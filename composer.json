@@ -1,4 +1,6 @@
 {
+    "name": "Snowtricks",
+    "description": "School project #6 - A Symfony application",
     "type": "project",
     "license": "proprietary",
     "require": {
