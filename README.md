@@ -42,6 +42,8 @@ composer install
 
 ### Step 3
 
+Load fixtures:
+
 ```shell
 php bin/console doctrine:database:create
 ```
