@@ -2,7 +2,7 @@
 
 Shool project #6 - A Symfony 4 application...
 
-## Attached Links
+## Attached Resources
 
 - [Demo](http://vps320850.ovh.net/snowtricks.com)
 - [Diagrams](https://github.com/opportus/snowtricks/blob/master/conception/diagrams)
@@ -12,38 +12,49 @@ Shool project #6 - A Symfony 4 application...
 - [Tickets](https://github.com/opportus/snowtricks/issues)
 - [Task Board](https://github.com/opportus/snowtricks/projects/1)
 - [Quality Test](https://insight.sensiolabs.com/projects/bb2ed0f1-32af-43ab-b550-efefdeb3cec6)
-- [Setup](https://github.com/opportus/snowtricks/blob/master/README.md#setup)
+- [Setup](https://github.com/opportus/snowtricks/blob/master/README.md#installation)
 
 ## Installation
 
-### Step 1
+### Requirements
+
+- PHP >= 7.1
+- Git
+- Composer
+
+### Step 1 - Clone And Compose The Application
 
 Clone the repository:
-
 ```shell
 git clone https://github.com/opportus/snowtricks.git path/to/my/project
 ```
 
-Change directory:
-
+Change the working directory:
 ```shell
 cd path/to/my/project
 ```
 
 Install dependencies:
-
 ```shell
 composer install
 ```
 
-### Step 2
+### Step 2 - Configure The Application
 
-[Configure Doctrine](https://symfony.com/doc/current/doctrine.html#configuring-the-database)
+Configure Doctrine:
 
-### Step 3
+https://symfony.com/doc/current/doctrine.html#configuring-the-database
 
-Load fixtures:
+...
 
+### Step 3 - Load Intitial Data To The Application Database
+
+Create the database:
 ```shell
 php bin/console doctrine:database:create
+```
+
+Load fixtures:
+```shell
+php bin/console doctrine:fixtures:load
 ```
