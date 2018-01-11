@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "9bdadcc3bfd0deadaf8cf798de18c1e1",
+    "content-hash": "2cec64bc03dc6d55f258d6efdca28e17",
     "packages": [
         {
             "name": "doctrine/annotations",
@@ -1230,11 +1230,16 @@
         {
             "name": "opportus/user-bundle",
             "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/opportus/UserBundle.git",
+                "reference": "b4b92d966a5e4e0e8887b366bec0520e16814ff8"
+            },
             "dist": {
-                "type": "path",
-                "url": "/home/opportus/git/UserBundle",
-                "reference": "98cb72de10cb049a289a3c98f34d9194fc0c75f5",
-                "shasum": null
+                "type": "zip",
+                "url": "https://api.github.com/repos/opportus/UserBundle/zipball/b4b92d966a5e4e0e8887b366bec0520e16814ff8",
+                "reference": "b4b92d966a5e4e0e8887b366bec0520e16814ff8",
+                "shasum": ""
             },
             "require": {
                 "php": ">=7.1.0",
@@ -1270,7 +1275,12 @@
                 "bundle",
                 "user bundle",
                 "user management"
-            ]
+            ],
+            "support": {
+                "source": "https://github.com/opportus/UserBundle/tree/master",
+                "issues": "https://github.com/opportus/UserBundle/issues"
+            },
+            "time": "2018-01-11T14:45:24+00:00"
         },
         {
             "name": "psr/cache",
