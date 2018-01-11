@@ -1,3 +1,2 @@
-#index:
-#    path: /
-#    defaults: { _controller: 'App\Controller\DefaultController::index' }
+app:
+    resource: '@OpportusUserBundle/Resources/config/routing.xml'

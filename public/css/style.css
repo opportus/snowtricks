@@ -1,0 +1,88 @@
+body {
+  	background-color: #ffffff;
+    color: #555;
+  	font-family: 'Roboto', sans-serif;
+    font-size: 15px;
+    font-weight: 400;
+    -webkit-font-smoothing: antialiased;
+    -webkit-overflow-scrolling: touch;
+}
+
+h1, h2, h3, h4, h5, h6 {
+	font-family: 'Raleway', sans-serif;
+    font-weight: 600;
+    color: #333;
+	text-transform: uppercase;
+}
+
+h1 {
+	font-size: 30px;
+	letter-spacing: 1px;
+	margin-top: 30px;
+	margin-bottom: 30px;
+}
+
+h2 {
+	font-size: 20px;
+}
+
+p {
+    line-height: 22px;
+    margin-bottom: 25px;
+}
+
+a {
+    color: #1abc9c;
+    word-wrap: break-word;
+    -webkit-transition: color 0.1s ease-in, background 0.1s ease-in;
+    -moz-transition: color 0.1s ease-in, background 0.1s ease-in;
+    -ms-transition: color 0.1s ease-in, background 0.1s ease-in;
+    -o-transition: color 0.1s ease-in, background 0.1s ease-in;
+    transition: color 0.1s ease-in, background 0.1s ease-in;
+}
+
+a:hover,
+a:focus {
+    color: #7b7b7b;
+    text-decoration: none;
+    outline: 0;
+}
+
+a:before,
+a:after {
+    -webkit-transition: color 0.1s ease-in, background 0.1s ease-in;
+    -moz-transition: color 0.1s ease-in, background 0.1s ease-in;
+    -ms-transition: color 0.1s ease-in, background 0.1s ease-in;
+    -o-transition: color 0.1s ease-in, background 0.1s ease-in;
+    transition: color 0.1s ease-in, background 0.1s ease-in;
+}
+
+hr {
+    display: block;
+    height: 1px;
+    border: 0;
+    border-top: 1px solid #ccc;
+    margin: 1em 0;
+    padding: 0;
+}
+
+.border {
+    border: 1px solid #dddddd;
+    border-radius: 5px;
+    padding: 2rem;
+}
+
+.navbar {
+    border-bottom: 1px solid #dddddd;
+}
+
+.navbar-brand {
+    color: #333333;
+}
+
+.footer {
+	background-color: #383a3d;
+	color: #777777;
+    margin-top: 2rem;
+    padding: .5rem 1rem;
+}

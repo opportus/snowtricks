@@ -1,0 +1,5 @@
+monolog:
+    handlers:
+        syslog:
+            type: syslog
+            level: NOTICE
