@@ -1,18 +1,26 @@
 security:
-    # https://symfony.com/doc/current/book/security.html#where-do-users-come-from-user-providers
+    encoders:
+        Opportus\UserBundle\Entity\UserInterface: bcrypt
+
     providers:
-        in_memory: { memory: ~ }
+        opportus_user_bundle:
+            id: opportus_user.security.user_provider.default
+
+    role_hierarchy:
+        ROLE_ADMIN: ROLE_USER
+        ROLE_SUPER_ADMIN: ROLE_ADMIN
+
     firewalls:
         dev:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
             security: false
         main:
             anonymous: ~
-
-            # activate different ways to authenticate
-
-            # http_basic: ~
-            # https://symfony.com/doc/current/book/security.html#a-configuring-how-your-users-will-authenticate
-
-            # form_login: ~
-            # https://symfony.com/doc/current/cookbook/security/form_login_setup.html
+            form_login:
+                login_path: opportus_user_sign_in
+                check_path: opportus_user_sign_in
+                username_parameter: 'user_sign_in_form[username]'
+                password_parameter: 'user_sign_in_form[plainPassword]'
+                csrf_parameter: 'user_sign_in_form[_token]'
+            logout:
+                path: opportus_user_sign_out
