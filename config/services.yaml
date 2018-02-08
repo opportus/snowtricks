@@ -27,3 +27,61 @@ services:
 
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
+
+    # Controller...
+    App\Controller\UserController:
+        arguments:
+            $parameters:
+                sign_up:
+                    template: User/sign_up.form.html.twig
+                    redirection:
+                        201: index
+                sign_in:
+                    template: User/sign_in.form.html.twig
+                activate:
+                    redirection:
+                        201: index
+                        403: index
+                        500: index
+                request_password_reset:
+                    template: User/request_password_reset.form.html.twig
+                    redirection:
+                        201: index
+                reset_password:
+                    template: User/reset_password.form.html.twig
+                    redirection:
+                        201: index
+    App\Controller\IndexController:
+        arguments:
+            $parameters: []
+
+    # Mailer...
+    App\Mailer\MailerInterface: '@App\Mailer\Mailer'
+    App\Mailer\Mailer:
+        arguments:
+            $parameters:
+                send_user_sign_up_email:
+                    from: snowtricks@example.com
+                    template: User/sign_up.email.html.twig
+                send_user_activation_email:
+                    from: snowtricks@example.com
+                    template: User/activate.email.html.twig
+                send_user_password_reset_email:
+                    from: snowtricks@example.com
+                    template: User/reset_password.email.html.twig
+
+    # Validator...
+    App\Validator\ValidatorInterface: '@App\Validator\Validator'
+    App\Validator\Validator:
+        arguments:
+            $parameters: []
+
+    # Event subscriber...
+    App\EventSubscriber\UserPasswordEncoderSubscriber:
+        tags:
+            - { name: doctrine.event_listener, event: prePersist, priority: 100}
+            - { name: doctrine.event_listener, event: preUpdate, priority: 100}
+    App\EventSubscriber\ValidatorSubscriber:
+        tags:
+            - { name: doctrine.event_listener, event: prePersist, priority: 90}
+            - { name: doctrine.event_listener, event: preUpdate, priority: 90}

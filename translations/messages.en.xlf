@@ -1,0 +1,208 @@
+<?xml version="1.0"?>
+
+<xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
+    <file source-language="en" datatype="plaintext" original="file.ext">
+        <body>
+
+            <trans-unit id="user.sign_up.notification.201">
+                <source>user.sign_up.notification.201</source>
+                <target>Welcome %username%! An email has been sent to %email%. It contains an activation link you must click in order to activate your account.</target>
+            </trans-unit>
+            <trans-unit id="user.sign_up.notification.409">
+                <source>user.sign_up.notification.409</source>
+                <target>An account with the supplied username/email already exists.</target>
+            </trans-unit>
+            <trans-unit id="user.sign_up.notification.500">
+                <source>user.sign_up.notification.500</source>
+                <target>Sorry, an unexpected error has occurred during your registration.</target>
+            </trans-unit>
+            <trans-unit id="user.sign_up.form.title">
+                <source>user.sign_up.form.title</source>
+                <target>Sign Up</target>
+            </trans-unit>
+            <trans-unit id="user.sign_up.form.label.username">
+                <source>user.sign_up.form.label.username</source>
+                <target>Username</target>
+            </trans-unit>
+            <trans-unit id="user.sign_up.form.label.email">
+                <source>user.sign_up.form.label.email</source>
+                <target>Email</target>
+            </trans-unit>
+            <trans-unit id="user.sign_up.form.label.password">
+                <source>user.sign_up.form.label.password</source>
+                <target>Password</target>
+            </trans-unit>
+            <trans-unit id="user.sign_up.form.label.submit">
+                <source>user.sign_up.form.label.submit</source>
+                <target>Sign Up</target>
+            </trans-unit>
+            <trans-unit id="user.sign_up.form.link.sign_in">
+                <source>user.sign_up.form.link.sign_in</source>
+                <target>Sign In</target>
+            </trans-unit>
+            <trans-unit id="user.sign_up.email.subject">
+                <source>user.sign_up.email.subject</source>
+                <target>Welcome %username%</target>
+            </trans-unit>
+            <trans-unit id="user.sign_up.email.message">
+                <source>user.sign_up.email.message</source>
+                <target xml:space="preserve">
+                    Hello %username%!
+
+                    You have successfully been registered.
+
+                    Another email has been sent to you. It contains an activation link you must click in order to activate your account.
+
+                    Kind regards,
+                    the Team.
+                </target>
+            </trans-unit>
+
+            <trans-unit id="user.sign_in.form.title">
+                <source>user.sign_in.form.title</source>
+                <target>Sign In</target>
+            </trans-unit>
+            <trans-unit id="user.sign_in.form.label.username">
+                <source>user.sign_in.form.label.username</source>
+                <target>Username</target>
+            </trans-unit>
+            <trans-unit id="user.sign_in.form.label.password">
+                <source>user.sign_in.form.label.password</source>
+                <target>Password</target>
+            </trans-unit>
+            <trans-unit id="user.sign_in.form.label.submit">
+                <source>user.sign_in.form.label.submit</source>
+                <target>Sign In</target>
+            </trans-unit>
+            <trans-unit id="user.sign_in.form.link.sign_up">
+                <source>user.sign_in.form.link.sign_up</source>
+                <target>Sign Up</target>
+            </trans-unit>
+            <trans-unit id="user.sign_in.form.link.request_password_reset">
+                <source>user.sign_in.form.link.request_password_reset</source>
+                <target>Forgot Password ?</target>
+            </trans-unit>
+
+            <trans-unit id="user.activate.notification.201">
+                <source>user.activate.notification.201</source>
+                <target>Congrats. Your account is now activated.</target>
+            </trans-unit>
+            <trans-unit id="user.activate.notification.403">
+                <source>user.activate.notification.403</source>
+                <target>Token not valid.</target>
+            </trans-unit>
+            <trans-unit id="user.activate.notification.500">
+                <source>user.activate.notification.500</source>
+                <target>Sorry, an unexpected error has occurred during your activation request.</target>
+            </trans-unit>
+            <trans-unit id="user.activate.email.subject">
+                <source>user.activate.email.subject</source>
+                <target>Account Activation</target>
+            </trans-unit>
+            <trans-unit id="user.activate.email.message">
+                <source>user.activate.email.message</source>
+                <target>
+                    Hello %username%!
+
+                    To activate your account, please click on the following link:
+                    %action_link%
+
+                    Kind regards,
+                    the Team.
+                </target>
+            </trans-unit>
+
+            <trans-unit id="user.request_password_reset.notification.201">
+                <source>user.request_password_reset.notification.201</source>
+                <target>An email has been sent to you. It contains a link you must click in order to reset your password.</target>
+            </trans-unit>
+            <trans-unit id="user.request_password_reset.notification.404">
+                <source>user.request_password_reset.notification.404</source>
+                <target>User "%username%" does not exist.</target>
+            </trans-unit>
+            <trans-unit id="user.request_password_reset.notification.500">
+                <source>user.request_password_reset.notification.500</source>
+                <target>Sorry, an unexpected error has occurred during your password reset request.</target>
+            </trans-unit>
+            <trans-unit id="user.request_password_reset.form.title">
+                <source>user.request_password_reset.form.title</source>
+                <target>Forgot Password</target>
+            </trans-unit>
+            <trans-unit id="user.request_password_reset.form.label.username">
+                <source>user.request_password_reset.form.label.username</source>
+                <target>Username</target>
+            </trans-unit>
+            <trans-unit id="user.request_password_reset.form.label.submit">
+                <source>user.request_password_reset.form.label.submit</source>
+                <target>Request</target>
+            </trans-unit>
+
+            <trans-unit id="user.reset_password.notification.201">
+                <source>user.reset_password.notification.201</source>
+                <target>Your password has been updated.</target>
+            </trans-unit>
+            <trans-unit id="user.reset_password.notification.403">
+                <source>user.reset_password.notification.403</source>
+                <target>Token not valid.</target>
+            </trans-unit>
+            <trans-unit id="user.reset_password.notification.500">
+                <source>user.reset_password.notification.500</source>
+                <target>Sorry, an unexpected error has occurred during your password reset.</target>
+            </trans-unit>
+            <trans-unit id="user.reset_password.form.title">
+                <source>user.reset_password.form.title</source>
+                <target>Reset Password</target>
+            </trans-unit>
+            <trans-unit id="user.reset_password.form.label.password">
+                <source>user.reset_password.form.label.password</source>
+                <target>Password</target>
+            </trans-unit>
+            <trans-unit id="user.reset_password.form.label.submit">
+                <source>user.reset_password.form.label.submit</source>
+                <target>Update Password</target>
+            </trans-unit>
+            <trans-unit id="user.reset_password.email.subject">
+                <source>user.reset_password.email.subject</source>
+                <target>Password Reset</target>
+            </trans-unit>
+            <trans-unit id="user.reset_password.email.message">
+                <source>user.reset_password.email.message</source>
+                <target>
+                    Hello %username%!
+
+                    To reset your password, please click on the following link:
+                    %action_link%
+
+                    Kind regards,
+                    the Team.
+                </target>
+            </trans-unit>
+
+            <trans-unit id="user.layout.link.anchor.sign_up">
+                <source>user.layout.link.anchor.sign_up</source>
+                <target>Sign Up</target>
+            </trans-unit>
+            <trans-unit id="user.layout.link.title.sign_up">
+                <source>user.layout.link.title.sign_up</source>
+                <target>Sign Up</target>
+            </trans-unit>
+            <trans-unit id="user.layout.link.anchor.sign_in">
+                <source>user.layout.link.anchor.sign_in</source>
+                <target>Sign In</target>
+            </trans-unit>
+            <trans-unit id="user.layout.link.title.sign_in">
+                <source>user.layout.link.title.sign_in</source>
+                <target>Sign In</target>
+            </trans-unit>
+            <trans-unit id="user.layout.link.anchor.sign_out">
+                <source>user.layout.link.anchor.sign_out</source>
+                <target>Sign Out</target>
+            </trans-unit>
+            <trans-unit id="user.layout.link.title.sign_out">
+                <source>user.layout.link.title.sign_out</source>
+                <target>Sign Out</target>
+            </trans-unit>
+
+        </body>
+    </file>
+</xliff>

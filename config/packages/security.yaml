@@ -1,10 +1,10 @@
 security:
     encoders:
-        Opportus\UserBundle\Entity\UserInterface: bcrypt
+        App\Entity\User: bcrypt
 
     providers:
         opportus_user_bundle:
-            id: opportus_user.security.user_provider.default
+            id: App\Security\UserProvider
 
     role_hierarchy:
         ROLE_ADMIN: ROLE_USER
@@ -17,10 +17,10 @@ security:
         main:
             anonymous: ~
             form_login:
-                login_path: opportus_user_sign_in
-                check_path: opportus_user_sign_in
+                login_path: user_sign_in
+                check_path: user_sign_in
                 username_parameter: 'user_sign_in_form[username]'
                 password_parameter: 'user_sign_in_form[plainPassword]'
                 csrf_parameter: 'user_sign_in_form[_token]'
             logout:
-                path: opportus_user_sign_out
+                path: user_sign_out

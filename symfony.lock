@@ -71,7 +71,7 @@
     "ocramius/proxy-manager": {
         "version": "2.1.1"
     },
-    "opportus/user-bundle": {
+    "opportus/persistence-decoupler-bundle": {
         "version": "dev-master"
     },
     "psr/cache": {

@@ -1,0 +1,11 @@
+{% extends 'User/layout.form.html.twig' %}
+{% block user_content %}
+    {{ parent() }}
+    <h1>{{ 'user.sign_up.form.title'|trans }}</h1>
+    {{ form_start(form) }}
+        {{ form_errors(form) }}
+    {{ form_end(form) }}
+    <ul class="list-group list-unstyled">
+        <li><a href="{{ url('user_sign_in') }}">{{ 'user.sign_up.form.link.sign_in'|trans }}</a></li>
+    </ul>
+{% endblock user_content %}

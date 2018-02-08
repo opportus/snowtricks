@@ -1,0 +1,15 @@
+{% extends 'User/layout.form.html.twig' %}
+{% block user_content %}
+    {{ parent() }}
+    <h1>{{ 'user.sign_in.form.title'|trans }}</h1>
+    {% if error %}
+        <div class="alert alert-danger" role="alert">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
+    {% endif %}
+    {{ form_start(form) }}
+        {{ form_errors(form) }}
+    {{ form_end(form) }}
+    <ul class="list-group list-unstyled">
+        <li><a href="{{ url('user_sign_up') }}">{{ 'user.sign_in.form.link.sign_up'|trans }}</a></li>
+        <li><a href="{{ url('user_request_password_reset') }}">{{ 'user.sign_in.form.link.request_password_reset'|trans }}</a></li>
+    </ul>
+{% endblock user_content %}
