@@ -12,5 +12,18 @@ namespace App\Entity;
  */
 interface EntityInterface
 {
+    /**
+     * Gets the ID.
+     *
+     * @return null|int
+     */
+    public function getId() : ?int;
+
+    /**
+     * Gets the creation datetime.
+     *
+     * @return \DateTimeInterface
+     */
+    public function getCreatedAt() : \DateTimeInterface;
 }
 

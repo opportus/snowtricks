@@ -4,18 +4,18 @@ namespace App\Controller;
 
 use App\Entity\User;
 use App\Entity\UserToken;
-use App\Form\UserSignUpFormType;
-use App\Form\UserSignInFormType;
-use App\Form\UserRequestPasswordResetFormType;
-use App\Form\UserResetPasswordFormType;
+use App\Form\Type\UserSignUpType;
+use App\Form\Type\UserSignInType;
+use App\Form\Type\UserRequestPasswordResetType;
+use App\Form\Type\UserResetPasswordType;
 use App\Exception\EntityNotFoundException;
+use App\Exception\RequestNotValidException;
 use App\Exception\TokenNotValidException;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\RedirectResponse;
-use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
+use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 
 /**
  * The user controller...
@@ -37,57 +37,53 @@ class UserController extends Controller
      */
     public function signUp(Request $request)
     {
-        $status   = 200;
-        // @todo If necessary, implement a factory...
-        $formData = new User();
-        $form     = $this->formFactory->create(UserSignUpFormType::class, $formData);
+        $form = $this->formFactory->create(UserSignUpType::class, new User());
 
         $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            $user = $formData;
-            $user
-                ->setActivation(false)
-                ->addRole('ROLE_USER')
-            ;
+        try {
+            if ($form->isSubmitted() && $form->isValid() === false) {
+                throw new RequestNotValidException();
 
-            // @todo If necessary, implement a factory...
-            $userToken = new UserToken();
-            $userToken
-                ->setUser($user)
-                ->setType('activation')
-            ;
+            } elseif ($form->isSubmitted() && $form->isValid()) {
+                $user = $form->getData();
+                $user
+                    ->enable()
+                    ->addRole('ROLE_USER')
+                    ->addActivationToken()
+                ;
 
-            try {
                 $this->entityManager->persist($user);
-                $this->entityManager->persist($userToken);
                 $this->entityManager->flush();
 
                 $this->mailer
                     ->sendUserSignUpEmail($user)
-                    ->sendUserActivationEmail($user, $userToken)
+                    ->sendUserActivationEmail($user)
                 ;
 
                 $status = 201;
 
-            } catch (\Exception $exception) {
-                if ($exception instanceof UniqueConstraintViolationException) {
-                    $status = 409;
+            } else {
+                $status = 200;
+            }
 
-                } else {
-                    $status = 500;
+        } catch (\Exception $exception) {
+            if ($exception instanceof RequestNotValidException) {
+                $status = 400;
 
-                    $this->logger->critical(
-                        sprintf(
-                            'An %s has occured during a user sign up action',
-                            get_class($exception)
-                        ),
-                        array(
-                            'exception' => $exception,
-                            'request'   => $request,
-                        )
-                    );
-                }
+            } else {
+                $status = 500;
+
+                $this->logger->critical(
+                    sprintf(
+                        'An %s has occured during a user sign up action',
+                        get_class($exception)
+                    ),
+                    array(
+                        'exception' => $exception,
+                        'request'   => $request,
+                    )
+                );
             }
         }
 
@@ -97,8 +93,8 @@ class UserController extends Controller
                 $this->translator->trans(
                     'user.sign_up.notification.' . (string) $status,
                     array(
-                        '%username%' => $formData->getUsername(),
-                        '%email%'    => $formData->getEmail(),
+                        '%username%' => $form->getData()->getUsername(),
+                        '%email%'    => $form->getData()->getEmail(),
                     )
                 )
             );
@@ -114,7 +110,7 @@ class UserController extends Controller
         } else {
             return new Response(
                 $this->twig->render(
-                    $this->parameters['sign_up']['template'],
+                    'user/sign_up.html.twig',
                     array(
                         'form' => $form->createView(),
                     )
@@ -136,11 +132,11 @@ class UserController extends Controller
     public function signIn(Request $request, AuthenticationUtils $authUtils)
     {
         $error = $authUtils->getLastAuthenticationError();
-        $form  = $this->formFactory->create(UserSignInFormType::class);
+        $form  = $this->formFactory->create(UserSignInType::class);
 
         return new Response(
             $this->twig->render(
-                $this->parameters['sign_in']['template'],
+                'user/sign_in.html.twig',
                 array(
                     'form'  => $form->createView(),
                     'error' => $error,
@@ -180,9 +176,8 @@ class UserController extends Controller
 
             $user = $userToken->getUser();
 
-            $user->setActivation(true);
+            $user->enable();
 
-            $this->entityManager->persist($user);
             $this->entityManager->remove($userToken);
             $this->entityManager->flush();
 
@@ -212,10 +207,7 @@ class UserController extends Controller
             $request->getSession()->getFlashBag()->add(
                 $status,
                 $this->translator->trans(
-                    'user.activate.notification.' . (string) $status,
-                    array(
-                        '%token%' => $request->attributes->get('token'),
-                    )
+                    'user.activate.notification.' . (string) $status
                 )
             );
         }
@@ -237,55 +229,56 @@ class UserController extends Controller
      */
     public function requestPasswordReset(Request $request)
     {
-        $status   = 200;
-        // @todo If necessary, implement a factory...
-        $formData = new User();
-        $form     = $this->formFactory->create(UserRequestPasswordResetFormType::class, $formData);
+        $form = $this->formFactory->create(UserRequestPasswordResetType::class, new User());
 
         $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            try {
+        try {
+            if ($form->isSubmitted() && $form->isValid() === false) {
+                throw new RequestNotValidException();
+
+            } elseif ($form->isSubmitted() && $form->isValid()) {
                 $user = $this->entityManager->getRepository(User::class)->findOneByUsername(
-                    $formData->getUsername()
+                    $form->getData()->getUsername()
                 );
 
                 if ($user === null) {
                     throw new EntityNotFoundException();
                 }
 
-                // @todo If necessary, implement a factory...
-                $userToken = new UserToken();
-                $userToken
-                    ->setUser($user)
-                    ->setType('password_reset')
-                ;
+                $user->addPasswordResetToken();
 
-                $this->entityManager->persist($userToken);
+                $this->entityManager->persist($user);
                 $this->entityManager->flush();
 
-                $this->mailer->sendUserPasswordResetEmail($user, $userToken);
+                $this->mailer->sendUserPasswordResetEmail($user);
 
                 $status = 201;
 
-            } catch (\Exception $exception) {
-                if ($exception instanceof EntityNotFoundException) {
-                    $status = 404;
+            } else {
+                $status = 200;
+            }
 
-                } else {
-                    $status = 500;
+        } catch (\Exception $exception) {
+            if ($exception instanceof RequestNotValidException) {
+                $status = 400;
 
-                    $this->logger->critical(
-                        sprintf(
-                            'A %s has occured during a user password reset request action',
-                            get_class($exception)
-                        ),
-                        array(
-                            'exception' => $exception,
-                            'request'   => $request,
-                        )
-                    );
-                }
+            } elseif ($exception instanceof EntityNotFoundException) {
+                $status = 404;
+
+            } else {
+                $status = 500;
+
+                $this->logger->critical(
+                    sprintf(
+                        'A %s has occured during a user password reset request action',
+                        get_class($exception)
+                    ),
+                    array(
+                        'exception' => $exception,
+                        'request'   => $request,
+                    )
+                );
             }
         }
 
@@ -295,12 +288,11 @@ class UserController extends Controller
                 $this->translator->trans(
                     'user.request_password_reset.notification.' . (string) $status,
                     array(
-                        '%username%' => $formData->getUsername(),
+                        '%username%' => $form->getData()->getUsername(),
                     )
                 )
             );
         }
-
 
         if (isset($this->parameters['request_password_reset']['redirection'][$status])) {
             return new RedirectResponse(
@@ -312,7 +304,7 @@ class UserController extends Controller
         } else {
             return new Response(
                 $this->twig->render(
-                    $this->parameters['request_password_reset']['template'],
+                    'user/request_password_reset.html.twig',
                     array(
                         'form' => $form->createView(),
                     )
@@ -332,50 +324,56 @@ class UserController extends Controller
      */
     public function resetPassword(Request $request)
     {
-        $status   = 200;
-        $formData = new User();
-        $form     = $this->formFactory->create(UserResetPasswordFormType::class, $formData);
+        $form = $this->formFactory->create(UserResetPasswordType::class, new User());
 
         $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            try {
+        try {
+            if ($form->isSubmitted() && $form->isValid() === false) {
+                throw new RequestNotValidException();
+
+            } elseif ($form->isSubmitted() && $form->isValid()) {
                 $userToken = $this->entityManager->getRepository(UserToken::class)->findOneByKey(
                     $request->attributes->get('token')
                 );
 
-                if ($userToken === null || $userToken->isExpired()){
+                if ($userToken === null || $userToken->isExpired()) {
                     throw new TokenNotValidException();
                 }
 
                 $user = $userToken->getUser();
 
-                $user->setPlainPassword($formData->getPlainPassword());
+                $user->setPlainPassword($form->getData()->getPlainPassword());
 
-                $this->entityManager->persist($user);
                 $this->entityManager->remove($userToken);
                 $this->entityManager->flush();
 
                 $status = 201;
 
-            } catch (\Exception $exception) {
-                if ($exception instanceof TokenNotValidException) {
-                    $status = 403;
+            } else {
+                $status = 200;
+            }
 
-                } else {
-                    $status = 500;
+        } catch (\Exception $exception) {
+            if ($exception instanceof RequestNotValidException) {
+                $status = 400;
 
-                    $this->logger->critical(
-                        sprintf(
-                            'A %s has occured during a user password reset action',
-                            get_class($exception)
-                        ),
-                        array(
-                            'exception' => $exception,
-                            'request'   => $request,
-                        )
-                    );
-                }
+            } elseif ($exception instanceof TokenNotValidException) {
+                $status = 403;
+
+            } else {
+                $status = 500;
+
+                $this->logger->critical(
+                    sprintf(
+                        'A %s has occured during a user password reset action',
+                        get_class($exception)
+                    ),
+                    array(
+                        'exception' => $exception,
+                        'request'   => $request,
+                    )
+                );
             }
         }
 
@@ -383,10 +381,7 @@ class UserController extends Controller
             $request->getSession()->getFlashBag()->add(
                 $status,
                 $this->translator->trans(
-                    'user.reset_password.notification.' . (string) $status,
-                    array(
-                        '%token%' => $request->attributes->get('token'),
-                    )
+                    'user.reset_password.notification.' . (string) $status
                 )
             );
         }
@@ -401,7 +396,7 @@ class UserController extends Controller
         } else {
             return new Response(
                 $this->twig->render(
-                    $this->parameters['reset_password']['template'],
+                    'user/reset_password.html.twig',
                     array(
                         'form' => $form->createView(),
                     )

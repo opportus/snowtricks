@@ -1,0 +1,14 @@
+{% if app.request.hasPreviousSession %}
+    {% for status, messages in app.flashes %}
+        {% if status|first == 2 %}
+            {% set label = 'success' %}
+        {% elseif status|first == 4 or status|first == 5 %}
+            {% set label = 'danger' %}
+        {% endif %}
+        {% for message in messages %}
+            <div class="alert alert-{{ label }}" role="alert">
+                {{ message }}
+            </div>
+        {% endfor %}
+    {% endfor %}
+{% endif %}

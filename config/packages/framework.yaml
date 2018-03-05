@@ -7,7 +7,7 @@ framework:
     translator:
         fallbacks: ['en']
     csrf_protection: { enabled: true }
-    #http_method_override: true
+    http_method_override: true
 
     # uncomment this entire section to enable sessions
     session:

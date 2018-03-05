@@ -59,7 +59,7 @@ class ValidatorSubscriber implements EventSubscriber
      */
     public function prePersist(LifecycleEventArgs $args)
     {
-        $this->validator->validateWithExceptionAndLog($args->getEntity(), null, array('CREATE'));
+        $this->validator->validateWithExceptionAndLog($args->getEntity());
     }
 
     /**
@@ -69,7 +69,7 @@ class ValidatorSubscriber implements EventSubscriber
      */
     public function preUpdate(LifecycleEventArgs $args)
     {
-        $this->validator->validateWithExceptionAndLog($args->getEntity(), null, array('UPDATE'));
+        $this->validator->validateWithExceptionAndLog($args->getEntity());
     }
 
     /**
@@ -79,7 +79,7 @@ class ValidatorSubscriber implements EventSubscriber
      */
     public function preDelete(LifecycleEventArgs $args)
     {
-        $this->validator->validateWithExceptionAndLog($args->getEntity(), null, array('DELETE'));
+        $this->validator->validateWithExceptionAndLog($args->getEntity());
     }
 }
 

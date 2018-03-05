@@ -2,7 +2,8 @@
 
 namespace App\Entity;
 
-use Doctrine\Common\Collections\Collection;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
@@ -17,34 +18,18 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
  *
  * @ORM\Entity(repositoryClass="App\Repository\UserRepository")
  * @ORM\Table(name="user")
- * @ORM\HasLifecycleCallbacks()
- *
- * @UniqueEntity(fields={"username"}, groups={"CREATE", "UPDATE", "user.sign_up.form"})
- * @UniqueEntity(fields={"email"}, groups={"CREATE", "UPDATE", "user.sign_up.form"})
+ * @UniqueEntity(fields={"username"}, groups={"user.sign_up.form"})
+ * @UniqueEntity(fields={"email"}, groups={"user.sign_up.form"})
  */
-class User implements UserInterface
+class User extends Entity implements UserInterface
 {
-    /**
-     * @var null|int $id
-     *
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="AUTO")
-     * @ORM\Column(name="id", type="integer")
-     *
-     * @Assert\NotNull(groups={"UPDATE", "DELETE"})
-     * @Assert\Type(type="integer", groups={"UPDATE", "DELETE"})
-     * @Assert\Range(min=1, groups={"UPDATE", "DELETE"})
-     */
-    protected $id;
-
     /**
      * @var null|string $username
      *
      * @ORM\Column(name="username", type="string", length=35, unique=true)
-     *
-     * @Assert\NotBlank(groups={"CREATE", "user.sign_up.form", "user.sign_in.form", "user.request_password_reset.form", "user.sign_up.email", "user.activate.email", "user.reset_password.email"})
-     * @Assert\Type(type="string", groups={"CREATE", "UPDATE", "user.sign_up.form", "user.sign_in.form", "user.request_password_reset.form", "user.sign_up.email", "user.activate.email", "user.reset_password.email"})
-     * @Assert\Length(max=35, groups={"CREATE", "UPDATE", "user.sign_up.form", "user.sign_in.form", "user.request_password_reset.form", "user.sign_up.email", "user.activate.email", "user.reset_password.email"})
+     * @Assert\NotBlank(groups={"user.sign_up.form", "user.sign_in.form", "user.request_reset_password.form"})
+     * @Assert\Type(type="string", groups={"user.sign_up.form", "user.sign_in.form", "user.request_reset_password.form"})
+     * @Assert\Length(max=35, groups={"user.sign_up.form", "user.sign_in.form", "user.request_reset_password.form"})
      */
     protected $username;
 
@@ -52,20 +37,18 @@ class User implements UserInterface
      * @var null|string $email
      *
      * @ORM\Column(name="email", type="string", length=255, unique=true)
-     *
-     * @Assert\NotBlank(groups={"CREATE", "user.sign_up.form", "user.sign_up.email", "user.activate.email", "user.reset_password.email"})
-     * @Assert\Type(type="string", groups={"CREATE", "UPDATE", "user.sign_up.form", "user.sign_up.email", "user.activate.email", "user.reset_password.email"})
-     * @Assert\Length(max=255, groups={"CREATE", "UPDATE", "user.sign_up.form", "user.sign_up.email", "user.activate.email", "user.reset_password.email"})
-     * @Assert\Email(groups={"CREATE", "UPDATE", "user.sign_up.form", "user.sign_up.email", "user.activate.email", "user.reset_password.email"})
+     * @Assert\NotBlank(groups={"user.sign_up.form"})
+     * @Assert\Type(type="string", groups={"user.sign_up.form"})
+     * @Assert\Length(max=255, groups={"user.sign_up.form"})
+     * @Assert\Email()
      */
     protected $email;
 
     /**
      * @var null|string $plainPassword
      *
-     * @Assert\NotBlank(groups={"user.sign_up.form", "user.sign_in.form", "user.reset_password.form"})
-     * @Assert\Type(type="string", groups={"user.sign_up.form", "user.sign_in.form", "user.reset_password.form"})
-     * @Assert\Length(max=4096, groups={"user.sign_up.form", "user.sign_in.form", "user.reset_password.form"})
+     * @Assert\Type(type="string", groups={"user.sign_up.form", "user.reset_password.form"})
+     * @Assert\Length(max=4096, groups={"user.sign_up.form", "user.rest_password.form"})
      */
     protected $plainPassword;
 
@@ -73,10 +56,9 @@ class User implements UserInterface
      * @var null|string $password
      *
      * @ORM\Column(name="password", type="string", length=255)
-     *
-     * @Assert\NotBlank(groups={"CREATE"})
-     * @Assert\Type(type="string", groups={"CREATE", "UPDATE"})
-     * @Assert\Length(max=255, groups={"CREATE", "UPDATE"})
+     * @Assert\NotBlank()
+     * @Assert\Type(type="string")
+     * @Assert\Length(max=255)
      */
     protected $password;
 
@@ -84,66 +66,46 @@ class User implements UserInterface
      * @var null|string $salt
      *
      * @ORM\Column(name="salt", type="string", length=255, nullable=true)
-     *
-     * @Assert\Type(type="string", groups={"CREATE", "UPDATE"})
-     * @Assert\Length(max=255, groups={"CREATE", "UPDATE"})
+     * @Assert\Type(type="string")
+     * @Assert\Length(max=255)
      */
     protected $salt;
 
     /**
-     * @var null|bool $activation
+     * @var null|bool $enabled
      *
-     * @ORM\Column(name="activation", type="boolean")
-     *
-     * @Assert\NotNull(groups={"CREATE"})
-     * @Assert\Type(type="bool", groups={"CREATE", "UPDATE"})
+     * @ORM\Column(name="enabled", type="boolean")
+     * @Assert\NotNull()
+     * @Assert\Type(type="bool")
      */
-    protected $activation;
-
-    /**
-     * @var null|\Datetime $createdAt
-     *
-     * @ORM\Column(name="created_at", type="datetime")
-     *
-     * @Assert\NotNull(groups={"CREATE"})
-     * @Assert\Type(type="object", groups={"CREATE", "UPDATE"})
-     * @Assert\DateTime(groups={"CREATE", "UPDATE"})
-     */
-    protected $createdAt;
+    protected $enabled;
 
     /**
      * @var array $roles
      *
      * @ORM\Column(name="roles", type="array")
-     *
-     * @Assert\NotBlank(groups={"CREATE"})
-     * @Assert\Type(type="array", groups={"CREATE", "UPDATE"})
+     * @Assert\NotBlank()
+     * @Assert\Type(type="array")
      */
-    protected $roles = array();
+    protected $roles;
 
     /**
-     * @var null|Doctrine\Common\Collections\Collection $tokens
+     * @var Doctrine\Common\Collections\Collection $tokens
      *
-     * @ORM\OneToMany(targetEntity="App\Entity\UserToken", mappedBy="user")
+     * @ORM\OneToMany(targetEntity="App\Entity\UserToken", mappedBy="user", cascade={"persist", "remove"}, orphanRemoval=true)
+     * @Assert\Valid()
      */
     protected $tokens;
 
     /**
-     * {@inheritdoc}
+     * Constructs the user.
      */
-    public function getId()
+    public function __construct()
     {
-        return $this->id;
-    }
+        parent::__construct();
 
-    /**
-     * {@inheritdoc}
-     */
-    public function setId(int $id) : UserInterface
-    {
-        $this->id = $id;
-
-        return $this;
+        $this->roles  = array();
+        $this->tokens = new ArrayCollection();
     }
 
     /**
@@ -167,7 +129,7 @@ class User implements UserInterface
     /**
      * {@inheritdoc}
      */
-    public function getEmail()
+    public function getEmail() : ?string
     {
         return $this->email;
     }
@@ -185,7 +147,7 @@ class User implements UserInterface
     /**
      * {@inheritdoc}
      */
-    public function getPlainPassword()
+    public function getPlainPassword() : ?string
     {
         return $this->plainPassword;
     }
@@ -230,9 +192,9 @@ class User implements UserInterface
     /**
      * {@inheritdoc}
      */
-    public function setSalt() : UserInterface
+    public function setSalt(string $salt) : UserInterface
     {
-        $this->salt = base64_encode(random_bytes(32));
+        $this->salt = $salt;
 
         return $this;
     }
@@ -240,17 +202,9 @@ class User implements UserInterface
     /**
      * {@inheritdoc}
      */
-    public function getActivation()
+    public function enable() : UserInterface
     {
-        return $this->activation;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function setActivation(bool $activation) : UserInterface
-    {
-        $this->activation = $activation;
+        $this->enabled = true;
 
         return $this;
     }
@@ -258,19 +212,9 @@ class User implements UserInterface
     /**
      * {@inheritdoc}
      */
-    public function getCreatedAt()
+    public function disable() : UserInterface
     {
-        return $this->createdAt;
-    }
-
-    /**
-     * {@inheritdoc}
-     *
-     * @ORM\PrePersist
-     */
-    public function setCreatedAt() : UserInterface
-    {
-        $this->createdAt = new \Datetime();
+        $this->enabled = false;
 
         return $this;
     }
@@ -281,16 +225,6 @@ class User implements UserInterface
     public function getRoles()
     {
         return $this->roles;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function setRoles(array $roles) : UserInterface
-    {
-        $this->roles = $roles;
-
-        return $this;
     }
 
     /**
@@ -331,17 +265,54 @@ class User implements UserInterface
     /**
      * {@inheritdoc}
      */
-    public function getTokens()
+    public function getTokens() : array
     {
-        return $this->tokens;
+        return $this->tokens->toArray();
     }
 
     /**
      * {@inheritdoc}
      */
-    public function setTokens(Collection $tokens) : UserInterface
+    public function getActivationToken() : ?UserTokenInterface
     {
-        $this->tokens = $tokens;
+        return $this->getToken('activation');
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getPasswordResetToken() : ?UserTokenInterface
+    {
+        return $this->getToken('password_reset');
+    }
+
+    /**
+     * Gets the token.
+     *
+     * @return null|App\Entity\UserTokenInterface
+     */
+    protected function getToken($type) : ?UserTokenInterface
+    {
+        $criteria = new Criteria();
+
+        return $this->tokens->matching(
+            $criteria->where(
+                $criteria->expr()->eq('type', $type)
+            )
+
+        )->get(0);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function addActivationToken() : UserInterface
+    {
+        $token = new UserToken();
+
+        $token->setType('activation');
+
+        $this->addToken($token);
 
         return $this;
     }
@@ -349,9 +320,52 @@ class User implements UserInterface
     /**
      * {@inheritdoc}
      */
+    public function addPasswordResetToken() : UserInterface
+    {
+        $token = new UserToken();
+
+        $token->setType('password_reset');
+
+        $this->addToken($token);
+
+        return $this;
+    }
+
+    /**
+     * Adds the token.
+     *
+     * @param  App\Entity\UserTokenInterface
+     * @return App\Entity\UserInterface
+     */
+    protected function addToken(UserTokenInterface $token) : UserInterface
+    {
+        $token->setUser($this);
+
+        if ($this->tokens->contains($token) === false) {
+            $this->tokens->add($token);
+        }
+
+        return $this;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getGravatar(?int $size = 80, ?string $imageSet = 'mm', ?string $rating = 'g') : ?string
+    {
+        if ($this->email === null) {
+            return null;
+        }
+
+        return 'https://www.gravatar.com/avatar/'.md5(strtolower(trim($this->email))).'?s='.$size.'&d='.$imageSet.'&r='.$rating;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function isEnabled()
     {
-        return (bool) $this->getActivation();
+        return (bool) $this->enabled;
     }
 
     /**
@@ -359,7 +373,7 @@ class User implements UserInterface
      */
     public function isAccountNonExpired()
     {
-        return $this->getActivation();
+        return (bool) $this->enabled;
     }
 
     /**
@@ -367,7 +381,7 @@ class User implements UserInterface
      */
     public function isAccountNonLocked()
     {
-        return $this->getActivation();
+        return (bool) $this->enabled;
     }
 
     /**
@@ -375,7 +389,7 @@ class User implements UserInterface
      */
     public function isCredentialsNonExpired()
     {
-        return $this->getActivation();
+        return (bool) $this->enabled;
     }
 
     /**
@@ -383,6 +397,7 @@ class User implements UserInterface
      */
     public function eraseCredentials()
     {
+        $this->plainPassword = null;
     }
 
     /**
@@ -391,14 +406,14 @@ class User implements UserInterface
     public function serialize()
     {
         return serialize(array(
-            $this->getId(),
-            $this->getUsername(),
-            $this->getEmail(),
-            $this->getPassword(),
-            $this->getSalt(),
-            $this->getActivation(),
-            $this->getCreatedAt(),
-            $this->getRoles(),
+            $this->id,
+            $this->username,
+            $this->email,
+            $this->password,
+            $this->salt,
+            $this->enabled,
+            $this->createdAt,
+            $this->roles,
         ));
     }
 
@@ -413,7 +428,7 @@ class User implements UserInterface
             $this->email,
             $this->password,
             $this->salt,
-            $this->activation,
+            $this->enabled,
             $this->createdAt,
             $this->roles
         ) = unserialize($serialized);
@@ -424,7 +439,7 @@ class User implements UserInterface
      */
     public function __toString() : string
     {
-        return (string) $this->getUsername();
+        return (string) $this->username;
     }
 }
 

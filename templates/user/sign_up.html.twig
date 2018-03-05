@@ -1,0 +1,23 @@
+{% extends 'base.html.twig' %}
+{% block title %}{{ 'user.sign_up.page.title'|trans() }}{% endblock title %}
+{% block description %}{{ 'user.sign_up.page.description'|trans() }}{% endblock description %}
+{% block content %}
+    {{ parent() }}
+    <div class="container-fluid" style="min-height:100vh;">
+        <div class="row mt-5">
+            <div class="col-md-4 offset-md-4 text-center justify-content-center">
+                <h1>{{ block('title') }}</h1>
+                <div class="row my-4">
+                    <div class="col p-4 border rounded">
+                        {{ form_start(form) }}
+                            {{ form_errors(form) }}
+                        {{ form_end(form) }}
+                        <ul class="list-group list-unstyled">
+                            <li><a href="{{ url('user_sign_in') }}" title="{{ 'user.sign_up.page.link.title.sign_in'|trans }}">{{ 'user.sign_up.page.link.anchor.sign_in'|trans }}</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock content %}

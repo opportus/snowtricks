@@ -1,0 +1,85 @@
+{% for comment in comments %}
+    <li id="{{ comment.id }}" class="trick-comment-list-item col-12 mt-4"
+        data-url="{{ url('trick_comment_list_ajax') }}?attribute[id]={{ comment.id }}">
+        <div class="row">
+            <div class="trick-comment-list-item-gravatar col-2">
+                <img class="rounded-circle" src="{{ comment.author.gravatar }}" style="width:35px;"></img>
+            </div>
+            <div class="col-10">
+                <div class="row mb-3">
+                    {% if comment.updatedAt %}
+                        <div class="trick-comment-list-item-meta col">
+                            {{ 'trick_comment.list.item.meta.updated_at'|trans({'%author%': comment.author.username, '%updated_at%': comment.updatedAt|date()}) }}
+                        </div>
+                    {% else %}
+                        <div class="trick-comment-list-item-meta col">
+                            {{ 'trick_comment.list.item.meta.created_at'|trans({'%author%': comment.author.username, '%created_at%': comment.createdAt|date()}) }}
+                        </div>
+                    {% endif %}
+                </div>
+                <div class="row mb-3">
+                    <div class="trick-comment-list-item-body col">
+                        {{ comment.body }}
+                    </div>
+                </div>
+                <ul class="trick-comment-list-item-action mb-5 list-inline">
+                    {% if is_granted('ROLE_USER') and app.user.username != comment.author.username %}
+                        {% set editReplyActionStyle = '' %}
+                    {% else %}
+                        {% set editReplyActionStyle = 'display:none;' %}
+                    {% endif %}
+                    {% if is_granted('ROLE_USER') and app.user.username == comment.author.username %}
+                        {% set editActionStyle = '' %}
+                        {% set deleteActionStyle = '' %}
+                    {% else %}
+                        {% set editActionStyle = 'display:none;' %}
+                        {% set deleteActionStyle = 'display:none;' %}
+                    {% endif %}
+                    {% if comment.hasParent == false and comment.hasChildren %}
+                        {% set listChildrenActionStyle = '' %}
+                    {% else %}
+                        {% set listChildrenActionStyle = 'display:none;' %}
+                    {% endif %}
+                    <li class="trick-comment-list-item-action-edit-reply list-inline-item float-left" style="{{ editReplyActionStyle }}">
+                        <i class="fas fa-reply ajax-action"
+                            style="cursor:pointer;"
+                            title="{{ 'trick_comment.list.item.action.reply.title'|trans() }}"
+                            data-action="editTrickCommentReply"
+                            data-url="{{ url('trick_comment_edit_ajax') }}?attribute[thread]={{ comment.thread.id }}&attribute[parent]={{ comment.hasParent ? comment.parent.id : comment.id }}">
+                        </i>
+                    </li>
+                    <li class="trick-comment-list-item-action-edit list-inline-item float-left" style="{{ editActionStyle }}">
+                        <i class="fas fa-pencil-alt ajax-action"
+                            style="cursor:pointer;"
+                            title="{{ 'trick_comment.list.item.action.edit.title'|trans() }}"
+                            data-action="editTrickComment"
+                            data-url="{{ url('trick_comment_edit_ajax', {'id': comment.id}) }}">
+                        </i>
+                    </li>
+                    <li class="trick-comment-list-item-action-delete list-inline-item float-left" style="{{ deleteActionStyle }}">
+                        <i class="fas fa-trash ajax-action"
+                            style="cursor:pointer;"
+                            title="{{ 'trick_comment.list.item.action.delete.title'|trans() }}"
+                            data-action="deleteTrickComment"
+                            data-url="{{ url('trick_comment_delete_ajax', {'id': comment.id}) }}"
+                            data-token="{{ csrf_token('trick-comment-delete') }}">
+                        </i>
+                    </li>
+                    <li class="trick-comment-list-item-action-list-children list-inline-item float-right" style="{{ listChildrenActionStyle }}">
+                        <i class="fas fa-ellipsis-h ajax-action"
+                            style="cursor:pointer;"
+                            title="{{ 'trick_comment.list.item.action.list_children.title'|trans() }}"
+                            data-action="listTrickCommentChildren">
+                        </i>
+                    </li>
+                </ul>
+                {% if comment.hasParent == false %}
+                    <ul id="infinite-scroll-{{ random() }}"
+                        class="trick-comment-list-item-children-list row list-unstyled infinite-scroll infinite-scroll-collapsable"
+                        data-url="{{ url('trick_comment_list_ajax') }}?attribute[parent]={{ comment.id }}&order[createdAt]=ASC">
+                    </ul>
+                {% endif %}
+            </div>
+        </div>
+    </li>
+{% endfor %}

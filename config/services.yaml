@@ -3,6 +3,7 @@
 parameters:
     locale: 'en'
     app_name: 'SnowTricks'
+    form_theme: 'bootstrap_4_layout.html.twig'
 
 services:
     # default configuration for services in *this* file
@@ -29,31 +30,48 @@ services:
     # please note that last definitions always *replace* previous ones
 
     # Controller...
+    App\Controller\HomeController:
+        arguments:
+            $parameters: []
     App\Controller\UserController:
         arguments:
             $parameters:
                 sign_up:
-                    template: User/sign_up.form.html.twig
                     redirection:
-                        201: index
+                        201: home_show
                 sign_in:
-                    template: User/sign_in.form.html.twig
+                    ~
                 activate:
                     redirection:
-                        201: index
-                        403: index
-                        500: index
+                        201: home_show
+                        403: home_show
+                        500: home_show
                 request_password_reset:
-                    template: User/request_password_reset.form.html.twig
                     redirection:
-                        201: index
+                        201: home_show
                 reset_password:
-                    template: User/reset_password.form.html.twig
                     redirection:
-                        201: index
-    App\Controller\IndexController:
+                        201: home_show
+    App\Controller\TrickController:
         arguments:
-            $parameters: []
+            $parameters:
+                show:
+                    redirection:
+                        ~
+                list:
+                    redirection:
+                        ~
+                    per_page: 15
+    App\Controller\TrickCommentController:
+        arguments:
+            $parameters:
+                show:
+                    redirection:
+                        ~
+                list:
+                    redirection:
+                        ~
+                    per_page: 5
 
     # Mailer...
     App\Mailer\MailerInterface: '@App\Mailer\Mailer'
@@ -62,13 +80,13 @@ services:
             $parameters:
                 send_user_sign_up_email:
                     from: snowtricks@example.com
-                    template: User/sign_up.email.html.twig
+                    template: user/sign_up_email.html.twig
                 send_user_activation_email:
                     from: snowtricks@example.com
-                    template: User/activate.email.html.twig
+                    template: user/activate_email.html.twig
                 send_user_password_reset_email:
                     from: snowtricks@example.com
-                    template: User/reset_password.email.html.twig
+                    template: user/reset_password_email.html.twig
 
     # Validator...
     App\Validator\ValidatorInterface: '@App\Validator\Validator'

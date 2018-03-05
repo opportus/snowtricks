@@ -3,9 +3,6 @@
 namespace App\Repository;
 
 use App\Entity\UserInterface;
-use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepositoryInterface;
-use Doctrine\Common\Persistence\ObjectRepository;
-use Doctrine\Common\Collections\Selectable;
 
 /**
  * The user repository interface...
@@ -15,23 +12,15 @@ use Doctrine\Common\Collections\Selectable;
  * @author  Clément Cazaud <opportus@gmail.com>
  * @license https://github.com/opportus/snowtricks/blob/master/LICENSE.md MIT
  */
-interface UserRepositoryInterface extends ServiceEntityRepositoryInterface, ObjectRepository, Selectable
+interface UserRepositoryInterface extends EntityRepositoryInterface
 {
-    /**
-     * Finds one user by id.
-     *
-     * @param  int $id
-     * @return null|App\Entity\UserInterface
-     */
-    public function findOneById(int $id);
-
     /**
      * Finds one user by username.
      *
      * @param  string $username
      * @return null|App\Entity\UserInterface
      */
-    public function findOneByUsername(string $username);
+    public function findOneByUsername(string $username) : ?UserInterface;
 
     /**
      * Finds one user by email.
@@ -39,6 +28,6 @@ interface UserRepositoryInterface extends ServiceEntityRepositoryInterface, Obje
      * @param  string $email
      * @return null|App\Entity\UserInterface
      */
-    public function findOneByEmail(string $email);
+    public function findOneByEmail(string $email) : ?UserInterface;
 }
 

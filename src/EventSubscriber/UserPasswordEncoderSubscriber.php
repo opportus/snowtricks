@@ -73,7 +73,7 @@ class UserPasswordEncoderSubscriber implements EventSubscriber
         $encoder = $this->encoderFactory->getEncoder($user);
 
         if (($encoder instanceof BCryptPasswordEncoder) === false) {
-            $user->setSalt();
+            $user->setSalt(base64_encode(random_bytes(32)));
         }
 
         $user->setPassword(

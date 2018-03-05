@@ -3,7 +3,6 @@
 namespace App\Entity;
 
 use Symfony\Component\Security\Core\User\AdvancedUserInterface;
-use Doctrine\Common\Collections\Collection;
 
 /**
  * The user interface...
@@ -13,23 +12,8 @@ use Doctrine\Common\Collections\Collection;
  * @author  Clément Cazaud <opportus@gmail.com>
  * @license https://github.com/opportus/snowtricks/blob/master/LICENSE.md MIT
  */
-interface UserInterface extends AdvancedUserInterface, \Serializable, EntityInterface
+interface UserInterface extends EntityInterface, AdvancedUserInterface, \Serializable
 {
-    /**
-     * Gets the id.
-     *
-     * @return null|int
-     */
-    public function getId();
-
-    /**
-     * Sets the id.
-     *
-     * @param  int $id
-     * @return App\Entity\UserInterface
-     */
-    public function setId(int $id) : UserInterface;
-
     /**
      * Sets the username.
      *
@@ -43,7 +27,7 @@ interface UserInterface extends AdvancedUserInterface, \Serializable, EntityInte
      *
      * @return null|string
      */
-    public function getEmail();
+    public function getEmail() : ?string;
 
     /**
      * Sets the email.
@@ -58,7 +42,7 @@ interface UserInterface extends AdvancedUserInterface, \Serializable, EntityInte
      *
      * @return null|string
      */
-    public function getPlainPassword();
+    public function getPlainPassword() : ?string;
 
     /**
      * Sets the plain password.
@@ -79,46 +63,24 @@ interface UserInterface extends AdvancedUserInterface, \Serializable, EntityInte
     /**
      * Sets the salt.
      *
+     * @param  string $salt
      * @return App\Entity\UserInterface
      */
-    public function setSalt() : UserInterface;
+    public function setSalt(string $salt) : UserInterface;
 
     /**
-     * Gets the activation.
-     *
-     * @return null|bool
-     */
-    public function getActivation();
-
-    /**
-     * Sets the activation.
-     *
-     * @param  bool $activation
-     * @return App\Entity\UserInterface
-     */
-    public function setActivation(bool $activation) : UserInterface;
-
-    /**
-     * Gets the creation datetime.
-     *
-     * @return null|\Datetime
-     */
-    public function getCreatedAt();
-
-    /**
-     * Sets the creation datetime.
+     * Enables.
      *
      * @return App\Entity\UserInterface
      */
-    public function setCreatedAt() : UserInterface;
+    public function enable() : UserInterface;
 
     /**
-     * Sets the roles.
+     * Disables.
      *
-     * @param  array $roles
      * @return App\Entity\UserInterface
      */
-    public function setRoles(array $roles) : UserInterface;
+    public function disable() : UserInterface;
 
     /**
      * Adds a role.
@@ -147,17 +109,46 @@ interface UserInterface extends AdvancedUserInterface, \Serializable, EntityInte
     /**
      * Gets the tokens.
      *
-     * @return null|Doctrine\Common\Collections\Collection
+     * @return array
      */
-    public function getTokens();
+    public function getTokens() : array;
 
     /**
-     * Sets the tokens.
+     * Gets the activation token.
      *
-     * @param  Doctrine\Common\Colelctions\Collection $collection
+     * @return null|App\Entity\UserTokenInterface
+     */
+    public function getActivationToken() : ?UserTokenInterface;
+
+    /**
+     * Gets the password reset token.
+     *
+     * @return null|App\Entity\UserTokenInterface
+     */
+    public function getPasswordResetToken() : ?UserTokenInterface;
+    /**
+     * Adds an activation token.
+     *
      * @return App\Entity\UserInterface
      */
-    public function setTokens(Collection $collection) : UserInterface;
+    public function addActivationToken() : UserInterface;
+
+    /**
+     * Adds a password reset token.
+     *
+     * @return App\Entity\UserInterface
+     */
+    public function addPasswordResetToken() : UserInterface;
+
+    /**
+     * Gets the gravatar.
+     *
+     * @param  null|int $size
+     * @param  null|string $imageSet
+     * @param  null|string $rating
+     * @return null|string
+     */
+    public function getGravatar(?int $size = 80, ?string $imageSet = 'mm', ?string $rating = 'g') : ?string;
 
     /**
      * Returns the username.

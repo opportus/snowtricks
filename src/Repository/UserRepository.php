@@ -17,6 +17,8 @@ use Symfony\Bridge\Doctrine\RegistryInterface;
  */
 class UserRepository extends ServiceEntityRepository implements UserRepositoryInterface
 {
+    use EntityRepositoryTrait;
+
     /**
      * {@inheritdoc}
      */
@@ -29,19 +31,7 @@ class UserRepository extends ServiceEntityRepository implements UserRepositoryIn
     /**
      * {@inheritdoc}
      */
-    public function findOneById(int $id)
-    {
-        return $this->findOneBy(
-            array(
-                'id' => $id
-            )
-        );
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function findOneByUsername(string $username)
+    public function findOneByUsername(string $username) : ?UserInterface
     {
         return $this->findOneBy(
             array(
@@ -53,7 +43,7 @@ class UserRepository extends ServiceEntityRepository implements UserRepositoryIn
     /**
      * {@inheritdoc}
      */
-    public function findOneByEmail(string $email)
+    public function findOneByEmail(string $email) : ?UserInterface
     {
         return $this->findOneBy(
             array(

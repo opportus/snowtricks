@@ -19,8 +19,8 @@ security:
             form_login:
                 login_path: user_sign_in
                 check_path: user_sign_in
-                username_parameter: 'user_sign_in_form[username]'
-                password_parameter: 'user_sign_in_form[plainPassword]'
-                csrf_parameter: 'user_sign_in_form[_token]'
+                username_parameter: 'user_sign_in[username]'
+                password_parameter: 'user_sign_in[plainPassword]'
+                csrf_parameter: 'user_sign_in[_token]'
             logout:
                 path: user_sign_out

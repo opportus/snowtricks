@@ -2,10 +2,9 @@
 
 namespace App\Entity;
 
-use Doctirne\Common\Collections\Collection;
+use Doctrine\ORM\Mapping\UniqueConstraint;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
-use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
  * The user token...
@@ -15,47 +14,29 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
  * @author  Clément Cazaud <opportus@gmail.com>
  * @license https://github.com/opportus/snowtricks/blob/master/LICENSE.md MIT
  *
- * @ORM\Entity(repositoryClass="App\Repository\UserTokenRepository")
- * @ORM\Table(name="user_token")
- * @ORM\HasLifecycleCallbacks()
- *
- * @UniqueEntity(fields={"key"}, groups={"CREATE", "UPDATE"})
+ * @ORM\Entity(repositoryClass="App\Repository\UserTokenRepository", readOnly=true)
+ * @ORM\Table(name="user_token", uniqueConstraints={@UniqueConstraint(name="user_token_type_idx", columns={"user_id", "type"})})
  */
-class UserToken implements UserTokenInterface
+class UserToken extends Entity implements UserTokenInterface
 {
-    /**
-     * @var null|int $id
-     *
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="AUTO")
-     * @ORM\Column(name="id", type="integer")
-     *
-     * @Assert\NotNull(groups={"UPDATE", "DELETE"})
-     * @Assert\Type(type="integer", groups={"UPDATE", "DELETE"})
-     * @Assert\Range(min=1, groups={"UPDATE", "DELETE"})
-     */
-    protected $id;
-
     /**
      * @var null|string $key
      *
      * @ORM\Column(name="name", type="string", length=255, unique=true)
-     *
-     * @Assert\NotBlank(groups={"CREATE", "user.activate.email", "user.reset_password.email"})
-     * @Assert\Type(type="string", groups={"CREATE", "UPDATE", "user.activate.email", "user.reset_password.email"})
-     * @Assert\Length(max=255, groups={"CREATE", "UPDATE", "user.activate.email", "user.reset_password.email"})
+     * @Assert\NotBlank()
+     * @Assert\Type(type="string")
+     * @Assert\Length(max=255)
      */
     protected $key;
 
     /**
      * @var null|string $type
      *
-     * @ORM\Column(name="type", type="string", length=35)
-     *
-     * @Assert\NotBlank(groups={"CREATE"})
-     * @Assert\Type(type="string", groups={"CREATE", "UPDATE"})
-     * @Assert\Length(max=35, groups={"CREATE", "UPDATE"})
-     * @Assert\Choice(choices={"activation", "password_reset"}, groups={"CREATE", "UPDATE"})
+     * @ORM\Column(name="type", type="string", length=20)
+     * @Assert\NotBlank()
+     * @Assert\Type(type="string")
+     * @Assert\Length(max=20)
+     * @Assert\Choice(choices={"activation", "password_reset"})
      */
     protected $type;
 
@@ -63,76 +44,45 @@ class UserToken implements UserTokenInterface
      * @var null|int $ttl
      *
      * @ORM\Column(name="ttl", type="smallint")
-     *
-     * @Assert\NotNull(groups={"CREATE", "user.activate.email", "user.reset_password.email"})
-     * @Assert\Type(type="integer", groups={"CREATE", "UPDATE", "user.activate.email", "user.reset_password.email"})
-     * @Assert\Range(min=1, groups={"CREATE", "UPDATE", "user.activate.email", "user.reset_password.email"})
+     * @Assert\NotNull()
+     * @Assert\Type(type="integer")
+     * @Assert\Range(min=1, max=32767)
      */
     protected $ttl;
-
-    /**
-     * @var null|\Datetime $createdAt
-     *
-     * @ORM\Column(name="created_at", type="datetime")
-     *
-     * @Assert\NotNull(groups={"CREATE"})
-     * @Assert\Type(type="object", groups={"CREATE", "UPDATE"})
-     * @Assert\DateTime(groups={"CREATE", "UPDATE"})
-     */
-    protected $createdAt;
 
     /**
      * @var null|App\Entity\UserInterface $user
      *
      * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="tokens")
-     *
-     * @Assert\NotNull(groups={"CREATE"})
-     * @Assert\Valid(groups={"CREATE", "UPDATE"})
+     * @ORM\JoinColumn(name="user_id", referencedColumnName="id", nullable=false)
+     * @Assert\NotNull()
+     * @Assert\Valid()
      */
     protected $user;
 
     /**
-     * {@inheritdoc}
+     * Constructs the user token.
      */
-    public function getId()
+    public function __construct()
     {
-        return $this->id;
+        parent::__construct();
+
+        $this->key = rtrim(strtr(base64_encode(random_bytes(32)), '+/', '-_'), '=');
+        $this->ttl = 24;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function setId(int $id) : UserTokenInterface
-    {
-        $this->id = $id;
-
-        return $this;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getKey()
+    public function getKey() : ?string
     {
         return $this->key;
     }
 
     /**
      * {@inheritdoc}
-     *
-     * @ORM\PrePersist
      */
-    public function setKey() : UserTokenInterface
-    {
-        $this->key = rtrim(strtr(base64_encode(random_bytes(32)), '+/', '-_'), '=');
-
-        return $this;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getType()
+    public function getType() : ?string
     {
         return $this->type;
     }
@@ -150,47 +100,15 @@ class UserToken implements UserTokenInterface
     /**
      * {@inheritdoc}
      */
-    public function getTtl()
+    public function getTtl() : ?int
     {
         return $this->ttl;
     }
 
     /**
      * {@inheritdoc}
-     *
-     * @ORM\PrePersist
      */
-    public function setTtl() : UserTokenInterface
-    {
-        $this->ttl = 24;
-
-        return $this;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getCreatedAt()
-    {
-        return $this->createdAt;
-    }
-
-    /**
-     * {@inheritdoc}
-     *
-     * @ORM\PrePersist
-     */
-    public function setCreatedAt() : UserTokenInterface
-    {
-        $this->createdAt = new \Datetime();
-
-        return $this;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getUser()
+    public function getUser() : ?UserInterface
     {
         return $this->user;
     }
@@ -211,9 +129,9 @@ class UserToken implements UserTokenInterface
     public function isExpired() : bool
     {
         return
-            $this->getCreatedAt() !== null &&
-            $this->getTtl() !== null &&
-            $this->getCreatedAt()->diff(new \Datetime())->h > $this->getTtl()
+            $this->createdAt !== null &&
+            $this->ttl !== null &&
+            $this->createdAt->diff(new \DateTime())->h > $this->ttl
         ;
     }
 
@@ -222,7 +140,7 @@ class UserToken implements UserTokenInterface
      */
     public function isEqualTo(string $token) : bool
     {
-        return hash_equals((string) $this, $token);
+        return hash_equals($this->key, $token);
     }
 
     /**
@@ -230,7 +148,7 @@ class UserToken implements UserTokenInterface
      */
     public function __toString() : string
     {
-        return (string) $this->getKey();
+        return (string) $this->key;
     }
 }
 

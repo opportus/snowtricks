@@ -2,8 +2,6 @@
 
 namespace App\Entity;
 
-use Doctrine\ORM\Mapping as ORM;
-
 /**
  * The user token interface...
  *
@@ -15,40 +13,18 @@ use Doctrine\ORM\Mapping as ORM;
 interface UserTokenInterface extends EntityInterface
 {
     /**
-     * Gets the id.
-     *
-     * @return null|int
-     */
-    public function getId();
-
-    /**
-     * Sets the id.
-     *
-     * @param  int $id
-     * @return App\Entity\UserTokenInterface
-     */
-    public function setId(int $id) : UserTokenInterface;
-
-    /**
      * Gets the key.
      *
      * @return null|string
      */
-    public function getKey();
-
-    /**
-     * Sets the key.
-     *
-     * @return App\Entity\UserTokenInterface
-     */
-    public function setKey() : UserTokenInterface;
+    public function getKey() : ?string;
 
     /**
      * Gets the type.
      *
      * @return null|string
      */
-    public function getType();
+    public function getType() : ?string;
 
     /**
      * Sets the type.
@@ -63,35 +39,14 @@ interface UserTokenInterface extends EntityInterface
      *
      * @return null|int
      */
-    public function getTtl();
-
-    /**
-     * Sets the ttl.
-     *
-     * @return App\Entity\UserTokenInterface
-     */
-    public function setTtl() : UserTokenInterface;
-
-    /**
-     * Gets the creation datetime.
-     *
-     * @return null|\Datetime
-     */
-    public function getCreatedAt();
-
-    /**
-     * Sets the creation datetime.
-     *
-     * @return App\Entity\UserTokenInterface
-     */
-    public function setCreatedAt() : UserTokenInterface;
+    public function getTtl() : ?int;
 
     /**
      * Gets the user.
      *
      * @return null|App\Entity\UserInterface
      */
-    public function getUser();
+    public function getUser() : ?UserInterface;
 
     /**
      * Sets the user.
