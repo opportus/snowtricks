@@ -2,17 +2,15 @@
 
 namespace App\Controller;
 
-use App\Entity\Trick;
 use App\Entity\TrickComment;
 use App\Form\Type\TrickCommentEditType;
-use App\Exception\Http\NotFoundException;
+use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
+use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\HttpFoundation\RedirectResponse;
-use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Security\Csrf\CsrfToken;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 
 /**
  * The trick comment controller...
@@ -25,535 +23,157 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 class TrickCommentController extends Controller
 {
     /**
-     * Lists the trick comments.
+     * Gets the trick comment list.
      *
      * @param  Symfony\Component\HttpFoundation\Request $request
-     * @return Symfony\Component\HttpFoundation\Response
+     * @return array
+     * @throws Symfony\Component\HttpKernel\Exception\NotFoundHttpException
      *
-     * @Route("/ajax/trick-comment", name="trick_comment_list_ajax")
+     * @Route("/ajax/trick-comment", name="trick_comment_get_list_ajax", defaults={"_format": "json"})
      * @Method("GET")
      */
-    public function list(Request $request) : Response
+    public function getList(Request $request) : array
     {
-        try {
-            $offset   = ($request->query->getInt('page', 1) - 1) * $this->parameters['list']['per_page'];
-            $comments = $this->entityManager->getRepository(TrickComment::class)->findBy(
-                array_map(function ($value) {
-                    if ($value === '') {
-                        return null;
-
-                    } else {
-                        return $value;
-                    }
-
-                }, $request->query->get('attribute', array())),
-                $request->query->get('order', array()),
-                $this->parameters['list']['per_page'],
-                $offset
-            );
-
-            if  (empty($comments)) {
-                throw new NotFoundException();
-            }
-
-            $status = 200;
-
-        } catch (\Exception $exception) {
-            if ($exception instanceof EntityNotFoundException) {
-                $status = 404;
-
-            } else {
-                $status = 500;
-
-                $this->logger->critical(
-                    sprintf(
-                        'A %s has occured during a trick comment list action',
-                        get_class($exception)
-                    ),
-                    array(
-                        'exception' => $exception,
-                        'request'   => $request,
-                    )
-                );
-            }
-        }
-
-        // HTML response...
-        if ($request->attributes->get('_route') === 'trick_comment_list_html') {
-            if ($this->translator->getCatalogue()->has('trick_comment.list.notification.' . (string) $status)) {
-                $request->getSession()->getFlashBag()->add(
-                    $status,
-                    $this->translator->trans(
-                        'trick_comment.list.notification.' . (string) $status
-                    )
-                );
-            }
-
-            if (isset($this->parameters['list']['redirection'][$status])) {
-                return new RedirectResponse(
-                    $this->router->generate(
-                        $this->parameters['list']['redirection'][$status]
-                    )
-                );
-
-            } else {
-
-            }
-
-        // AJAX response...
-        } elseif ($request->attributes->get('_route') === 'trick_comment_list_ajax') {
-            return new JsonResponse(
-                array(
-                    'html'      => isset($exception) ? null : $this->twig->render(
-                        'trick/comment/list.html.twig',
-                        array(
-                            'comments' => $comments,
-                        )
-                    ),
-                    'exception' => isset($exception) ? (string) $exception : null,
-                ),
-                $status
-            );
-
-        // REST response...
-        } elseif ($request->attributes->get('_route') === 'trick_comment_list_rest') {
-
-        }
-    }
-
-    /**
-     * Edits the trick comment.
-     *
-     * @param  Symfony\Component\HttpFoundation\Request $request
-     * @return Symfony\Component\HttpFoundation\Response
-     *
-     * @Route("/ajax/trick-comment/edit/{id}", name="trick_comment_edit_ajax", defaults={"id": null})
-     * @Method("GET")
-     */
-    public function edit(Request $request) : Response
-    {
-        // Operation...
-        try {
-            if ($this->authorizationChecker->isGranted('ROLE_USER') === false) {
-                throw new AccessDeniedException(
-                    sprintf(
-                        'User %s has not the privilege to edit a trick comment',
-                        $this->tokenStorage->getToken()->getUser()->getUsername()
-                    )
-                );
-            }
-
-            // Edits an existing comment...
-            if ($request->attributes->getInt('id')) {
-                $comment = $this->entityManager->getRepository(TrickComment::class)
-                    ->findOneById($request->attributes->getInt('id'))
-                ;
-
-                if ($comment === null) {
-                    throw new EntityNotFoundException(
-                        sprintf(
-                            'Trick comment %s not found',
-                            $request->attributes->get('id')
-                        )
-                    );
-                }
-
-                if ($comment->getAuthor()->getId() !== $this->tokenStorage->getToken()->getUser()->getId()) {
-                    throw new AccessDeniedException(
-                        sprintf(
-                            'User %s is not the author of the trick comment %s',
-                            $this->tokenStorage->getToken()->getUser()->getUsername(),
-                            (string) $comment->getId()
-                        )
-                    );
-                }
-
-            // Edits a new comment...
-            } else {
-                $comment = new TrickComment();
-
-                if ($request->query->get('attribute')['thread']) {
-                    $thread = $this->entityManager->getRepository(Trick::class)
-                        ->findOneById((int) $request->query->get('attribute')['thread'])
-                    ;
-
-                    if ($thread === null) {
-                        throw new RequestNotValidException(
-                            sprintf(
-                                'Thread %s not found',
-                                $request->query->get('attribute')['thread']
-                            )
-                        );
-                    }
-
-                    $comment->setThread($thread);
+        $order    = $request->query->get('order', array());
+        $limit    = $this->parameters['get_list']['per_page'];
+        $offset   = ($request->query->getInt('page', 1) - 1) * $limit;
+        $criteria = array_map(
+            function ($value) {
+                if ($value === '') {
+                    return null;
 
                 } else {
-                    throw new RequestNotValidException(
-                        sprintf(
-                            'The query must contain the ID of the trick to which the new comment will be attached'
-                        )
-                    );
+                    return $value;
                 }
+            },
+            $request->query->get('attribute', array())
+        );
 
-                if ($request->query->get('attribute')['parent']) {
-                    $parent = $this->entityManager->getRepository(TrickComment::class)
-                        ->findOneById((int) $request->query->get('attribute')['parent'])
-                    ;
+        $comments = $this->entityManager->getRepository(TrickComment::class)->findBy(
+            $criteria,
+            $order,
+            $limit,
+            $offset
+        );
 
-                    if ($parent === null) {
-                        throw new RequestNotValidException(
-                            sprintf(
-                                'Trick comment parent %s not found',
-                                $request->query->get('attribute')['parent']
-                            )
-                        );
-                    }
-
-                    $comment->setParent($parent);
-                }
-            }
-
-            $form = $this->formFactory->createNamed(
-                'trick_comment_edit' . (($comment->getId() === null) ? '' : '_' . (string) $comment->getId()),
-                TrickCommentEditType::class,
-                $comment,
-                array(
-                    'action' => $comment->getId() === null
-                        ? $this->router->generate(str_replace('edit', 'create', $request->attributes->get('_route')))
-                        : $this->router->generate(str_replace('edit', 'update', $request->attributes->get('_route')), array('id' => $comment->getId()))
-                    ,
-                    'method' => $comment->getId() === null
-                        ? 'POST'
-                        : 'PATCH'
-                    ,
-                )
-            );
-
-            $status = 200;
-
-        } catch (\Exception $exception) {
-            if ($exception instanceof RequestNotValidException) {
-                $status = 400;
-
-            } elseif ($exception instanceof AccessDeniedException) {
-                $status = 403;
-
-            } elseif ($exception instanceof EntityNotFoundException) {
-                $status = 404;
-
-            } else {
-                $status = 500;
-
-                $this->logger->critical(
-                    sprintf(
-                        'A %s has occured during a trick comment edit action',
-                        get_class($exception)
-                    ),
-                    array(
-                        'exception' => $exception,
-                        'request'   => $request,
-                    )
-                );
-            }
+        if (empty($comments)) {
+            throw new NotFoundHttpException();
         }
 
-        // HTML response...
-        if ($request->attributes->get('_route') === 'trick_comment_edit_html') {
-            if ($this->translator->getCatalogue()->has('trick_comment.list.notification.' . (string) $status)) {
-                $request->getSession()->getFlashBag()->add(
-                    $status,
-                    $this->translator->trans(
-                        'trick_comment.edit.notification.' . (string) $status
-                    )
-                );
-            }
-
-            if (isset($this->parameters['edit']['redirection'][$status])) {
-                return new RedirectResponse(
-                    $this->router->generate(
-                        $this->parameters['edit']['redirection'][$status]
-                    )
-                );
-
-            } else {
-
-            }
-
-        // AJAX response...
-        } elseif ($request->attributes->get('_route') === 'trick_comment_edit_ajax') {
-            return new JsonResponse(
-                array(
-                    'html'      => isset($exception) ? null : $this->twig->render(
-                        'trick/comment/edit.html.twig',
-                        array(
-                            'form' => $form->createView(),
-                        )
-                    ),
-                    'exception' => isset($exception) ? (string) $exception : null,
-                ),
-                $status
-            );
-        }
+        return array(
+            'comments' => $comments
+        );
     }
 
     /**
-     * Creates the trick comment.
+     * Gets the trick comment.
      *
      * @param  Symfony\Component\HttpFoundation\Request $request
-     * @return Symfony\Component\HttpFoundation\Response
+     * @return array
+     * @throws Symfony\Component\HttpKernel\Exception\NotFoundHttpException
      *
-     * @Route("/ajax/trick-comment", name="trick_comment_create_ajax")
+     * @Route("/ajax/trick-comment/{id}", name="trick_comment_get_ajax", defaults={"_format": "json"})
+     * @Method("GET")
+     */
+    public function get(Request $request) : array
+    {
+        $comment = $this->entityManager->getRepository(TrickComment::class)
+            ->findOneById($request->attributes->getInt('id'))
+        ;
+
+        if ($comment === null) {
+            throw new NotFoundHttpException();
+        }
+
+        return array(
+            'comment' => $comment
+        );
+    }
+
+    /**
+     * Posts the trick comment.
+     *
+     * @param  Symfony\Component\HttpFoundation\Request $request
+     * @return array
+     * @throws Symfony\Component\HttpKernel\Exception\BadRequestHttpException
+     *
+     * @Route("/ajax/trick-comment", name="trick_comment_post_ajax", defaults={"_format": "json"})
      * @Method("POST")
+     * @Security("has_role('ROLE_USER')")
      */
-    public function create(Request $request) : Response
+    public function post(Request $request) : array
     {
-        try {
-            if ($this->authorizationChecker->isGranted('ROLE_USER') === false) {
-                throw new AccessDeniedException(
-                    sprintf(
-                        'User %s has not the privilege to create a trick comment',
-                        $this->tokenStorage->getToken()->getUser()->getUsername()
-                    )
-                );
-            }
+        $comment = new TrickComment();
 
-            $comment = new TrickComment();
+        $comment->setAuthor(
+            $this->tokenStorage->getToken()->getUser()
+        );
 
-            $comment->setAuthor(
-                $this->tokenStorage->getToken()->getUser()
+        $form = $this->formFactory->createNamed(
+            'trick_comment_edit_form',
+            TrickCommentEditType::class,
+            $comment,
+            array(
+                'action' => $this->router->generate($request->attributes->get('_route')),
+                'method' => 'POST',
+            )
+        );
+
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $this->entityManager->persist($comment);
+            $this->entityManager->flush();
+
+            return array(
+                'comment' => $comment
             );
 
-            $form = $this->formFactory->createNamed(
-                'trick_comment_edit',
-                TrickCommentEditType::class,
-                $comment,
-                array(
-                    'action' => $this->router->generate($request->attributes->get('_route')),
-                    'method' => 'POST',
-                )
-            );
-
-            $form->handleRequest($request);
-
-            if ($form->isSubmitted() && $form->isValid()) {
-                $this->entityManager->persist($form->getData());
-                $this->entityManager->flush();
-
-                $status = 201;
-
-            } else {
-                throw new RequestNotValidException(
-                    sprintf(
-                        '%s',
-                        $form->getErrors()
-                    )
-                );
-            }
-
-        } catch (\Exception $exception) {
-            if ($exception instanceof RequestNotValidException) {
-                $status = 400;
-
-            } elseif ($exception instanceof AccessDeniedException) {
-                $status = 403;
-
-            } else {
-                $status = 500;
-
-                $this->logger->critical(
-                    sprintf(
-                        'A %s has occured during a trick comment create action',
-                        get_class($exception)
-                    ),
-                    array(
-                        'exception' => $exception,
-                        'request'   => $request,
-                    )
-                );
-            }
-        }
-
-        // HTML response...
-        if ($request->attributes->get('_route') === 'trick_comment_create_html') {
-            if ($this->translator->getCatalogue()->has('trick_comment.create.notification.' . (string) $status)) {
-                $request->getSession()->getFlashBag()->add(
-                    $status,
-                    $this->translator->trans(
-                        'trick_comment.create.notification.' . (string) $status
-                    )
-                );
-            }
-
-            if (isset($this->parameters['create']['redirection'][$status])) {
-                return new RedirectResponse(
-                    $this->router->generate(
-                        $this->parameters['create']['redirection'][$status]
-                    )
-                );
-
-            } else {
-
-            }
-
-        // AJAX response...
-        } elseif ($request->attributes->get('_route') === 'trick_comment_create_ajax') {
-            return new JsonResponse(
-                array(
-                    'html'      => isset($exception) ? null : $this->twig->render(
-                        'trick/comment/edit.html.twig',
-                        array(
-                            'form' => $form->createView(),
-                        )
-                    ),
-                    'exception' => isset($exception) ? (string) $exception : null,
-                ),
-                $status
-            );
-
-        // REST response...
-        } elseif ($request->attributes->get('_route') === 'trick_comment_create_rest') {
-
+        } else {
+            throw new BadRequestHttpException((string) $form->getErrors());
         }
     }
 
     /**
-     * Updates the trick comment.
+     * Puts the trick comment.
      *
      * @param  Symfony\Component\HttpFoundation\Request $request
-     * @return Symfony\Component\HttpFoundation\Response
+     * @return array
+     * @throws Symfony\Component\HttpKernel\Exception\BadRequestHttpException
+     * @throws Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException
+     * @throws Symfony\Component\HttpKernel\Exception\NotFoundHttpException
      *
-     * @Route("/ajax/trick-comment/{id}", name="trick_comment_update_ajax")
-     * @Method("PATCH")
+     * @Route("/ajax/trick-comment/{id}", name="trick_comment_put_ajax", defaults={"_format": "json"})
+     * @Method("PUT")
+     * @Security("has_role('ROLE_USER')")
      */
-    public function update(Request $request) : Response
+    public function put(Request $request) : array
     {
-        try {
-            if ($this->authorizationChecker->isGranted('ROLE_USER') === false) {
-                throw new AccessDeniedException(
-                    sprintf(
-                        'User %s has not the privilege to update the trick comment %s',
-                        $this->tokenStorage->getToken()->getUser()->getUsername(),
-                        $request->attributes->get('id')
-                    )
-                );
-            }
+        $comment = $this->get($request)['comment'];
 
-            $comment = $this->entityManager->getRepository(TrickComment::class)
-                ->findOneById($request->attributes->getInt('id'))
-            ;
-
-            if ($comment === null) {
-                throw new EntityNotFoundException(
-                    sprintf(
-                        'Trick comment %s not found',
-                        $request->attributes->get('id')
-                    )
-                );
-            }
-
-            if ($comment->getAuthor()->getId() !== $this->tokenStorage->getToken()->getUser()->getId()) {
-                throw new AccessDeniedException(
-                    sprintf(
-                        'User %s is not the author of the trick comment %s',
-                        $this->tokenStorage->getToken()->getUser()->getUsername(),
-                        (string) $comment->getId()
-                    )
-                );
-            }
-
-            $form = $this->formFactory->createNamed(
-                'trick_comment_edit_' . (string) $comment->getId(),
-                TrickCommentEditType::class,
-                $comment,
-                array(
-                    'action' => $this->router->generate($request->attributes->get('_route'), array('id' => (string) $comment->getId())),
-                    'method' => 'PATCH',
-                )
-            );
-
-            $form->handleRequest($request);
-
-            if ($form->isSubmitted() && $form->isValid()) {
-                $this->entityManager->flush();
-
-                $status = 201;
-
-            } else {
-                throw new RequestNotValidException(
-                    sprintf(
-                        '%s',
-                        $form->getErrors()
-                    )
-                );
-            }
-
-        } catch (\Exception $exception) {
-            if ($exception instanceof RequestNotValidException) {
-                $status = 400;
-
-            } elseif ($exception instanceof AccessDeniedException) {
-                $status = 403;
-
-            } elseif ($exception instanceof EntityNotFoundException) {
-                $status = 404;
-
-            } else {
-                $status = 500;
-
-                $this->logger->critical(
-                    sprintf(
-                        'A %s has occured during a trick comment update action',
-                        get_class($exception)
-                    ),
-                    array(
-                        'exception' => $exception,
-                        'request'   => $request,
-                    )
-                );
-            }
+        if (! $this->authorizationChecker->isGranted('PUT', $comment)) {
+            throw new AccessDeniedHttpException();
         }
 
-        // HTML response...
-        if ($request->attributes->get('_route') === 'trick_comment_update_html') {
-            if ($this->translator->getCatalogue()->has('trick_comment.update.notification.' . (string) $status)) {
-                $request->getSession()->getFlashBag()->add(
-                    $status,
-                    $this->translator->trans(
-                        'trick_comment.update.notification.' . (string) $status
-                    )
-                );
-            }
+        $form = $this->formFactory->createNamed(
+            'trick_comment_edit_form_' . (string) $comment->getId(),
+            TrickCommentEditType::class,
+            $comment,
+            array(
+                'action' => $this->router->generate($request->attributes->get('_route'), array('id' => (string) $comment->getId())),
+                'method' => 'PUT',
+            )
+        );
 
-            if (isset($this->parameters['update']['redirection'][$status])) {
-                return new RedirectResponse(
-                    $this->router->generate(
-                        $this->parameters['update']['redirection'][$status]
-                    )
-                );
+        $form->handleRequest($request);
 
-            } else {
+        if ($form->isSubmitted() && $form->isValid()) {
+            $this->entityManager->flush();
 
-            }
+            return array();
 
-        // AJAX response...
-        } elseif ($request->attributes->get('_route') === 'trick_comment_update_ajax') {
-            return new JsonResponse(
-                array(
-                    'html'      => isset($exception) ? null : $this->twig->render(
-                        'trick/comment/edit.html.twig',
-                        array(
-                            'form' => $form->createView(),
-                        )
-                    ),
-                    'exception' => isset($exception) ? (string) $exception : null,
-                ),
-                $status
-            );
-
-        // REST response...
-        } elseif ($request->attributes->get('_route') === 'trick_comment_update_rest') {
-
+        } else {
+            throw new BadRequestHttpException((string) $form->getErrors());
         }
     }
 
@@ -561,119 +181,103 @@ class TrickCommentController extends Controller
      * Deletes the trick comment.
      *
      * @param  Symfony\Component\HttpFoundation\Request $request
-     * @return Symfony\Component\HttpFoundation\Response
+     * @return array
+     * @throws Symfony\Component\HttpKernel\Exception\BadRequestHttpException
+     * @throws Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException
+     * @throws Symfony\Component\HttpKernel\Exception\NotFoundHttpException
      *
-     * @Route("/ajax/trick-comment/{id}", name="trick_comment_delete_ajax")
+     * @Route("/ajax/trick-comment/{id}", name="trick_comment_delete_ajax", defaults={"_format": "json"})
      * @Method("DELETE")
+     * @Security("has_role('ROLE_USER')")
      */
-    public function delete(Request $request) : Response
+    public function delete(Request $request) : array
     {
-        try {
-            if ($this->authorizationChecker->isGranted('ROLE_USER') === false) {
-                throw new AccessDeniedException(
-                    sprintf(
-                        'User %s has not the privilege to delete the trick comment %s',
-                        $this->tokenStorage->getToken()->getUser()->getUsername(),
-                        $request->attributes->get('id')
-                    )
-                );
-            }
+        $comment = $this->get($request)['comment'];
 
-            if ($this->csrfTokenManager->isTokenValid(new CsrfToken('trick-comment-delete', $request->headers->get('x-csrf-token'))) === false) {
-                throw new AccessDeniedException(
-                    sprintf(
-                        'Token not valid'
-                    )
-                );
-            }
+        if (! $this->authorizationChecker->isGranted('DELETE', $comment)) {
+            throw new AccessDeniedHttpException();
+        }
 
-            $comment = $this->entityManager->getRepository(TrickComment::class)
-                ->findOneById($request->attributes->getInt('id'))
-            ;
+        $form = $this->formFactory->createNamed(
+            'trick_comment_edit_form_' . (string) $comment->getId(),
+            TrickCommentEditType::class,
+            $comment,
+            array(
+                'action' => $this->router->generate($request->attributes->get('_route'), array('id' => (string) $comment->getId())),
+                'method' => 'DELETE',
+            )
+        );
 
-            if ($comment === null) {
-                throw new EntityNotFoundException(
-                    sprintf(
-                        'Trick comment %s not found',
-                        $request->attributes->get('id')
-                    )
-                );
-            }
+        $form->handleRequest($request);
 
-            if ($comment->getAuthor()->getId() !== $this->tokenStorage->getToken()->getUser()->getId()) {
-                throw new AccessDeniedException(
-                    sprintf(
-                        'User %s is not the author of the trick comment %s',
-                        $this->tokenStorage->getToken()->getUser()->getUsername(),
-                        (string) $comment->getId()
-                    )
-                );
-            }
-
+        if ($form->isSubmitted() && $form->isValid()) {
             $this->entityManager->remove($comment);
             $this->entityManager->flush();
 
-            $status = 204;
+            return array();
 
-        } catch (\Exception $exception) {
-            if ($exception instanceof AccessDeniedException) {
-                $status = 403;
-
-            } elseif ($exception instanceof EntityNotFoundException) {
-                $status = 404;
-
-            } else {
-                $status = 500;
-
-                $this->logger->critical(
-                    sprintf(
-                        'A %s has occured during a trick comment delete action',
-                        get_class($exception)
-                    ),
-                    array(
-                        'exception' => $exception,
-                        'request'   => $request,
-                    )
-                );
-            }
+        } else {
+            throw new BadRequestHttpException((string) $form->getErrors());
         }
+    }
 
-        // HTML response...
-        if ($request->attributes->get('_route') === 'trick_comment_delete_html') {
-            if ($this->translator->getCatalogue()->has('trick_comment.delete.notification.' . (string) $status)) {
-                $request->getSession()->getFlashBag()->add(
-                    $status,
-                    $this->translator->trans(
-                        'trick_comment.delete.notification.' . (string) $status
-                    )
-                );
-            }
+    /**
+     * Gets the trick comment edit form.
+     *
+     * @param  Symfony\Component\HttpFoundation\Request $request
+     * @return array
+     * @throws Symfony\Component\HttpKernel\Exception\NotFoundHttpException
+     *
+     * @Route("/ajax/trick-comment/edit-form/{id}", name="trick_comment_get_edit_form_ajax", defaults={"_format": "json"})
+     * @Method("GET")
+     */
+    public function getEditForm(Request $request) : array
+    {
+        $comment = $this->get($request)['comment'];
+        $form    = $this->formFactory->createNamed(
+            'trick_comment_edit_form_' . (string) $comment->getId(),
+            TrickCommentEditType::class,
+            $comment,
+            array(
+                'action' => $this->router->generate(str_replace('get_edit_form', 'put', $request->attributes->get('_route')), array('id' => $comment->getId())),
+                'method' => 'PUT',
+            )
+        );
 
-            if (isset($this->parameters['delete']['redirection'][$status])) {
-                return new RedirectResponse(
-                    $this->router->generate(
-                        $this->parameters['delete']['redirection'][$status]
-                    )
-                );
+        return array(
+            'form' => $form->createView()
+        );
+    }
 
-            } else {
-                return new Response(null, $status);
-            }
+    /**
+     * Gets the new trick comment edit form.
+     *
+     * @param  Symfony\Component\HttpFoundation\Request $request
+     * @return array
+     *
+     * @Route("/ajax/trick-comment/edit-form", name="trick_comment_get_new_edit_form_ajax", defaults={"_format": "json"})
+     * @Method("GET")
+     */
+    public function getNewEditForm(Request $request) : array
+    {
+        $form = $this->formFactory->createNamed(
+            'trick_comment_edit_form',
+            TrickCommentEditType::class,
+            null,
+            array(
+                'action' => $this->router->generate(str_replace('get_new_edit_form', 'post', $request->attributes->get('_route'))),
+                'method' => 'POST',
+            )
+        );
 
-        // AJAX response...
-        } elseif ($request->attributes->get('_route') === 'trick_comment_delete_ajax') {
-            return new JsonResponse(
-                array(
-                    'html'      => null,
-                    'exception' => isset($exception) ? (string) $exception : null,
-                ),
-                $status
-            );
+        $form->submit(array(
+            'thread' => $request->query->get('attribute')['thread'],
+            'parent' => $request->query->get('attribute', '')['parent'],
+        ));
 
-        // REST response...
-        } elseif ($request->attributes->get('_route') === 'trick_comment_update_rest') {
-
-        }
+        return array(
+            'form' => $form
+        );
     }
 }
 

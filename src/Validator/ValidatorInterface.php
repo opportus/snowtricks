@@ -2,8 +2,8 @@
 
 namespace App\Validator;
 
-use App\Entity\EntityInterface;
-use Symfony\Component\Validator\ConstraintViolationListInterface;
+use Symfony\Component\Validator\Validator\ValidatorInterface as SymfonyValidatorInterface;
+use Symfony\Component\Validator\Exception\ValidatorException;
 
 /**
  * The validator interface...
@@ -13,36 +13,26 @@ use Symfony\Component\Validator\ConstraintViolationListInterface;
  * @author  Clément Cazaud <opportus@gmail.com>
  * @license https://github.com/opportus/snowtricks/blob/master/LICENSE.md MIT
  */
-interface ValidatorInterface
+interface ValidatorInterface extends SymfonyValidatorInterface
 {
     /**
-     * Validates the entity.
+     * Validates by throwing an exception.
      *
-     * @param  App\Entity\EntityInterface $entity
+     * @param  mixed $value
      * @param  null|array|Symfony\Component\Validator\Constraint $constraints
      * @param  null|array $groups
-     * @return Symfony\Component\Validator\ConstraintViolationListInterface
+     * @throws mixed
      */
-    public function validate(EntityInterface $entity, $constraints = null, $groups = null) : ConstraintViolationListInterface;
+    public function validateWithException($value, $constraints = null, $groups = null, string $exception = ValidatorException::class);
 
     /**
-     * Validates the entity by throwing an exception if it's not valid.
+     * Validates by throwing an exception and logs.
      *
-     * @param  App\Entity\EntityInterface $entity
+     * @param  mixed $value
      * @param  null|array|Symfony\Component\Validator\Constraint $constraints
      * @param  null|array $groups
-     * @throws App\Exception\EntityNotValidException
+     * @throws mixed
      */
-    public function validateWithException(EntityInterface $entity, $constraints = null, $groups = null);
-
-    /**
-     * Validates the entity by throwing an exception and logging if it's not valid.
-     *
-     * @param  App\Entity\EntityInterface $entity
-     * @param  null|array|Symfony\Component\Validator\Constraint $constraints
-     * @param  null|array $groups
-     * @throws App\Exception\EntityNotValidException
-     */
-    public function validateWithExceptionAndLog(EntityInterface $entity, $constraints = null, $groups = null);
+    public function validateWithExceptionAndLog($value, $constraints = null, $groups = null, string $exception = ValidatorException::class);
 }
 

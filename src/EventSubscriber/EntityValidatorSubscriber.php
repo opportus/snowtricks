@@ -2,21 +2,19 @@
 
 namespace App\EventSubscriber;
 
-use App\Entity\EntityInterface;
 use App\Validator\ValidatorInterface;
-use Psr\Log\LoggerInterface;
 use Doctrine\Common\EventSubscriber;
 use Doctrine\Common\Persistence\Event\LifecycleEventArgs;
 
 /**
- * The validator subscriber...
+ * The entity validator subscriber...
  *
  * @version 0.0.1
  * @package App\EventSubscriber
  * @author  Clément Cazaud <opportus@gmail.com>
  * @license https://github.com/opportus/snowtricks/blob/master/LICENSE.md MIT
  */
-class ValidatorSubscriber implements EventSubscriber
+class EntityValidatorSubscriber implements EventSubscriber
 {
     /**
      * @var App\Validator\ValidatorInterface $validator
@@ -24,20 +22,13 @@ class ValidatorSubscriber implements EventSubscriber
     protected $validator;
 
     /**
-     * @var Psr\Log\LoggerInterface $logger
-     */
-    protected $logger;
-
-    /**
      * Constructs the validator subscriber.
      *
      * @param App\Validator\ValidatorInterface $validator
-     * @param Psr\Log\LoggerInterface $logger
      */
-    public function __construct(ValidatorInterface $validator, LoggerInterface $logger)
+    public function __construct(ValidatorInterface $validator)
     {
         $this->validator = $validator;
-        $this->logger    = $logger;
     }
 
     /**
@@ -55,7 +46,8 @@ class ValidatorSubscriber implements EventSubscriber
     /**
      * Validates entity before CREATE operation.
      *
-     * @param Doctrine\Common\Persistence\Event\LifecycleEventArgs $args
+     * @param  Doctrine\Common\Persistence\Event\LifecycleEventArgs $args
+     * @throws Symfony\Component\Validator\Exception\ValidatorException
      */
     public function prePersist(LifecycleEventArgs $args)
     {
@@ -65,7 +57,8 @@ class ValidatorSubscriber implements EventSubscriber
     /**
      * Validates entity before UPDATE operation.
      *
-     * @param Doctrine\Common\Persistence\Event\LifecycleEventArgs $args
+     * @param  Doctrine\Common\Persistence\Event\LifecycleEventArgs $args
+     * @throws Symfony\Component\Validator\Exception\ValidatorException
      */
     public function preUpdate(LifecycleEventArgs $args)
     {
@@ -75,7 +68,8 @@ class ValidatorSubscriber implements EventSubscriber
     /**
      * Validates entity before DELETE operation.
      *
-     * @param Doctrine\Common\Persistence\Event\LifecycleEventArgs $args
+     * @param  Doctrine\Common\Persistence\Event\LifecycleEventArgs $args
+     * @throws Symfony\Component\Validator\Exception\ValidatorException
      */
     public function preDelete(LifecycleEventArgs $args)
     {
