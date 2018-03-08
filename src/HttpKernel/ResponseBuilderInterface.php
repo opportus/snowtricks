@@ -2,7 +2,6 @@
 
 namespace App\HttpKernel;
 
-use Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent;
 use Symfony\Component\HttpKernel\Event\GetResponseForControllerResultEvent;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -17,19 +16,11 @@ use Symfony\Component\HttpFoundation\Response;
 interface ResponseBuilderInterface
 {
     /**
-     * Builds the response from GetResponseForExceptionEvent.
-     *
-     * @param  Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent $event
-     * @return Symfony\Component\HttpFoundation\Response
-     */
-    public function buildFromGetResponseForExceptionEvent(GetResponseForExceptionEvent $event) : Response;
-
-    /**
-     * Builds the response from GetResponseForControllerResultEvent.
+     * Builds the response from the GetResponseForControllerResultEvent.
      *
      * @param  Symfony\Component\HttpKernel\Event\GetResponseForControllerResultEvent $event
      * @return Symfony\Component\HttpFoundation\Response
      */
-    public function buildFromGetResponseForControllerResultEvent(GetResponseForControllerResultEvent $event) : Response;
+    public function buildResponseFromGetResponseForControllerResultEvent(GetResponseForControllerResultEvent $event) : Response;
 }
 

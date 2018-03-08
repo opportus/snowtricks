@@ -2,9 +2,11 @@
 
 namespace App\Controller;
 
+use App\HttpKernel\ControllerResult;
+use App\HttpKernel\ControllerResultInterface;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Annotation\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 
 /**
  * The home controller...
@@ -17,20 +19,17 @@ use Symfony\Component\Routing\Annotation\Route;
 class HomeController extends Controller
 {
     /**
-     * Shows the home page.
+     * Gets the home page.
      *
      * @param  Symfony\Component\HttpFoundation\Request $request
-     * @return Symfony\Component\HttpFoundation\Response
+     * @return App\HttpKernel\ControllerResultInterface
      *
-     * @Route("/", name="home_show")
+     * @Route("/", name="home_get")
+     * @Method("GET")
      */
-    public function show(Request $request)
+    public function get(Request $request) : ControllerResultInterface
     {
-        return new Response(
-            $this->twig->render(
-                'home/show.html.twig'
-            )
-        );
+        return new ControllerResult(200);
     }
 }
 

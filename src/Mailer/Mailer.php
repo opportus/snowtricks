@@ -7,9 +7,9 @@ use App\Validator\ValidatorInterface;
 use Symfony\Component\Translation\TranslatorInterface;
 use Symfony\Component\Routing\RouterInterface;
 use Psr\Log\LoggerInterface;
-use \Swift_Mailer;
-use \Swift_Message;
-use \Twig_Environment;
+use Swift_Mailer;
+use Swift_Message;
+use Twig_Environment;
 
 /**
  * The mailer...

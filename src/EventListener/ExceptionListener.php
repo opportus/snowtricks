@@ -2,9 +2,13 @@
 
 namespace App\EventListener;
 
-use App\HttpKernel\ExceptionConverterInterface;
-use App\HttpKernel\ResponseBuilderInterface;
+use App\HttpKernel\ExceptionHandlerInterface;
+use App\HttpKernel\ControllerResult;
+use App\HttpKernel\ControllerResultInterface;
 use Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent;
+use Symfony\Component\HttpKernel\Event\GetResponseForControllerResultEvent;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Symfony\Component\HttpKernel\Events;
 
 /**
  * The exception listener...
@@ -17,28 +21,25 @@ use Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent;
 class ExceptionListener
 {
     /**
-     * @var App\HttpKernel\ExceptionConverterInterface $exceptionConverter
+     * @var App\HttpKernel\ExceptionHandlerInterface $exceptionHandler
      */
-    protected $exceptionConverter;
+    protected $exceptionHandler;
 
     /**
-     * @var App\HttpKernel\ResponseBuilderInterface $responseBuilder
+     * @var Symfony\Component\EventDispatcher\EventDispatcherInterface $eventDispatcher
      */
-    protected $responseBuilder;
+    protected $eventDispatcher;
 
     /**
      * Constructs the exception listener.
      *
-     * @param App\HttpKernel\ExceptionConverterInterface $exceptionConverter
-     * @param App\HttpKernel\ResponseGeneratorInterface $responseBuilder
+     * @param App\HttpKernel\ExceptionHandlerInterface $exceptionHandler
+     * @param Symfony\Component\EventDispatcher\EventDispatcherInterface $eventDispatcher
      */
-    public function __construct(
-        ExceptionConverterInterface $exceptionConverter,
-        ResponseBuilderInterface    $responseBuilder
-    )
+    public function __construct(ExceptionHandlerInterface $exceptionHandler, EventDispatcherInterface $eventDispatcher)
     {
-        $this->exceptionConverter = $exceptionConverter;
-        $this->responseBuilder    = $responseBuilder;
+        $this->exceptionHandler = $exceptionHandler;
+        $this->eventDispatcher  = $eventDispatcher;
     }
 
     /**
@@ -49,12 +50,26 @@ class ExceptionListener
     public function onKernelException(GetResponseForExceptionEvent $event)
     {
         $event->setException(
-            $this->exceptionConverter->convert($event->getException())
+            $this->exceptionHandler->handleException($event->getException())
         );
 
-        $event->setResponse(
-            $this->responseBuilder->buildFromGetResponseForExceptionEvent($event)
-        );
+        if ($event->getException()->getStatusCode()[0] === 4) {
+            $viewEvent = new GetResponseForControllerResultEvent(
+                $event->getKernel(),
+                $event->getRequest(),
+                $event->getRequestType(),
+                new ControllerResult(
+                    $event->getException()->getStatusCode(),
+                    array('exception' => $event->getException())
+                )
+            );
+
+            $this->eventDispatcher->dispatch(Events::VIEW, $viewEvent);
+
+            $event->setResponse(
+                $viewEvent->getResponse()
+            );
+        }
     }
 }
 

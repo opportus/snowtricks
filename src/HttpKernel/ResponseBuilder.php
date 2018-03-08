@@ -2,12 +2,12 @@
 
 namespace App\HttpKernel;
 
-use Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent;
-use Symfony\Component\HttpKernel\Event\GetResponseForControllerResultEvent;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpKernel\Event\GetResponseForControllerResultEvent;
+use Symfony\Component\Routing\RouterInterface;
 use Twig_Environment;
 
 /**
@@ -26,6 +26,11 @@ class ResponseBuilder implements ResponseBuilderInterface
     protected $parameters;
 
     /**
+     * @var Symfony\Component\Routing\RouterInterface $router
+     */
+    protected $router;
+
+    /**
      * @var Twig_Environment $twig
      */
     protected $twig;
@@ -34,81 +39,85 @@ class ResponseBuilder implements ResponseBuilderInterface
      * Constructs the response builder.
      *
      * @param array $parameters
+     * @param Symfony\Component\Routing\RouterInterface $router
      * @param Twig_Environment $twig
      */
-    public function __construct(array $parameters, Twig_Environment $twig)
+    public function __construct(array $parameters, RouterInterface $router, Twig_Environment $twig)
     {
         $this->parameters = $parameters;
+        $this->router     = $router;
         $this->twig       = $twig;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function buildFromGetResponseForExceptionEvent(GetResponseForExceptionEvent $event) : Response
+    public function buildResponseFromGetResponseForControllerResultEvent(GetResponseForControllerResultEvent $event) : Response
     {
-        $status = $event->getException()->getStatusCode();
         $format = $event->getRequest()->getRequestFormat();
+        $status = $event->getControllerResult()->getStatusCode();
 
-        if (isset($this->parameters[$action->getSnakeName()]['template'][$format])) {
-            $template = $this->parameters[$action->getSnakeName()]['template'][$format];
+        $parameters = $this->getRequestParameters($event->getRequest());
+
+        if (isset($parameters[$format][$status]['redirection'])) {
+            $redirection = $parameters[$format][$status]['redirection'];
+
+        } elseif ($event->getControllerResult()->getRedirection()) {
+            $redirection = $event->getControllerResult()->getRedirection();
         }
 
-        if (isset($this->parameters[$action->getSnakeName()]['redirection'][$format][$status])) {
-            $redirection = $this->parameters[$action->getSnakeName()]['redirection'][$format][$status];
-        }
-
-        // Redirect response...
         if (isset($redirection)) {
-            $response = new RedirectResponse(
-                $this->router->generate($redirection)
+            return new RedirectResponse(
+                $this->router->generate($redirection),
+                $status[0] === 3 ? $status : 302
             );
-
-        } elseif ($status === 303) {
-            $response = new RedirectResponse(
-                $action->getRequest()->headers->get('Location')
-            );
-
-        // HTML response...
-        } elseif ($format === 'html') {
-            if (isset($template)) {
-                $response = new Response(
-                    $this->twig->render(
-                        $template,
-                        $action->getOperationResults()
-                    ),
-                    $status
-                );
-            }
-
-        // JSON response...
-        } elseif ($format === 'json') {
-            if (isset($template)) {
-                $response = new JsonResponse(
-                    array(
-                        'html' => $this->twig->render(
-                            $template,
-                            $action->getOperationResults()
-                        ),
-                        'exception' => $action->getException(),
-                    ),
-                    $status
-                );
-
-            } else {
-                // Serialize operation results to JSON...
-            }
         }
 
-        return $action->setResponse($response);
+        if (isset($parameters[$format][$status]['template'])) {
+            $template = $parameters[$format][$status]['template'];
+            $content  = $this->twig->render(
+                $template,
+                $event->getControllerResult()->getData()
+            );
+
+        } else {
+            $content = $event->getControllerResult()->getData();
+        }
+
+        if ($format === 'html') {
+            return new Response(
+                $content,
+                $status
+            );
+
+        } else {
+            return new JsonResponse(
+                $content,
+                $status
+            );
+        }
     }
 
     /**
-     * {@inheritdoc}
+     * Gets the request parameters.
+     *
+     * @param  Symfony\Component\HttpFoundation\Request $request
+     * @return array
      */
-    public function buildFromGetResponseForControllerResultEvent(GetResponseForControllerResultEvent $event) : Response
+    private function getRequestParameters(Request $request) : array
     {
+        $fqAction = $request->attributes->get('_controller');
 
+        $controller = substr($fqAction, 0, strpos($fqAction, ':'));
+        $controller = strtolower(preg_replace('/(?<!^)[A-Z]/', '_$0', $controller));
+
+        $action = substr($fqAction, strpos($fqAction, ':') + 1);
+        $action = strtolower(preg_replace('/(?<!^)[A-Z]/', '_$0', $action));
+
+        return isset($this->parameters[$controller][$action])
+            ? $this->parameters[$controller][$action]
+            : array()
+        ;
     }
 }
 

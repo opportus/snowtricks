@@ -52,8 +52,9 @@ class RequestListener
     {
         $action      = $event->getRequest()->attributes->get('_controller');
         $constraints = array(
-            'App\Controller\TrickCommentController::getList'        => 'GetTrickCommentListQuery',
-            'App\Controller\TrickCommentController::getNewEditForm' => 'GetTrickCommentNewEditFormQuery',
+            'App\Controller\TrickCommentController:getList'        => 'GetTrickCommentListQuery',
+            'App\Controller\TrickCommentController:getNewEditForm' => 'GetTrickCommentNewEditFormQuery',
+            'App\Controller\TrickController:getList'               => 'GetTrickListQuery',
         );
 
         if (array_key_exists($action, $constraints)) {

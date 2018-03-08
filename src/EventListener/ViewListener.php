@@ -35,10 +35,10 @@ class ViewListener
      *
      * @param Symfony\Component\HttpKernel\Event\GetResponseForControllerResultEvent $event
      */
-    public function onKernelException(GetResponseForControllerResultEvent $event)
+    public function onKernelView(GetResponseForControllerResultEvent $event)
     {
         $event->setResponse(
-            $this->responseBuilder->buildFromGetResponseForControllerResultEvent($event)
+            $this->responseBuilder->buildResponseFromGetResponseForControllerResultEvent($event)
         );
     }
 }
