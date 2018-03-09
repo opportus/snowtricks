@@ -44,8 +44,8 @@ class File extends Entity implements FileInterface
     /**
      * @var null|Symfony\Component\HttpFoundation\File\File $fileManager
      *
-     * @Assert\NotBlank(groups={"uploaded_file.edit.form"})
-     * @Assert\File(mimeTypes={"image/png", "image/jpeg", "image/gif", "video/mp4"}, groups={"uploaded_file.edit.form"})
+     * @Assert\NotBlank()
+     * @Assert\File(mimeTypes={"image/png", "image/jpeg", "image/gif", "video/mp4"})
      */
     protected $fileManager;
 

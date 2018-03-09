@@ -25,9 +25,9 @@ class TrickVersion extends Entity implements TrickVersionInterface
      * @var null|string $title
      *
      * @ORM\Column(name="title", type="string", length=255)
-     * @Assert\NotBlank(groups={"trick_version.edit.form"})
-     * @Assert\Type(type="string", groups={"trick_version.edit.form"})
-     * @Assert\Length(max=255, groups={"trick_version.edit.form"})
+     * @Assert\NotBlank()
+     * @Assert\Type(type="string")
+     * @Assert\Length(max=255)
      */
     protected $title;
 
@@ -35,9 +35,9 @@ class TrickVersion extends Entity implements TrickVersionInterface
      * @var null|string $description
      *
      * @ORM\Column(name="description", type="string", length=255)
-     * @Assert\NotBlank(groups={"trick_version.edit.form"})
-     * @Assert\Type(type="string", groups={"trick_version.edit.form"})
-     * @Assert\Length(max=255, groups={"trick_version.edit.form"})
+     * @Assert\NotBlank()
+     * @Assert\Type(type="string")
+     * @Assert\Length(max=255)
      */
     protected $description;
 
@@ -45,9 +45,9 @@ class TrickVersion extends Entity implements TrickVersionInterface
      * @var null|string $body
      *
      * @ORM\Column(name="body", type="text")
-     * @Assert\NotBlank(groups={"trick_version.edit.form"})
-     * @Assert\Type(type="string", groups={"trick_version.edit.form"})
-     * @Assert\Length(max=64512, groups={"trick_version.edit.form"})
+     * @Assert\NotBlank()
+     * @Assert\Type(type="string")
+     * @Assert\Length(max=64512)
      */
     protected $body;
 
@@ -73,8 +73,8 @@ class TrickVersion extends Entity implements TrickVersionInterface
      *
      * @ORM\ManyToOne(targetEntity="App\Entity\TrickGroup")
      * @ORM\JoinColumn(name="group_id", referencedColumnName="id", nullable=false)
-     * @Assert\NotNull(groups={"trick_version.edit.form"})
-     * @Assert\Valid(groups={"trick_version.edit.form"})
+     * @Assert\NotNull()
+     * @Assert\Valid()
      */
     protected $group;
 

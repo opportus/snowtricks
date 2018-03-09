@@ -5,6 +5,75 @@ parameters:
     app_name: 'SnowTricks'
     form_theme: 'bootstrap_4_layout.html.twig'
 
+    # Request parameters
+    request_parameters:
+
+        # Trick
+        trick_get:
+            template: 'trick/trick.html.twhig'
+            form_options: ~
+
+        trick_get_list:
+            template: '/trick/trick_list.html.twig'
+            form_options: ~
+
+        trick_delete:
+            template: ~
+            form_options:
+                action: 'trick_delete'
+                method: 'DELETE'
+                validation_groups: ['trick.delete.form']
+                csrf_protection: true,
+                csrf_field_name: '_token'
+                csrf_token_id: 'security'
+
+        # Trick Comment
+        trick_comment_get:
+            template: ~
+            form_options: ~
+
+        trick_comment_get_list:
+            template: '/trick/comment/trick_comment_list.html.twig'
+            form_options: ~
+
+        trick_comment_post:
+            template: ~
+            form_options:
+                action: 'trick_comment_post'
+                method: 'POST'
+                validation_groups: ['trick_comment.post.form']
+                csrf_protection: true,
+                csrf_field_name: '_token'
+                csrf_token_id: 'security'
+
+        trick_comment_put:
+            template: ~
+            form_options:
+                action: 'trick_comment_put'
+                method: 'PUT'
+                validation_groups: ['trick_comment.put.form']
+                csrf_protection: true,
+                csrf_field_name: '_token'
+                csrf_token_id: 'security'
+
+        trick_comment_delete:
+            template: ~
+            form_options:
+                action: 'trick_comment_delete'
+                method: 'DELETE'
+                validation_groups: ['trick_comment.delete.form']
+                csrf_protection: true,
+                csrf_field_name: '_token'
+                csrf_token_id: 'security'
+
+        trick_comment_get_form:
+            template: 'trick/comment/trick_comment_form'
+            form_options: ~
+
+        trick_comment_get_new_form:
+            template: 'trick/comment/trick_comment_form'
+            form_options: ~
+
 services:
     # default configuration for services in *this* file
     _defaults:
@@ -32,46 +101,20 @@ services:
     # Controller...
     App\Controller\HomeController:
         arguments:
-            $parameters: []
+            $parameters:
+                '%request_parameters%'
     App\Controller\UserController:
         arguments:
             $parameters:
-                sign_up:
-                    redirection:
-                        201: home_show
-                sign_in:
-                    ~
-                activate:
-                    redirection:
-                        201: home_show
-                        403: home_show
-                        500: home_show
-                request_password_reset:
-                    redirection:
-                        201: home_show
-                reset_password:
-                    redirection:
-                        201: home_show
+                '%request_parameters%'
     App\Controller\TrickController:
         arguments:
             $parameters:
-                show:
-                    redirection:
-                        ~
-                list:
-                    redirection:
-                        ~
-                    per_page: 15
+                '%request_parameters%'
     App\Controller\TrickCommentController:
         arguments:
             $parameters:
-                show:
-                    redirection:
-                        ~
-                list:
-                    redirection:
-                        ~
-                    per_page: 5
+                '%request_parameters%'
 
     # Mailer...
     App\Mailer\MailerInterface: '@App\Mailer\Mailer'
@@ -93,6 +136,8 @@ services:
     App\Validator\Validator:
         arguments:
             $parameters: []
+
+    # Event listener...
 
     # Event subscriber...
     App\EventSubscriber\UserPasswordEncoderSubscriber:

@@ -3,17 +3,11 @@
 namespace App\Controller;
 
 use App\Entity\Trick;
-use App\Entity\TrickComment;
-use App\Form\Type\TrickCommentEditType;
 use App\HttpKernel\ControllerResult;
 use App\HttpKernel\ControllerResultInterface;
-use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
-use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpFoundation\Request;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 
 /**
  * The trick controller...
@@ -30,9 +24,8 @@ class TrickController extends Controller
      *
      * @param  Symfony\Component\HttpFoundation\Request $request
      * @return App\HttpKernel\ControllerResultInterface
-     * @throws Symfony\Component\HttpKernel\Exception\NotFoundHttpException
      *
-     * @Route("/ajax/trick", name="trick_get_list_ajax", defaults={"_format": "json"})
+     * @Route("/trick", name="trick_get_list")
      * @Method("GET")
      */
     public function getList(Request $request) : ControllerResultInterface
@@ -60,7 +53,7 @@ class TrickController extends Controller
         );
 
         if (empty($tricks)) {
-            throw new NotFoundHttpException();
+            return new ControllerResult(404);
         }
 
         $data = array(
@@ -75,9 +68,8 @@ class TrickController extends Controller
      *
      * @param  Symfony\Component\HttpFoundation\Request $request
      * @return App\HttpKernel\ControllerResultInterface
-     * @throws Symfony\Component\HttpKernel\Exception\NotFoundHttpException
      *
-     * @Route("/trick/{slug}", name="trick_get", defaults={"_format": "html"})
+     * @Route("/trick/{slug}", name="trick_get")
      * @Method("GET")
      */
     public function get(Request $request) : ControllerResultInterface
@@ -87,28 +79,11 @@ class TrickController extends Controller
         ;
 
         if ($trick === null) {
-            throw new NotFoundHttpException();
-        }
-
-        if ($this->authorizationChecker->isGranted('ROLE_USER')) {
-            $comment = new TrickComment();
-
-            $comment->setThread($trick);
-
-            $commentForm = $this->formFactory->createNamed(
-                'trick_comment_edit_form',
-                TrickCommentEditType::class,
-                $comment,
-                array(
-                    'action' => $this->router->generate('trick_comment_post_ajax'),
-                    'method' => 'POST',
-                )
-            );
+            return new ControllerResult(404);
         }
 
         $data = array(
-            'trick'       => $trick,
-            'commentForm' => $commentForm
+            'trick' => $trick,
         );
 
         return new ControllerResult(200, $data);
@@ -119,13 +94,9 @@ class TrickController extends Controller
      *
      * @param  Symfony\Component\HttpFoundation\Request $request
      * @return App\HttpKernel\ControllerResultInterface
-     * @throws Symfony\Component\HttpKernel\Exception\BadRequestHttpException
-     * @throws Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException
-     * @throws Symfony\Component\HttpKernel\Exception\NotFoundHttpException
      *
-     * @Route("/ajax/trick/{slug}", name="trick_delete_ajax", defaults={"_format": "json"})
+     * @Route("/trick/{slug}", name="trick_delete")
      * @Method("DELETE")
-     * @Security("has_role('ROLE_USER')")
      */
     public function delete(Request $request) : ControllerResultInterface
     {
@@ -134,20 +105,13 @@ class TrickController extends Controller
         ;
 
         if ($trick === null) {
-            throw new NotFoundHttpException();
-        }
-
-        if (! $this->authorizationChecker->isGranted('DELETE', $trick)) {
-            throw new AccessDeniedHttpException();
+            return new ControllerResult(404);
         }
 
         $form = $this->formFactory->create(
-            FormType::class,
-            $trick,
-            array(
-                'action' => $this->router->generate($request->attributes->get('_route'), array('slug' => $trick->getSlug())),
-                'method' => 'DELETE',
-            )
+            TrickCommentType::class,
+            $comment,
+            $this->parameters[$request->attributes->get('_route')]['form_options']
         );
 
         $form->handleRequest($request);
@@ -156,10 +120,18 @@ class TrickController extends Controller
             $this->entityManager->remove($trick);
             $this->entityManager->flush();
 
-            return new ControllerResult(204);
+            $data = array(
+                'trick' => $trick,
+            );
 
-        } else {
-            throw new BadRequestHttpException((string) $form->getErrors());
+            return new ControllerResult(204, $data);
+
+        } elseif ($form->isSubmitted()) {
+            $data = array(
+                'form' => $form->createView(),
+            );
+
+            return new ControllerResult(400, $data);
         }
     }
 }

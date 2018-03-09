@@ -35,9 +35,9 @@ class TrickAttachment extends Entity implements TrickAttachmentInterface
      * @var null|string $title
      *
      * @ORM\Column(name="title", type="string", length=255)
-     * @Assert\NotBlank(groups={"trick_attachment.edit.form"})
-     * @Assert\Type(type="string", groups={"trick_attachment.edit.form"})
-     * @Assert\Length(max=255, groups={"trick_attachment.edit.form"})
+     * @Assert\NotBlank()
+     * @Assert\Type(type="string")
+     * @Assert\Length(max=255)
      */
     protected $title;
 
@@ -45,9 +45,9 @@ class TrickAttachment extends Entity implements TrickAttachmentInterface
      * @var null|string $alt
      *
      * @ORM\Column(name="alt", type="string", length=255)
-     * @Assert\NotBlank(groups={"trick_attachment.edit.form"})
-     * @Assert\Type(type="string", groups={"trick_attachment.edit.form"})
-     * @Assert\Length(max=255, groups={"trick_attachment.edit.form"})
+     * @Assert\NotBlank()
+     * @Assert\Type(type="string")
+     * @Assert\Length(max=255)
      */
     protected $alt;
 

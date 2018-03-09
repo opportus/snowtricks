@@ -33,20 +33,5 @@ interface ControllerResultInterface
      * @return App\HttpKernel\ControllerResultInterface
      */
     public function setData(array $data) : ControllerResultInterface;
-
-    /**
-     * Gets the redirection.
-     *
-     * @return null|string $redirection
-     */
-    public function getRedirection() : ?string;
-
-    /**
-     * Sets the redirection.
-     *
-     * @param  string $redirection
-     * @return App\HttpKernel\ControllerResultInterface
-     */
-    public function setRedirection(string $redirection) : ControllerResultInterface;
 }
 

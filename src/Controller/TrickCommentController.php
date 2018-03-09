@@ -3,16 +3,12 @@
 namespace App\Controller;
 
 use App\Entity\TrickComment;
-use App\Form\Type\TrickCommentEditType;
+use App\Form\Type\TrickCommentType;
 use App\HttpKernel\ControllerResult;
 use App\HttpKernel\ControllerResultInterface;
-use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
-use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpFoundation\Request;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 
 /**
  * The trick comment controller...
@@ -29,9 +25,8 @@ class TrickCommentController extends Controller
      *
      * @param  Symfony\Component\HttpFoundation\Request $request
      * @return App\HttpKernel\ControllerResultInterface
-     * @throws Symfony\Component\HttpKernel\Exception\NotFoundHttpException
      *
-     * @Route("/ajax/trick-comment", name="trick_comment_get_list_ajax", defaults={"_format": "json"})
+     * @Route("/trick-comment", name="trick_comment_get_list")
      * @Method("GET")
      */
     public function getList(Request $request) : ControllerResultInterface
@@ -59,7 +54,7 @@ class TrickCommentController extends Controller
         );
 
         if (empty($comments)) {
-            throw new NotFoundHttpException();
+            return new ControllerResult(404);
         }
 
         $data = array(
@@ -74,9 +69,8 @@ class TrickCommentController extends Controller
      *
      * @param  Symfony\Component\HttpFoundation\Request $request
      * @return App\HttpKernel\ControllerResultInterface
-     * @throws Symfony\Component\HttpKernel\Exception\NotFoundHttpException
      *
-     * @Route("/ajax/trick-comment/{id}", name="trick_comment_get_ajax", defaults={"_format": "json"})
+     * @Route("/trick-comment/{id}", name="trick_comment_get")
      * @Method("GET")
      */
     public function get(Request $request) : ControllerResultInterface
@@ -86,7 +80,7 @@ class TrickCommentController extends Controller
         ;
 
         if ($comment === null) {
-            throw new NotFoundHttpException();
+            return new ControllerResult(404);
         }
 
         $data = array(
@@ -101,28 +95,17 @@ class TrickCommentController extends Controller
      *
      * @param  Symfony\Component\HttpFoundation\Request $request
      * @return App\HttpKernel\ControllerResultInterface
-     * @throws Symfony\Component\HttpKernel\Exception\BadRequestHttpException
      *
-     * @Route("/ajax/trick-comment", name="trick_comment_post_ajax", defaults={"_format": "json"})
+     * @Route("/trick-comment", name="trick_comment_post")
      * @Method("POST")
-     * @Security("has_role('ROLE_USER')")
      */
     public function post(Request $request) : ControllerResultInterface
     {
         $comment = new TrickComment();
-
-        $comment->setAuthor(
-            $this->tokenStorage->getToken()->getUser()
-        );
-
-        $form = $this->formFactory->createNamed(
-            'trick_comment_edit_form',
-            TrickCommentEditType::class,
+        $form    = $this->formFactory->create(
+            TrickCommentType::class,
             $comment,
-            array(
-                'action' => $this->router->generate($request->attributes->get('_route')),
-                'method' => 'POST',
-            )
+            $this->parameters[$request->attributes->get('_route')]['form_options']
         );
 
         $form->handleRequest($request);
@@ -137,8 +120,12 @@ class TrickCommentController extends Controller
 
             return new ControllerResult(201, $data);
 
-        } else {
-            throw new BadRequestHttpException((string) $form->getErrors());
+        } elseif ($form->isSubmitted()) {
+            $data = array(
+                'form' => $form->createView(),
+            );
+
+            return new ControllerResult(400, $data);
         }
     }
 
@@ -147,13 +134,9 @@ class TrickCommentController extends Controller
      *
      * @param  Symfony\Component\HttpFoundation\Request $request
      * @return App\HttpKernel\ControllerResultInterface
-     * @throws Symfony\Component\HttpKernel\Exception\BadRequestHttpException
-     * @throws Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException
-     * @throws Symfony\Component\HttpKernel\Exception\NotFoundHttpException
      *
-     * @Route("/ajax/trick-comment/{id}", name="trick_comment_put_ajax", defaults={"_format": "json"})
+     * @Route("/trick-comment/{id}", name="trick_comment_put")
      * @Method("PUT")
-     * @Security("has_role('ROLE_USER')")
      */
     public function put(Request $request) : ControllerResultInterface
     {
@@ -162,21 +145,13 @@ class TrickCommentController extends Controller
         ;
 
         if ($comment === null) {
-            throw new NotFoundHttpException();
+            return new ControllerResult(404);
         }
 
-        if (! $this->authorizationChecker->isGranted('PUT', $comment)) {
-            throw new AccessDeniedHttpException();
-        }
-
-        $form = $this->formFactory->createNamed(
-            'trick_comment_edit_form_' . (string) $comment->getId(),
-            TrickCommentEditType::class,
+        $form = $this->formFactory->create(
+            TrickCommentType::class,
             $comment,
-            array(
-                'action' => $this->router->generate($request->attributes->get('_route'), array('id' => (string) $comment->getId())),
-                'method' => 'PUT',
-            )
+            $this->parameters[$request->attributes->get('_route')]['form_options']
         );
 
         $form->handleRequest($request);
@@ -184,10 +159,18 @@ class TrickCommentController extends Controller
         if ($form->isSubmitted() && $form->isValid()) {
             $this->entityManager->flush();
 
-            return new ControllerResult(204);
+            $data = array(
+                'comment' => $comment,
+            );
 
-        } else {
-            throw new BadRequestHttpException((string) $form->getErrors());
+            return new ControllerResult(204, $data);
+
+        } elseif ($form->isSubmitted()) {
+            $data = array(
+                'form' => $form->createView(),
+            );
+
+            return new ControllerResult(400, $data);
         }
     }
 
@@ -196,13 +179,9 @@ class TrickCommentController extends Controller
      *
      * @param  Symfony\Component\HttpFoundation\Request $request
      * @return App\HttpKernel\ControllerResultInterface
-     * @throws Symfony\Component\HttpKernel\Exception\BadRequestHttpException
-     * @throws Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException
-     * @throws Symfony\Component\HttpKernel\Exception\NotFoundHttpException
      *
-     * @Route("/ajax/trick-comment/{id}", name="trick_comment_delete_ajax", defaults={"_format": "json"})
+     * @Route("/trick-comment/{id}", name="trick_comment_delete")
      * @Method("DELETE")
-     * @Security("has_role('ROLE_USER')")
      */
     public function delete(Request $request) : ControllerResultInterface
     {
@@ -211,21 +190,13 @@ class TrickCommentController extends Controller
         ;
 
         if ($comment === null) {
-            throw new NotFoundHttpException();
+            return new ControllerResult(404);
         }
 
-        if (! $this->authorizationChecker->isGranted('DELETE', $comment)) {
-            throw new AccessDeniedHttpException();
-        }
-
-        $form = $this->formFactory->createNamed(
-            'trick_comment_edit_form_' . (string) $comment->getId(),
-            TrickCommentEditType::class,
+        $form = $this->formFactory->create(
+            TrickCommentType::class,
             $comment,
-            array(
-                'action' => $this->router->generate($request->attributes->get('_route'), array('id' => (string) $comment->getId())),
-                'method' => 'DELETE',
-            )
+            $this->parameters[$request->attributes->get('_route')]['form_options']
         );
 
         $form->handleRequest($request);
@@ -234,41 +205,44 @@ class TrickCommentController extends Controller
             $this->entityManager->remove($comment);
             $this->entityManager->flush();
 
-            return new ControllerResult(204);
+            $data = array(
+                'comment' => $comment,
+            );
 
-        } else {
-            throw new BadRequestHttpException((string) $form->getErrors());
+            return new ControllerResult(204, $data);
+
+        } elseif ($form->isSubmitted()) {
+            $data = array(
+                'form' => $form->createView(),
+            );
+
+            return new ControllerResult(400, $data);
         }
     }
 
     /**
-     * Gets the trick comment edit form.
+     * Gets the trick comment form.
      *
      * @param  Symfony\Component\HttpFoundation\Request $request
      * @return App\HttpKernel\ControllerResultInterface
-     * @throws Symfony\Component\HttpKernel\Exception\NotFoundHttpException
      *
-     * @Route("/ajax/trick-comment/edit-form/{id}", name="trick_comment_get_edit_form_ajax", defaults={"_format": "json"})
+     * @Route("/trick-comment/form/{id}", name="trick_comment_get_form")
      * @Method("GET")
      */
-    public function getEditForm(Request $request) : ControllerResultInterface
+    public function getForm(Request $request) : ControllerResultInterface
     {
         $comment = $this->entityManager->getRepository(TrickComment::class)
             ->findOneById($request->attributes->getInt('id'))
         ;
 
         if ($comment === null) {
-            throw new NotFoundHttpException();
+            return new ControllerResult(404);
         }
 
-        $form = $this->formFactory->createNamed(
-            'trick_comment_edit_form_' . (string) $comment->getId(),
-            TrickCommentEditType::class,
+        $form = $this->formFactory->create(
+            TrickCommentType::class,
             $comment,
-            array(
-                'action' => $this->router->generate(str_replace('get_edit_form', 'put', $request->attributes->get('_route')), array('id' => $comment->getId())),
-                'method' => 'PUT',
-            )
+            $this->parameters['trick_comment_put']['form_options']
         );
 
         $data = array(
@@ -279,24 +253,21 @@ class TrickCommentController extends Controller
     }
 
     /**
-     * Gets the new trick comment edit form.
+     * Gets the trick comment new form.
      *
      * @param  Symfony\Component\HttpFoundation\Request $request
      * @return App\HttpKernel\ControllerResultInterface
      *
-     * @Route("/ajax/trick-comment/edit-form", name="trick_comment_get_new_edit_form_ajax", defaults={"_format": "json"})
+     * @Route("/trick-comment/form", name="trick_comment_get_new_form")
      * @Method("GET")
      */
-    public function getNewEditForm(Request $request) : ControllerResultInterface
+    public function getNewForm(Request $request) : ControllerResultInterface
     {
-        $form = $this->formFactory->createNamed(
-            'trick_comment_edit_form',
-            TrickCommentEditType::class,
-            null,
-            array(
-                'action' => $this->router->generate(str_replace('get_new_edit_form', 'post', $request->attributes->get('_route'))),
-                'method' => 'POST',
-            )
+        $comment = new TrickComment();
+        $form    = $this->formFactory->create(
+            TrickCommentType::class,
+            $comment,
+            $this->parameters['trick_comment_post']['form_options']
         );
 
         $form->submit(array(

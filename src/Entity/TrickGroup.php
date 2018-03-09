@@ -17,8 +17,6 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
  *
  * @ORM\Entity(repositoryClass="App\Repository\TrickGroupRepository")
  * @ORM\Table(name="trick_group")
- *
- * @UniqueEntity(fields={"title"}, groups={"trick_group.edit.form"})
  */
 class TrickGroup extends Entity implements TrickGroupInterface
 {
@@ -36,9 +34,9 @@ class TrickGroup extends Entity implements TrickGroupInterface
      * @var null|string $title
      *
      * @ORM\Column(name="title", type="string", length=255, unique=true)
-     * @Assert\NotBlank(groups={"trick_group.edit.form"})
-     * @Assert\Type(type="string", groups={"trick_group.edit.form"})
-     * @Assert\Length(max=255, groups={"trick_group.edit.form"})
+     * @Assert\NotBlank()
+     * @Assert\Type(type="string")
+     * @Assert\Length(max=255)
      */
     protected $title;
 
@@ -46,9 +44,9 @@ class TrickGroup extends Entity implements TrickGroupInterface
      * @var null|string $description
      *
      * @ORM\Column(name="description", type="string", length=255)
-     * @Assert\NotBlank(groups={"trick_group.edit.form"})
-     * @Assert\Type(type="string", groups={"trick_group.edit.form"})
-     * @Assert\Length(max=255, groups={"trick_group.edit.form"})
+     * @Assert\NotBlank()
+     * @Assert\Type(type="string")
+     * @Assert\Length(max=255)
      */
     protected $description;
 

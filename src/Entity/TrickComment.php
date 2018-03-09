@@ -24,9 +24,9 @@ class TrickComment extends Entity implements TrickCommentInterface
      *
      * @ORM\Column(name="body", type="text")
      *
-     * @Assert\NotBlank(groups={"trick_comment.edit.form"})
-     * @Assert\Type(type="string", groups={"trick_comment.edit.form"})
-     * @Assert\Length(max=64512, groups={"trick_comment.edit.form"})
+     * @Assert\NotBlank()
+     * @Assert\Type(type="string")
+     * @Assert\Length(max=64512)
      */
     protected $body;
 

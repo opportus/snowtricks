@@ -18,8 +18,6 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
  *
  * @ORM\Entity(repositoryClass="App\Repository\UserRepository")
  * @ORM\Table(name="user")
- * @UniqueEntity(fields={"username"}, groups={"user.sign_up.form"})
- * @UniqueEntity(fields={"email"}, groups={"user.sign_up.form"})
  */
 class User extends Entity implements UserInterface
 {
@@ -27,9 +25,9 @@ class User extends Entity implements UserInterface
      * @var null|string $username
      *
      * @ORM\Column(name="username", type="string", length=35, unique=true)
-     * @Assert\NotBlank(groups={"user.sign_up.form", "user.sign_in.form", "user.request_reset_password.form"})
-     * @Assert\Type(type="string", groups={"user.sign_up.form", "user.sign_in.form", "user.request_reset_password.form"})
-     * @Assert\Length(max=35, groups={"user.sign_up.form", "user.sign_in.form", "user.request_reset_password.form"})
+     * @Assert\NotBlank()
+     * @Assert\Type(type="string")
+     * @Assert\Length(max=35)
      */
     protected $username;
 
@@ -37,9 +35,9 @@ class User extends Entity implements UserInterface
      * @var null|string $email
      *
      * @ORM\Column(name="email", type="string", length=255, unique=true)
-     * @Assert\NotBlank(groups={"user.sign_up.form"})
-     * @Assert\Type(type="string", groups={"user.sign_up.form"})
-     * @Assert\Length(max=255, groups={"user.sign_up.form"})
+     * @Assert\NotBlank()
+     * @Assert\Type(type="string")
+     * @Assert\Length(max=255)
      * @Assert\Email()
      */
     protected $email;
@@ -47,8 +45,8 @@ class User extends Entity implements UserInterface
     /**
      * @var null|string $plainPassword
      *
-     * @Assert\Type(type="string", groups={"user.sign_up.form", "user.reset_password.form"})
-     * @Assert\Length(max=4096, groups={"user.sign_up.form", "user.rest_password.form"})
+     * @Assert\Type(type="string")
+     * @Assert\Length(max=4096)
      */
     protected $plainPassword;
 
@@ -72,13 +70,13 @@ class User extends Entity implements UserInterface
     protected $salt;
 
     /**
-     * @var null|bool $enabled
+     * @var null|bool $activation
      *
-     * @ORM\Column(name="enabled", type="boolean")
+     * @ORM\Column(name="activation", type="boolean")
      * @Assert\NotNull()
      * @Assert\Type(type="bool")
      */
-    protected $enabled;
+    protected $activation;
 
     /**
      * @var array $roles
@@ -104,8 +102,9 @@ class User extends Entity implements UserInterface
     {
         parent::__construct();
 
-        $this->roles  = array();
-        $this->tokens = new ArrayCollection();
+        $this->activation = false;
+        $this->roles      = array();
+        $this->tokens     = new ArrayCollection();
     }
 
     /**
@@ -202,19 +201,17 @@ class User extends Entity implements UserInterface
     /**
      * {@inheritdoc}
      */
-    public function enable() : UserInterface
+    public function getActivation() : bool
     {
-        $this->enabled = true;
-
-        return $this;
+        return $this->activation;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function disable() : UserInterface
+    public function setActivation(bool $activation) : UserInterface
     {
-        $this->enabled = false;
+        $this->activation = $activation;
 
         return $this;
     }
@@ -363,9 +360,29 @@ class User extends Entity implements UserInterface
     /**
      * {@inheritdoc}
      */
+    public function enable() : UserInterface
+    {
+        $this->activation = true;
+
+        return $this;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function disable() : UserInterface
+    {
+        $this->activation = false;
+
+        return $this;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function isEnabled()
     {
-        return (bool) $this->enabled;
+        return (bool) $this->activation;
     }
 
     /**
@@ -373,7 +390,7 @@ class User extends Entity implements UserInterface
      */
     public function isAccountNonExpired()
     {
-        return (bool) $this->enabled;
+        return (bool) $this->activation;
     }
 
     /**
@@ -381,7 +398,7 @@ class User extends Entity implements UserInterface
      */
     public function isAccountNonLocked()
     {
-        return (bool) $this->enabled;
+        return (bool) $this->activation;
     }
 
     /**
@@ -389,7 +406,7 @@ class User extends Entity implements UserInterface
      */
     public function isCredentialsNonExpired()
     {
-        return (bool) $this->enabled;
+        return (bool) $this->activation;
     }
 
     /**
@@ -411,7 +428,7 @@ class User extends Entity implements UserInterface
             $this->email,
             $this->password,
             $this->salt,
-            $this->enabled,
+            $this->activation,
             $this->createdAt,
             $this->roles,
         ));
@@ -428,7 +445,7 @@ class User extends Entity implements UserInterface
             $this->email,
             $this->password,
             $this->salt,
-            $this->enabled,
+            $this->activation,
             $this->createdAt,
             $this->roles
         ) = unserialize($serialized);

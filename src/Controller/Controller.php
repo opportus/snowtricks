@@ -69,12 +69,19 @@ abstract class Controller extends AbstractController
         RouterInterface               $router
     )
     {
-        $this->parameters           = $parameters;
         $this->entityManager        = $entityManager;
         $this->tokenStorage         = $tokenStorage;
         $this->authorizationChecker = $authorizationChecker;
         $this->formFactory          = $formFactory;
         $this->router               = $router;
+
+        foreach ($parameters as $routeName => $routeParameters) {
+            if (isset($routeParameters['form_options']['action'])) {
+                $parameters[$routeName]['form_options']['action'] = $this->router->generate($routeParameters['form_options']['action']);
+            }
+        }
+
+        $this->parameters = $parameters;
     }
 }
 

@@ -23,22 +23,15 @@ class ControllerResult implements ControllerResultInterface
     protected $data;
 
     /**
-     * @var string $redirection
-     */
-    protected $redirection;
-
-    /**
      * Constructs the controller result.
      *
      * @param int $statusCode
      * @param array $data
-     * @param string $redirection
      */
-    public function __construct(int $statusCode, array $data = array(), string $redirection)
+    public function __construct(int $statusCode, array $data = array())
     {
         $this->statusCode  = $statusCode;
         $this->data        = $data;
-        $this->redirection = $redirection;
     }
 
     /**
@@ -63,24 +56,6 @@ class ControllerResult implements ControllerResultInterface
     public function setData(array $data) : ControllerResultInterface
     {
         $this->data = $data;
-
-        return $this;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getRedirection() : string
-    {
-        return $this->redirection;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function setRedirection(string $redirection) : ControllerResultInterface
-    {
-        $this->redirection = $redirection;
 
         return $this;
     }

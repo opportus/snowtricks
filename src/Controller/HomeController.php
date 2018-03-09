@@ -19,7 +19,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 class HomeController extends Controller
 {
     /**
-     * Gets the home page.
+     * Gets the home.
      *
      * @param  Symfony\Component\HttpFoundation\Request $request
      * @return App\HttpKernel\ControllerResultInterface
@@ -27,7 +27,7 @@ class HomeController extends Controller
      * @Route("/", name="home_get")
      * @Method("GET")
      */
-    public function get(Request $request) : ControllerResultInterface
+    public function getHome(Request $request) : ControllerResultInterface
     {
         return new ControllerResult(200);
     }

@@ -5,22 +5,22 @@ namespace App\Form\Type;
 use App\Entity\TrickComment;
 use App\Form\DataTransformer\TrickToIdTransformer;
 use App\Form\DataTransformer\TrickCommentToIdTransformer;
+use App\Form\DataTransformer\UserToIdTransformer;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
-use Symfony\Component\Form\Extension\Core\Type\HiddenType;
-use Symfony\Component\Form\Extension\Core\Type\ButtonType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
- * The trick comment edit type...
+ * The trick comment type...
  *
  * @version 0.0.1
  * @package App\Form\Type
  * @author  Clément Cazaud <opportus@gmail.com>
  * @license https://github.com/opportus/snowtricks/blob/master/LICENSE.md MIT
  */
-class TrickCommentEditType extends AbstractType
+class TrickCommentType extends AbstractType
 {
     /**
      * @var App\Form\DataTransformer\TrickToIdTransformer $trickToIdTransformer
@@ -33,15 +33,26 @@ class TrickCommentEditType extends AbstractType
     protected $trickCommentToIdTransformer;
 
     /**
+     * @var App\Form\DataTransformer\UserToIdTransformer $userToIdTransformer
+     */
+    protected $userToIdTransformer;
+
+    /**
      * Constructs the trick comment type.
      *
      * @param App\Form\DataTransformer\TrickToIdTransformer $trickToIdTransformer
      * @param App\Form\DataTransformer\TrickCommentToIdTransformer $trickCommentToIdTransformer
+     * @param App\Form\DataTransformer\UserToIdTransformer $userToIdTransformer
      */
-    public function __construct(TrickToIdTransformer $trickToIdTransformer, TrickCommentToIdTransformer $trickCommentToIdTransformer)
+    public function __construct(
+        TrickToIdTransformer        $trickToIdTransformer,
+        TrickCommentToIdTransformer $trickCommentToIdTransformer,
+        UserToIdTransformer         $userToIdTransformer
+    )
     {
         $this->trickToIdTransformer        = $trickToIdTransformer;
         $this->trickCommentToIdTransformer = $trickCommentToIdTransformer;
+        $this->userToIdTransformer         = $userToIdTransformer;
     }
 
     /**
@@ -55,28 +66,22 @@ class TrickCommentEditType extends AbstractType
                 TextareaType::class
             )
             ->add(
-                'thread',
-                HiddenType::class
-            )
-            ->add(
                 'parent',
-                HiddenType::class
+                TextType::class
             )
             ->add(
-                'id',
-                HiddenType::class,
-                array(
-                    'disabled' => true,
-                )
+                'thread',
+                TextType::class
             )
             ->add(
-                'submit',
-                ButtonType::class
+                'author',
+                TextType::class
             )
         ;
 
-        $builder->get('thread')->addModelTransformer($this->trickToIdTransformer);
         $builder->get('parent')->addModelTransformer($this->trickCommentToIdTransformer);
+        $builder->get('thread')->addModelTransformer($this->trickToIdTransformer);
+        $builder->get('author')->addModelTransformer($this->userToIdTransformer);
     }
 
     /**
@@ -85,11 +90,8 @@ class TrickCommentEditType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class'        => TrickComment::class,
-            'validation_groups' => array('trick_comment.edit.form'),
-            'csrf_protection'   => true,
-            'csrf_field_name'   => '_token',
-            'csrf_token_id'     => 'security',
+            'data_class' => TrickComment::class,
+            'empty_data' => new TrickComment(),
         ));
     }
 }

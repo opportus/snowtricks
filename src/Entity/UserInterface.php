@@ -69,18 +69,19 @@ interface UserInterface extends EntityInterface, AdvancedUserInterface, \Seriali
     public function setSalt(string $salt) : UserInterface;
 
     /**
-     * Enables.
+     * Gets the activation.
      *
-     * @return App\Entity\UserInterface
+     * @return bool
      */
-    public function enable() : UserInterface;
+    public function getActivation() : bool;
 
     /**
-     * Disables.
+     * Sets the activation.
      *
+     * @param  bool $activation
      * @return App\Entity\UserInterface
      */
-    public function disable() : UserInterface;
+    public function setActivation(bool $activation) : UserInterface;
 
     /**
      * Adds a role.
@@ -149,6 +150,20 @@ interface UserInterface extends EntityInterface, AdvancedUserInterface, \Seriali
      * @return null|string
      */
     public function getGravatar(?int $size = 80, ?string $imageSet = 'mm', ?string $rating = 'g') : ?string;
+
+    /**
+     * Enables.
+     *
+     * @return App\Entity\UserInterface
+     */
+    public function enable() : UserInterface;
+
+    /**
+     * Disables.
+     *
+     * @return App\Entity\UserInterface
+     */
+    public function disable() : UserInterface;
 
     /**
      * Returns the username.
