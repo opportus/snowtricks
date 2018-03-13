@@ -30,8 +30,8 @@ class ControllerResult implements ControllerResultInterface
      */
     public function __construct(int $statusCode, array $data = array())
     {
-        $this->statusCode  = $statusCode;
-        $this->data        = $data;
+        $this->statusCode = $statusCode;
+        $this->data       = $data;
     }
 
     /**

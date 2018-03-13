@@ -2,12 +2,11 @@
 
 namespace App\Controller;
 
-use App\Entity\Trick;
-use App\HttpKernel\ControllerResult;
-use App\HttpKernel\ControllerResultInterface;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 
 /**
  * The trick controller...
@@ -20,119 +19,61 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 class TrickController extends Controller
 {
     /**
-     * Gets the trick list.
+     * Gets trick list.
      *
      * @param  Symfony\Component\HttpFoundation\Request $request
-     * @return App\HttpKernel\ControllerResultInterface
+     * @return Symfony\Component\HttpFoundation\Response
      *
-     * @Route("/trick", name="trick_get_list")
+     * @Route("/trick", name="get_trick_list")
      * @Method("GET")
      */
-    public function getList(Request $request) : ControllerResultInterface
+    public function getTrickList(Request $request) : Response
     {
-        $limit    = 10;
-        $offset   = ($request->query->getInt('page', 1) - 1) * $limit;
-        $order    = $request->query->get('order', array());
-        $criteria = array_map(
-            function ($value) {
-                if ($value === '') {
-                    return null;
-
-                } else {
-                    return $value;
-                }
-            },
-            $request->query->get('attribute', array())
-        );
-
-        $tricks = $this->entityManager->getRepository(Trick::class)->findBy(
-            $criteria,
-            $order,
-            $limit,
-            $offset
-        );
-
-        if (empty($tricks)) {
-            return new ControllerResult(404);
-        }
-
-        $data = array(
-            'tricks' => $tricks,
-        );
-
-        return new ControllerResult(200, $data);
+        return $this->getList($request);
     }
 
     /**
-     * Gets the trick.
+     * Gets trick.
      *
      * @param  Symfony\Component\HttpFoundation\Request $request
-     * @return App\HttpKernel\ControllerResultInterface
+     * @return Symfony\Component\HttpFoundation\Response
      *
-     * @Route("/trick/{slug}", name="trick_get")
+     * @Route("/trick/{slug}", name="get_trick")
      * @Method("GET")
      */
-    public function get(Request $request) : ControllerResultInterface
+    public function getTrick(Request $request) : Response
     {
-        $trick = $this->entityManager->getRepository(Trick::class)
-            ->findOneBySlug($request->attributes->get('slug'))
-        ;
-
-        if ($trick === null) {
-            return new ControllerResult(404);
-        }
-
-        $data = array(
-            'trick' => $trick,
-        );
-
-        return new ControllerResult(200, $data);
+        return $this->get($request);
     }
 
     /**
-     * Deletes the trick.
+     * Deletes trick by delete form.
      *
      * @param  Symfony\Component\HttpFoundation\Request $request
-     * @return App\HttpKernel\ControllerResultInterface
+     * @return Symfony\Component\HttpFoundation\Response
      *
-     * @Route("/trick/{slug}", name="trick_delete")
+     * @Route("/trick/delete/{slug}", name="delete_trick_by_delete_form")
      * @Method("DELETE")
+     * @Security("has_role('ROLE_USER')")
      */
-    public function delete(Request $request) : ControllerResultInterface
+    public function deleteTrickByDeleteForm(Request $request) : Response
     {
-        $trick = $this->entityManager->getRepository(Trick::class)
-            ->findOneById($request->attributes->get('slug'))
-        ;
+        return $this->delete($request);
+    }
 
-        if ($trick === null) {
-            return new ControllerResult(404);
-        }
-
-        $form = $this->formFactory->create(
-            TrickCommentType::class,
-            $comment,
-            $this->parameters[$request->attributes->get('_route')]['form_options']
-        );
-
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            $this->entityManager->remove($trick);
-            $this->entityManager->flush();
-
-            $data = array(
-                'trick' => $trick,
-            );
-
-            return new ControllerResult(204, $data);
-
-        } elseif ($form->isSubmitted()) {
-            $data = array(
-                'form' => $form->createView(),
-            );
-
-            return new ControllerResult(400, $data);
-        }
+    /**
+     * Gets trick delete form.
+     *
+     * @param  Symfony\Component\HttpFoundation\Request $request
+     * @return Symfony\Component\HttpFoundation\Response
+     *
+     * @Route("/trick/delete/{slug}", name="get_trick_delete_form")
+     * @Method("GET")
+     * @Security("has_role('ROLE_USER')")
+     */
+    public function getTrickDeleteForm(Request $request) : Response
+    {
+        return $this->getForm($request);
     }
 }
 

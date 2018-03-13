@@ -2,13 +2,11 @@
 
 namespace App\Controller;
 
-use App\Entity\TrickComment;
-use App\Form\Type\TrickCommentType;
-use App\HttpKernel\ControllerResult;
-use App\HttpKernel\ControllerResultInterface;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 
 /**
  * The trick comment controller...
@@ -21,265 +19,118 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 class TrickCommentController extends Controller
 {
     /**
-     * Gets the trick comment list.
+     * Gets trick comment list.
      *
      * @param  Symfony\Component\HttpFoundation\Request $request
-     * @return App\HttpKernel\ControllerResultInterface
+     * @return Symfony\Component\HttpFoundation\Response
      *
-     * @Route("/trick-comment", name="trick_comment_get_list")
+     * @Route("/trick-comment", name="get_trick_comment_list")
      * @Method("GET")
      */
-    public function getList(Request $request) : ControllerResultInterface
+    public function getTrickCommentList(Request $request) : Response
     {
-        $limit    = 5;
-        $offset   = ($request->query->getInt('page', 1) - 1) * $limit;
-        $order    = $request->query->get('order', array());
-        $criteria = array_map(
-            function ($value) {
-                if ($value === '') {
-                    return null;
-
-                } else {
-                    return $value;
-                }
-            },
-            $request->query->get('attribute', array())
-        );
-
-        $comments = $this->entityManager->getRepository(TrickComment::class)->findBy(
-            $criteria,
-            $order,
-            $limit,
-            $offset
-        );
-
-        if (empty($comments)) {
-            return new ControllerResult(404);
-        }
-
-        $data = array(
-            'comments' => $comments,
-        );
-
-        return new ControllerResult(200, $data);
+        return $this->getList($request);
     }
 
     /**
-     * Gets the trick comment.
+     * Gets trick comment.
      *
      * @param  Symfony\Component\HttpFoundation\Request $request
-     * @return App\HttpKernel\ControllerResultInterface
+     * @return Symfony\Component\HttpFoundation\Response
      *
-     * @Route("/trick-comment/{id}", name="trick_comment_get")
+     * @Route("/trick-comment/{id}", name="get_trick_comment")
      * @Method("GET")
      */
-    public function get(Request $request) : ControllerResultInterface
+    public function getTrickComment(Request $request) : Response
     {
-        $comment = $this->entityManager->getRepository(TrickComment::class)
-            ->findOneById($request->attributes->getInt('id'))
-        ;
-
-        if ($comment === null) {
-            return new ControllerResult(404);
-        }
-
-        $data = array(
-            'comment' => $comment,
-        );
-
-        return new ControllerResult(200, $data);
+        return $this->get($request);
     }
 
     /**
-     * Posts the trick comment.
+     * Posts trick comment by edit form.
      *
      * @param  Symfony\Component\HttpFoundation\Request $request
-     * @return App\HttpKernel\ControllerResultInterface
+     * @return Symfony\Component\HttpFoundation\Response
      *
-     * @Route("/trick-comment", name="trick_comment_post")
+     * @Route("/trick-comment/edit", name="post_trick_comment_by_edit_form")
      * @Method("POST")
+     * @Security("has_role('ROLE_USER')")
      */
-    public function post(Request $request) : ControllerResultInterface
+    public function postTrickCommentByEditForm(Request $request) : Response
     {
-        $comment = new TrickComment();
-        $form    = $this->formFactory->create(
-            TrickCommentType::class,
-            $comment,
-            $this->parameters[$request->attributes->get('_route')]['form_options']
-        );
-
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            $this->entityManager->persist($comment);
-            $this->entityManager->flush();
-
-            $data = array(
-                'comment' => $comment,
-            );
-
-            return new ControllerResult(201, $data);
-
-        } elseif ($form->isSubmitted()) {
-            $data = array(
-                'form' => $form->createView(),
-            );
-
-            return new ControllerResult(400, $data);
-        }
+        return $this->post($request);
     }
 
     /**
-     * Puts the trick comment.
+     * Puts trick comment by edit form.
      *
      * @param  Symfony\Component\HttpFoundation\Request $request
-     * @return App\HttpKernel\ControllerResultInterface
+     * @return Symfony\Component\HttpFoundation\Response
      *
-     * @Route("/trick-comment/{id}", name="trick_comment_put")
+     * @Route("/trick-comment/edit/{id}", name="put_trick_comment_by_edit_form")
      * @Method("PUT")
+     * @Security("has_role('ROLE_USER')")
      */
-    public function put(Request $request) : ControllerResultInterface
+    public function putTrickCommentByEditForm(Request $request) : Response
     {
-        $comment = $this->entityManager->getRepository(TrickComment::class)
-            ->findOneById($request->attributes->getInt('id'))
-        ;
-
-        if ($comment === null) {
-            return new ControllerResult(404);
-        }
-
-        $form = $this->formFactory->create(
-            TrickCommentType::class,
-            $comment,
-            $this->parameters[$request->attributes->get('_route')]['form_options']
-        );
-
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            $this->entityManager->flush();
-
-            $data = array(
-                'comment' => $comment,
-            );
-
-            return new ControllerResult(204, $data);
-
-        } elseif ($form->isSubmitted()) {
-            $data = array(
-                'form' => $form->createView(),
-            );
-
-            return new ControllerResult(400, $data);
-        }
+        return $this->put($request);
     }
 
     /**
-     * Deletes the trick comment.
+     * Deletes trick comment by delete form.
      *
      * @param  Symfony\Component\HttpFoundation\Request $request
-     * @return App\HttpKernel\ControllerResultInterface
+     * @return Symfony\Component\HttpFoundation\Response
      *
-     * @Route("/trick-comment/{id}", name="trick_comment_delete")
+     * @Route("/trick-comment/delete/{id}", name="delete_trick_comment_by_delete_form")
      * @Method("DELETE")
+     * @Security("has_role('ROLE_USER')")
      */
-    public function delete(Request $request) : ControllerResultInterface
+    public function deleteTrickCommentByDeleteForm(Request $request) : Response
     {
-        $comment = $this->entityManager->getRepository(TrickComment::class)
-            ->findOneById($request->attributes->getInt('id'))
-        ;
-
-        if ($comment === null) {
-            return new ControllerResult(404);
-        }
-
-        $form = $this->formFactory->create(
-            TrickCommentType::class,
-            $comment,
-            $this->parameters[$request->attributes->get('_route')]['form_options']
-        );
-
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            $this->entityManager->remove($comment);
-            $this->entityManager->flush();
-
-            $data = array(
-                'comment' => $comment,
-            );
-
-            return new ControllerResult(204, $data);
-
-        } elseif ($form->isSubmitted()) {
-            $data = array(
-                'form' => $form->createView(),
-            );
-
-            return new ControllerResult(400, $data);
-        }
+        return $this->delete($request);
     }
 
     /**
-     * Gets the trick comment form.
+     * Gets trick comment edit form.
      *
      * @param  Symfony\Component\HttpFoundation\Request $request
-     * @return App\HttpKernel\ControllerResultInterface
+     * @return Symfony\Component\HttpFoundation\Response
      *
-     * @Route("/trick-comment/form/{id}", name="trick_comment_get_form")
+     * @Route("/trick-comment/edit/{id}", name="get_trick_comment_edit_form")
      * @Method("GET")
      */
-    public function getForm(Request $request) : ControllerResultInterface
+    public function getTrickCommentEditForm(Request $request) : Response
     {
-        $comment = $this->entityManager->getRepository(TrickComment::class)
-            ->findOneById($request->attributes->getInt('id'))
-        ;
-
-        if ($comment === null) {
-            return new ControllerResult(404);
-        }
-
-        $form = $this->formFactory->create(
-            TrickCommentType::class,
-            $comment,
-            $this->parameters['trick_comment_put']['form_options']
-        );
-
-        $data = array(
-            'form' => $form->createView(),
-        );
-
-        return new ControllerResult(200, $data);
+        return $this->getForm($request);
     }
 
     /**
-     * Gets the trick comment new form.
+     * Gets trick comment empty edit form.
      *
      * @param  Symfony\Component\HttpFoundation\Request $request
-     * @return App\HttpKernel\ControllerResultInterface
+     * @return Symfony\Component\HttpFoundation\Response
      *
-     * @Route("/trick-comment/form", name="trick_comment_get_new_form")
+     * @Route("/trick-comment/edit", name="get_trick_comment_emtpy_edit_form")
      * @Method("GET")
      */
-    public function getNewForm(Request $request) : ControllerResultInterface
+    public function getTrickCommentEmptyEditForm(Request $request) : Response
     {
-        $comment = new TrickComment();
-        $form    = $this->formFactory->create(
-            TrickCommentType::class,
-            $comment,
-            $this->parameters['trick_comment_post']['form_options']
-        );
+        return $this->getEmptyForm($request);
+    }
 
-        $form->submit(array(
-            'thread' => $request->query->get('attribute')['thread'],
-            'parent' => $request->query->get('attribute', '')['parent'],
-        ));
-
-        $data = array(
-            'form' => $form->createView(),
-        );
-
-        return new ControllerResult(200, $data);
+    /**
+     * Gets trick comment delete form.
+     *
+     * @param  Symfony\Component\HttpFoundation\Request $request
+     * @return Symfony\Component\HttpFoundation\Response
+     *
+     * @Route("/trick-comment/delete/{id}", name="get_trick_comment_delete_form")
+     * @Method("GET")
+     */
+    public function getTrickCommentDeleteForm(Request $request) : Response
+    {
+        return $this->getForm($request);
     }
 }
 

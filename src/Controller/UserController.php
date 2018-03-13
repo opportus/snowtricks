@@ -2,13 +2,8 @@
 
 namespace App\Controller;
 
-use App\Entity\User;
-use App\Entity\UserToken;
-use App\Form\Type\UserType;
-use App\HttpKernel\ControllerResult;
-use App\HttpKernel\ControllerResultInterface;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
+use Symfony\Component\HttpFoundation\Response;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 
@@ -23,317 +18,122 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 class UserController extends Controller
 {
     /**
-     * Posts a user.
+     * Gets user sign up empty form.
      *
      * @param  Symfony\Component\HttpFoundation\Request $request
-     * @return App\HttpKernel\ControllerResultInterface
+     * @return Symfony\Component\HttpFoundation\Response
      *
-     * @Route("/user/sign-up", name="user_post")
+     * @Route("/user/sign-up", name="get_user_sign_up_empty_form")
+     * @Method("GET")
+     */
+    public function getUserSignUpEmptyForm(Request $request) : Response
+    {
+        return $this->getEmptyForm($request);
+    }
+
+    /**
+     * Posts user by sign up form.
+     *
+     * @param  Symfony\Component\HttpFoundation\Request $request
+     * @return Symfony\Component\HttpFoundation\Response
+     *
+     * @Route("/user/sign-up", name="post_user_by_sign_up_form")
      * @Method("POST")
      */
-    public function post(Request $request) : ControllerResultInterface
+    public function postUserBySignUpForm(Request $request) : Response
     {
-        $user = new User();
-        $form = $this->formFactory->create(
-            UserType::class,
-            $user,
-            $this->parameters[$request->attributes->get('_route')]['form_options']
-        );
-
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            $this->entityManager->persist($user);
-            $this->entityManager->flush();
-
-            $data = array(
-                'user' => $user,
-            );
-
-            return new ControllerResult(201, $data);
-
-        } elseif ($form->isSubmitted()) {
-            $data = array(
-                'form' => $form->createView(),
-            );
-
-            return new ControllerResult(400, $data);
-        }
+        return $this->post($request);
     }
 
     /**
-     * Gets activation form.
+     * Patches user by activation email form.
      *
      * @param  Symfony\Component\HttpFoundation\Request $request
-     * @return App\HttpKernel\ControllerResultInterface
+     * @return Symfony\Component\HttpFoundation\Response
      *
-     * @Route("/user/activation/{id}", name="user_get_activation_form" defaults={"_format": "html"})
-     * @Method("GET")
-     */
-    public function getActivationForm(Request $request) : ControllerResultInterface
-    {
-        $user = $this->entityManager->getRepository(User::class)
-            ->findOneById($request->attributes->getInt('id'))
-        ;
-
-        if ($user === null) {
-            return new ControllerResult(404);
-        }
-
-        if ($user->getActivationToken() === null) {
-            return new ControllerResult(400);
-        }
-
-        // @todo Implement userTokenActivation data transformer...
-        // @todo Implement UserActivationType
-        $form = $this->formFactory->createNamed(
-            'user_activation_form',
-            UserActivationType::class,
-            $user,
-            array(
-                'action' => $this->router->generate(
-                    str_replace('get_activation_form', 'patch_activation', $request->attributes->get('_route')),
-                    array('id' => (string) $user->getId())
-                ),
-                'method' => 'PATCH',
-            )
-        );
-
-        $data = array(
-            'form' => $form,
-        );
-
-        return new ControllerResult(200, $data);
-    }
-
-    /**
-     * Patches activation.
-     *
-     * @param  Symfony\Component\HttpFoundation\Request $request
-     * @return App\HttpKernel\ControllerResultInterface
-     *
-     * @Route("/user/activation/{id}", name="user_patch_activation", defaults={"_format": "html"})
+     * @Route("/user/activation/{id}", name="patch_user_by_activation_email_form")
      * @Method("PATCH")
      */
-    public function patchActivation(Request $request) : ControllerResultInterface
+    public function patchUserByActivationEmailForm(Request $request) : Response
     {
-        $user = $this->entityManager->getRepository(User::class)
-            ->findOneById($request->attributes->getInt('id'))
-        ;
-
-        // @todo Implement getActivation property...
-        $form = $this->formFactory->createNamed(
-            'user_activation_form',
-            UserActivationType::class,
-            $user,
-            array(
-                'action' => $this->router->generate($request->attributes->get('_route'), array('id' => $user->getId())),
-                'method' => 'PATCH',
-            )
-        );
-
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            $this->entityManager->flush();
-
-            return new ControllerResult(204);
-
-        } elseif ($form->isSubmitted()) {
-            return new ControllerResult(400);
-        }
+        return $this->patch($request);
     }
 
     /**
-     * Gets password reset request.
+     * Gets user password reset request empty form.
      *
      * @param  Symfony\Component\HttpFoundation\Request $request
-     * @return App\HttpKernel\ControllerResultInterface
+     * @return Symfony\Component\HttpFoundation\Response
      *
-     * @Route("/user/password-reset-request", name="user_get_password_reset_request", defaults={"_format": "html"})
+     * @Route("/user/password-reset-request", name="get_user_password_reset_request_empty_form")
      * @Method("GET")
      */
-    public function getPasswordResetRequest(Request $request) : ControllerResultInterface
+    public function getUserPasswordResetRequestEmptyForm(Request $request) : Response
     {
-        $user = new User();
-
-        $form = $this->formFactory->createNamed(
-            'user_password_reset_request_form',
-            UserPasswordResetRequestType::class,
-            $user,
-            array(
-                'action' => $this->router->generate($request->attributes->get('_route')),
-                'method' => 'GET',
-            )
-        );
-
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            $user = $this->entityManager->getRepository(User::class)
-                ->findOneByUsername($user->getUsername())
-            ;
-
-            if ($user === null) {
-                return new ControllerResult(404);
-            }
-
-            $data = array(
-                'user' => $user,
-            );
-
-            return new ControllerResult(204, $data);
-
-        } elseif ($form->isSubmitted()) {
-            $data = array(
-                'form' => $form->createView(),
-            );
-
-            return new ControllerResult(400, $data);
-        }
+        return $this->getEmptyForm($request);
     }
 
     /**
-     * Gets password reset request form.
+     * Proceeds by user password reset request form.
      *
      * @param  Symfony\Component\HttpFoundation\Request $request
-     * @return App\HttpKernel\ControllerResultInterface
+     * @return Symfony\Component\HttpFoundation\Response
      *
-     * @Route("/user/password-reset-request", name="user_get_password_reset_request_form", defaults={"_format": "html"})
+     * @Route("/user/password-reset-request", name="proceed_by_user_password_reset_request_form")
+     * @Method("POST")
+     */
+    public function proceedByUserPasswordResetRequestForm(Request $request) : Response
+    {
+        return $this->proceed($request);
+    }
+
+    /**
+     * Gets user password reset form.
+     *
+     * @param  Symfony\Component\HttpFoundation\Request $request
+     * @return Symfony\Component\HttpFoundation\Response
+     *
+     * @Route("/user/password-reset/{id}", name="get_user_password_reset_form")
      * @Method("GET")
      */
-    public function getPasswordResetRequestForm(Request $request) : ControllerResultInterface
+    public function getUserPasswordResetForm(Request $request) : Response
     {
-        $user = new User();
-
-        $form = $this->formFactory->createNamed(
-            'user_password_reset_request_form',
-            UserPasswordResetRequestType::class,
-            $user,
-            array(
-                'action' => $this->router->generate(
-                    str_replace('get_password_reset_request_form', 'post_password_reset_request', $request->attributes->get('_route'))
-                ),
-                'method' => 'POST',
-            )
-        );
-
-        $data = array(
-            'form' => $form,
-        );
-
-        return new ControllerResult(200, $data);
+        return $this->getForm($request);
     }
 
     /**
-     * Posts password reset.
+     * Patches user by password reset form.
      *
      * @param  Symfony\Component\HttpFoundation\Request $request
-     * @return App\HttpKernel\ControllerResultInterface
+     * @return Symfony\Component\HttpFoundation\Response
      *
-     * @Route("/user/password-reset/{token}", name="user_post_password_reset", defaults={"_format": "html"})
+     * @Route("/user/password-reset/{id}", name="patch_user_by_password_reset_form")
      * @method("PATCH")
      */
-    public function patchPassword(Request $request)
+    public function patchUserByPasswordResetForm(Request $request) : Response
     {
-        $user = new User();
-
-        $form = $this->formFactory->createNamed(
-            'user_password_reset_form',
-            UserPasswordResetType::class,
-            $user,
-            array(
-                'action' => $this->router->generate($request->attributes->get('_route')),
-                'method' => 'POST',
-            )
-        );
-
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            $user
-                ->enable()
-                ->addRole('ROLE_USER')
-                ->addActivationToken()
-            ;
-
-            $this->entityManager->persist($user);
-            $this->entityManager->flush();
-
-            $data = array(
-                'user' => $user,
-            );
-
-            return new ControllerResult(201, $data);
-
-        } elseif ($form->isSubmitted()) {
-            $data = array(
-                'form' => $form->createView(),
-            );
-
-            return new ControllerResult(400, $data);
-        }
+        return $this->patch($request);
     }
 
     /**
-     * Gets sign up form.
+     * Gets user sign in empty form.
      *
      * @param  Symfony\Component\HttpFoundation\Request $request
-     * @return App\HttpKernel\ControllerResultInterface
+     * @return Symfony\Component\HttpFoundation\Response
      *
-     * @Route("/user/sign-up", name="user_get_sign_up_form" defaults={"_format": "html"})
-     * @Method("GET")
+     * @Route("/user/sign-in", name="get_user_sign_in_empty_form")
      */
-    public function getSignUpForm(Request $request) : ControllerResultInterface
+    public function getUserSignInEmptyForm(Request $request) : Response
     {
-        $user = new User();
-
-        $form = $this->formFactory->createNamed(
-            'user_sign_up_form',
-            UserSignUpType::class,
-            $user,
-            array(
-                'action' => $this->router->generate(str_replace('get_sign_up_form', 'post_sign_up', $request->attributes->get('_route'))),
-                'method' => 'POST',
-            )
-        );
-
-        $data = array(
-            'form' => $form,
-        );
-
-        return new ControllerResult(200, $data);
+        return $this->getEmptyForm($request);
     }
 
     /**
-     * Signs in a user.
+     * Proceeds user sign out.
      *
-     * @param  Symfony\Component\HttpFoundation\Request $request
-     * @param  Symfony\Component\Security\Http\Authentication\AuthenticationUtils $authUtils
-     * @return App\HttpKernel\ControllerResultInterface
-     *
-     * @Route("/sign-in", name="user_sign_in", defaults={"_format": "html"})
+     * @Route("/user/sign-out", name="proceed_user_sign_out")
      */
-    public function signIn(Request $request, AuthenticationUtils $authUtils) : ControllerResultInterface
-    {
-        $error = $authUtils->getLastAuthenticationError();
-        $form  = $this->formFactory->create(UserSignInType::class);
-
-        $data = array(
-            'form'  => $form,
-            'error' => $error
-        );
-
-        return new ControllerResult(200, $data);
-    }
-
-    /**
-     * Signs out a user.
-     *
-     * @Route("/sign-out", name="user_sign_out", defaults={"_format": "html"})
-     */
-    public function signOut()
-    {
-    }
+    public function proceedUserSignOut()
+    {}
 }
 

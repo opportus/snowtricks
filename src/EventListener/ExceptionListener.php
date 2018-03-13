@@ -2,13 +2,10 @@
 
 namespace App\EventListener;
 
+use App\HttpFoundation\ResponseFactoryInterface;
 use App\HttpKernel\ExceptionHandlerInterface;
 use App\HttpKernel\ControllerResult;
-use App\HttpKernel\ControllerResultInterface;
 use Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent;
-use Symfony\Component\HttpKernel\Event\GetResponseForControllerResultEvent;
-use Symfony\Component\EventDispatcher\EventDispatcherInterface;
-use Symfony\Component\HttpKernel\Events;
 
 /**
  * The exception listener...
@@ -26,20 +23,20 @@ class ExceptionListener
     protected $exceptionHandler;
 
     /**
-     * @var Symfony\Component\EventDispatcher\EventDispatcherInterface $eventDispatcher
+     * @var App\HttpFoundation\ResponseFactoryInterface $responseFactory
      */
-    protected $eventDispatcher;
+    protected $responseFactory;
 
     /**
      * Constructs the exception listener.
      *
      * @param App\HttpKernel\ExceptionHandlerInterface $exceptionHandler
-     * @param Symfony\Component\EventDispatcher\EventDispatcherInterface $eventDispatcher
+     * @param App\HttpFoundation\ResponseFactoryInterface $responseFactory
      */
-    public function __construct(ExceptionHandlerInterface $exceptionHandler, EventDispatcherInterface $eventDispatcher)
+    public function __construct(ExceptionHandlerInterface $exceptionHandler, ResponseFactoryInterface $responseFactory)
     {
         $this->exceptionHandler = $exceptionHandler;
-        $this->eventDispatcher  = $eventDispatcher;
+        $this->responseFactory  = $responseFactory;
     }
 
     /**
@@ -54,21 +51,15 @@ class ExceptionListener
         );
 
         if ($event->getException()->getStatusCode()[0] === 4) {
-            $viewEvent = new GetResponseForControllerResultEvent(
-                $event->getKernel(),
+            $response = $this->responseFactory->createResponse(
                 $event->getRequest(),
-                $event->getRequestType(),
                 new ControllerResult(
                     $event->getException()->getStatusCode(),
                     array('exception' => $event->getException())
                 )
             );
 
-            $this->eventDispatcher->dispatch(Events::VIEW, $viewEvent);
-
-            $event->setResponse(
-                $viewEvent->getResponse()
-            );
+            $event->setResponse($response);
         }
     }
 }

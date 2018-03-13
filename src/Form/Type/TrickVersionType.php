@@ -67,19 +67,5 @@ class TrickVersionType extends AbstractType
             )
         ;
     }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function configureOptions(OptionsResolver $resolver)
-    {
-        $resolver->setDefaults(array(
-            'data_class'        => TrickVersion::class,
-            'validation_groups' => array('trick_version.edit.form'),
-            'csrf_protection'   => true,
-            'csrf_field_name'   => '_token',
-            'csrf_token_id'     => 'security',
-        ));
-    }
 }
 

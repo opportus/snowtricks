@@ -55,19 +55,5 @@ class UserType extends AbstractType
             )
         ;
     }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function configureOptions(OptionsResolver $resolver)
-    {
-        $resolver->setDefaults(array(
-            'data_class'      => User::class,
-            'empty_data'      => new User(),
-            'csrf_protection' => true,
-            'csrf_field_name' => '_token',
-            'csrf_token_id'   => 'security',
-        ));
-    }
 }
 

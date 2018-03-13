@@ -83,16 +83,5 @@ class TrickCommentType extends AbstractType
         $builder->get('thread')->addModelTransformer($this->trickToIdTransformer);
         $builder->get('author')->addModelTransformer($this->userToIdTransformer);
     }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function configureOptions(OptionsResolver $resolver)
-    {
-        $resolver->setDefaults(array(
-            'data_class' => TrickComment::class,
-            'empty_data' => new TrickComment(),
-        ));
-    }
 }
 

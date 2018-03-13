@@ -5,74 +5,44 @@ parameters:
     app_name: 'SnowTricks'
     form_theme: 'bootstrap_4_layout.html.twig'
 
-    # Request parameters
-    request_parameters:
+    # Will be replaced by action annotation in futur...
+    action_parameters:
+        # Home...
+        App\Controller\HomeController::getHome: ~
+        # User...
+        App\Controller\UserController::postUserBySignUpForm:
+        App\Controller\UserController::postUserBySignUpForm: ~
+        App\Controller\UserController::getUserSingUpEmptyForm: ~
+        App\Controller\UserController::patchUserByActivationEmailForm: ~
+        App\Controller\UserController::getUserPasswordResetRequestEmptyForm: ~
+        App\Controller\UserController::proceedByUserPasswordResetRequestForm:
+            form:
+                options:
+                    method: 'POST'
+        App\Controller\UserController::getUserPasswordResetForm: ~
+        App\Controller\UserController::patchUserByPasswordResetForm: ~
+        App\Controller\UserController::getUserSignInEmptyForm: ~
+        # Trick...
+        App\Controller\TrickController::getTrickList: ~
+        App\Controller\TrickController::getTrick:
+            entity:
+                id: 'slug'
+        App\Controller\TrickController::deleteTrickByDeleteForm:
+            entity:
+                id: 'slug'
+        App\Controller\TrickController::getTrickDeleteForm:
+            entity:
+                id: 'slug'
+        # Trick Comment...
+        App\Controller\TrickCommentController::getTrickCommentList: ~
+        App\Controller\TrickCommentController::getTrickComment: ~
+        App\Controller\TrickCommentController::postTrickCommentByEditForm: ~
+        App\Controller\TrickCommentController::putTrickCommentByEditForm: ~
+        App\Controller\TrickCommentController::deleteTrickCommentByDeleteForm: ~
+        App\Controller\TrickCommentController::getTrickCommentEditForm: ~
+        App\Controller\TrickCommentController::getTrickCommentEmptyEditForm: ~
+        App\Controller\TrickCommentController::getTrickCommentDeleteForm: ~
 
-        # Trick
-        trick_get:
-            template: 'trick/trick.html.twhig'
-            form_options: ~
-
-        trick_get_list:
-            template: '/trick/trick_list.html.twig'
-            form_options: ~
-
-        trick_delete:
-            template: ~
-            form_options:
-                action: 'trick_delete'
-                method: 'DELETE'
-                validation_groups: ['trick.delete.form']
-                csrf_protection: true,
-                csrf_field_name: '_token'
-                csrf_token_id: 'security'
-
-        # Trick Comment
-        trick_comment_get:
-            template: ~
-            form_options: ~
-
-        trick_comment_get_list:
-            template: '/trick/comment/trick_comment_list.html.twig'
-            form_options: ~
-
-        trick_comment_post:
-            template: ~
-            form_options:
-                action: 'trick_comment_post'
-                method: 'POST'
-                validation_groups: ['trick_comment.post.form']
-                csrf_protection: true,
-                csrf_field_name: '_token'
-                csrf_token_id: 'security'
-
-        trick_comment_put:
-            template: ~
-            form_options:
-                action: 'trick_comment_put'
-                method: 'PUT'
-                validation_groups: ['trick_comment.put.form']
-                csrf_protection: true,
-                csrf_field_name: '_token'
-                csrf_token_id: 'security'
-
-        trick_comment_delete:
-            template: ~
-            form_options:
-                action: 'trick_comment_delete'
-                method: 'DELETE'
-                validation_groups: ['trick_comment.delete.form']
-                csrf_protection: true,
-                csrf_field_name: '_token'
-                csrf_token_id: 'security'
-
-        trick_comment_get_form:
-            template: 'trick/comment/trick_comment_form'
-            form_options: ~
-
-        trick_comment_get_new_form:
-            template: 'trick/comment/trick_comment_form'
-            form_options: ~
 
 services:
     # default configuration for services in *this* file
@@ -101,20 +71,25 @@ services:
     # Controller...
     App\Controller\HomeController:
         arguments:
-            $parameters:
-                '%request_parameters%'
+            $parameters: '%action_parameters%'
+
     App\Controller\UserController:
         arguments:
-            $parameters:
-                '%request_parameters%'
+            $parameters: '%action_parameters%'
+
     App\Controller\TrickController:
         arguments:
-            $parameters:
-                '%request_parameters%'
+            $parameters: '%action_parameters%'
+
     App\Controller\TrickCommentController:
         arguments:
-            $parameters:
-                '%request_parameters%'
+            $parameters: '%action_parameters%'
+
+    # Response Factory...
+    App\HttpFoundation\ResponseFactoryInterface: '@App\HttpFoundation\ResponseFactory'
+    App\HttpFoundation\ResponseFactory:
+        arguments:
+            $parameters: '%action_parameters%'
 
     # Mailer...
     App\Mailer\MailerInterface: '@App\Mailer\Mailer'
