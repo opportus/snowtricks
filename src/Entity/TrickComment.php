@@ -2,6 +2,11 @@
 
 namespace App\Entity;
 
+use App\Entity\Data\EntityDataInterface;
+use App\Entity\Data\TrickCommentDataInterface;
+use App\Entity\Data\TrickCommentData;
+use App\Security\AuthorizableTrait;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -19,16 +24,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  */
 class TrickComment extends Entity implements TrickCommentInterface
 {
-    /**
-     * @var null|string $body
-     *
-     * @ORM\Column(name="body", type="text")
-     *
-     * @Assert\NotBlank()
-     * @Assert\Type(type="string")
-     * @Assert\Length(max=64512)
-     */
-    protected $body;
+    use AuthorizableTrait;
 
     /**
      * @var null|\DateTimeInterface $updatedAt
@@ -39,6 +35,37 @@ class TrickComment extends Entity implements TrickCommentInterface
      * @Assert\DateTime()
      */
     protected $updatedAt;
+
+    /**
+     * @var string $body
+     *
+     * @ORM\Column(name="body", type="text")
+     *
+     * @Assert\NotBlank()
+     * @Assert\Type(type="string")
+     * @Assert\Length(max=64512)
+     */
+    protected $body;
+
+    /**
+     * @var App\Entity\UserInterface $author
+     *
+     * @ORM\ManyToOne(targetEntity="App\Entity\User")
+     * @ORM\JoinColumn(name="author_id", referencedColumnName="id", nullable=false)
+     * @Assert\NotNull()
+     * @Assert\Valid()
+     */
+    protected $author;
+
+    /**
+     * @var App\Entity\TrickInterface $thread
+     *
+     * @ORM\ManyToOne(targetEntity="App\Entity\Trick", inversedBy="comments")
+     * @ORM\JoinColumn(name="thread_id", referencedColumnName="id", nullable=false)
+     * @Assert\NotNull()
+     * @Assert\Valid()
+     */
+    protected $thread;
 
     /**
      * @var null|App\Entity\TrickCommentInterface $parent
@@ -58,55 +85,74 @@ class TrickComment extends Entity implements TrickCommentInterface
     protected $children;
 
     /**
-     * @var null|App\Entity\TrickInterface $thread
-     *
-     * @ORM\ManyToOne(targetEntity="App\Entity\Trick", inversedBy="comments")
-     * @ORM\JoinColumn(name="thread_id", referencedColumnName="id", nullable=false)
-     * @Assert\NotNull()
-     * @Assert\Valid()
-     */
-    protected $thread;
-
-    /**
-     * @var null|App\Entity\UserInterface $author
-     *
-     * @ORM\ManyToOne(targetEntity="App\Entity\User")
-     * @ORM\JoinColumn(name="author_id", referencedColumnName="id", nullable=false)
-     * @Assert\NotNull()
-     * @Assert\Valid()
-     */
-    protected $author;
-
-    /**
      * Constructs the trick comment.
+     *
+     * @param string $body
+     * @param App\Entity\UserInterface $author
+     * @param App\Entity\TrickInterface $thread
+     * @param App\Entity\TrickCommentInterface $parent
+     * @param Doctrine\Common\Collections\Collection $children
      */
-    public function __construct()
+    private function __construct(
+        string                 $body,
+        UserInterface          $author,
+        TrickInterface         $thread,
+        ?TrickCommentInterface $parent   = null,
+        ?Collection            $children = null
+    )
     {
-        parent::__construct();
-
-        $this->children = new ArrayCollection();
+        $this->id        = $this->generateId();
+        $this->createdAt = new \DateTime();
+        $this->body      = $body;
+        $this->author    = $author;
+        $this->thread    = $thread;
+        $this->parent    = $parent;
+        $this->children  = $children === null ? new ArrayCollection() : $children;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function getBody() : ?string
+    public static function createFromData(EntityDataInterface $data) : EntityInterface
     {
-        return $this->body;
+        if (! $data instanceof TrickCommentDataInterface) {
+            throw new \InvalidArgumentException();
+        }
+
+        $self = get_called_class();
+
+        return new $self(
+            $data->getBody(),
+            $data->getAuthor(),
+            $data->getThread(),
+            $data->getParent(),
+            $data->getChildren()
+        );
     }
 
     /**
      * {@inheritdoc}
      */
-    public function setBody(string $body) : TrickCommentInterface
+    public function updateFromData(EntityDataInterface $data) : EntityInterface
     {
-        if ($this->body !== null) {
+        if (! $data instanceof TrickCommentDataInterface) {
+            throw new \InvalidArgumentException();
+        }
+
+        if ($data->getBody()) {
+            $this->body      = $data->getBody();
             $this->updatedAt = new \DateTime();
         }
 
-        $this->body = $body;
-
         return $this;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function toData() : EntityDataInterface
+    {
+        return TrickCommentData::createFromEntity($this);
     }
 
     /**
@@ -120,19 +166,25 @@ class TrickComment extends Entity implements TrickCommentInterface
     /**
      * {@inheritdoc}
      */
-    public function getParent() : ?TrickCommentInterface
+    public function getBody() : string
     {
-        return $this->parent;
+        return $this->body;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function setParent(TrickCommentInterface $parent) : TrickCommentInterface
+    public function getThread() : TrickInterface
     {
-        $this->parent = $parent;
+        return $this->thread;
+    }
 
-        return $this;
+    /**
+     * {@inheritdoc}
+     */
+    public function getParent() : ?TrickCommentInterface
+    {
+        return $this->parent;
     }
 
     /**
@@ -156,9 +208,9 @@ class TrickComment extends Entity implements TrickCommentInterface
     /**
      * {@inheritdoc}
      */
-    public function getChildren() : array
+    public function getChildren() : Collection
     {
-        return $this->children->toArray();
+        return clone $this->children;
     }
 
     /**
@@ -192,43 +244,6 @@ class TrickComment extends Entity implements TrickCommentInterface
     public function hasChildren() : bool
     {
         return !$this->children->isEmpty();
-    }
-
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getThread() : ?TrickInterface
-    {
-        return $this->thread;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function setThread(TrickInterface $thread) : TrickCommentInterface
-    {
-        $this->thread = $thread;
-
-        return $this;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getAuthor() : ?UserInterface
-    {
-        return $this->author;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function setAuthor(UserInterface $author) : TrickCommentInterface
-    {
-        $this->author = $author;
-
-        return $this;
     }
 }
 

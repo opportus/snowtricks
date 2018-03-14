@@ -72,8 +72,6 @@ abstract class Controller extends AbstractController
     {
         $parameters = $this->resolveActionParameters($request);
 
-        $entityClass = $parameters['entity']['class'];
-
         $limit    = 10;
         $offset   = ($request->query->getInt('page', 1) - 1) * $limit;
         $order    = $request->query->get('order', array());
@@ -89,7 +87,7 @@ abstract class Controller extends AbstractController
             $request->query->get('attribute', array())
         );
 
-        $entities = $this->entityManager->getRepository($entityClass)->findBy(
+        $entities = $this->entityManager->getRepository($parameters['entity']['class'])->findBy(
             $criteria,
             $order,
             $limit,
@@ -122,11 +120,8 @@ abstract class Controller extends AbstractController
     {
         $parameters = $this->resolveActionParameters($request);
 
-        $entityClass = $parameters['entity']['class'];
-        $entityId    = $parameters['entity']['id'];
-
-        $entity = $this->entityManager->getRepository($entityClass)->findOneBy(
-            array($entityId => $request->attributes->get($entityId))
+        $entity = $this->entityManager->getRepository($parameters['entity']['class'])->findOneBy(
+            array($parameters['entity']['id'] => $request->attributes->get($parameters['entity']['id']))
         );
 
         if ($entity === null) {
@@ -155,21 +150,17 @@ abstract class Controller extends AbstractController
     {
         $parameters = $this->resolveActionParameters($request);
 
-        $entityClass = $parameters['entity']['class'];
-        $formClass   = $parameters['form']['class'];
-        $formOptions = $parameters['form']['options'];
-
-        $entity = new $entityClass();
-
         $form = $this->formFactory->create(
-            $formClass,
-            $entity,
-            $formOptions
+            $parameters['form']['class'],
+            new $parameters['form']['options']['data_class'](),
+            $parameters['form']['options']
         );
 
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $entity = $parameters['entity']['class']::createFromData($form->getData());
+
             $this->entityManager->persist($entity);
             $this->entityManager->flush();
 
@@ -202,13 +193,8 @@ abstract class Controller extends AbstractController
     {
         $parameters = $this->resolveActionParameters($request);
 
-        $entityClass = $parameters['entity']['class'];
-        $entityId    = $parameters['entity']['id'];
-        $formClass   = $parameters['form']['class'];
-        $formOptions = $parameters['form']['options'];
-
-        $entity = $this->entityManager->getRepository($entityClass)->findOneBy(
-            array($entityId => $request->attributes->get($entityId))
+        $entity = $this->entityManager->getRepository($parameters['entity']['class'])->findOneBy(
+            array($parameters['entity']['id'] => $request->attributes->get($parameters['entity']['id']))
         );
 
         if ($entity === null) {
@@ -216,14 +202,16 @@ abstract class Controller extends AbstractController
         }
 
         $form = $this->formFactory->create(
-            $formClass,
-            $entity,
-            $formOptions
+            $parameters['form']['class'],
+            $parameters['form']['options']['data_class']::createFromEntity($entity),
+            $parameters['form']['options']
         );
 
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $entity->updateFromData($form->getData());
+
             $this->entityManager->flush();
 
             return $this->responseFactory->createResponse(
@@ -255,13 +243,8 @@ abstract class Controller extends AbstractController
     {
         $parameters = $this->resolveActionParameters($request);
 
-        $entityClass = $parameters['entity']['class'];
-        $entityId    = $parameters['entity']['id'];
-        $formClass   = $parameters['form']['class'];
-        $formOptions = $parameters['form']['options'];
-
-        $entity = $this->entityManager->getRepository($entityClass)->findOneBy(
-            array($entityId => $request->attributes->get($entityId))
+        $entity = $this->entityManager->getRepository($parameters['entity']['class'])->findOneBy(
+            array($parameters['entity']['id'] => $request->attributes->get($parameters['entity']['id']))
         );
 
         if ($entity === null) {
@@ -269,14 +252,16 @@ abstract class Controller extends AbstractController
         }
 
         $form = $this->formFactory->create(
-            $formClass,
-            $entity,
-            $formOptions
+            $parameters['form']['class'],
+            $parameters['form']['options']['data_class']::createFromEntity($entity),
+            $parameters['form']['options']
         );
 
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $entity->updateFromData($form->getData());
+
             $this->entityManager->flush();
 
             return $this->responseFactory->createResponse(
@@ -308,13 +293,8 @@ abstract class Controller extends AbstractController
     {
         $parameters = $this->resolveActionParameters($request);
 
-        $entityClass = $parameters['entity']['class'];
-        $entityId    = $parameters['entity']['id'];
-        $formClass   = $parameters['form']['class'];
-        $formOptions = $parameters['form']['options'];
-
-        $entity = $this->entityManager->getRepository($entityClass)->findOneBy(
-            array($entityId => $request->attributes->get($entityId))
+        $entity = $this->entityManager->getRepository($parameters['entity']['class'])->findOneBy(
+            array($parameters['entity']['id'] => $request->attributes->get($parameters['entity']['id']))
         );
 
         if ($entity === null) {
@@ -322,9 +302,9 @@ abstract class Controller extends AbstractController
         }
 
         $form = $this->formFactory->create(
-            $formClass,
-            $entity,
-            $formOptions
+            $parameters['form']['class'],
+            $parameters['form']['options']['data_class']::createFromEntity($entity),
+            $parameters['form']['options']
         );
 
         $form->handleRequest($request);
@@ -362,28 +342,19 @@ abstract class Controller extends AbstractController
     {
         $parameters = $this->resolveActionParameters($request);
 
-        $entityClass = $parameters['entity']['class'];
-        $entityId    = $parameters['entity']['id'];
-        $formClass   = $parameters['form']['class'];
-        $formOptions = $parameters['form']['options'];
-
-        $entity = new $entityClass();
-
         $form = $this->formFactory->create(
-            $formClass,
-            $entity,
-            $formOptions
+            $parameters['form']['class'],
+            null,
+            $parameters['form']['options']
         );
+
 
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
             return $this->responseFactory->createResponse(
                 $request,
-                new ControllerResult(
-                    202,
-                    array('entity' => $entity)
-                )
+                new ControllerResult(202)
             );
 
         } elseif ($form->isSubmitted()) {
@@ -407,26 +378,18 @@ abstract class Controller extends AbstractController
     {
         $parameters = $this->resolveActionParameters($request);
 
-        $entityClass = $parameters['entity']['class'];
-        $entityId    = $parameters['entity']['id'];
-        $formClass   = $parameters['form']['class'];
-        $formOptions = $parameters['form']['options'];
-
-        $entity = $this->entityManager->getRepository($entityClass)->findOneBy(
-            array($entityId => $request->attributes->get($entityId))
+        $entity = $this->entityManager->getRepository($parameters['entity']['class'])->findOneBy(
+            array($parameters['entity']['id'] => $request->attributes->get($parameters['entity']['id']))
         );
 
         if ($entity === null) {
-            return $this->responseFactory->createResponse(
-                $request,
-                new ControllerResult(404)
-            );
+            return $this->responseFactory->createResponse($request, 404);
         }
 
         $form = $this->formFactory->create(
-            $formClass,
-            $entity,
-            $formOptions
+            $parameters['form']['class'],
+            $parameters['form']['options']['data_class']::createFromEntity($entity),
+            $parameters['form']['options']
         );
 
         return $this->responseFactory->createResponse(
@@ -448,15 +411,10 @@ abstract class Controller extends AbstractController
     {
         $parameters = $this->resolveActionParameters($request);
 
-        $entityClass = $parameters['entity']['class'];
-        $formClass   = $parameters['form']['class'];
-        $formOptions = $parameters['form']['options'];
-
-        $entity = new $entityClass();
-        $form   = $this->formFactory->create(
-            $formClass,
-            $entity,
-            $formOptions
+        $form = $this->formFactory->create(
+            $parameters['form']['class'],
+            $parameters['form']['options']['data_class'],
+            $parameters['form']['options']
         );
 
         return $this->responseFactory->createResponse(
@@ -509,7 +467,7 @@ abstract class Controller extends AbstractController
             'csrf_token_id'     => 'security',
             'data_class'        => str_replace(
                 array('\Controller\\', 'Controller'),
-                array('\Entity\\',     ''),
+                array('\Entity\Data\\',  'Data'),
                 get_class($this)
             )
         ));

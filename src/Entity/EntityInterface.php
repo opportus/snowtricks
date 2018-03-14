@@ -2,6 +2,8 @@
 
 namespace App\Entity;
 
+use App\Entity\Data\EntityDataInterface;
+
 /**
  * The entity interface...
  *
@@ -13,11 +15,36 @@ namespace App\Entity;
 interface EntityInterface
 {
     /**
+     * Creates from data.
+     *
+     * @param  App\Entity\Data\EntityDataInterface $data
+     * @return App\Entity\EntityInterface
+     * @throws \InvalidArgumentException
+     */
+    public static function createFromData(EntityDataInterface $data) : EntityInterface;
+
+    /**
+     * Updates from data.
+     *
+     * @param  App\Entity\Data\EntityDataInterface $data
+     * @return App\Entity\EntityInterface
+     * @throws \InvalidArgumentException
+     */
+    public function updateFromData(EntityDataInterface $data) : EntityInterface;
+
+    /**
+     * To data.
+     *
+     * @return App\Entity\Data\EntityDataInterface
+     */
+    public function toData() : EntityDataInterface;
+
+    /**
      * Gets the ID.
      *
-     * @return null|int
+     * @return string
      */
-    public function getId() : ?int;
+    public function getId() : string;
 
     /**
      * Gets the creation datetime.

@@ -2,9 +2,9 @@
 
 namespace App\Security;
 
-use App\Entity\EntityInterface;
 use App\Entity\TrickInterface;
-use App\Entity\UserInterface;
+use App\Security\AuthorizableInterface;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
  * The trick access voter...
@@ -19,7 +19,7 @@ class TrickAccessVoter extends EntityAccessVoter
     /**
      * {@inheritdoc}
      */
-    protected function canGet(EntityInterface $subject, UserInterface $user) : bool
+    protected function canGet(AuthorizableInterface $subject, UserInterface $user) : bool
     {
         return true;
     }
@@ -27,23 +27,23 @@ class TrickAccessVoter extends EntityAccessVoter
     /**
      * {@inheritdoc}
      */
-    protected function canPut(EntityInterface $subject, UserInterface $user) : bool
+    protected function canPut(AuthorizableInterface $subject, UserInterface $user) : bool
     {
-        return $subject->isAuthor($user);
+        return $subject->hasAuthor($user);
     }
 
     /**
      * {@inheritdoc}
      */
-    protected function canDelete(EntityInterface $subject, UserInterface $user) : bool
+    protected function canDelete(AuthorizableInterface $subject, UserInterface $user) : bool
     {
-        return $subject->isAuthor($user);
+        return $subject->hasAuthor($user);
     }
 
     /**
      * {@inheritdoc}
      */
-    protected function supportsSubject(EntityInterface $subject) : bool
+    protected function supportsSubject(AuthorizableInterface $subject) : bool
     {
         return $subject instanceof TrickInterface;
     }

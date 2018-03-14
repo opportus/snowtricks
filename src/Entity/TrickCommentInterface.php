@@ -2,6 +2,9 @@
 
 namespace App\Entity;
 
+use App\Security\AuthorizableInterface;
+use Doctrine\Common\Collections\Collection;
+
 /**
  * The trick comment interface...
  *
@@ -10,23 +13,8 @@ namespace App\Entity;
  * @author  Clément Cazaud <opportus@gmail.com>
  * @license https://github.com/opportus/snowtricks/blob/master/LICENSE.md MIT
  */
-interface TrickCommentInterface extends EntityInterface
+interface TrickCommentInterface extends EntityInterface, AuthorizableInterface
 {
-    /**
-     * Gets the body.
-     *
-     * @return null|string
-     */
-    public function getBody() : ?string;
-
-    /**
-     * Sets the body.
-     *
-     * @param  string $body
-     * @return App\Entity\TrickCommentInterface
-     */
-    public function setBody(string $body) : TrickCommentInterface;
-
     /**
      * Gets the update datetime.
      *
@@ -35,19 +23,25 @@ interface TrickCommentInterface extends EntityInterface
     public function getUpdatedAt() : ?\DateTimeInterface;
 
     /**
+     * Gets the body.
+     *
+     * @return string
+     */
+    public function getBody() : string;
+
+    /**
+     * Gets the thread.
+     *
+     * @return App\Entity\TrickInterface
+     */
+    public function getThread() : TrickInterface;
+
+    /**
      * Gets the parent.
      *
      * @return null|App\Entity\TrickCommentInterface
      */
     public function getParent() : ?TrickCommentInterface;
-
-    /**
-     * Sets the parent.
-     *
-     * @param  App\Entity\TrickCommentInterface $parent
-     * @return App\Entity\TrickCommentInterface
-     */
-    public function setParent(TrickCommentInterface $parent) : TrickCommentInterface;
 
     /**
      * Removes the parent.
@@ -68,7 +62,7 @@ interface TrickCommentInterface extends EntityInterface
      *
      * @return array
      */
-    public function getChildren() : array;
+    public function getChildren() : Collection;
 
     /**
      * Adds a child.
@@ -92,35 +86,5 @@ interface TrickCommentInterface extends EntityInterface
      * @return bool
      */
     public function hasChildren() : bool;
-
-    /**
-     * Gets the thread.
-     *
-     * @return null|App\Entity\TrickInterface
-     */
-    public function getThread() : ?TrickInterface;
-
-    /**
-     * Sets the thread.
-     *
-     * @param  App\Entity\TrickInterface $thread
-     * @return App\Entity\TrickCommentInterface
-     */
-    public function setThread(TrickInterface $thread) : TrickCommentInterface;
-
-    /**
-     * Gets the author.
-     *
-     * @return null|App\Entity\UserInterface
-     */
-    public function getAuthor() : ?UserInterface;
-
-    /**
-     * Sets the author.
-     *
-     * @param  App\Entity\UserInterface $author
-     * @return App\Entity\TrickCommentInterface
-     */
-    public function setAuthor(UserInterface $author) : TrickCommentInterface;
 }
 

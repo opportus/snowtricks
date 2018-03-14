@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use App\Entity\Data\EntityDataInterface;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -18,13 +19,13 @@ use Symfony\Component\Validator\Constraints as Assert;
 abstract class Entity implements EntityInterface
 {
     /**
-     * @var null|int $id
+     * @var string $id
      *
      * @ORM\Id
-     * @ORM\GeneratedValue(strategy="AUTO")
-     * @ORM\Column(name="id", type="integer")
-     * @Assert\Type(type="integer")
-     * @Assert\Range(min=1)
+     * @ORM\Column(name="id", type="string")
+     * @Assert\NotNull()
+     * @Assert\Type(type="string")
+     * @Assert\Length(max=255)
      */
     protected $id;
 
@@ -39,17 +40,24 @@ abstract class Entity implements EntityInterface
     protected $createdAt;
 
     /**
-     * Constructs the entity.
+     * {@inheritdoc}
      */
-    public function __construct()
-    {
-        $this->createdAt = new \DateTime();
-    }
+    abstract public static function createFromData(EntityDataInterface $data) : EntityInterface;
 
     /**
      * {@inheritdoc}
      */
-    public function getId() : ?int
+    abstract public function updateFromData(EntityDataInterface $data) : EntityInterface;
+
+    /**
+     * {@inheritdoc}
+     */
+    abstract public function toData() : EntityDataInterface;
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getId() : string
     {
         return $this->id;
     }
@@ -60,6 +68,23 @@ abstract class Entity implements EntityInterface
     public function getCreatedAt() : \DateTimeInterface
     {
         return $this->createdAt;
+    }
+
+    /**
+     * Generates a V4 UUID.
+     *
+     * @return string
+     */
+    protected function generateId() : string
+    {
+        $random = random_bytes(16);
+
+        assert(strlen($random) == 16);
+
+        $random[6] = chr(ord($random[6]) & 0x0f | 0x40); // Sets version to 0100
+        $random[8] = chr(ord($random[8]) & 0x3f | 0x80); // Sets bits 6-7 to 10
+
+        return vsprintf('%s%s-%s-%s-%s-%s%s%s', str_split(bin2hex($random), 4));
     }
 }
 

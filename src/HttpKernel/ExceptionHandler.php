@@ -5,6 +5,8 @@ namespace App\HttpKernel;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\HttpKernel\Exception\ConflictHttpException;
+use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 
 /**
@@ -52,6 +54,12 @@ class ExceptionHandler implements ExceptionHandlerInterface
         if (! $exception instanceof HttpException) {
             if ($exception instanceof UniqueConstraintViolationException) {
                 $exception = new ConflictHttpException(
+                    $exception->getMessage(),
+                    $exception
+                );
+
+            } elseif ($exception instanceof AccessDeniedException) {
+                $exception = new AccessDeniedHttpException(
                     $exception->getMessage(),
                     $exception
                 );

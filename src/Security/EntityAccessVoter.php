@@ -2,8 +2,8 @@
 
 namespace App\Security;
 
-use App\Entity\EntityInterface;
-use App\Entity\UserInterface;
+use App\Security\AuthorizableInterface;
+use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\Voter;
 
@@ -30,7 +30,7 @@ abstract class EntityAccessVoter extends Voter
             return false;
         }
 
-        if (! $subject instanceof EntityInterface) {
+        if (! $subject instanceof AuthorizableInterface) {
             return false;
         }
 
@@ -65,36 +65,36 @@ abstract class EntityAccessVoter extends Voter
     /**
      * Checks whether the user can get the subject.
      *
-     * @param  App\Entity\EntityInterface $subject
-     * @param  App\Entity\UserInterface $user
+     * @param  App\Security\AuthorizableInterface $subject
+     * @param  Symfony\Component\Security\Core\User\UserInterface $user
      * @return bool
      */
-    abstract protected function canGet(EntityInterface $subject, UserInterface $user) : bool;
+    abstract protected function canGet(AuthorizableInterface $subject, UserInterface $user) : bool;
 
     /**
      * Checks whether the user can put the subject.
      *
-     * @param  App\Entity\EntityInterface $subject
-     * @param  App\Entity\UserInterface $user
+     * @param  App\Security\AuthorizableInterface $subject
+     * @param  Symfony\Component\Security\Core\User\UserInterface $user
      * @return bool
      */
-    abstract protected function canPut(EntityInterface $subject, UserInterface $user) : bool;
+    abstract protected function canPut(AuthorizableInterface $subject, UserInterface $user) : bool;
 
     /**
      * Checks whether the user can delete the subject.
      *
-     * @param  App\Entity\EntityInterface $subject
-     * @param  App\Entity\UserInterface $user
+     * @param  App\Security\AuthorizableInterface $subject
+     * @param  Symfony\Component\Security\Core\User\UserInterface $user
      * @return bool
      */
-    abstract protected function canDelete(EntityInterface $subject, UserInterface $user) : bool;
+    abstract protected function canDelete(AuthorizableInterface $subject, UserInterface $user) : bool;
 
     /**
      * Checks whether this voter supports the subject.
      *
-     * @param  App\Entity\EntityInterface $subject
+     * @param  App\Security\AuthorizableInterface $subject
      * @return bool
      */
-    abstract protected function supportsSubject(EntityInerface $subject) : bool;
+    abstract protected function supportsSubject(AuthorizableInterface $subject) : bool;
 }
 
