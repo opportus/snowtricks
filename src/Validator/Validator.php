@@ -2,11 +2,9 @@
 
 namespace App\Validator;
 
-use App\Entity\EntityInterface;
 use App\Validator\ValidatorInterface as AppValidatorInterface;
-use App\Exception\EntityNotValidException;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
-use Symfony\Component\Validator\ConstraintViolationListInterface;
+use Symfony\Component\Validator\Exception\ValidatorException;
 use Psr\Log\LoggerInterface;
 
 /**
@@ -41,37 +39,23 @@ class Validator implements AppValidatorInterface
      * @param Symfony\Component\Validator\Validator\ValidatorInterface $validator
      * @param Psr\Log\LoggerInterface $logger
      */
-    public function __construct(
-        array                  $parameters,
-        ValidatorInterface     $validator,
-        LoggerInterface        $logger
-    )
+    public function __construct(array $parameters, ValidatorInterface $validator, LoggerInterface $logger)
     {
-        $this->parameters    = $parameters;
-        $this->validator     = $validator;
-        $this->logger        = $logger;
+        $this->parameters = $parameters;
+        $this->validator  = $validator;
+        $this->logger     = $logger;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function validate(EntityInterface $entity, $constraints = null, $groups = null) : ConstraintViolationListInterface
+    public function validateWithException($value, $constraints = null, $groups = null, string $exception = ValidatorException::class)
     {
-        return $this->validator
-            ->validate($entity, $constraints, $groups)
-        ;
-    }
+        $constraintViolationList = $this->validator->validate($value, $constraints, $groups);
 
-    /**
-     * {@inheritdoc}
-     */
-    public function validateWithException(EntityInterface $entity, $constraints = null, $groups = null)
-    {
-        $entityConstraintViolationList = $this->validate($entity, $constraints, $groups);
-
-        if ($entityConstraintViolationList->count() > 0) {
-            throw new EntityNotValidException(
-                (string) $entityConstraintViolationList
+        if ($constraintViolationList->count() > 0) {
+            throw new $exception(
+                (string) $constraintViolationList
             );
         }
     }
@@ -79,26 +63,26 @@ class Validator implements AppValidatorInterface
     /**
      * {@inheritdoc}
      */
-    public function validateWithExceptionAndLog(EntityInterface $entity, $constraints = null, $groups = null)
+    public function validateWithExceptionAndLog($value, $constraints = null, $groups = null, string $exception = ValidatorException::class)
     {
         try {
-            $this->validateWithException($entity, $constraints, $groups);
+            $this->validateWithException($value, $constraints, $groups, $exception);
 
-        } catch (EntityNotValidException $exception) {
+        } catch (\Exception $e) {
             $this->logger->critical(
                 sprintf(
-                    'Invalid %s',
-                    get_class($entity)
+                    'A % has occured',
+                    get_class($e)
                 ),
                 array(
-                    'exception'          => $exception,
-                    'entity'             => $entity,
-                    'entity_constraints' => $constraints,
-                    'entity_groups'      => $groups,
+                    'exception'   => $e,
+                    'value'       => $value,
+                    'constraints' => $constraints,
+                    'groups'      => $groups,
                 )
             );
 
-            throw $exception;
+            throw $e;
         }
     }
 }

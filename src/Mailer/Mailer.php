@@ -3,14 +3,13 @@
 namespace App\Mailer;
 
 use App\Entity\UserInterface;
-use App\Entity\UserTokenInterface;
 use App\Validator\ValidatorInterface;
 use Symfony\Component\Translation\TranslatorInterface;
 use Symfony\Component\Routing\RouterInterface;
 use Psr\Log\LoggerInterface;
-use \Swift_Mailer;
-use \Swift_Message;
-use \Twig_Environment;
+use Swift_Mailer;
+use Swift_Message;
+use Twig_Environment;
 
 /**
  * The mailer...
@@ -123,39 +122,22 @@ class Mailer implements MailerInterface
     /**
      * {@inheritdoc}
      */
-    public function sendUserActivationEmail(UserInterface $user, UserTokenInterface $userToken) : MailerInterface
+    public function sendUserActivationEmail(UserInterface $user) : MailerInterface
     {
-        $this->validator->validateWithExceptionAndLog($user, null, array('user.activate.email'));
-        $this->validator->validateWithExceptionAndLog($userToken, null, array('user.activate.email'));
-
         $template = $this->parameters['send_user_activation_email']['template'];
         $from     = $this->parameters['send_user_activation_email']['from'];
         $subject  = $this->translator->trans(
-            'user.activate.email.subject',
+            'user.activation.email.subject',
             array(
                 '%username%'    => $user->getUsername(),
-                '%action_ttl%'  => (string) $userToken->getTtl(),
-                '%action_link%' => $this->router->generate(
-                    'user_activate',
-                    array(
-                        'token' => $userToken->getKey()
-                    ),
-                    RouterInterface::ABSOLUTE_URL
-                )
+                '%action_ttl%'  => $user->getActivationToken()->getTtl(),
             )
         );
         $message  = $this->translator->trans(
-            'user.activate.email.message',
+            'user.activation.email.message',
             array(
                 '%username%'    => $user->getUsername(),
-                '%action_ttl%'  => (string) $userToken->getTtl(),
-                '%action_link%' => $this->router->generate(
-                    'user_activate',
-                    array(
-                        'token' => $userToken->getKey()
-                    ),
-                    RouterInterface::ABSOLUTE_URL
-                )
+                '%action_ttl%'  => $user->getActivationToken()->getTtl(),
             )
         );
 
@@ -173,39 +155,22 @@ class Mailer implements MailerInterface
     /**
      * {@inheritdoc}
      */
-    public function sendUserPasswordResetEmail(UserInterface $user, UserTokenInterface $userToken) : MailerInterface
+    public function sendUserPasswordResetEmail(UserInterface $user) : MailerInterface
     {
-        $this->validator->validateWithExceptionAndLog($user, null, array('user.reset_password.email'));
-        $this->validator->validateWithExceptionAndLog($userToken, null, array('user.reset_password.email'));
-
         $template = $this->parameters['send_user_password_reset_email']['template'];
         $from     = $this->parameters['send_user_password_reset_email']['from'];
         $subject  = $this->translator->trans(
-            'user.reset_password.email.subject',
+            'user.password_reset.email.subject',
             array(
                 '%username%'    => $user->getUsername(),
-                '%action_ttl%'  => (string) $userToken->getTtl(),
-                '%action_link%' => $this->router->generate(
-                    'user_reset_password',
-                    array(
-                        'token' => $userToken->getKey()
-                    ),
-                    RouterInterface::ABSOLUTE_URL
-                )
+                '%action_ttl%'  => $user->getPasswordResetToken()->getTtl(),
             )
         );
         $message  = $this->translator->trans(
-            'user.reset_password.email.message',
+            'user.password_reset.email.message',
             array(
                 '%username%'    => $user->getUsername(),
-                '%action_ttl%'  => (string) $userToken->getTtl(),
-                '%action_link%' => $this->router->generate(
-                    'user_reset_password',
-                    array(
-                        'token' => $userToken->getKey()
-                    ),
-                    RouterInterface::ABSOLUTE_URL
-                )
+                '%action_ttl%'  => $user->getPasswordResetToken()->getTtl(),
             )
         );
 

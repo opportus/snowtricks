@@ -7,33 +7,33 @@
                 <meta charset="utf-8" />
                 <meta http-equiv="X-UA-Compatible" content="IE=edge" />
                 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-                <meta name="description" content="{% block description %}{{ app_name }}{% endblock %}" />
+                <meta name="description" content="{% block description %}{% endblock %}" />
                 <meta name="author" content="{% block author %}{{ app_name }}{% endblock %}" />
-                <title>{% block title %}{{ app_name }}{% endblock title %}</title>
+                <title>{% block title %}{% endblock title %}</title>
             {% endblock meta %}
             {% block icons %}
                 <!-- Icons ============================================================= -->
                 <link rel="shortcut icon" href="{{ asset('favicon.ico') }}" type="image/x-icon" />
-                <link rel="apple-touch-icon" href="{{ asset('apple-touch-icon.png') }}" />
-                <link rel="apple-touch-icon" sizes="57x57" href="{{ asset('apple-touch-icon-57x57.png') }}" />
-                <link rel="apple-touch-icon" sizes="72x72" href="{{ asset('apple-touch-icon-72x72.png') }}" />
-                <link rel="apple-touch-icon" sizes="76x76" href="{{ asset('apple-touch-icon-76x76.png') }}" />
-                <link rel="apple-touch-icon" sizes="114x114" href="{{ asset('apple-touch-icon-114x114.png') }}" />
-                <link rel="apple-touch-icon" sizes="120x120" href="{{ asset('apple-touch-icon-120x120.png') }}" />
-                <link rel="apple-touch-icon" sizes="144x144" href="{{ asset('apple-touch-icon-144x144.png') }}" />
-                <link rel="apple-touch-icon" sizes="152x152" href="{{ asset('apple-touch-icon-152x152.png') }}" />
-                <link rel="apple-touch-icon" sizes="180x180" href="{{ asset('apple-touch-icon-180x180.png') }}" />
+                <link rel="apple-touch-icon" href="{{ asset('img/apple-touch-icon.png') }}" />
+                <link rel="apple-touch-icon" sizes="57x57" href="{{ asset('img/apple-touch-icon-57x57.png') }}" />
+                <link rel="apple-touch-icon" sizes="72x72" href="{{ asset('img/apple-touch-icon-72x72.png') }}" />
+                <link rel="apple-touch-icon" sizes="76x76" href="{{ asset('img/apple-touch-icon-76x76.png') }}" />
+                <link rel="apple-touch-icon" sizes="114x114" href="{{ asset('img/apple-touch-icon-114x114.png') }}" />
+                <link rel="apple-touch-icon" sizes="120x120" href="{{ asset('img/apple-touch-icon-120x120.png') }}" />
+                <link rel="apple-touch-icon" sizes="144x144" href="{{ asset('img/apple-touch-icon-144x144.png') }}" />
+                <link rel="apple-touch-icon" sizes="152x152" href="{{ asset('img/apple-touch-icon-152x152.png') }}" />
+                <link rel="apple-touch-icon" sizes="180x180" href="{{ asset('img/apple-touch-icon-180x180.png') }}" />
             {% endblock icons %}
             {% block fonts %}
                 <!-- Fonts ============================================================= -->
-		        <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
-		        <link href="https://fonts.googleapis.com/css?family=Raleway" rel="stylesheet">
+                <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
+                <link href="https://fonts.googleapis.com/css?family=Raleway" rel="stylesheet">
             {% endblock fonts %}
             {% block stylesheets %}
                 <!-- Stylesheets ======================================================= -->
                 <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css" rel="stylesheet" />
-		        <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" />
-		        <link href="{{ asset('css/style.css') }}" rel="stylesheet" />
+                <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" />
+                <link href="https://use.fontawesome.com/releases/v5.0.6/css/all.css" rel="stylesheet">
             {% endblock stylesheets %}
         </head>
     {% endblock head %}
@@ -42,63 +42,74 @@
             {% block navbar %}
                 <!-- Navbar ============================================================ -->
                 <nav class="navbar navbar-expand-md navbar-light bg-light">
-                    <a class="navbar-brand" href="{{ path('index') }}">
-                        <img src="{{ asset('snowtricks-logo.png') }}" width="30" height="30" class="d-inline-block align-top" alt="SnowTricks">
-                        {{ app_name }}
-                    </a>
-                    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#nav" aria-expanded="false" aria-label="Toggle navigation">
-                        <span class="navbar-toggler-icon"></span>
-                    </button>
-                    <div class="collapse navbar-collapse" id="nav">
-                        <ul class="navbar-nav ml-md-auto">
-                            <li class="nav-item">
-                                <a class="nav-link" href="{{ path('index') }}">Home</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="{{ path('index') }}#tricks">Tricks</a>
-                            </li>
-                            {% if is_granted('IS_AUTHENTICATED_REMEMBERED') %}
+                    {% block logo %}
+                        <!-- Logo ============================================================ -->
+                        <a class="navbar-brand" href="{{ url('get_home') }}">
+                            {{ app_name }}
+                        </a>
+                    {% endblock logo %}
+                    {% block menu %}
+                        <!-- Menu ============================================================ -->
+                        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#nav" aria-expanded="false" aria-label="Toggle navigation">
+                            <span class="navbar-toggler-icon"></span>
+                        </button>
+                        <div class="collapse navbar-collapse" id="nav">
+                            <ul class="navbar-nav ml-md-auto">
                                 <li class="nav-item">
-                                    <a class="nav-link" href="{{ path('user_sign_out') }}">Sign Out</a>
+                                    <a class="nav-link" href="{{ url('get_home') }}" title="{{ 'base.navbar.link.title.home'|trans() }}">
+                                        {{ 'base.navbar.link.anchor.home'|trans() }}
+                                    </a>
                                 </li>
-                            {% else %}
-                                <li class="nav-item">
-                                    <a class="nav-link" href="{{ path('user_sign_in') }}">Sign In</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link" href="{{ path('user_sign_up') }}">Sign Up</a>
-                                </li>
-                            {% endif %}
-                        </ul>
-                    </div>
+                                {% if is_granted('IS_AUTHENTICATED_REMEMBERED') %}
+                                    <li class="nav-item">
+                                        <a class="nav-link" href="{{ url('proceed_user_sign_out') }}" title="{{ 'base.navbar.link.title.sign_out'|trans() }}">
+                                            {{ 'base.navbar.link.anchor.sign_out'|trans() }}
+                                        </a>
+                                    </li>
+                                {% else %}
+                                    <li class="nav-item">
+                                        <a class="nav-link" href="{{ url('get_user_sign_in_empty_form') }}" title="{{ 'base.navbar.link.title.sign_in'|trans() }}">
+                                            {{ 'base.navbar.link.anchor.sign_in'|trans() }}
+                                        </a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link" href="{{ url('get_user_sign_up_empty_form') }}" title="{{ 'base.navbar.link.title.sign_up'|trans() }}">
+                                            {{ 'base.navbar.link.anchor.sign_up'|trans() }}
+                                        </a>
+                                    </li>
+                                {% endif %}
+                            </ul>
+                        </div>
+                    {% endblock menu %}
                 </nav>
             {% endblock navbar %}
             {% block content %}
                 <!-- Content =========================================================== -->
-                {% block flash %}
+                {% block notification %}
                     <!-- Notification ================================================== -->
-                    {% if app.request.hasPreviousSession %}
-                        {% for label, messages in app.flashes %}
-                            {% for message in messages %}
-                                <div class="alert alert-{{ label }}" role="alert">
-                                    {{ message }}
-                                </div>
-                            {% endfor %}
-                        {% endfor %}
-                    {% endif %}
-                {% endblock flash %}
+                    {% include 'notification.html.twig' %}
+                {% endblock notification %}
             {% endblock content %}
             {% block footer %}
                 <!-- Footer ============================================================ -->
-                <footer id="footer" class="footer">
-                    <span class="copyright">{{ app_name }} Copyright &copy; {{ date()|date('Y') }}</span>
+                <footer id="footer" class="footer mt-5 p-3 bg-dark text-secondary">
+                    {{ app_name }} Copyright &copy; {{ date()|date('Y') }}
                 </footer>
             {% endblock footer %}
+            <div id="arrow-scroll-up" class="arrow-scroll position-fixed" style="bottom:50px;cursor:pointer;display:none;right:50px">
+                <i class="fas fa-arrow-up" style="font-size:30px;"></i>
+            </div>
             {% block javascripts %}
                 <!-- Javascripts ======================================================= -->
-                <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+                <script src="http://code.jquery.com/jquery-3.3.1.min.js"></script>
                 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js"></script>
                 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js"></script>
+                <script src="{{ asset('js/ajax-action-handler.js') }}"></script>
+                <script src="{{ asset('js/trick-comment-form.js') }}"></script>
+                <script src="{{ asset('js/trick-comment-form-registry.js') }}"></script>
+                <script src="{{ asset('js/infinite-scroll.js') }}"></script>
+                <script src="{{ asset('js/infinite-scroll-registry.js') }}"></script>
+                <script src="{{ asset('js/arrow-scroll.js') }}"></script>
             {% endblock javascripts %}
         </body>
     {% endblock body %}

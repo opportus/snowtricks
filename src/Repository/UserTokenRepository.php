@@ -17,6 +17,8 @@ use Symfony\Bridge\Doctrine\RegistryInterface;
  */
 class UserTokenRepository extends ServiceEntityRepository implements UserTokenRepositoryInterface
 {
+    use EntityRepositoryTrait;
+
     /**
      * {@inheritdoc}
      */
@@ -29,19 +31,7 @@ class UserTokenRepository extends ServiceEntityRepository implements UserTokenRe
     /**
      * {@inheritdoc}
      */
-    public function findOneById(int $id)
-    {
-        return $this->findOneBy(
-            array(
-                'id' => $id
-            )
-        );
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function findOneByKey(string $key)
+    public function findOneByKey(string $key) : ?UserTokenInterface
     {
         return $this->findOneBy(
             array(

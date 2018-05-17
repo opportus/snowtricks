@@ -3,7 +3,6 @@
 namespace App\Mailer;
 
 use App\Entity\UserInterface;
-use App\Entity\UserTokenInterface;
 
 /**
  * The mailer interface...
@@ -29,22 +28,20 @@ interface MailerInterface
      * Sends an user activation email.
      *
      * @param  App\Entity\UserInterface $user
-     * @param  App\Entity\UserTokenInterface $userToken
      * @return App\Mailer\MailerInterface
      * @throws App\Exception\EntityNotValidException
      * @throws \Swift_Exception
      */
-    public function sendUserActivationEmail(UserInterface $user, UserTokenInterface $userToken) : MailerInterface;
+    public function sendUserActivationEmail(UserInterface $user) : MailerInterface;
 
     /**
      * Sends an user password reset email.
      *
      * @param  App\Entity\UserInterface $user
-     * @param  App\Entity\UserTokenInterface $userToken
      * @return App\Mailer\MailerInterface
      * @throws App\Exception\EntityNotValidException
      * @throws \Swift_Exception
      */
-    public function sendUserPasswordResetEmail(UserInterface $user, UserTokenInterface $userToken) : MailerInterface;
+    public function sendUserPasswordResetEmail(UserInterface $user) : MailerInterface;
 }
 

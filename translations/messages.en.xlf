@@ -16,9 +16,21 @@
                 <source>user.sign_up.notification.500</source>
                 <target>Sorry, an unexpected error has occurred during your registration.</target>
             </trans-unit>
-            <trans-unit id="user.sign_up.form.title">
-                <source>user.sign_up.form.title</source>
+            <trans-unit id="user.sign_up.page.title">
+                <source>user.sign_up.page.title</source>
                 <target>Sign Up</target>
+            </trans-unit>
+            <trans-unit id="user.sign_up.page.description">
+                <source>user.sign_up.page.description</source>
+                <target>Sign Up</target>
+            </trans-unit>
+            <trans-unit id="user.sign_up.page.link.anchor.sign_in">
+                <source>user.sign_up.page.link.anchor.sign_in</source>
+                <target>Sign In</target>
+            </trans-unit>
+            <trans-unit id="user.sign_up.page.link.title.sign_in">
+                <source>user.sign_up.page.link.title.sign_in</source>
+                <target>Sign In</target>
             </trans-unit>
             <trans-unit id="user.sign_up.form.label.username">
                 <source>user.sign_up.form.label.username</source>
@@ -32,13 +44,17 @@
                 <source>user.sign_up.form.label.password</source>
                 <target>Password</target>
             </trans-unit>
+            <trans-unit id="user.sign_up.form.message.username_conflict">
+                <source>user.sign_up.form.message.username_conflict</source>
+                <target>This username is already used</target>
+            </trans-unit>
+            <trans-unit id="user.sign_up.form.message.email_conflict">
+                <source>user.sign_up.form.message.email_conflict</source>
+                <target>This email is already used</target>
+            </trans-unit>
             <trans-unit id="user.sign_up.form.label.submit">
                 <source>user.sign_up.form.label.submit</source>
                 <target>Sign Up</target>
-            </trans-unit>
-            <trans-unit id="user.sign_up.form.link.sign_in">
-                <source>user.sign_up.form.link.sign_in</source>
-                <target>Sign In</target>
             </trans-unit>
             <trans-unit id="user.sign_up.email.subject">
                 <source>user.sign_up.email.subject</source>
@@ -58,9 +74,29 @@
                 </target>
             </trans-unit>
 
-            <trans-unit id="user.sign_in.form.title">
-                <source>user.sign_in.form.title</source>
+            <trans-unit id="user.sign_in.page.title">
+                <source>user.sign_in.page.title</source>
                 <target>Sign In</target>
+            </trans-unit>
+            <trans-unit id="user.sign_in.page.description">
+                <source>user.sign_in.page.description</source>
+                <target>Sign In</target>
+            </trans-unit>
+            <trans-unit id="user.sign_in.page.link.anchor.sign_up">
+                <source>user.sign_in.page.link.anchor.sign_up</source>
+                <target>Sign Up</target>
+            </trans-unit>
+            <trans-unit id="user.sign_in.page.link.title.sign_up">
+                <source>user.sign_in.page.link.title.sign_up</source>
+                <target>Sign Up</target>
+            </trans-unit>
+            <trans-unit id="user.sign_in.page.link.anchor.request_password_reset">
+                <source>user.sign_in.page.link.anchor.request_password_reset</source>
+                <target>Forgot Password ?</target>
+            </trans-unit>
+            <trans-unit id="user.sign_in.page.link.title.request_password_reset">
+                <source>user.sign_in.page.link.title.request_password_reset</source>
+                <target>Forgot Password ?</target>
             </trans-unit>
             <trans-unit id="user.sign_in.form.label.username">
                 <source>user.sign_in.form.label.username</source>
@@ -74,132 +110,216 @@
                 <source>user.sign_in.form.label.submit</source>
                 <target>Sign In</target>
             </trans-unit>
-            <trans-unit id="user.sign_in.form.link.sign_up">
-                <source>user.sign_in.form.link.sign_up</source>
-                <target>Sign Up</target>
-            </trans-unit>
-            <trans-unit id="user.sign_in.form.link.request_password_reset">
-                <source>user.sign_in.form.link.request_password_reset</source>
-                <target>Forgot Password ?</target>
-            </trans-unit>
 
-            <trans-unit id="user.activate.notification.201">
-                <source>user.activate.notification.201</source>
+            <trans-unit id="user.activation.notification.204">
+                <source>user.activation.notification.204</source>
                 <target>Congrats. Your account is now activated.</target>
             </trans-unit>
-            <trans-unit id="user.activate.notification.403">
-                <source>user.activate.notification.403</source>
+            <trans-unit id="user.activation.notification.403">
+                <source>user.activation.notification.403</source>
                 <target>Token not valid.</target>
             </trans-unit>
-            <trans-unit id="user.activate.notification.500">
-                <source>user.activate.notification.500</source>
+            <trans-unit id="user.activation.notification.404">
+                <source>user.activation.notification.404</source>
+                <target>Token not valid.</target>
+            </trans-unit>
+            <trans-unit id="user.activation.notification.500">
+                <source>user.activation.notification.500</source>
                 <target>Sorry, an unexpected error has occurred during your activation request.</target>
             </trans-unit>
-            <trans-unit id="user.activate.email.subject">
-                <source>user.activate.email.subject</source>
+            <trans-unit id="user.activation.email.subject">
+                <source>user.activation.email.subject</source>
                 <target>Account Activation</target>
             </trans-unit>
-            <trans-unit id="user.activate.email.message">
-                <source>user.activate.email.message</source>
+            <trans-unit id="user.activation.email.message">
+                <source>user.activation.email.message</source>
                 <target>
                     Hello %username%!
 
-                    To activate your account, please click on the following link:
-                    %action_link%
-
-                    Kind regards,
-                    the Team.
+                    To activate your account, please click on the button below.
+                </target>
+            </trans-unit>
+            <trans-unit id="user.activation.email.form.label.submit">
+                <source>user.activation.email.form.label.submit</source>
+                <target>
+                    Activate my Account
                 </target>
             </trans-unit>
 
-            <trans-unit id="user.request_password_reset.notification.201">
-                <source>user.request_password_reset.notification.201</source>
+            <trans-unit id="user.password_reset_request.notification.204">
+                <source>user.password_reset_request.notification.204</source>
                 <target>An email has been sent to you. It contains a link you must click in order to reset your password.</target>
             </trans-unit>
-            <trans-unit id="user.request_password_reset.notification.404">
-                <source>user.request_password_reset.notification.404</source>
-                <target>User "%username%" does not exist.</target>
+            <trans-unit id="user.password_reset_request.notification.404">
+                <source>user.password_reset_request.notification.404</source>
+                <target>User does not exist.</target>
             </trans-unit>
-            <trans-unit id="user.request_password_reset.notification.500">
-                <source>user.request_password_reset.notification.500</source>
+            <trans-unit id="user.password_reset_request.notification.500">
+                <source>user.password_reset_request.notification.500</source>
                 <target>Sorry, an unexpected error has occurred during your password reset request.</target>
             </trans-unit>
-            <trans-unit id="user.request_password_reset.form.title">
-                <source>user.request_password_reset.form.title</source>
+            <trans-unit id="user.password_reset_request.page.title">
+                <source>user.password_reset_request.page.title</source>
                 <target>Forgot Password</target>
             </trans-unit>
-            <trans-unit id="user.request_password_reset.form.label.username">
-                <source>user.request_password_reset.form.label.username</source>
+            <trans-unit id="user.password_reset_request.page.description">
+                <source>user.password_reset_request.page.description</source>
+                <target>Forgot Password</target>
+            </trans-unit>
+            <trans-unit id="user.password_reset_request.form.label.username">
+                <source>user.password_reset_request.form.label.username</source>
                 <target>Username</target>
             </trans-unit>
-            <trans-unit id="user.request_password_reset.form.label.submit">
-                <source>user.request_password_reset.form.label.submit</source>
+            <trans-unit id="user.password_reset_request.form.label.submit">
+                <source>user.password_reset_request.form.label.submit</source>
                 <target>Request</target>
             </trans-unit>
+            <trans-unit id="user.password_reset_request.form.message.username_not_found">
+                <source>user.password_reset_request.form.message.username_not_found</source>
+                <target>User not found</target>
+            </trans-unit>
 
-            <trans-unit id="user.reset_password.notification.201">
-                <source>user.reset_password.notification.201</source>
+            <trans-unit id="user.password_reset.notification.204">
+                <source>user.password_reset.notification.204</source>
                 <target>Your password has been updated.</target>
             </trans-unit>
-            <trans-unit id="user.reset_password.notification.403">
-                <source>user.reset_password.notification.403</source>
+            <trans-unit id="user.password_reset.notification.403">
+                <source>user.password_reset.notification.403</source>
                 <target>Token not valid.</target>
             </trans-unit>
-            <trans-unit id="user.reset_password.notification.500">
-                <source>user.reset_password.notification.500</source>
+            <trans-unit id="user.password_reset.notification.404">
+                <source>user.password_reset.notification.404</source>
+                <target>User not found.</target>
+            </trans-unit>
+            <trans-unit id="user.password_reset.notification.500">
+                <source>user.password_reset.notification.500</source>
                 <target>Sorry, an unexpected error has occurred during your password reset.</target>
             </trans-unit>
-            <trans-unit id="user.reset_password.form.title">
-                <source>user.reset_password.form.title</source>
+            <trans-unit id="user.password_reset.page.title">
+                <source>user.password_reset.page.title</source>
                 <target>Reset Password</target>
             </trans-unit>
-            <trans-unit id="user.reset_password.form.label.password">
-                <source>user.reset_password.form.label.password</source>
+            <trans-unit id="user.password_reset.page.description">
+                <source>user.password_reset.page.description</source>
+                <target>Reset Password</target>
+            </trans-unit>
+            <trans-unit id="user.password_reset.form.label.password">
+                <source>user.password_reset.form.label.password</source>
                 <target>Password</target>
             </trans-unit>
-            <trans-unit id="user.reset_password.form.label.submit">
-                <source>user.reset_password.form.label.submit</source>
+            <trans-unit id="user.password_reset.form.label.submit">
+                <source>user.password_reset.form.label.submit</source>
                 <target>Update Password</target>
             </trans-unit>
-            <trans-unit id="user.reset_password.email.subject">
-                <source>user.reset_password.email.subject</source>
+            <trans-unit id="user.password_reset.email.subject">
+                <source>user.password_reset.email.subject</source>
                 <target>Password Reset</target>
             </trans-unit>
-            <trans-unit id="user.reset_password.email.message">
-                <source>user.reset_password.email.message</source>
+            <trans-unit id="user.password_reset.email.message">
+                <source>user.password_reset.email.message</source>
                 <target>
                     Hello %username%!
 
-                    To reset your password, please click on the following link:
-                    %action_link%
-
-                    Kind regards,
-                    the Team.
+                    To reset your password, please click on the button below.
+                </target>
+            </trans-unit>
+            <trans-unit id="user.password_reset.email.form.label.submit">
+                <source>user.password_reset.email.form.label.submit</source>
+                <target>
+                    Reset my Password
                 </target>
             </trans-unit>
 
-            <trans-unit id="user.layout.link.anchor.sign_up">
-                <source>user.layout.link.anchor.sign_up</source>
+            <trans-unit id="trick.show.group.label">
+                <source>trick.show.group.label</source>
+                <target>Trick Type</target>
+            </trans-unit>
+            <trans-unit id="trick.show.author.label">
+                <source>trick.show.author.label</source>
+                <target>Contributor</target>
+            </trans-unit>
+
+            <trans-unit id="home.show.title">
+                <source>home.show.title</source>
+                <target>Snowboard Tricks</target>
+            </trans-unit>
+            <trans-unit id="home.show.description">
+                <source>home.show.description</source>
+                <target>The Wikipedia of Snowboard Tricks</target>
+            </trans-unit>
+            <trans-unit id="home.show.author">
+                <source>home.show.author</source>
+                <target></target>
+            </trans-unit>
+
+            <trans-unit id="trick_comment.edit.form.label.submit.create">
+                <source>trick_comment.edit.form.label.submit.create</source>
+                <target>Leave a comment</target>
+            </trans-unit>
+            <trans-unit id="trick_comment.edit.form.label.submit.update">
+                <source>trick_comment.edit.form.label.submit.update</source>
+                <target>Update</target>
+            </trans-unit>
+            <trans-unit id="trick_comment.edit.form.label.submit.reply">
+                <source>trick_comment.edit.form.label.submit.reply</source>
+                <target>Reply</target>
+            </trans-unit>
+
+            <trans-unit id="trick_comment.list.item.meta.created_at">
+                <source>trick_comment.list.item.meta.created_at</source>
+                <target>%author% has commented on %created_at%</target>
+            </trans-unit>
+            <trans-unit id="trick_comment.list.item.meta.updated_at">
+                <source>trick_comment.list.item.meta.updated_at</source>
+                <target>%author% has modified his comment on %updated_at%</target>
+            </trans-unit>
+            <trans-unit id="trick_comment.list.item.action.edit.title">
+                <source>trick_comment.list.item.action.edit.title</source>
+                <target>Edit your comment</target>
+            </trans-unit>
+            <trans-unit id="trick_comment.list.item.action.delete.title">
+                <source>trick_comment.list.item.action.delete.title</source>
+                <target>Delete your comment</target>
+            </trans-unit>
+            <trans-unit id="trick_comment.list.item.action.reply.title">
+                <source>trick_comment.list.item.action.reply.title</source>
+                <target>Reply to this comment</target>
+            </trans-unit>
+            <trans-unit id="trick_comment.list.item.action.list_children.title">
+                <source>trick_comment.list.item.action.list_children.title</source>
+                <target>View replies to this comment</target>
+            </trans-unit>
+
+            <trans-unit id="base.navbar.link.anchor.home">
+                <source>base.navbar.link.anchor.home</source>
+                <target>Home</target>
+            </trans-unit>
+            <trans-unit id="base.navbar.link.title.home">
+                <source>base.navbar.link.title.home</source>
+                <target>Home</target>
+            </trans-unit>
+            <trans-unit id="base.navbar.link.anchor.sign_up">
+                <source>base.navbar.link.anchor.sign_up</source>
                 <target>Sign Up</target>
             </trans-unit>
-            <trans-unit id="user.layout.link.title.sign_up">
-                <source>user.layout.link.title.sign_up</source>
+            <trans-unit id="base.navbar.link.title.sign_up">
+                <source>base.navbar.link.title.sign_up</source>
                 <target>Sign Up</target>
             </trans-unit>
-            <trans-unit id="user.layout.link.anchor.sign_in">
-                <source>user.layout.link.anchor.sign_in</source>
+            <trans-unit id="base.navbar.link.anchor.sign_in">
+                <source>base.navbar.link.anchor.sign_in</source>
                 <target>Sign In</target>
             </trans-unit>
-            <trans-unit id="user.layout.link.title.sign_in">
-                <source>user.layout.link.title.sign_in</source>
+            <trans-unit id="base.navbar.link.title.sign_in">
+                <source>base.navbar.link.title.sign_in</source>
                 <target>Sign In</target>
             </trans-unit>
-            <trans-unit id="user.layout.link.anchor.sign_out">
-                <source>user.layout.link.anchor.sign_out</source>
+            <trans-unit id="base.navbar.link.anchor.sign_out">
+                <source>base.navbar.link.anchor.sign_out</source>
                 <target>Sign Out</target>
             </trans-unit>
-            <trans-unit id="user.layout.link.title.sign_out">
-                <source>user.layout.link.title.sign_out</source>
+            <trans-unit id="base.navbar.link.title.sign_out">
+                <source>base.navbar.link.title.sign_out</source>
                 <target>Sign Out</target>
             </trans-unit>
 

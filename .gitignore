@@ -1,4 +1,6 @@
 composer.lock
+symfony.lock
+.phpcomplete_extended
 ###> symfony/framework-bundle ###
 .env
 /public/bundles/

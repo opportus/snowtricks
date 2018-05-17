@@ -2,8 +2,6 @@
 
 namespace App\Entity;
 
-use Doctrine\ORM\Mapping as ORM;
-
 /**
  * The user token interface...
  *
@@ -15,91 +13,32 @@ use Doctrine\ORM\Mapping as ORM;
 interface UserTokenInterface extends EntityInterface
 {
     /**
-     * Gets the id.
-     *
-     * @return null|int
-     */
-    public function getId();
-
-    /**
-     * Sets the id.
-     *
-     * @param  int $id
-     * @return App\Entity\UserTokenInterface
-     */
-    public function setId(int $id) : UserTokenInterface;
-
-    /**
      * Gets the key.
      *
-     * @return null|string
+     * @return string
      */
-    public function getKey();
-
-    /**
-     * Sets the key.
-     *
-     * @return App\Entity\UserTokenInterface
-     */
-    public function setKey() : UserTokenInterface;
+    public function getKey() : string;
 
     /**
      * Gets the type.
      *
-     * @return null|string
+     * @return string
      */
-    public function getType();
-
-    /**
-     * Sets the type.
-     *
-     * @param  string $type
-     * @return App\Entity\UserTokenInterface
-     */
-    public function setType(string $type) : UserTokenInterface;
+    public function getType() : string;
 
     /**
      * Gets the ttl.
      *
-     * @return null|int
+     * @return int
      */
-    public function getTtl();
-
-    /**
-     * Sets the ttl.
-     *
-     * @return App\Entity\UserTokenInterface
-     */
-    public function setTtl() : UserTokenInterface;
-
-    /**
-     * Gets the creation datetime.
-     *
-     * @return null|\Datetime
-     */
-    public function getCreatedAt();
-
-    /**
-     * Sets the creation datetime.
-     *
-     * @return App\Entity\UserTokenInterface
-     */
-    public function setCreatedAt() : UserTokenInterface;
+    public function getTtl() : int;
 
     /**
      * Gets the user.
      *
-     * @return null|App\Entity\UserInterface
+     * @return App\Entity\UserInterface
      */
-    public function getUser();
-
-    /**
-     * Sets the user.
-     *
-     * @param  App\Entity\UserInterface
-     * @return App\Entity\UserTokenInterface
-     */
-    public function setUser(UserInterface $user) : UserTokenInterface;
+    public function getUser() : UserInterface;
 
     /**
      * Checks whether or not the token is expired.
@@ -109,12 +48,12 @@ interface UserTokenInterface extends EntityInterface
     public function isExpired() : bool;
 
     /**
-     * Checks whether or not the token is equal to the given token.
+     * Checks whether or not the token key is equal to the given string.
      *
      * @param  string $token
      * @return bool
      */
-    public function isEqualTo(string $token) : bool;
+    public function hasKey(string $token) : bool;
 
     /**
      * Returns the key.
