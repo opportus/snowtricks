@@ -1,4 +1,4 @@
-{% for trick in tricks %}
+{% for trick in entities %}
     <li id="{{ trick.id }}" class="trick-list-item col-lg-3 col-md-4 col-sm-6 mt-2">
         <article>
             <img class="trick-list-item-attachment img-fluid mb-2"
@@ -7,7 +7,7 @@
                 alt="{{ (trick.featuredAttachment is not null) ? trick.featuredAttachment.alt : '' }}">
             </img>
             <h2 class="trick-list-item-title d-inline-block" style="font-size:15px;">
-                <a href="{{ url('trick_show', {'slug': trick.slug}) }}">
+                <a href="{{ url('get_trick', {'slug': trick.slug}) }}">
                     {{ trick.title }}
                 </a>
             </h2>
@@ -19,14 +19,16 @@
                             data-url="">
                         </i>
                     </li>
+                {% if is_granted('DELETE', trick) %}
                     <li class="list-inline-item">
                         <i class="trick-list-item-action-list-item-delete fas fa-trash ajax-action"
                             style="cursor:pointer;"
                             data-action="deleteTrick"
-                            data-token="{{ csrf_token('trick-delete') }}"
-                            data-url="{{ url('trick_delete', {'id': trick.id}) }}">
+                            data-token="{{ csrf_token('security') }}"
+                            data-url="{{ url('delete_trick_by_delete_form', {'slug': trick.slug}) }}">
                         </i>
                     </li>
+                {% endif %}
                 </ul>
             {% endif %}
         </article>

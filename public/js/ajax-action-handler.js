@@ -10,7 +10,9 @@ class AjaxActionHandler
             }
         });
 
-        mutationObserver.observe($('.trick-show-comment-list')[0], {childList: true, subtree: true});
+        if ($('.trick-show-comment-list')[0]) {
+            mutationObserver.observe($('.trick-show-comment-list')[0], {childList: true, subtree: true});
+        }
 
         this.initialize();
     }
@@ -49,9 +51,10 @@ class AjaxActionHandler
 
             $.ajax({
                 url: target.data('url'),
+                dataType: 'json',
                 success: function(response, status) {
                     commentItemBody.closest('.row').hide();
-                    commentItemBody.closest('.row').after(response.html);
+                    commentItemBody.closest('.row').after(response);
 
                     var commentForm = trickCommentFormRegistry.get(commentItem.find('form').first().attr('id'));
 
@@ -74,8 +77,9 @@ class AjaxActionHandler
 
             $.ajax({
                 url: target.data('url'),
+                dataType: 'json',
                 success: function(response, status) {
-                    commentItem.find('.trick-comment-list-item-action').first().after(response.html);
+                    commentItem.find('.trick-comment-list-item-action').first().after(response);
 
                     var commentForm = trickCommentFormRegistry.get(commentItem.find('form').first().attr('id'));
 
@@ -95,6 +99,7 @@ class AjaxActionHandler
             url: commentForm.attr('action'),
             type: 'POST',
             method: 'POST',
+            dataType: 'json',
             data: commentForm.serialize(),
             success: function(response, status) {
                 commentForm.reset();
@@ -110,14 +115,15 @@ class AjaxActionHandler
 
         $.ajax({
             url: commentForm.attr('action'),
-            type: 'PATCH',
-            method: 'PATCH',
+            dataType: 'json',
+            method: 'PUT',
             data: commentForm.serialize(),
             success: function(response, status) {
                 $.ajax({
                     url: commentItem.data('url'),
+                    dataType: 'json',
                     success: function(response, status) {
-                        commentItem.replaceWith(response.html);
+                        commentItem.replaceWith(response);
                     }
                 });
             }
@@ -138,7 +144,7 @@ class AjaxActionHandler
 
         $.ajax({
             url: commentReplyForm.attr('action'),
-            type: 'POST',
+            dataType: 'json',
             method: 'POST',
             data: commentReplyForm.serialize(),
             success: function(response, status) {
@@ -173,10 +179,9 @@ class AjaxActionHandler
     {
         $.ajax({
             url: target.data('url'),
-            method: 'DELETE',
-            headers: {
-                'X-Csrf-Token': target.data('token')
-            },
+            data: {'trick_comment_delete[_token]': target.data('token'), '_method': 'DELETE'},
+            method: 'POST',
+            dataType: 'json',
             success: function(response, status) {
                 if (target.closest('.trick-comment-list-item-children-list').children().length === 1) {
                     target.closest('.trick-comment-list-item-children-list').closest('.trick-comment-list-item').find('.trick-comment-list-item-action-list-children').first().css('display', 'none');
@@ -193,11 +198,15 @@ class AjaxActionHandler
     {
         $.ajax({
             url: target.data('url'),
-            method: 'DELETE',
-            headers: {
-                'X-Csrf-Token': target.data('token')
-            },
+            data: {'trick_delete[_token]': target.data('token'), '_method': 'DELETE'},
+            method: 'POST',
+            dataType: 'json',
             success: function(response, status) {
+                if (target.data('redirection')) {
+                    $(location).attr('href', target.data('redirection'))
+                    return;
+                }
+
                 target.closest('.trick-list-item').hide('slow', function() {
                     target.closest('.trick-list-item').remove();
                 });

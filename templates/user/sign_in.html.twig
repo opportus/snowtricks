@@ -9,15 +9,15 @@
                 <h1>{{ block('title') }}</h1>
                 <div class="row my-4">
                     <div class="col p-4 border rounded">
-                        {% if error %}
+                        {% if error is defined and error is not null %}
                             <div class="alert alert-danger" role="alert">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
                         {% endif %}
                         {{ form_start(form) }}
                             {{ form_errors(form) }}
                         {{ form_end(form) }}
                         <ul class="list-group list-unstyled">
-                            <li><a href="{{ url('user_sign_up') }}" title="{{ 'user.sign_in.page.link.title.sign_up'|trans }}">{{ 'user.sign_in.page.link.anchor.sign_up'|trans }}</a></li>
-                            <li><a href="{{ url('user_request_password_reset') }}" title="{{ 'user.sign_in.page.link.title.request_password_reset'|trans }}">{{ 'user.sign_in.page.link.anchor.request_password_reset'|trans }}</a></li>
+                            <li><a href="{{ url('get_user_sign_up_empty_form') }}" title="{{ 'user.sign_in.page.link.title.sign_up'|trans }}">{{ 'user.sign_in.page.link.anchor.sign_up'|trans }}</a></li>
+                            <li><a href="{{ url('get_user_password_reset_request_empty_form') }}" title="{{ 'user.sign_in.page.link.title.request_password_reset'|trans }}">{{ 'user.sign_in.page.link.anchor.request_password_reset'|trans }}</a></li>
                         </ul>
                     </div>
                 </div>

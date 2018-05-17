@@ -55,27 +55,27 @@ class ResponseFactory implements ResponseFactoryInterface
      */
     public function createResponse(Request $request, ControllerResultInterface $controllerResult) : Response
     {
-        $parameters = $this->resolveResponseParameters($request, $controllerResult);
+        $parameters  = $this->resolveResponseParameters($request, $controllerResult);
 
         if (! empty($parameters['redirection']['route']['name'])) {
             $response = new RedirectResponse(
                 $this->generateRoute(
-                    $parameters['route']['name'],
-                    $parameters['route']['parameters'],
+                    $parameters['redirection']['route']['name'],
+                    $parameters['redirection']['route']['parameters'],
                     $controllerResult
                 ),
                 $parameters['redirection']['status']
             );
 
         } else {
-            if ($request->getRequestFormat() === 'html') {
+            if ($this->isAcceptedContentType('html', $request)) {
                 $response = new Response(
                     $this->generateResponseContent($parameters, $request, $controllerResult),
                     $controllerResult->getStatusCode(),
                     $this->generateResponseHeaders($parameters, $controllerResult)
                 );
 
-            } elseif ($request->getRequestFormat() === 'json') {
+            } elseif ($this->isAcceptedContentType('json', $request)) {
                 $response = new JsonResponse(
                     $this->generateResponseContent($parameters, $request, $controllerResult),
                     $controllerResult->getStatusCode(),
@@ -104,7 +104,7 @@ class ResponseFactory implements ResponseFactoryInterface
             );
 
         } else {
-            $content = $controllerResult->getData();
+            $content = '';
         }
 
         return $content;
@@ -119,6 +119,8 @@ class ResponseFactory implements ResponseFactoryInterface
      */
     protected function generateResponseHeaders(array $parameters, ControllerResultInterface $controllerResult) : array
     {
+        $headers = array();
+
         foreach ($parameters['headers'] as $name => $value) {
             if (isset($value['route']['name'])) {
                 $routeName       = $value['route']['name'];
@@ -179,6 +181,23 @@ class ResponseFactory implements ResponseFactoryInterface
     }
 
     /**
+     * Checks wether the given format is the requested content type.
+     *
+     * @param  string $type
+     * @param  Symfony\Component\HttpFoundation\Request $request
+     * @return bool
+     */
+    protected function isAcceptedContentType(string $type, Request $request) : bool
+    {
+        if (strpos($request->headers->get('accept'), $type) === false) {
+            return false;
+
+        } else {
+            return true;
+        }
+    }
+
+    /**
      * Resolves the response parameters.
      *
      * @param  Symfony\Component\HttpFoundation\Request $request
@@ -187,40 +206,58 @@ class ResponseFactory implements ResponseFactoryInterface
      */
     protected function resolveResponseParameters(Request $request, ControllerResultInterface $controllerResult) : array
     {
-        if (empty($this->parameters)) {
-            $parameters = array();
+        $parameters = array();
+        $action     = $request->attributes->get('_controller');
+        $status     = $controllerResult->getStatusCode();
 
-        } else {
-            $action = $request->attributes->get('_controller');
-            $format = $request->getRequestFormat();
-            $status = $controllerResult->getStatusCode();
+        if (isset($this->parameters[$action]['response'])) {
+            foreach ($this->parameters[$action]['response'] as $params) {
+                if ((isset($params['status']) &&
+                    $params['status'] === $status) &&
+                    ((isset($params['format']) &&
+                    $this->isAcceptedContentType($params['format'], $request)) ||
+                    ! isset($params['format']))
+                ) {
+                    $parameters = $params;
 
-            $parameters = isset($this->parameters[$action][$format][$status]) ? $this->parameters[$action][$format][$status] : array();
+                    break;
+                }
+            }
         }
 
-        $redirectionParameters = isset($parameters['redirection'])      ? $parameters['redirection']      : array();
-        $routeParameters       = isset($redirectionParameters['route']) ? $redirectionParameters['route'] : array();
-
-        $routeParametersResolver = new OptionsResolver();
-        $routeParametersResolver->setDefaults(array(
-            'name'       => null,
-            'parameters' => array()
+        $parametersResolver = new OptionsResolver();
+        $parametersResolver->setDefaults(array(
+            'format'      => null,
+            'status'      => null,
+            'template'    => null,
+            'redirection' => array(),
+            'headers'     => array()
         ));
 
         $redirectionParametersResolver = new OptionsResolver();
         $redirectionParametersResolver->setDefaults(array(
-            'route'  => $routeParametersResolver->resolve($routeParameters),
+            'route'  => array(),
             'status' => 302
         ));
 
-        $parametersResolver = new OptionsResolver();
-        $parametersResolver->setDefaults(array(
-            'template'    => null,
-            'redirection' => $redirectionParametersResolver->resolve($redirectionParameters),
-            'headers'     => array()
+        $redirectionRouteParametersResolver = new OptionsResolver();
+        $redirectionRouteParametersResolver->setDefaults(array(
+            'name'       => null,
+            'parameters' => array()
         ));
 
-        return $parametersResolver->resolve($parameters);
+        $resolvedParameters = $parametersResolver->resolve($parameters);
+
+        $redirectionParameters = isset($parameters['redirection']) ? $parameters['redirection'] : array();
+        $redirectionParameters = $redirectionParametersResolver->resolve($redirectionParameters);
+
+        $redirectionRouteParameters = isset($parameters['redirection']['route']) ? $parameters['redirection']['route'] : array();
+        $redirectionRouteParameters = $redirectionRouteParametersResolver->resolve($redirectionRouteParameters);
+
+        $resolvedParameters['redirection']          = $redirectionParameters;
+        $resolvedParameters['redirection']['route'] = $redirectionRouteParameters;
+
+        return $resolvedParameters;
     }
 }
 

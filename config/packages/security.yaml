@@ -17,10 +17,10 @@ security:
         main:
             anonymous: ~
             form_login:
-                login_path: user_sign_in
-                check_path: user_sign_in
+                login_path: get_user_sign_in_empty_form
+                check_path: get_user_sign_in_empty_form
                 username_parameter: 'user_sign_in[username]'
                 password_parameter: 'user_sign_in[plainPassword]'
                 csrf_parameter: 'user_sign_in[_token]'
             logout:
-                path: user_sign_out
+                path: proceed_user_sign_out

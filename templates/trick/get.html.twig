@@ -1,0 +1,93 @@
+{% extends 'base.html.twig' %}
+{% block title %}{{ entity.title }}{% endblock title %}
+{% block description %}{{ entity.description }}{% endblock description %}
+{% block content %}
+    {{ parent() }}
+    <div id="{{ entity.id }}" class="trick-show container-fluid"
+        style="background:url({{ asset('http://via.placeholder.com/1280x1024?text=+') }});background-repeat:no-repeat;background-size:100% 100vh;min-height:100vh;">
+        <div class="row">
+            <div class="trick-show-content col-md-8 offset-md-2 mt-5 bg-white" style="border:1px solid #999999">
+                <div class="row">
+                    {% if entity.featuredAttachment is not null %}
+                        {% set src = entity.featuredAttachment.src %}
+                    {% else %}
+                        {% set src = 'http://via.placeholder.com/1280x1024?text=+' %}
+                    {% endif %}
+                    <header class="trick-show-header col text-center justify-content-center"
+                        style="background:url({{ asset(src) }});height:50vh;padding-top:20vh;">
+                        {% if is_granted('ROLE_USER') %}
+                            <ul class="trick-show-action-list list-inline position-absolute" style="right:30px;top:30px;">
+                                <li class="list-inline-item">
+                                    <i class="trick-show-action-list-item-edit fas fa-pencil-alt ajax-action"
+                                        style="cursor:pointer;"
+                                        data-url="">
+                                    </i>
+                                </li>
+                                {% if is_granted('DELETE', entity) %}
+                                    <li class="list-inline-item">
+                                        <i class="trick-show-action-list-item-delete fas fa-trash ajax-action"
+                                            style="cursor:pointer;"
+                                            data-action="deleteTrick"
+                                            data-redirection="{{ url('get_home') }}"
+                                            data-token="{{ csrf_token('security') }}"
+                                            data-url="{{ url('delete_trick_by_delete_form', {'slug': entity.slug}) }}">
+                                        </i>
+                                    </li>
+                                {% endif %}
+                            </ul>
+                        {% endif %}
+                        <h1 class="trick-show-title">{{ block('title') }}</h1>
+                        <div class="trick-show-description">{{ entity.description }}</div>
+                    </header>
+                </div>
+                {% if entity.attachments is not empty %}
+                    <ul class="trick-show-attachment-list row mt-4 list-inline">
+                        {% for attachment in entity.attachments %}
+                            <li id="{{ attachment.id }}" class="trick-show-attachment-list-item col list-inline-item">
+                                {% if attachment.type|first() == 'i' %}
+                                    <img src="{{ attachment.src }}" alt="{{ attachment.alt }}" title="{{ attachment.title }}" />
+                                {% elseif attachment.type|first() == 'v' %}
+                                    <embed src="{{ attachment.src }}" type="{{ attachment.type }}" title="{{ attachment.title }}" />
+                                {% endif %}
+                            </li>
+                        {% endfor %}
+                    </ul>
+                {% endif %}
+                <div class="row mt-4">
+                    <div class="trick-show-body col">
+                        {{ entity.body }}
+                    </div>
+                </div>
+                <div class="row mt-4">
+                    <ul class="trick-show-meta-list col list-unstyled list-inline text-center">
+                        {% if entity.group is not null %}
+                            <li id="{{ entity.group.id }}" class="trick-show-goup list-inline-item badge badge-pill badge-secondary">
+                                {{ 'trick.show.group.label'|trans() }}: {{ entity.group.title }}
+                            </li>
+                        {% endif %}
+                        {% for author in entity.authors %}
+                            <li id="{{ author.id }}" class="trick-show-author list-inline-item badge badge-pill badge-secondary">
+                                {{ 'trick.show.author.label'|trans() }}: {{ author.username }}
+                            </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+                <div class="row mt-4">
+                    <div class="col-lg-8 offset-lg-2">
+                        {% if is_granted('ROLE_USER') %}
+                            <div class="row mt-4">
+                                <div class="trick-show-comment-edit col-12" style="border-bottom:1px solid #999999;border-top:1px solid #999999;">
+                                    {{ render(controller('App\\Controller\\TrickCommentController::getTrickCommentEmptyEditForm', {}, {'attribute[thread]': entity.id, 'attribute[parent]': null})) }}
+                                </div>
+                            </div>
+                        {% endif %}
+                        <ul id="infinite-scroll-{{ random() }}"
+                            class="trick-show-comment-list row mt-4 list-unstyled infinite-scroll"
+                            data-url="{{ url('get_trick_comment_list') }}?attribute[thread]={{ entity.id }}&attribute[parent]=&order[createdAt]=DESC">
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock content %}

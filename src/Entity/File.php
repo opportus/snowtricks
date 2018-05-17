@@ -16,13 +16,11 @@ use Symfony\Component\HttpFoundation\File\File as FileManager;
  *
  * @ORM\Entity(repositoryClass="App\Repository\FileRepository")
  * @ORM\Table(name="file")
- *
- * @todo Implement Doctrine file manager subscriber.
  */
 class File extends Entity implements FileInterface
 {
     /**
-     * @var null|string $path
+     * @var string $path
      *
      * @ORM\Column(name="path", type="string", length=255, unique=true)
      * @Assert\NotBlank()
@@ -32,7 +30,7 @@ class File extends Entity implements FileInterface
     protected $path;
 
     /**
-     * @var null|App\Entity\UserInterface $uploader
+     * @var App\Entity\UserInterface $uploader
      *
      * @ORM\ManyToOne(targetEntity="App\Entity\User")
      * @ORM\JoinColumn(name="uploader_id", referencedColumnName="id", nullable=false)
@@ -42,17 +40,38 @@ class File extends Entity implements FileInterface
     protected $uploader;
 
     /**
-     * @var null|Symfony\Component\HttpFoundation\File\File $fileManager
+     * @var Symfony\Component\HttpFoundation\File\File $fileManager
      *
      * @Assert\NotBlank()
      * @Assert\File(mimeTypes={"image/png", "image/jpeg", "image/gif", "video/mp4"})
      */
     protected $fileManager;
 
+
+    /**
+     * Constructs the file.
+     *
+     * @param App\Entity\UserInterface $uploader
+     * @param string $directory
+     * @param string $name
+     */
+    public function __construct(
+        UserInterface $uploader,
+        string        $directory,
+        ?string       $name = null
+    )
+    {
+        $this->id          = $this->generateId();
+        $this->createdAt   = new \DateTime();
+        $this->path        = $this->setPath($directory, $name);
+        $this->uploader    = $uploader;
+        $this->fileManager = new FileManager($this->path);
+    }
+
     /**
      * {@inheritdoc}
      */
-    public function getPath() : ?string
+    public function getPath() : string
     {
         return $this->path;
     }
@@ -60,53 +79,31 @@ class File extends Entity implements FileInterface
     /**
      * {@inheritdoc}
      */
-    public function setPath(string $directory, ?string $name = null) : FileInterface
+    public function getName() : string
     {
-        $name      = $name === null ? md5(uniqid()) : $name;
-        $extension = $this->fileManager->guessExtension();
-
-        $this->path = rtrim($directory, '/\\') . DIRECTORY_SEPARATOR . $name . '.' . $extension;
-
-        return $this;
+        return $this->fileManager->getFilename();
     }
 
     /**
      * {@inheritdoc}
      */
-    public function getName() : ?string
+    public function getExtension() : string
     {
-        return $this->fileManager->getFilename() === ''
-            ? null
-            : $this->fileManager->getFilename()
-        ;
+        return $this->fileManager->getExtension();
     }
 
     /**
      * {@inheritdoc}
      */
-    public function getExtension() : ?string
+    public function getDirectory() : string
     {
-        return $this->fileManager->getExtension() === ''
-            ? null
-            : $this->fileManager->getExtension()
-        ;
+        return $this->fileManager->getPath();
     }
 
     /**
      * {@inheritdoc}
      */
-    public function getDirectory() : ?string
-    {
-        return $this->fileManager->getPath() === ''
-            ? null
-            : $this->fileManager->getPath()
-        ;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getMimeType() : ?string
+    public function getMimeType() : string
     {
         return $this->fileManager->getMimeType();
     }
@@ -114,19 +111,9 @@ class File extends Entity implements FileInterface
     /**
      * {@inheritdoc}
      */
-    public function getUploader() : ?UserInterface
+    public function getUploader() : UserInterface
     {
         return $this->uploader;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function setUploader(UserInterface $uploader) : FileInterface
-    {
-        $this->uploader = $uploader;
-
-        return $this;
     }
 
     /**
@@ -135,16 +122,6 @@ class File extends Entity implements FileInterface
     public function getFileManager() : FileManager
     {
         return $this->fileManager;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function setFileManager(FileManager $fileManager) : FileInterface
-    {
-        $this->fileManager = $fileManager;
-
-        return $this;
     }
 
     /**
@@ -166,4 +143,18 @@ class File extends Entity implements FileInterface
 
         return $this;
     }
+
+    /**
+     * {@inheritdoc}
+     */
+    protected function setPath(string $directory, ?string $name = null) : FileInterface
+    {
+        $name      = $name === null ? md5(uniqid()) : $name;
+        $extension = $this->fileManager->guessExtension();
+
+        $this->path = rtrim($directory, '/\\') . DIRECTORY_SEPARATOR . $name . '.' . $extension;
+
+        return $this;
+    }
 }
+

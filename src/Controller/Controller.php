@@ -3,13 +3,12 @@
 namespace App\Controller;
 
 use App\HttpKernel\ControllerResult;
-use App\HttpFoundation\ResponseFactoryInterface;
+use App\HttpKernel\ControllerResultInterface;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 /**
  * The controller...
@@ -19,7 +18,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
  * @author  Clément Cazaud <opportus@gmail.com>
  * @license https://github.com/opportus/snowtricks/blob/master/LICENSE.md MIT
  */
-abstract class Controller extends AbstractController
+abstract class Controller
 {
     /**
      * @var array $parameters
@@ -32,43 +31,43 @@ abstract class Controller extends AbstractController
     protected $entityManager;
 
     /**
+     * @var Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface $authorizationChecker
+     */
+    protected $authorizationChecker;
+
+    /**
      * @var Symfony\Component\Form\FormFactoryInterface $formFactory
      */
     protected $formFactory;
-
-    /**
-     * @var App\HttpFoundation\ResponseFactoryInterface $responseFactory
-     */
-    protected $responseFactory;
 
     /**
      * Constructs the app controller.
      *
      * @param array $parameters
      * @param Doctrine\ORM\EntityManagerInterface $entityManager
+     * @param Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface $authorizationChecker
      * @param Symfony\Component\Form\FormFactoryInterface $formFactory
-     * @param App\HttpFoudation\ResponseFactoryInterface $responseFactory
      */
     public function __construct(
-        array                    $parameters,
-        EntityManagerInterface   $entityManager,
-        FormFactoryInterface     $formFactory,
-        ResponseFactoryInterface $responseFactory
+        array                         $parameters,
+        EntityManagerInterface        $entityManager,
+        AuthorizationCheckerInterface $authorizationChecker,
+        FormFactoryInterface          $formFactory
     )
     {
-        $this->parameters      = $parameters;
-        $this->entityManager   = $entityManager;
-        $this->formFactory     = $formFactory;
-        $this->responseFactory = $responseFactory;
+        $this->parameters           = $parameters;
+        $this->entityManager        = $entityManager;
+        $this->authorizationChecker = $authorizationChecker;
+        $this->formFactory          = $formFactory;
     }
 
     /**
      * Gets list.
      *
      * @param  Symfony\Component\HttpFoundation\Request $request
-     * @return Symfony\Component\HttpFoundation\Response
+     * @return App\HttpKernel\ControllerResultInterface
      */
-    protected function getList(Request $request) : Response
+    protected function getList(Request $request) : ControllerResultInterface
     {
         $parameters = $this->resolveActionParameters($request);
 
@@ -95,18 +94,22 @@ abstract class Controller extends AbstractController
         );
 
         if (empty($entities)) {
-            return $this->responseFactory->createResponse(
-                $request,
-                new ControllerResult(404)
-            );
+            return new ControllerResult(404);
         }
 
-        return $this->responseFactory->createResponse(
-            $request,
-            new ControllerResult(
-                200,
-                array('entities' => $entities)
-            )
+        foreach ($entities as $key => $entity) {
+            if (! $this->authorizationChecker->isGranted('GET', $entity)) {
+                unset($entities[$key]);
+            }
+        }
+
+        if (empty($entities)) {
+            return new ControllerResult(403);
+        }
+
+        return new ControllerResult(
+            200,
+            array('entities' => $entities)
         );
     }
 
@@ -114,9 +117,9 @@ abstract class Controller extends AbstractController
      * Gets.
      *
      * @param  Symfony\Component\HttpFoundation\Request $request
-     * @return Symfony\Component\HttpFoundation\Response
+     * @return App\HttpKernel\ControllerResultInterface
      */
-    protected function get(Request $request) : Response
+    protected function get(Request $request) : ControllerResultInterface
     {
         $parameters = $this->resolveActionParameters($request);
 
@@ -125,18 +128,16 @@ abstract class Controller extends AbstractController
         );
 
         if ($entity === null) {
-            return $this->responseFactory->createResponse(
-                $request,
-                new ControllerResult(404)
-            );
+            return new ControllerResult(404);
         }
 
-        return $this->responseFactory->createResponse(
-            $request,
-            new ControllerResult(
-                200,
-                array('entity' => $entity)
-            )
+        if (! $this->authorizationChecker->isGranted('GET', $entity)) {
+            return new ControllerResult(403);
+        }
+
+        return new ControllerResult(
+            200,
+            array('entity' => $entity)
         );
     }
 
@@ -144,9 +145,9 @@ abstract class Controller extends AbstractController
      * Posts.
      *
      * @param  Symfony\Component\HttpFoundation\Request $request
-     * @return Symfony\Component\HttpFoundation\Response
+     * @return App\HttpKernel\ControllerResultInterface
      */
-    protected function post(Request $request) : Response
+    protected function post(Request $request) : ControllerResultInterface
     {
         $parameters = $this->resolveActionParameters($request);
 
@@ -161,24 +162,22 @@ abstract class Controller extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $entity = $parameters['entity']['class']::createFromData($form->getData());
 
+            if (! $this->authorizationChecker->isGranted('POST', $entity)) {
+                return new ControllerResult(403);
+            }
+
             $this->entityManager->persist($entity);
             $this->entityManager->flush();
 
-            return $this->responseFactory->createResponse(
-                $request,
-                new ControllerResult(
-                    201,
-                    array('entity' => $entity)
-                )
+            return new ControllerResult(
+                201,
+                array('entity' => $entity)
             );
 
         } elseif ($form->isSubmitted()) {
-            return $this->responseFactory->createResponse(
-                $request,
-                new ControllerResult(
-                    400,
-                    array('form' => $form->createView())
-                )
+            return new ControllerResult(
+                400,
+                array('form' => $form->createView())
             );
         }
     }
@@ -187,9 +186,9 @@ abstract class Controller extends AbstractController
      * Puts.
      *
      * @param  Symfony\Component\HttpFoundation\Request $request
-     * @return Symfony\Component\HttpFoundation\Response
+     * @return App\HttpKernel\ControllerResultInterface
      */
-    protected function put(Request $request) : Response
+    protected function put(Request $request) : ControllerResultInterface
     {
         $parameters = $this->resolveActionParameters($request);
 
@@ -198,7 +197,11 @@ abstract class Controller extends AbstractController
         );
 
         if ($entity === null) {
-            return $this->responseFactory->createResponse($request, 404);
+            return new ControllerResult(404);
+        }
+
+        if (! $this->authorizationChecker->isGranted('PUT', $entity)) {
+            return new ControllerResult(403);
         }
 
         $form = $this->formFactory->create(
@@ -214,21 +217,15 @@ abstract class Controller extends AbstractController
 
             $this->entityManager->flush();
 
-            return $this->responseFactory->createResponse(
-                $request,
-                new ControllerResult(
-                    204,
-                    array('entity' => $entity)
-                )
+            return new ControllerResult(
+                204,
+                array('entity' => $entity)
             );
 
         } elseif ($form->isSubmitted()) {
-            return $this->responseFactory->createResponse(
-                $request,
-                new ControllerResult(
-                    400,
-                    array('form' => $form->createView())
-                )
+            return new ControllerResult(
+                400,
+                array('form' => $form->createView())
             );
         }
     }
@@ -237,9 +234,9 @@ abstract class Controller extends AbstractController
      * Patches.
      *
      * @param  Symfony\Component\HttpFoundation\Request $request
-     * @return Symfony\Component\HttpFoundation\Response
+     * @return App\HttpKernel\ControllerResultInterface
      */
-    protected function patch(Request $request) : Response
+    protected function patch(Request $request) : ControllerResultInterface
     {
         $parameters = $this->resolveActionParameters($request);
 
@@ -248,7 +245,11 @@ abstract class Controller extends AbstractController
         );
 
         if ($entity === null) {
-            return $this->responseFactory->createResponse($request, 404);
+            return new ControllerResult(404);
+        }
+
+        if (! $this->authorizationChecker->isGranted('PATCH', $entity)) {
+            return new ControllerResult(403);
         }
 
         $form = $this->formFactory->create(
@@ -264,21 +265,15 @@ abstract class Controller extends AbstractController
 
             $this->entityManager->flush();
 
-            return $this->responseFactory->createResponse(
-                $request,
-                new ControllerResult(
-                    204,
-                    array('entity' => $entity)
-                )
+            return new ControllerResult(
+                204,
+                array('entity' => $entity)
             );
 
         } elseif ($form->isSubmitted()) {
-            return $this->responseFactory->createResponse(
-                $request,
-                new ControllerResult(
-                    400,
-                    array('form' => $form->createView())
-                )
+            return new ControllerResult(
+                400,
+                array('form' => $form->createView())
             );
         }
     }
@@ -287,9 +282,9 @@ abstract class Controller extends AbstractController
      * Deletes.
      *
      * @param  Symfony\Component\HttpFoundation\Request $request
-     * @return Symfony\Component\HttpFoundation\Response
+     * @return App\HttpKernel\ControllerResultInterface
      */
-    protected function delete(Request $request) : Response
+    protected function delete(Request $request) : ControllerResultInterface
     {
         $parameters = $this->resolveActionParameters($request);
 
@@ -298,12 +293,16 @@ abstract class Controller extends AbstractController
         );
 
         if ($entity === null) {
-            return $this->responseFactory->createResponse($request, 404);
+            return new ControllerResult(404);
+        }
+
+        if (! $this->authorizationChecker->isGranted('DELETE', $entity)) {
+            return new ControllerResult(403);
         }
 
         $form = $this->formFactory->create(
             $parameters['form']['class'],
-            $parameters['form']['options']['data_class']::createFromEntity($entity),
+            null,
             $parameters['form']['options']
         );
 
@@ -313,21 +312,15 @@ abstract class Controller extends AbstractController
             $this->entityManager->remove($entity);
             $this->entityManager->flush();
 
-            return $this->responseFactory->createResponse(
-                $request,
-                new ControllerResult(
-                    204,
-                    array('entity' => $entity)
-                )
+            return new ControllerResult(
+                204,
+                array('entity' => $entity)
             );
 
         } elseif ($form->isSubmitted()) {
-            return $this->responseFactory->createResponse(
-                $request,
-                new ControllerResult(
-                    400,
-                    array('form' => $form->createView())
-                )
+            return new ControllerResult(
+                400,
+                array('form' => $form->createView())
             );
         }
     }
@@ -336,34 +329,30 @@ abstract class Controller extends AbstractController
      * Proceeds.
      *
      * @param  Symfony\Component\HttpFoundation\Request $request
-     * @return Symfony\Component\HttpFoundation\Response
+     * @return App\HttpKernel\ControllerResultInterface
      */
-    public function proceed(Request $request) : Response
+    public function proceed(Request $request) : ControllerResultInterface
     {
         $parameters = $this->resolveActionParameters($request);
 
         $form = $this->formFactory->create(
             $parameters['form']['class'],
-            null,
+            new $parameters['form']['options']['data_class'],
             $parameters['form']['options']
         );
-
 
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            return $this->responseFactory->createResponse(
-                $request,
-                new ControllerResult(202)
+            return new ControllerResult(
+                202,
+                array('form' => $form)
             );
 
         } elseif ($form->isSubmitted()) {
-            return $this->responseFactory->createResponse(
-                $request,
-                new ControllerResult(
-                    400,
-                    array('form' => $form->createView())
-                )
+            return new ControllerResult(
+                400,
+                array('form' => $form->createView())
             );
         }
     }
@@ -372,57 +361,42 @@ abstract class Controller extends AbstractController
      * Gets form.
      *
      * @param  Symfony\Component\HttpFoundation\Request $request
-     * @return Symfony\Component\HttpFoundation\Response
+     * @return App\HttpKernel\ControllerResultInterface
      */
-    public function getForm(Request $request) : Response
+    public function getForm(Request $request) : ControllerResultInterface
     {
         $parameters = $this->resolveActionParameters($request);
 
-        $entity = $this->entityManager->getRepository($parameters['entity']['class'])->findOneBy(
-            array($parameters['entity']['id'] => $request->attributes->get($parameters['entity']['id']))
-        );
+        if ($request->attributes->get($parameters['entity']['id']) !== null && $parameters['form']['options']['data_class'] !== null) {
+            $entity = $this->entityManager->getRepository($parameters['entity']['class'])->findOneBy(
+                array($parameters['entity']['id'] => $request->attributes->get($parameters['entity']['id']))
+            );
 
-        if ($entity === null) {
-            return $this->responseFactory->createResponse($request, 404);
+            if ($entity === null) {
+                return new ControllerResult(404);
+            }
+
+            if (! $this->authorizationChecker->isGranted('GET', $entity)) {
+                return new ControllerResult(403);
+            }
+        }
+
+        if (isset($entity)) {
+            $data = $parameters['form']['options']['data_class']::createFromEntity($entity);
+
+        } else {
+            $data = null;
         }
 
         $form = $this->formFactory->create(
             $parameters['form']['class'],
-            $parameters['form']['options']['data_class']::createFromEntity($entity),
+            $data,
             $parameters['form']['options']
         );
 
-        return $this->responseFactory->createResponse(
-            $request,
-            new ControllerResult(
-                200,
-                array('form' => $form->createView())
-            )
-        );
-    }
-
-    /**
-     * Gets empty form.
-     *
-     * @param  Symfony\Component\HttpFoundation\Request $request
-     * @return Symfony\Component\HttpFoundation\Response
-     */
-    public function getEmptyForm(Request $request) : Response
-    {
-        $parameters = $this->resolveActionParameters($request);
-
-        $form = $this->formFactory->create(
-            $parameters['form']['class'],
-            $parameters['form']['options']['data_class'],
-            $parameters['form']['options']
-        );
-
-        return $this->responseFactory->createResponse(
-            $request,
-            new ControllerResult(
-                200,
-                array('form' => $form->createView())
-            )
+        return new ControllerResult(
+            200,
+            array('form' => $form->createView())
         );
     }
 
@@ -434,18 +408,17 @@ abstract class Controller extends AbstractController
      */
     protected function resolveActionParameters(Request $request) : array
     {
-        if (empty($this->parameters)) {
-            $parameters = array();
+        $action = $request->attributes->get('_controller');
 
-        } else {
-            $action = $request->attributes->get('_controller');
+        $parameters['entity']          = isset($this->parameters[$action]['entity'])          ? $this->parameters[$action]['entity']          : array();
+        $parameters['form']            = isset($this->parameters[$action]['form'])            ? $this->parameters[$action]['form']            : array();
+        $parameters['form']['options'] = isset($this->parameters[$action]['form']['options']) ? $this->parameters[$action]['form']['options'] : array();
 
-            $parameters = isset($this->parameters[$action]) ? $this->parameters[$action] : array();
-        }
-
-        $entityParameters      = isset($parameters['entity'])      ? $parameters['entity']      : array();
-        $formParameters        = isset($parameters['form'])        ? $parameters['form']        : array();
-        $formOptionsParameters = isset($formParameters['options']) ? $formParameters['options'] : array();
+        $parametersResolver = new OptionsResolver();
+        $parametersResolver->setDefaults(array(
+            'entity' => array(),
+            'form'   => array()
+        ));
 
         $entityParametersResolver = new OptionsResolver();
         $entityParametersResolver->setDefaults(array(
@@ -454,41 +427,35 @@ abstract class Controller extends AbstractController
                 array('\Entity\\',     ''),
                 get_class($this)
             ),
-            'id' => 'id'
+            'id'    => 'id'
+        ));
+
+        $formParametersResolver = new OptionsResolver();
+        $formParametersResolver->setDefaults(array(
+            'class'   => str_replace(
+                array('\Controller\\', 'Controller'),
+                array('\Form\Type\\',  'Type'),
+                get_class($this)
+            ),
+            'options' => array()
         ));
 
         $formOptionsParametersResolver = new OptionsResolver();
         $formOptionsParametersResolver->setDefaults(array(
-            'action'            => $request->getBasePath(),
             'method'            => $request->getMethod(),
             'validation_groups' => array(),
             'csrf_protection'   => true,
             'csrf_field_name'   => '_token',
             'csrf_token_id'     => 'security',
-            'data_class'        => str_replace(
-                array('\Controller\\', 'Controller'),
-                array('\Entity\Data\\',  'Data'),
-                get_class($this)
-            )
+            'data_class'        => null
         ));
 
-        $formParametersResolver = new OptionsResolver();
-        $formParametersResolver->setDefaults(array(
-            'class' => str_replace(
-                array('\Controller\\', 'Controller'),
-                array('\Form\Type\\',  'Type'),
-                get_class($this)
-            ),
-            'options' => $formOptionsParametersResolver->resolve($formOptionsParameters)
-        ));
+        $resolvedParameters                    = $parametersResolver->resolve($parameters);
+        $resolvedParameters['entity']          = $entityParametersResolver->resolve($parameters['entity']);
+        $resolvedParameters['form']            = $formParametersResolver->resolve($parameters['form']);
+        $resolvedParameters['form']['options'] = $formOptionsParametersResolver->resolve($parameters['form']['options']);
 
-        $resolver = new OptionsResolver();
-        $resolver->setDefaults(array(
-            'entity' => $entityParametersResolver->resolve($entityParameters),
-            'form'   => $formParametersResolver->resolve($formParameters)
-        ));
-
-        return $resolver->resolve($parameters);
+        return $resolvedParameters;
     }
 }
 

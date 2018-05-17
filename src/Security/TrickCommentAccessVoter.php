@@ -2,9 +2,10 @@
 
 namespace App\Security;
 
+use App\Entity\UserInterface;
 use App\Entity\TrickCommentInterface;
 use App\Security\AuthorizableInterface;
-use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 
 /**
  * The trick comment access voter...
@@ -19,7 +20,7 @@ class TrickCommentAccessVoter extends EntityAccessVoter
     /**
      * {@inheritdoc}
      */
-    protected function canGet(AuthorizableInterface $subject, UserInterface $user) : bool
+    protected function canGet(AuthorizableInterface $subject, TokenInterface $token) : bool
     {
         return true;
     }
@@ -27,17 +28,45 @@ class TrickCommentAccessVoter extends EntityAccessVoter
     /**
      * {@inheritdoc}
      */
-    protected function canPut(AuthorizableInterface $subject, UserInterface $user) : bool
+    protected function canPost(AuthorizableInterface $subject, TokenInterface $token) : bool
     {
-        return $subject->hasAuthor($user);
+        return $token->isAuthenticated();
     }
 
     /**
      * {@inheritdoc}
      */
-    protected function canDelete(AuthorizableInterface $subject, UserInterface $user) : bool
+    protected function canPut(AuthorizableInterface $subject, TokenInterface $token) : bool
     {
-        return $subject->hasAuthor($user);
+        if (! $token->getUser() instanceof UserInterface) {
+            return false;
+        }
+
+        return $subject->hasAuthor($token->getUser());
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    protected function canPatch(AuthorizableInterface $subject, TokenInterface $token) : bool
+    {
+        if (! $token->getUser() instanceof UserInterface) {
+            return false;
+        }
+
+        return $subject->hasAuthor($token->getUser());
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    protected function canDelete(AuthorizableInterface $subject, TokenInterface $token) : bool
+    {
+        if (! $token->getUser() instanceof UserInterface) {
+            return false;
+        }
+
+        return $subject->hasAuthor($token->getUser());
     }
 
     /**

@@ -2,11 +2,13 @@
 
 namespace App\Entity;
 
+use App\Entity\Data\EntityDataInterface;
+use App\Entity\Data\UserDataInterface;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
-use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
  * The user...
@@ -22,7 +24,7 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 class User extends Entity implements UserInterface
 {
     /**
-     * @var null|string $username
+     * @var string $username
      *
      * @ORM\Column(name="username", type="string", length=35, unique=true)
      * @Assert\NotBlank()
@@ -32,7 +34,7 @@ class User extends Entity implements UserInterface
     protected $username;
 
     /**
-     * @var null|string $email
+     * @var string $email
      *
      * @ORM\Column(name="email", type="string", length=255, unique=true)
      * @Assert\NotBlank()
@@ -51,7 +53,7 @@ class User extends Entity implements UserInterface
     protected $plainPassword;
 
     /**
-     * @var null|string $password
+     * @var string $password
      *
      * @ORM\Column(name="password", type="string", length=255)
      * @Assert\NotBlank()
@@ -61,16 +63,7 @@ class User extends Entity implements UserInterface
     protected $password;
 
     /**
-     * @var null|string $salt
-     *
-     * @ORM\Column(name="salt", type="string", length=255, nullable=true)
-     * @Assert\Type(type="string")
-     * @Assert\Length(max=255)
-     */
-    protected $salt;
-
-    /**
-     * @var null|bool $activation
+     * @var bool $activation
      *
      * @ORM\Column(name="activation", type="boolean")
      * @Assert\NotNull()
@@ -97,14 +90,72 @@ class User extends Entity implements UserInterface
 
     /**
      * Constructs the user.
+     *
+     * @param string $username
+     * @param string $email
+     * @param string $plainPassword
+     * @param null|bool $activation
+     * @param null|array $roles
      */
-    public function __construct()
+    public function __construct(
+        string $username,
+        string $email,
+        string $plainPassword,
+        ?bool  $activation = null,
+        ?array $roles      = null
+    )
     {
-        parent::__construct();
+        $this->id            = $this->generateId();
+        $this->createdAt     = new \DateTime();
+        $this->username      = $username;
+        $this->email         = $email;
+        $this->plainPassword = $plainPassword;
+        $this->password      = \password_hash($plainPassword, \PASSWORD_BCRYPT);
+        $this->activation    = $activation === null ? false : $activation;
+        $this->roles         = $roles === null ? array('ROLE_USER') : $roles;
+        $this->tokens        = new ArrayCollection();
+    }
 
-        $this->activation = false;
-        $this->roles      = array();
-        $this->tokens     = new ArrayCollection();
+    /**
+     * {@inheritdoc}
+     */
+    public static function createFromData(EntityDataInterface $data) : EntityInterface
+    {
+        if (! $data instanceof UserDataInterface) {
+            throw new \InvalidArgumentException();
+        }
+
+        $self = get_called_class();
+
+        return new $self(
+            $data->getUsername(),
+            $data->getEmail(),
+            $data->getPlainPassword(),
+            $data->getActivation(),
+            $data->getRoles()
+        );
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function updateFromData(EntityDataInterface $data) : EntityInterface
+    {
+        if (! $data instanceof UserDataInterface) {
+            throw new \InvalidArgumentException();
+        }
+
+        $this->username      = $data->getUsername();
+        $this->email         = $data->getEmail();
+        $this->plainPassword = $data->getPlainPassword();
+        $this->activation    = $data->getActivation();
+        $this->roles         = $data->getRoles();
+
+        if ($this->plainPassword !== null) {
+            $this->password = \password_hash($this->plainPassword, PASSWORD_BCRYPT);
+        }
+
+        return $this;
     }
 
     /**
@@ -118,29 +169,9 @@ class User extends Entity implements UserInterface
     /**
      * {@inheritdoc}
      */
-    public function setUsername(string $username) : UserInterface
-    {
-        $this->username = $username;
-
-        return $this;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getEmail() : ?string
+    public function getEmail() : string
     {
         return $this->email;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function setEmail(string $email) : UserInterface
-    {
-        $this->email = $email;
-
-        return $this;
     }
 
     /**
@@ -154,17 +185,6 @@ class User extends Entity implements UserInterface
     /**
      * {@inheritdoc}
      */
-    public function setPlainPassword(string $plainPassword) : UserInterface
-    {
-        $this->password      = null;
-        $this->plainPassword = $plainPassword;
-
-        return $this;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
     public function getPassword()
     {
         return $this->password;
@@ -173,47 +193,9 @@ class User extends Entity implements UserInterface
     /**
      * {@inheritdoc}
      */
-    public function setPassword(string $password) : UserInterface
-    {
-        $this->password = $password;
-
-        return $this;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getSalt()
-    {
-        return $this->salt;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function setSalt(string $salt) : UserInterface
-    {
-        $this->salt = $salt;
-
-        return $this;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
     public function getActivation() : bool
     {
         return $this->activation;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function setActivation(bool $activation) : UserInterface
-    {
-        $this->activation = $activation;
-
-        return $this;
     }
 
     /**
@@ -262,14 +244,6 @@ class User extends Entity implements UserInterface
     /**
      * {@inheritdoc}
      */
-    public function getTokens() : array
-    {
-        return $this->tokens->toArray();
-    }
-
-    /**
-     * {@inheritdoc}
-     */
     public function getActivationToken() : ?UserTokenInterface
     {
         return $this->getToken('activation');
@@ -292,40 +266,46 @@ class User extends Entity implements UserInterface
     {
         $criteria = new Criteria();
 
-        return $this->tokens->matching(
+        $token = $this->tokens->matching(
             $criteria->where(
                 $criteria->expr()->eq('type', $type)
             )
 
-        )->get(0);
+        )->last();
+
+        return $token === false ? null : $token;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function addActivationToken() : UserInterface
+    public function createActivationToken(int $ttl = 24) : UserTokenInterface
     {
-        $token = new UserToken();
+        if ($token = $this->getActivationToken()) {
+            $this->tokens->removeElement($token);
+        }
 
-        $token->setType('activation');
+        $token = new UserToken($this, 'activation', $ttl);
 
         $this->addToken($token);
 
-        return $this;
+        return $token;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function addPasswordResetToken() : UserInterface
+    public function createPasswordResetToken(int $ttl = 24) : UserTokenInterface
     {
-        $token = new UserToken();
+        if ($token = $this->getPasswordResetToken()) {
+            $this->tokens->removeElement($token);
+        }
 
-        $token->setType('password_reset');
+        $token = new UserToken($this, 'password_reset', $ttl);
 
         $this->addToken($token);
 
-        return $this;
+        return $token;
     }
 
     /**
@@ -336,11 +316,7 @@ class User extends Entity implements UserInterface
      */
     protected function addToken(UserTokenInterface $token) : UserInterface
     {
-        $token->setUser($this);
-
-        if ($this->tokens->contains($token) === false) {
-            $this->tokens->add($token);
-        }
+        $this->tokens->add($token);
 
         return $this;
     }
@@ -348,12 +324,8 @@ class User extends Entity implements UserInterface
     /**
      * {@inheritdoc}
      */
-    public function getGravatar(?int $size = 80, ?string $imageSet = 'mm', ?string $rating = 'g') : ?string
+    public function getGravatar(?int $size = 80, ?string $imageSet = 'mm', ?string $rating = 'g') : string
     {
-        if ($this->email === null) {
-            return null;
-        }
-
         return 'https://www.gravatar.com/avatar/'.md5(strtolower(trim($this->email))).'?s='.$size.'&d='.$imageSet.'&r='.$rating;
     }
 
@@ -382,7 +354,7 @@ class User extends Entity implements UserInterface
      */
     public function isEnabled()
     {
-        return (bool) $this->activation;
+        return $this->activation;
     }
 
     /**
@@ -390,7 +362,7 @@ class User extends Entity implements UserInterface
      */
     public function isAccountNonExpired()
     {
-        return (bool) $this->activation;
+        return $this->activation;
     }
 
     /**
@@ -398,7 +370,7 @@ class User extends Entity implements UserInterface
      */
     public function isAccountNonLocked()
     {
-        return (bool) $this->activation;
+        return $this->activation;
     }
 
     /**
@@ -406,7 +378,15 @@ class User extends Entity implements UserInterface
      */
     public function isCredentialsNonExpired()
     {
-        return (bool) $this->activation;
+        return $this->activation;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getSalt()
+    {
+        return null;
     }
 
     /**
@@ -427,7 +407,6 @@ class User extends Entity implements UserInterface
             $this->username,
             $this->email,
             $this->password,
-            $this->salt,
             $this->activation,
             $this->createdAt,
             $this->roles,
@@ -444,7 +423,6 @@ class User extends Entity implements UserInterface
             $this->username,
             $this->email,
             $this->password,
-            $this->salt,
             $this->activation,
             $this->createdAt,
             $this->roles

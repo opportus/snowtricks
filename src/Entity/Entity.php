@@ -2,7 +2,6 @@
 
 namespace App\Entity;
 
-use App\Entity\Data\EntityDataInterface;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -42,21 +41,6 @@ abstract class Entity implements EntityInterface
     /**
      * {@inheritdoc}
      */
-    abstract public static function createFromData(EntityDataInterface $data) : EntityInterface;
-
-    /**
-     * {@inheritdoc}
-     */
-    abstract public function updateFromData(EntityDataInterface $data) : EntityInterface;
-
-    /**
-     * {@inheritdoc}
-     */
-    abstract public function toData() : EntityDataInterface;
-
-    /**
-     * {@inheritdoc}
-     */
     public function getId() : string
     {
         return $this->id;
@@ -67,7 +51,7 @@ abstract class Entity implements EntityInterface
      */
     public function getCreatedAt() : \DateTimeInterface
     {
-        return $this->createdAt;
+        return clone $this->createdAt;
     }
 
     /**

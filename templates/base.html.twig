@@ -44,7 +44,7 @@
                 <nav class="navbar navbar-expand-md navbar-light bg-light">
                     {% block logo %}
                         <!-- Logo ============================================================ -->
-                        <a class="navbar-brand" href="{{ url('home_show') }}">
+                        <a class="navbar-brand" href="{{ url('get_home') }}">
                             {{ app_name }}
                         </a>
                     {% endblock logo %}
@@ -56,24 +56,24 @@
                         <div class="collapse navbar-collapse" id="nav">
                             <ul class="navbar-nav ml-md-auto">
                                 <li class="nav-item">
-                                    <a class="nav-link" href="{{ url('home_show') }}" title="{{ 'base.navbar.link.title.home'|trans() }}">
+                                    <a class="nav-link" href="{{ url('get_home') }}" title="{{ 'base.navbar.link.title.home'|trans() }}">
                                         {{ 'base.navbar.link.anchor.home'|trans() }}
                                     </a>
                                 </li>
                                 {% if is_granted('IS_AUTHENTICATED_REMEMBERED') %}
                                     <li class="nav-item">
-                                        <a class="nav-link" href="{{ url('user_sign_out') }}" title="{{ 'base.navbar.link.title.sign_out'|trans() }}">
+                                        <a class="nav-link" href="{{ url('proceed_user_sign_out') }}" title="{{ 'base.navbar.link.title.sign_out'|trans() }}">
                                             {{ 'base.navbar.link.anchor.sign_out'|trans() }}
                                         </a>
                                     </li>
                                 {% else %}
                                     <li class="nav-item">
-                                        <a class="nav-link" href="{{ url('user_sign_in') }}" title="{{ 'base.navbar.link.title.sign_in'|trans() }}">
+                                        <a class="nav-link" href="{{ url('get_user_sign_in_empty_form') }}" title="{{ 'base.navbar.link.title.sign_in'|trans() }}">
                                             {{ 'base.navbar.link.anchor.sign_in'|trans() }}
                                         </a>
                                     </li>
                                     <li class="nav-item">
-                                        <a class="nav-link" href="{{ url('user_sign_up') }}" title="{{ 'base.navbar.link.title.sign_up'|trans() }}">
+                                        <a class="nav-link" href="{{ url('get_user_sign_up_empty_form') }}" title="{{ 'base.navbar.link.title.sign_up'|trans() }}">
                                             {{ 'base.navbar.link.anchor.sign_up'|trans() }}
                                         </a>
                                     </li>
@@ -104,11 +104,11 @@
                 <script src="http://code.jquery.com/jquery-3.3.1.min.js"></script>
                 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js"></script>
                 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js"></script>
+                <script src="{{ asset('js/ajax-action-handler.js') }}"></script>
                 <script src="{{ asset('js/trick-comment-form.js') }}"></script>
                 <script src="{{ asset('js/trick-comment-form-registry.js') }}"></script>
                 <script src="{{ asset('js/infinite-scroll.js') }}"></script>
                 <script src="{{ asset('js/infinite-scroll-registry.js') }}"></script>
-                <script src="{{ asset('js/ajax-action-handler.js') }}"></script>
                 <script src="{{ asset('js/arrow-scroll.js') }}"></script>
             {% endblock javascripts %}
         </body>

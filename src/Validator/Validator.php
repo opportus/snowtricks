@@ -2,9 +2,8 @@
 
 namespace App\Validator;
 
-use App\Validator\ValidatorInterface;
-use Symfony\Component\Validator\Validator\ValidatorInterface as SymfonyValidatorInterface;
-use Symfony\Component\Validator\Validator\TraceableValidator;
+use App\Validator\ValidatorInterface as AppValidatorInterface;
+use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Symfony\Component\Validator\Exception\ValidatorException;
 use Psr\Log\LoggerInterface;
 
@@ -16,8 +15,18 @@ use Psr\Log\LoggerInterface;
  * @author  Clément Cazaud <opportus@gmail.com>
  * @license https://github.com/opportus/snowtricks/blob/master/LICENSE.md MIT
  */
-class Validator extends TraceableValidator implements ValidatorInterface
+class Validator implements AppValidatorInterface
 {
+    /**
+     * @var array $parameters
+     */
+    protected $parameters;
+
+    /**
+     * @var Symfony\Component\Validator\Validator\ValidatorInterface $validator
+     */
+    protected $validator;
+
     /**
      * @var Psr\Log\LoggerInterface $logger
      */
@@ -26,13 +35,15 @@ class Validator extends TraceableValidator implements ValidatorInterface
     /**
      * Constructs the validator.
      *
+     * @param array $parameters
      * @param Symfony\Component\Validator\Validator\ValidatorInterface $validator
      * @param Psr\Log\LoggerInterface $logger
      */
-    public function __construct(SymfonyValidatorInterface $validator, LoggerInterface $logger)
+    public function __construct(array $parameters, ValidatorInterface $validator, LoggerInterface $logger)
     {
-        $this->validator = $validator;
-        $this->logger    = $logger;
+        $this->parameters = $parameters;
+        $this->validator  = $validator;
+        $this->logger     = $logger;
     }
 
     /**
@@ -40,7 +51,7 @@ class Validator extends TraceableValidator implements ValidatorInterface
      */
     public function validateWithException($value, $constraints = null, $groups = null, string $exception = ValidatorException::class)
     {
-        $constraintViolationList = $this->validate($value, $constraints, $groups);
+        $constraintViolationList = $this->validator->validate($value, $constraints, $groups);
 
         if ($constraintViolationList->count() > 0) {
             throw new $exception(

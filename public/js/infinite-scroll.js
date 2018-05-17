@@ -74,21 +74,21 @@ class InfiniteScroll
 
         $.ajax({
             url: url,
+            dataType: 'json',
             success: function(response, status) {
                 self.find('#infinite-scroll-loader-' + self.id).fadeOut(200, function() {
                     self.find('#infinite-scroll-loader-' + self.id).remove();
                 });
 
-                var html = $(response.html);
-
-                html.each(function() {
+                var response = $(response);
+                response.each(function() {
                     $(this).addClass(self.id + '-page-' + self.page);
                 });
 
                 self.find('.' + self.id + '-page-' + self.page).last().nextAll().remove();
                 self.find('.' + self.id + '-page-' + self.page).remove();
 
-                html.appendTo(self).hide().fadeIn(500);
+                response.appendTo(self).hide().fadeIn(500);
 
                 self.loading = false;
                 self.page++;

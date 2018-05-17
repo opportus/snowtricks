@@ -5,7 +5,7 @@ namespace App\Entity\Data;
 use App\Entity\TrickCommentInterface;
 use App\Entity\TrickInterface;
 use App\Entity\UserInterface;
-use App\Security\AuthorizableInterface;
+use App\Security\AuthorableInterface;
 use Doctrine\Common\Collections\Collection;
 
 /**
@@ -16,15 +16,8 @@ use Doctrine\Common\Collections\Collection;
  * @author  Clément Cazaud <opportus@gmail.com>
  * @license https://github.com/opportus/snowtricks/blob/master/LICENSE.md MIT
  */
-interface TrickCommentDataInterface extends EntityDataInterface, AuthorizableInterface
+interface TrickCommentDataInterface extends EntityDataInterface, AuthorableInterface
 {
-    /**
-     * Gets the update datetime.
-     *
-     * @return \DateTimeInterface
-     */
-    public function getUpdatedAt() : \DateTimeInterface;
-
     /**
      * Gets the body.
      *
@@ -39,6 +32,13 @@ interface TrickCommentDataInterface extends EntityDataInterface, AuthorizableInt
      * @return App\Entity\Data\TrickCommentDataInterface
      */
     public function setBody(string $body) : TrickCommentDataInterface;
+
+    /**
+     * Gets the author.
+     *
+     * @return null|App\Entity\UserInterface
+     */
+    public function getAuthor() : ?UserInterface;
 
     /**
      * Gets the thread.
@@ -73,9 +73,9 @@ interface TrickCommentDataInterface extends EntityDataInterface, AuthorizableInt
     /**
      * Gets the children.
      *
-     * @return Doctrine\Common\Collections\Collection
+     * @return null|Doctrine\Common\Collections\Collection
      */
-    public function getChildren() : Collection;
+    public function getChildren() : ?Collection;
 
     /**
      * Sets the children.

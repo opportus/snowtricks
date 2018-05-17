@@ -124,37 +124,20 @@ class Mailer implements MailerInterface
      */
     public function sendUserActivationEmail(UserInterface $user) : MailerInterface
     {
-        $this->validator->validateWithExceptionAndLog($user);
-        $this->validator->validateWithExceptionAndLog($user->getActivationToken());
-
         $template = $this->parameters['send_user_activation_email']['template'];
         $from     = $this->parameters['send_user_activation_email']['from'];
         $subject  = $this->translator->trans(
-            'user.activate.email.subject',
+            'user.activation.email.subject',
             array(
                 '%username%'    => $user->getUsername(),
                 '%action_ttl%'  => $user->getActivationToken()->getTtl(),
-                '%action_link%' => $this->router->generate(
-                    'user_activate',
-                    array(
-                        'token' => $user->getActivationToken()->getKey()
-                    ),
-                    RouterInterface::ABSOLUTE_URL
-                )
             )
         );
         $message  = $this->translator->trans(
-            'user.activate.email.message',
+            'user.activation.email.message',
             array(
                 '%username%'    => $user->getUsername(),
                 '%action_ttl%'  => $user->getActivationToken()->getTtl(),
-                '%action_link%' => $this->router->generate(
-                    'user_activate',
-                    array(
-                        'token' => $user->getActivationToken()->getKey()
-                    ),
-                    RouterInterface::ABSOLUTE_URL
-                )
             )
         );
 
@@ -174,37 +157,20 @@ class Mailer implements MailerInterface
      */
     public function sendUserPasswordResetEmail(UserInterface $user) : MailerInterface
     {
-        $this->validator->validateWithExceptionAndLog($user);
-        $this->validator->validateWithExceptionAndLog($user->getPasswordResetToken());
-
         $template = $this->parameters['send_user_password_reset_email']['template'];
         $from     = $this->parameters['send_user_password_reset_email']['from'];
         $subject  = $this->translator->trans(
-            'user.reset_password.email.subject',
+            'user.password_reset.email.subject',
             array(
                 '%username%'    => $user->getUsername(),
                 '%action_ttl%'  => $user->getPasswordResetToken()->getTtl(),
-                '%action_link%' => $this->router->generate(
-                    'user_reset_password',
-                    array(
-                        'token' => $user->getPasswordResetToken()->getKey()
-                    ),
-                    RouterInterface::ABSOLUTE_URL
-                )
             )
         );
         $message  = $this->translator->trans(
-            'user.reset_password.email.message',
+            'user.password_reset.email.message',
             array(
                 '%username%'    => $user->getUsername(),
                 '%action_ttl%'  => $user->getPasswordResetToken()->getTtl(),
-                '%action_link%' => $this->router->generate(
-                    'user_reset_password',
-                    array(
-                        'token' => $user->getPasswordResetToken()->getKey()
-                    ),
-                    RouterInterface::ABSOLUTE_URL
-                )
             )
         );
 

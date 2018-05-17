@@ -17,10 +17,10 @@ trait EntityRepositoryTrait
     /**
      * Finds one entity by ID.
      *
-     * @param  int $id
+     * @param  string $id
      * @return null|App\Entity\EntityInterface
      */
-    public function findOneById(int $id) : ?EntityInterface
+    public function findOneById(string $id) : ?EntityInterface
     {
         return $this->findOneBy(
             array(

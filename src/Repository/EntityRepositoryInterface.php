@@ -20,9 +20,9 @@ interface EntityRepositoryInterface extends ServiceEntityRepositoryInterface, Ob
     /**
      * Finds one entity by ID.
      *
-     * @param  int $id
+     * @param  string $id
      * @return null|App\Entity\EntityInterface
      */
-    public function findOneById(int $id) : ?EntityInterface;
+    public function findOneById(string $id) : ?EntityInterface;
 }
 

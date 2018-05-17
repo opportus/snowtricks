@@ -2,10 +2,6 @@
 
 namespace App\Security;
 
-use Symfony\Component\Security\Core\User\UserInterface;
-use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
-use Symfony\Component\Security\Core\Authorization\Voter\Voter;
-
 /**
  * The authorizable interface...
  *
@@ -16,27 +12,5 @@ use Symfony\Component\Security\Core\Authorization\Voter\Voter;
  */
 interface AuthorizableInterface
 {
-    /**
-     * Checks whether the authorizable has the given author.
-     *
-     * @param  Symfony\Component\Security\Core\User\UserInterface $author
-     * @return bool
-     */
-    public function hasAuthor(UserInterface $author) : bool;
-
-    /**
-     * Gets the author.
-     *
-     * @return Symfony\Component\Security\Core\User\UserInterface
-     */
-    public function getAuthor() : UserInterface;
-
-    /**
-     * Sets the author.
-     *
-     * @param  Symfony\Component\Security\Core\User\UserInterface $author
-     * @return App\Security\AuthorizableInterface
-     */
-    public function setAuthor(UserInterface $author) : AuthorizableInterface;
 }
 

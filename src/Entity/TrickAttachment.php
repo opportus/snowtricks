@@ -15,13 +15,11 @@ use Symfony\Component\Validator\Constraints as Assert;
  *
  * @ORM\Entity(repositoryClass="App\Repository\TrickAttachmentRepository")
  * @ORM\Table(name="trick_attachment")
- *
- * @todo
  */
 class TrickAttachment extends Entity implements TrickAttachmentInterface
 {
     /**
-     * @var null|string $src
+     * @var string $src
      *
      * @ORM\Column(name="src", type="string", length=255)
      * @Assert\NotBlank()
@@ -32,7 +30,7 @@ class TrickAttachment extends Entity implements TrickAttachmentInterface
     protected $src;
 
     /**
-     * @var null|string $title
+     * @var string $title
      *
      * @ORM\Column(name="title", type="string", length=255)
      * @Assert\NotBlank()
@@ -42,7 +40,7 @@ class TrickAttachment extends Entity implements TrickAttachmentInterface
     protected $title;
 
     /**
-     * @var null|string $alt
+     * @var string $alt
      *
      * @ORM\Column(name="alt", type="string", length=255)
      * @Assert\NotBlank()
@@ -52,7 +50,7 @@ class TrickAttachment extends Entity implements TrickAttachmentInterface
     protected $alt;
 
     /**
-     * @var null|string $type
+     * @var string $type
      *
      * @ORM\Column(name="type", type="string", length=20)
      * @Assert\NotBlank()
@@ -73,21 +71,37 @@ class TrickAttachment extends Entity implements TrickAttachmentInterface
     protected $trickVersion;
 
     /**
-     * {@inheritdoc}
+     * Constructs the attachment.
+     *
+     * @param string $src
+     * @param string $title
+     * @param string $alt
+     * @param string $type
+     * @param App\Entity\TrickVersionInterface $version
      */
-    public function getSrc()
+    public function __construct(
+        string               $src,
+        string               $title,
+        string               $alt,
+        string               $type,
+        TrckVersionInterface $version
+    )
     {
-        return $this->src;
+        $this->id           = $this->generateId();
+        $this->createdAt    = new \DateTime();
+        $this->src          = $src;
+        $this->title        = $title;
+        $this->alt          = $alt;
+        $this->type         = $type;
+        $this->trickVersion = $version;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function setSrc(string $src) : TrickAttachmentInterface
+    public function getSrc()
     {
-        $this->src = $src;
-
-        return $this;
+        return $this->src;
     }
 
     /**
@@ -101,29 +115,9 @@ class TrickAttachment extends Entity implements TrickAttachmentInterface
     /**
      * {@inheritdoc}
      */
-    public function setTitle(string $title) : TrickAttachmentInterface
-    {
-        $this->title = $title;
-
-        return $this;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
     public function getAlt()
     {
         return $this->alt;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function setAlt(string $alt): TrickAttachmentInterface
-    {
-        $this->alt = $alt;
-
-        return $this;
     }
 
     /**
@@ -137,29 +131,9 @@ class TrickAttachment extends Entity implements TrickAttachmentInterface
     /**
      * {@inheritdoc}
      */
-    public function setType(string $type) : TrickAttachmentInterface
-    {
-        $this->type = $type;
-
-        return $this;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
     public function getTrickVersion()
     {
         return $this->trickVersion;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function setTrickVersion(TrickVersionInterface $trickVersion) : TrickAttachmentInterface
-    {
-        $this->trickVersion = $trickVersion;
-
-        return $this;
     }
 
     /**
@@ -177,3 +151,4 @@ class TrickAttachment extends Entity implements TrickAttachmentInterface
         return $html;
     }
 }
+

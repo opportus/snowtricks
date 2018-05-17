@@ -2,7 +2,6 @@
 
 namespace App\Entity;
 
-use Doctrine\ORM\Mapping\UniqueConstraint;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -15,12 +14,12 @@ use Symfony\Component\Validator\Constraints as Assert;
  * @license https://github.com/opportus/snowtricks/blob/master/LICENSE.md MIT
  *
  * @ORM\Entity(repositoryClass="App\Repository\UserTokenRepository", readOnly=true)
- * @ORM\Table(name="user_token", uniqueConstraints={@UniqueConstraint(name="user_token_type_idx", columns={"user_id", "type"})})
+ * @ORM\Table(name="user_token")
  */
 class UserToken extends Entity implements UserTokenInterface
 {
     /**
-     * @var null|string $key
+     * @var string $key
      *
      * @ORM\Column(name="name", type="string", length=255, unique=true)
      * @Assert\NotBlank()
@@ -30,7 +29,7 @@ class UserToken extends Entity implements UserTokenInterface
     protected $key;
 
     /**
-     * @var null|string $type
+     * @var string $type
      *
      * @ORM\Column(name="type", type="string", length=20)
      * @Assert\NotBlank()
@@ -41,7 +40,7 @@ class UserToken extends Entity implements UserTokenInterface
     protected $type;
 
     /**
-     * @var null|int $ttl
+     * @var int $ttl
      *
      * @ORM\Column(name="ttl", type="smallint")
      * @Assert\NotNull()
@@ -51,7 +50,7 @@ class UserToken extends Entity implements UserTokenInterface
     protected $ttl;
 
     /**
-     * @var null|App\Entity\UserInterface $user
+     * @var App\Entity\UserInterface $user
      *
      * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="tokens")
      * @ORM\JoinColumn(name="user_id", referencedColumnName="id", nullable=false)
@@ -62,19 +61,25 @@ class UserToken extends Entity implements UserTokenInterface
 
     /**
      * Constructs the user token.
+     *
+     * @param App\Entity\UserInterface $user
+     * @param string $type
+     * @param int $ttl
      */
-    public function __construct()
+    public function __construct(UserInterface $user, string $type, int $ttl = 24)
     {
-        parent::__construct();
-
-        $this->key = rtrim(strtr(base64_encode(random_bytes(32)), '+/', '-_'), '=');
-        $this->ttl = 24;
+        $this->id        = $this->generateId();
+        $this->createdAt = new \DateTime();
+        $this->key       = rtrim(strtr(base64_encode(random_bytes(32)), '+/', '-_'), '=');
+        $this->type      = $type;
+        $this->ttl       = $ttl;
+        $this->user      = $user;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function getKey() : ?string
+    public function getKey() : string
     {
         return $this->key;
     }
@@ -82,7 +87,7 @@ class UserToken extends Entity implements UserTokenInterface
     /**
      * {@inheritdoc}
      */
-    public function getType() : ?string
+    public function getType() : string
     {
         return $this->type;
     }
@@ -90,17 +95,7 @@ class UserToken extends Entity implements UserTokenInterface
     /**
      * {@inheritdoc}
      */
-    public function setType(string $type) : UserTokenInterface
-    {
-        $this->type = $type;
-
-        return $this;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getTtl() : ?int
+    public function getTtl() : int
     {
         return $this->ttl;
     }
@@ -108,19 +103,9 @@ class UserToken extends Entity implements UserTokenInterface
     /**
      * {@inheritdoc}
      */
-    public function getUser() : ?UserInterface
+    public function getUser() : UserInterface
     {
         return $this->user;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function setUser(UserInterface $user) : UserTokenInterface
-    {
-        $this->user = $user;
-
-        return $this;
     }
 
     /**
@@ -138,7 +123,7 @@ class UserToken extends Entity implements UserTokenInterface
     /**
      * {@inheritdoc}
      */
-    public function isEqualTo(string $token) : bool
+    public function hasKey(string $token) : bool
     {
         return hash_equals($this->key, $token);
     }

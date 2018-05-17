@@ -19,74 +19,49 @@ interface FileInterface extends EntityInterface
      *
      * @return null|string
      */
-    public function getPath() : ?string;
-
-    /**
-     * Sets the path.
-     *
-     * @param  string $directory
-     * @param  null|string $name
-     * @return App\Entity\FileInterface
-     */
-    public function setPath(string $directory, ?string $name) : FileInterface;
+    public function getPath() : string;
 
     /**
      * Gets the name.
      *
-     * @return null|string
+     * @return string
      */
-    public function getName() : ?string;
+    public function getName() : string;
 
     /**
      * Gets the extension.
      *
-     * @return null|string
+     * @return string
      */
-    public function getExtension() : ?string;
+    public function getExtension() : string;
 
     /**
      * Gets the directory.
      *
-     * @return null|string
+     * @return string
      */
-    public function getDirectory() : ?string;
+    public function getDirectory() : string;
 
     /**
      * Gets the mime type.
      *
-     * @return null|string
+     * @return string
      */
-    public function getMimeType() : ?string;
+    public function getMimeType() : string;
 
     /**
      * Gets the uploader.
      *
-     * @return null|App\Entity\UserInterface
+     * @return App\Entity\UserInterface
      */
-    public function getUploader() : ?UserInterface;
-
-    /**
-     * Sets the uploader.
-     *
-     * @param  App\Entity\UserInterface $uploader
-     * @return App\Entity\FileInterface
-     */
-    public function setUploader(UserInterface $uploader) : FileInterface;
+    public function getUploader() : UserInterface;
 
     /**
      * Gets the file manager.
      *
-     * @return null|Symfony\Component\HttpFoundation\File\File
+     * @return Symfony\Component\HttpFoundation\File\File
      */
-    public function getFileManager() : ?FileManager;
-
-    /**
-     * Sets the file manager.
-     *
-     * @param  Symfony\Component\HttpFoundation\File\File $fileManager
-     * @return App\Entity\FileInterface
-     */
-    public function setFileManager(FileManager $fileManager) : FileInterface;
+    public function getFileManager() : FileManager;
 
     /**
      * Moves.

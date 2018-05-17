@@ -13,7 +13,7 @@ use Doctrine\Common\Collections\Collection;
  * @author  Clément Cazaud <opportus@gmail.com>
  * @license https://github.com/opportus/snowtricks/blob/master/LICENSE.md MIT
  */
-interface TrickCommentInterface extends EntityInterface, AuthorizableInterface
+interface TrickCommentInterface extends EntityInterface, TransferableDataInterface, AuthorizableInterface
 {
     /**
      * Gets the update datetime.
@@ -30,6 +30,21 @@ interface TrickCommentInterface extends EntityInterface, AuthorizableInterface
     public function getBody() : string;
 
     /**
+     * Gets the author.
+     *
+     * @return App\Entity\UserInterface
+     */
+    public function getAuthor() : UserInterface;
+
+    /**
+     * Checks whether the given user is an author.
+     *
+     * @param  App\Entity\UserInterface $user
+     * @return bool
+     */
+    public function hasAuthor(UserInterface $user) : bool;
+
+    /**
      * Gets the thread.
      *
      * @return App\Entity\TrickInterface
@@ -44,13 +59,6 @@ interface TrickCommentInterface extends EntityInterface, AuthorizableInterface
     public function getParent() : ?TrickCommentInterface;
 
     /**
-     * Removes the parent.
-     *
-     * @return App\Entity\TrickCommentInterface
-     */
-    public function removeParent() : TrickCommentInterface;
-
-    /**
      * Checks whether or not the comment has a parent.
      *
      * @return bool
@@ -58,11 +66,33 @@ interface TrickCommentInterface extends EntityInterface, AuthorizableInterface
     public function hasParent() : bool;
 
     /**
+     * Sets the parent.
+     *
+     * @param  App\Entity\TrickCommentInterface $parent
+     * @return App\Entity\TrickCommentInterface
+     */
+    public function setParent(TrickCommentInterface $parent) : TrickCommentInterface;
+
+    /**
+     * Removes the parent.
+     *
+     * @return App\Entity\TrickCommentInterface
+     */
+    public function removeParent() : TrickCommentInterface;
+
+    /**
      * Gets the children.
      *
      * @return array
      */
     public function getChildren() : Collection;
+
+    /**
+     * Checks whether or not the comment has children.
+     *
+     * @return bool
+     */
+    public function hasChildren() : bool;
 
     /**
      * Adds a child.
@@ -79,12 +109,5 @@ interface TrickCommentInterface extends EntityInterface, AuthorizableInterface
      * @return App\Entity\TrickCommentInterface
      */
     public function removeChild(TrickCommentInterface $child) : TrickCommentInterface;
-
-    /**
-     * Checks whether or not the comment has children.
-     *
-     * @return bool
-     */
-    public function hasChildren() : bool;
 }
 

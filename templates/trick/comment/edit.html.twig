@@ -1,16 +1,18 @@
 {% if form.id.vars.value %}
-    {% set action       = 'updateTrickComment' %}
+    {% set action       = url('put_trick_comment_by_edit_form', {'id': form.id.vars.value}) %}
+    {% set ajaxAction   = 'updateTrickComment' %}
     {% set bodyLayout   = 'col-12' %}
     {% set buttonLayout = 'col-12 mt-3' %}
     {% set buttonLabel  = 'trick_comment.edit.form.label.submit.update' %}
 {% else %}
+    {% set action = url('post_trick_comment_by_edit_form') %}
     {% if form.parent.vars.value == '' %}
-        {% set action       = 'createTrickComment' %}
+        {% set ajaxAction   = 'createTrickComment' %}
         {% set bodyLayout   = 'col-12 col-md-8' %}
         {% set buttonLayout = 'col-12 col-md-2 mt-3 mt-md-0 float-md-right' %}
         {% set buttonLabel  = 'trick_comment.edit.form.label.submit.create' %}
     {% else %}
-        {% set action       = 'replyTrickComment' %}
+        {% set ajaxAction   = 'replyTrickComment' %}
         {% set bodyLayout   = 'col-12' %}
         {% set buttonLayout = 'col-12 mt-3' %}
         {% set buttonLabel  = 'trick_comment.edit.form.label.submit.reply' %}
@@ -18,7 +20,7 @@
 {% endif %}
 <div class="row py-3">
     <div class="trick-comment-edit col-12">
-        {{ form_start(form, {'attr': {'id': 'trick-comment-edit-' ~ random(), 'class': 'row'}}) }}
+        {{ form_start(form, {'attr': {'action': action,'id': 'trick-comment-edit-' ~ random(), 'class': 'row'}}) }}
             {{ form_errors(form) }}
             <div class="trick-comment-edit-body {{ bodyLayout }}">
                 {{ form_errors(form.body) }}
@@ -42,7 +44,7 @@
                         'attr': {
                             'type': 'button',
                             'class': 'btn btn-secondary btn-sm ajax-action',
-                            'data-action': action,
+                            'data-action': ajaxAction,
                             'disabled': 'disabled'
                         }
                     }

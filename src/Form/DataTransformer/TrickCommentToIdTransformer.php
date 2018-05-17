@@ -51,7 +51,7 @@ class TrickCommentToIdTransformer implements DataTransformerInterface
             );
         }
 
-        return (string) $value->getId();
+        return $value->getId();
     }
 
     /**
@@ -64,7 +64,7 @@ class TrickCommentToIdTransformer implements DataTransformerInterface
         }
 
         $trickComment = $this->entityManager->getRepository(TrickComment::class)
-            ->findOneById((int) $value)
+            ->findOneById($value)
         ;
 
         if ($trickComment === null) {

@@ -2,6 +2,8 @@
 
 namespace App\Entity;
 
+use Doctrine\Common\Collections\Collection;
+
 /**
  * The trick group interface...
  *
@@ -15,46 +17,30 @@ interface TrickGroupInterface extends EntityInterface
     /**
      * Gets the slug.
      *
-     * @return null|string
+     * @return string
      */
-    public function getSlug() : ?string;
+    public function getSlug() : string;
 
     /**
      * Gets the title.
      *
-     * @return null|string
+     * @return string
      */
-    public function getTitle() : ?string;
-
-    /**
-     * Sets the title.
-     *
-     * @param  string $title
-     * @return App\Entity\TrickGroupInterface
-     */
-    public function setTitle(string $title) : TrickGroupInterface;
+    public function getTitle() : string;
 
     /**
      * Gets the description.
      *
-     * @return null|string
+     * @return string
      */
-    public function getDescription() : ?string;
-
-    /**
-     * Sets the description.
-     *
-     * @param  string $description
-     * @return App\Entity\TrickGroupInterface
-     */
-    public function setDescription(string $description) : TrickGroupInterface;
+    public function getDescription() : string;
 
     /**
      * Gets the tricks.
      *
-     * @return array
+     * @return Doctrine\Common\Collections\Collection
      */
-    public function getTricks() : array;
+    public function getTricks() : Collection;
 
     /**
      * Adds a trick.
@@ -71,19 +57,5 @@ interface TrickGroupInterface extends EntityInterface
      * @return App\Entity\TrickGroupInterface
      */
     public function removeTrick(TrickInterface $trick) : TrickGroupInterface;
-
-    /**
-     * Gets the author.
-     *
-     * @return null|App\Entity\UserInterface
-     */
-    public function getAuthor() : ?UserInterface;
-
-    /**
-     * Sets the author.
-     *
-     * @param  App\Entity\UserInterface $author
-     * @return App\Entity\TrickGroupInterface
-     */
-    public function setAuthor(UserInterface $author) : TrickGroupInterface;
 }
+

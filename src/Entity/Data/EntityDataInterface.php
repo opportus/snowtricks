@@ -21,19 +21,5 @@ interface EntityDataInterface
      * @return App\Entity\Data\EntityDataInterface
      */
     public static function createFromEntity(EntityInterface $entity) : EntityDataInterface;
-
-    /**
-     * Gets the ID.
-     *
-     * @return string
-     */
-    public function getId() : ?string;
-
-    /**
-     * Gets the creation datetime.
-     *
-     * @return \DateTimeInterface
-     */
-    public function getCreatedAt() : ?\DateTimeInterface;
 }
 

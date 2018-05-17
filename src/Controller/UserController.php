@@ -2,8 +2,10 @@
 
 namespace App\Controller;
 
+use App\HttpKernel\ControllerResult;
+use App\HttpKernel\ControllerResultInterface;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 
@@ -21,26 +23,26 @@ class UserController extends Controller
      * Gets user sign up empty form.
      *
      * @param  Symfony\Component\HttpFoundation\Request $request
-     * @return Symfony\Component\HttpFoundation\Response
+     * @return App\HttpKernel\ControllerResultInterface
      *
      * @Route("/user/sign-up", name="get_user_sign_up_empty_form")
      * @Method("GET")
      */
-    public function getUserSignUpEmptyForm(Request $request) : Response
+    public function getUserSignUpEmptyForm(Request $request) : ControllerResultInterface
     {
-        return $this->getEmptyForm($request);
+        return $this->getForm($request);
     }
 
     /**
      * Posts user by sign up form.
      *
      * @param  Symfony\Component\HttpFoundation\Request $request
-     * @return Symfony\Component\HttpFoundation\Response
+     * @return App\HttpKernel\ControllerResultInterface
      *
      * @Route("/user/sign-up", name="post_user_by_sign_up_form")
      * @Method("POST")
      */
-    public function postUserBySignUpForm(Request $request) : Response
+    public function postUserBySignUpForm(Request $request) : ControllerResultInterface
     {
         return $this->post($request);
     }
@@ -49,12 +51,12 @@ class UserController extends Controller
      * Patches user by activation email form.
      *
      * @param  Symfony\Component\HttpFoundation\Request $request
-     * @return Symfony\Component\HttpFoundation\Response
+     * @return App\HttpKernel\ControllerResultInterface
      *
      * @Route("/user/activation/{id}", name="patch_user_by_activation_email_form")
      * @Method("PATCH")
      */
-    public function patchUserByActivationEmailForm(Request $request) : Response
+    public function patchUserByActivationEmailForm(Request $request) : ControllerResultInterface
     {
         return $this->patch($request);
     }
@@ -63,26 +65,26 @@ class UserController extends Controller
      * Gets user password reset request empty form.
      *
      * @param  Symfony\Component\HttpFoundation\Request $request
-     * @return Symfony\Component\HttpFoundation\Response
+     * @return App\HttpKernel\ControllerResultInterface
      *
      * @Route("/user/password-reset-request", name="get_user_password_reset_request_empty_form")
      * @Method("GET")
      */
-    public function getUserPasswordResetRequestEmptyForm(Request $request) : Response
+    public function getUserPasswordResetRequestEmptyForm(Request $request) : ControllerResultInterface
     {
-        return $this->getEmptyForm($request);
+        return $this->getForm($request);
     }
 
     /**
      * Proceeds by user password reset request form.
      *
      * @param  Symfony\Component\HttpFoundation\Request $request
-     * @return Symfony\Component\HttpFoundation\Response
+     * @return App\HttpKernel\ControllerResultInterface
      *
      * @Route("/user/password-reset-request", name="proceed_by_user_password_reset_request_form")
      * @Method("POST")
      */
-    public function proceedByUserPasswordResetRequestForm(Request $request) : Response
+    public function proceedByUserPasswordResetRequestForm(Request $request) : ControllerResultInterface
     {
         return $this->proceed($request);
     }
@@ -91,12 +93,12 @@ class UserController extends Controller
      * Gets user password reset form.
      *
      * @param  Symfony\Component\HttpFoundation\Request $request
-     * @return Symfony\Component\HttpFoundation\Response
+     * @return App\HttpKernel\ControllerResultInterface
      *
-     * @Route("/user/password-reset/{id}", name="get_user_password_reset_form")
+     * @Route("/user/password-reset/{id}", name="get_user_password_reset_empty_form")
      * @Method("GET")
      */
-    public function getUserPasswordResetForm(Request $request) : Response
+    public function getUserPasswordResetEmptyForm(Request $request) : ControllerResultInterface
     {
         return $this->getForm($request);
     }
@@ -105,12 +107,12 @@ class UserController extends Controller
      * Patches user by password reset form.
      *
      * @param  Symfony\Component\HttpFoundation\Request $request
-     * @return Symfony\Component\HttpFoundation\Response
+     * @return App\HttpKernel\ControllerResultInterface
      *
      * @Route("/user/password-reset/{id}", name="patch_user_by_password_reset_form")
      * @method("PATCH")
      */
-    public function patchUserByPasswordResetForm(Request $request) : Response
+    public function patchUserByPasswordResetForm(Request $request) : ControllerResultInterface
     {
         return $this->patch($request);
     }
@@ -119,13 +121,21 @@ class UserController extends Controller
      * Gets user sign in empty form.
      *
      * @param  Symfony\Component\HttpFoundation\Request $request
-     * @return Symfony\Component\HttpFoundation\Response
+     * @return App\HttpKernel\ControllerResultInterface
      *
      * @Route("/user/sign-in", name="get_user_sign_in_empty_form")
      */
-    public function getUserSignInEmptyForm(Request $request) : Response
+    public function getUserSignInEmptyForm(Request $request, AuthenticationUtils $authenticationUtils) : ControllerResultInterface
     {
-        return $this->getEmptyForm($request);
+        $controllerResult = $this->getForm($request);
+
+        return $controllerResult->setData(array_merge(
+            $controllerResult->getData(),
+            array(
+                'error'    => $authenticationUtils->getLastAuthenticationError(),
+                'username' => $authenticationUtils->getLastUsername(),
+            )
+        ));
     }
 
     /**

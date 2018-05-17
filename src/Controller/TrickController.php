@@ -2,8 +2,8 @@
 
 namespace App\Controller;
 
+use App\HttpKernel\ControllerResultInterface;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
@@ -22,12 +22,12 @@ class TrickController extends Controller
      * Gets trick list.
      *
      * @param  Symfony\Component\HttpFoundation\Request $request
-     * @return Symfony\Component\HttpFoundation\Response
+     * @return App\HttpKernel\ControllerResultInterface
      *
      * @Route("/trick", name="get_trick_list")
      * @Method("GET")
      */
-    public function getTrickList(Request $request) : Response
+    public function getTrickList(Request $request) : ControllerResultInterface
     {
         return $this->getList($request);
     }
@@ -36,12 +36,12 @@ class TrickController extends Controller
      * Gets trick.
      *
      * @param  Symfony\Component\HttpFoundation\Request $request
-     * @return Symfony\Component\HttpFoundation\Response
+     * @return App\HttpKernel\ControllerResultInterface
      *
      * @Route("/trick/{slug}", name="get_trick")
      * @Method("GET")
      */
-    public function getTrick(Request $request) : Response
+    public function getTrick(Request $request) : ControllerResultInterface
     {
         return $this->get($request);
     }
@@ -50,13 +50,12 @@ class TrickController extends Controller
      * Deletes trick by delete form.
      *
      * @param  Symfony\Component\HttpFoundation\Request $request
-     * @return Symfony\Component\HttpFoundation\Response
+     * @return App\HttpKernel\ControllerResultInterface
      *
      * @Route("/trick/delete/{slug}", name="delete_trick_by_delete_form")
-     * @Method("DELETE")
      * @Security("has_role('ROLE_USER')")
      */
-    public function deleteTrickByDeleteForm(Request $request) : Response
+    public function deleteTrickByDeleteForm(Request $request) : ControllerResultInterface
     {
         return $this->delete($request);
     }
@@ -65,13 +64,13 @@ class TrickController extends Controller
      * Gets trick delete form.
      *
      * @param  Symfony\Component\HttpFoundation\Request $request
-     * @return Symfony\Component\HttpFoundation\Response
+     * @return App\HttpKernel\ControllerResultInterface
      *
      * @Route("/trick/delete/{slug}", name="get_trick_delete_form")
      * @Method("GET")
      * @Security("has_role('ROLE_USER')")
      */
-    public function getTrickDeleteForm(Request $request) : Response
+    public function getTrickDeleteForm(Request $request) : ControllerResultInterface
     {
         return $this->getForm($request);
     }

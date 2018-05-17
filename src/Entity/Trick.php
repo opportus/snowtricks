@@ -2,6 +2,9 @@
 
 namespace App\Entity;
 
+use App\Entity\Data\EntityDataInterface;
+use App\Entity\Data\TrickDataInterface;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\Mapping as ORM;
@@ -21,15 +24,6 @@ use Symfony\Component\Validator\Constraints as Assert;
 class Trick extends Entity implements TrickInterface
 {
     /**
-     * @var null|string $slug
-     *
-     * @ORM\Column(name="slug", type="string", length=255, unique=true)
-     * @Assert\Type(type="string")
-     * @Assert\Length(max=255)
-     */
-    protected $slug;
-
-    /**
      * @var null|\DateTimeInterface $updatedAt
      *
      * @ORM\Column(name="updated_at", type="datetime", nullable=true)
@@ -39,13 +33,14 @@ class Trick extends Entity implements TrickInterface
     protected $updatedAt;
 
     /**
-     * @var null|App\Entity\TrickGroupInterface $group
+     * @var string $slug
      *
-     * @ORM\ManyToOne(targetEntity="App\Entity\TrickGroup", inversedBy="tricks", cascade={"persist"})
-     * @ORM\JoinColumn(name="group_id", referencedColumnName="id")
-     * @Assert\Valid()
+     * @ORM\Column(name="slug", type="string", length=255, unique=true)
+     * @Assert\NotBlank()
+     * @Assert\Type(type="string")
+     * @Assert\Length(max=255)
      */
-    protected $group;
+    protected $slug;
 
     /**
      * @var Doctrine\Common\Collections\Collection $comments
@@ -57,6 +52,15 @@ class Trick extends Entity implements TrickInterface
     protected $comments;
 
     /**
+     * @var null|App\Entity\TrickGroupInterface $group
+     *
+     * @ORM\ManyToOne(targetEntity="App\Entity\TrickGroup", inversedBy="tricks", cascade={"persist"})
+     * @ORM\JoinColumn(name="group_id", referencedColumnName="id")
+     * @Assert\Valid()
+     */
+    protected $group;
+
+    /**
      * @var Doctrine\Common\Collections\Collection $versions
      *
      * @ORM\OneToMany(targetEntity="App\Entity\TrickVersion", mappedBy="trick", cascade={"all"}, orphanRemoval=true)
@@ -66,25 +70,112 @@ class Trick extends Entity implements TrickInterface
     protected $versions;
 
     /**
-     * @var null|App\Entity\TrickVersionInterface $version
+     * @var App\Entity\TrickVersionInterface $version
      */
     protected $version;
 
     /**
      * Constructs the trick.
+     *
+     * @param string $title
+     * @param string $description
+     * @param string $body
+     * @param App\Entity\UserInterface $author
+     * @param null|App\Entity\TrickGroupInterface $group
+     * @param null|Doctrine\Common\Collections\Collection $attachments
+     * @param null|Doctrine\Common\Collections\Collection $comments
+     * @param null|Doctrine\Common\Collections\Collection $versions
      */
-    public function __construct()
+    public function __construct(
+        string               $title,
+        string               $description,
+        string               $body,
+        UserInterface        $author,
+        ?TrickGroupInterface $group       = null,
+        ?Collection          $attachments = null,
+        ?Collection          $comments    = null,
+        ?Collection          $versions    = null
+    )
     {
-        parent::__construct();
+        $this->id        = $this->generateId();
+        $this->createdAt = new \DateTime();
+        $this->comments  = $comments === null ? new ArrayCollection() : $comments;
+        $this->versions  = $versions === null ? new ArrayCollection() : $versions;
 
-        $this->versions = new ArrayCollection();
-        $this->comments = new ArrayCollection();
+        $version = new TrickVersion(
+            $title,
+            $description,
+            $body,
+            $author,
+            $this,
+            $group,
+            $attachments
+        );
+
+        $this->setVersion($version);
     }
 
     /**
      * {@inheritdoc}
      */
-    public function getSlug() : ?string
+    public static function createFromData(EntityDataInterface $data) : EntityInterface
+    {
+        if (! $data instanceof TrickDataInterface) {
+            throw new \InvalidArgumentException();
+        }
+
+        $self = get_called_class();
+
+        return new $self(
+            $data->getTitle(),
+            $data->getDescription(),
+            $data->getBody(),
+            $data->getAuthor(),
+            $data->getGroup(),
+            $data->getAttachments(),
+            $data->getComments(),
+            $data->getVersions()
+        );
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function updateFromData(EntityDataInterface $data) : EntityInterface
+    {
+        if (! $data instanceof TrickDataInterface) {
+            throw new \InvalidArgumentException();
+        }
+
+        $version = new TrickVersion(
+            $this,
+            $data->getTitle(),
+            $data->getDescription(),
+            $data->getBody(),
+            $data->getAuthor(),
+            $data->getGroup(),
+            $data->getAttachments(),
+            $data->getComments(),
+            $data->getVersions()
+        );
+
+        $this->setVersion($version);
+
+        return $this;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getUpdatedAt() : ?\DateTimeInterface
+    {
+        return $this->updatedAt;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getSlug() : string
     {
         return $this->slug;
     }
@@ -92,45 +183,121 @@ class Trick extends Entity implements TrickInterface
     /**
      * {@inheritdoc}
      */
-    public function getTitle() : ?string
+    public function getVersions() : Collection
     {
-        return $this->getVersion() === null
-            ? null
-            : $this->getVersion()->getTitle()
-        ;
+        return clone $this->versions;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function getDescription() : ?string
+    public function getVersion() : TrickVersionInterface
     {
-        return $this->getVersion() === null
-            ? null
-            : $this->getVersion()->getDescription()
-        ;
+        if ($this->version !== null && $this->version->isEnabled()) {
+            return $this->version;
+        }
+
+        $criteria = Criteria::create();
+
+        $criteria->expr()->eq('enabled', true);
+
+        $version = $this->versions->matching($criteria)[0];
+
+        $this->version = $version;
+
+        return $this->version;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function getBody() : ?string
+    public function setVersion(TrickVersionInterface $version) : TrickInterface
     {
-        return $this->getVersion() === null
-            ? null
-            : $this->getVersion()->getBody()
-        ;
+        $this->addVersion($version);
+
+        if ($this->getVersion() && $this->getVersion() !== $version) {
+            $trick->getVersion()->disable();
+
+            $this->updatedAt = new \DateTime();
+        }
+
+        $this->version = $version;
+        $this->group   = $version->getGroup();
+        $this->slug    = preg_replace('/[\s]+/', '-', strtolower(trim($version->getTitle())));
+
+        return $this;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function getAttachments() : array
+    public function addVersion(TrickVersionInterface $version) : TrickInterface
     {
-        return $this->getVersion() === null
-            ? array()
-            : $this->getVersion()->getAttachments()
-        ;
+        if ($this->versions->contains($version) === false) {
+            $this->versions->add($version);
+        }
+
+        return $this;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getComments() : Collection
+    {
+        return clone $this->comments;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function addComment(TrickCommentInterface $comment) : TrickInterface
+    {
+        if ($this->comments->contains($comment) === false) {
+            $this->comments->add($comment);
+        }
+
+        return $this;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getGroup() : ?TrickGroupInterface
+    {
+        return $this->group === null ? $this->group : clone $this->group;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getTitle() : string
+    {
+        return $this->getVersion()->getTitle();
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getDescription() : string
+    {
+        return $this->getVersion()->getDescription();
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getBody() : string
+    {
+        return $this->getVersion()->getBody();
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getAttachments() : Collection
+    {
+        return $this->getVersion()->getAttachments();
     }
 
     /**
@@ -168,7 +335,15 @@ class Trick extends Entity implements TrickInterface
     /**
      * {@inheritdoc}
      */
-    public function isAuthor(UserInterface $user) : bool
+    public function getAuthor() : UserInterface
+    {
+        return $this->getVersion()->getAuthor();
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function hasAuthor(UserInterface $user) : bool
     {
         foreach ($this->getAuthors() as $author) {
             if ($author->getId() === $user->getId()) {
@@ -177,127 +352,6 @@ class Trick extends Entity implements TrickInterface
         }
 
         return false;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getUpdatedAt() : ?\DateTimeInterface
-    {
-        return $this->updatedAt;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getGroup() : ?TrickGroupInterface
-    {
-        return $this->group;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function setGroup(TrickGroupInterface $group) : TrickInterface
-    {
-        $this->group = $group;
-
-        return $this;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function removeGroup() : TrickInterface
-    {
-        $this->group = null;
-
-        return $this;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getVersion() : ?TrickVersionInterface
-    {
-        if ($this->version !== null && $this->version->isEnabled()) {
-            return $this->version;
-        }
-
-        $criteria = Criteria::create();
-
-        $criteria->expr()->eq('enabled', true);
-
-        $version = $this->versions->matching($criteria)[0];
-
-        $this->version = $version instanceof TrickVersionInterface ? $version : null;
-
-        return $this->version;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getVersions() : array
-    {
-        return $this->versions->toArray();
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function setVersion(TrickVersionInterface $version) : TrickInterface
-    {
-        if ($this->getVersion()) {
-            $trick->getVersion()->disable();
-
-            $this->updatedAt = new \DateTime();
-        }
-
-        $this->addVersion($version, $current = true);
-
-        $this->group = $version->getGroup();
-        $this->slug  = preg_replace('/[\s]+/', '-', strtolower(trim($version->getTitle())));
-
-        return $this;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function addVersion(TrickVersionInterface $version, bool $current = false) : TrickInterface
-    {
-        if ($version->getTrick() === null || $version->getTrick()->getId() !== $this->id) {
-            $version->setTrick($this, $current);
-        }
-
-        if ($this->versions->contains($version) === false) {
-            $this->versions->add($version);
-        }
-
-        return $this;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getComments() : array
-    {
-        return $this->comments->toArray();
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function addComment(TrickCommentInterface $comment) : TrickInterface
-    {
-        $comment->setTrick($this);
-
-        if ($this->comments->contains($comment) === false) {
-            $this->comments->add($comment);
-        }
-
-        return $this;
     }
 }
 

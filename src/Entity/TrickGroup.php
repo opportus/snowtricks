@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
@@ -21,7 +22,7 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 class TrickGroup extends Entity implements TrickGroupInterface
 {
     /**
-     * @var null|string $slug
+     * @var string $slug
      *
      * @ORM\Column(name="slug", type="string", length=255, unique=true)
      * @Assert\NotBlank()
@@ -31,7 +32,7 @@ class TrickGroup extends Entity implements TrickGroupInterface
     protected $slug;
 
     /**
-     * @var null|string $title
+     * @var string $title
      *
      * @ORM\Column(name="title", type="string", length=255, unique=true)
      * @Assert\NotBlank()
@@ -41,7 +42,7 @@ class TrickGroup extends Entity implements TrickGroupInterface
     protected $title;
 
     /**
-     * @var null|string $description
+     * @var string $description
      *
      * @ORM\Column(name="description", type="string", length=255)
      * @Assert\NotBlank()
@@ -59,29 +60,28 @@ class TrickGroup extends Entity implements TrickGroupInterface
     protected $tricks;
 
     /**
-     * @var null|App\Entity\UserInterface $author
-     *
-     * @ORM\ManyToOne(targetEntity="App\Entity\User")
-     * @ORM\JoinColumn(name="author_id", referencedColumnName="id", nullable=false)
-     * @Assert\NotNull()
-     * @Assert\Valid()
-     */
-    protected $author;
-
-    /**
      * Constructs the trick group.
+     *
+     * @param string $title
+     * @param string $description
      */
-    public function __construct()
+    public function __construct(
+        string $title,
+        string $description
+    )
     {
-        parent::__construct();
-
-        $this->tricks = new ArrayCollection();
+        $this->id          = $this->generateId();
+        $this->createdAt   = new \DateTime();
+        $this->slug        = preg_replace('/[\s]+/', '-', strtolower(trim($title)));
+        $this->title       = $title;
+        $this->description = $description;
+        $this->tricks      = new ArrayCollection();
     }
 
     /**
      * {@inheritdoc}
      */
-    public function getSlug() : ?string
+    public function getSlug() : string
     {
         return $this->slug;
     }
@@ -89,7 +89,7 @@ class TrickGroup extends Entity implements TrickGroupInterface
     /**
      * {@inheritdoc}
      */
-    public function getTitle() : ?string
+    public function getTitle() : string
     {
         return $this->title;
     }
@@ -97,18 +97,7 @@ class TrickGroup extends Entity implements TrickGroupInterface
     /**
      * {@inheritdoc}
      */
-    public function setTitle(string $title) : TrickGroupInterface
-    {
-        $this->title = $title;
-        $this->slug  = preg_replace('/[\s]+/', '-', strtolower(trim($this->title)));
-
-        return $this;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getDescription() : ?string
+    public function getDescription() : string
     {
         return $this->description;
     }
@@ -116,19 +105,9 @@ class TrickGroup extends Entity implements TrickGroupInterface
     /**
      * {@inheritdoc}
      */
-    public function setDescription(string $description) : TrickGroupInterface
+    public function getTricks() : Collection
     {
-        $this->description = $description;
-
-        return $this;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getTricks() : array
-    {
-        return $this->tricks->toArray();
+        return clone $this->tricks;
     }
 
     /**
@@ -136,8 +115,6 @@ class TrickGroup extends Entity implements TrickGroupInterface
      */
     public function addTrick(TrickInterface $trick) : TrickGroupInterface
     {
-        $trick->setGroup($this);
-
         if ($this->tricks->contains($trick) === false) {
             $this->tricks->add($trick);
         }
@@ -150,27 +127,9 @@ class TrickGroup extends Entity implements TrickGroupInterface
      */
     public function removeTrick(TrickInterface $trick) : TrickGroupInterface
     {
-        $trick->removeGroup();
         $this->tricks->removeElement($trick);
 
         return $this;
     }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getAuthor() : ?UserInterface
-    {
-        return $this->author;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function setAuthor(UserInterface $author) : TrickGroupInterface
-    {
-        $this->author = $author;
-
-        return $this;
-    }
 }
+

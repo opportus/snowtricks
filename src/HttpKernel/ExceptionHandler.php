@@ -67,7 +67,7 @@ class ExceptionHandler implements ExceptionHandlerInterface
             } else {
                 $exception = new HttpException(
                     500,
-                    $excetion->getMessage(),
+                    $exception->getMessage(),
                     $exception
                 );
             }

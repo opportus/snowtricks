@@ -45,6 +45,16 @@ class ControllerResult implements ControllerResultInterface
     /**
      * {@inheritdoc}
      */
+    public function setStatusCode(int $statusCode) : ControllerResultInterface
+    {
+        $this->statusCode = $statusCode;
+
+        return $this;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function getData() : array
     {
         return $this->data;

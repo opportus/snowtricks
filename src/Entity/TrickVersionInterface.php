@@ -2,6 +2,8 @@
 
 namespace App\Entity;
 
+use Doctrine\Common\Collections\Collection;
+
 /**
  * The trick version interface...
  *
@@ -15,47 +17,23 @@ interface TrickVersionInterface extends EntityInterface
     /**
      * Gets the title.
      *
-     * @return null|string
+     * @return string
      */
-    public function getTitle() : ?string;
-
-    /**
-     * Sets the title.
-     *
-     * @param  string $title
-     * @return App\Entity\TrickVersionInterface
-     */
-    public function setTitle(string $title) : TrickVersionInterface;
+    public function getTitle() : string;
 
     /**
      * Gets the description.
      *
-     * @return null|string
+     * @return string
      */
-    public function getDescription() : ?string;
-
-    /**
-     * Sets the description.
-     *
-     * @param  string $description
-     * @return App\Entity\TrickVersionInterface
-     */
-    public function setDescription(string $description) : TrickVersionInterface;
+    public function getDescription() : string;
 
     /**
      * Gets the body.
      *
-     * @return null|string
+     * @return string
      */
-    public function getBody() : ?string;
-
-    /**
-     * Sets the body.
-     *
-     * @param  string $body
-     * @return App\Entity\TrickVersionInterface
-     */
-    public function setBody(string $body) : TrickVersionInterface;
+    public function getBody() : string;
 
     /**
      * Returns whether or not this is enabled.
@@ -65,6 +43,13 @@ interface TrickVersionInterface extends EntityInterface
     public function isEnabled() : bool;
 
     /**
+     * Enables.
+     *
+     * @return App\Entity\TrickVersionInterface
+     */
+    public function enable() : TrickVersionInterface;
+
+    /**
      * Disables.
      *
      * @return App\Entity\TrickVersionInterface
@@ -72,19 +57,18 @@ interface TrickVersionInterface extends EntityInterface
     public function disable() : TrickVersionInterface;
 
     /**
-     * Gets the attachments.
+     * Gets the trick.
      *
-     * @return array
+     * @return App\Entity\TrickInterface
      */
-    public function getAttachments() : array;
+    public function getTrick() : TrickInterface;
 
     /**
-     * Adds an attachment.
+     * Gets the author.
      *
-     * @param  App\Entity\TrickAttachmentInterface $attachment
-     * @return App\Entity\TrickVerionInterface
+     * @return App\Entity\UserInterface
      */
-    public function addAttachment(TrickAttachmentInterface $attachment) : TrickVersionInterface;
+    public function getAuthor() : UserInterface;
 
     /**
      * Gets the group.
@@ -94,42 +78,9 @@ interface TrickVersionInterface extends EntityInterface
     public function getGroup() : ?TrickGroupInterface;
 
     /**
-     * Sets the group.
+     * Gets the attachments.
      *
-     * @param  App\Entity\TrickGroupInterface $group
-     * @return App\Entity\TrickVersionInterface
+     * @return Doctrine\Common\Collections\Collection
      */
-    public function setGroup(TrickGroupInterface $group) : TrickVersionInterface;
-
-    /**
-     * Gets the trick.
-     *
-     * @return null|App\Entity\TrickInterface
-     */
-    public function getTrick() : ?TrickInterface;
-
-    /**
-     * Sets the trick.
-     *
-     * @param  App\Entity\TrickInterface $trick
-     * @param  bool $enable
-     * @return App\Entity\TrickVersionInterface
-     */
-    public function setTrick(TrickInterface $trick, bool $enable = false) : TrickVersionInterface;
-
-    /**
-     * Gets the author.
-     *
-     * @return null|App\Entity\UserInterface
-     */
-    public function getAuthor() : ?UserInterface;
-
-    /**
-     * Sets the author.
-     *
-     * @param  App\Entity\UserInterface $author
-     * @return App\Entity\TrickVersionInterface
-     */
-    public function setAuthor(UserInterface $author) : TrickVersionInterface;
+    public function getAttachments() : Collection;
 }
-

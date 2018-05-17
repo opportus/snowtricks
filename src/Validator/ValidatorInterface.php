@@ -2,7 +2,6 @@
 
 namespace App\Validator;
 
-use Symfony\Component\Validator\Validator\ValidatorInterface as SymfonyValidatorInterface;
 use Symfony\Component\Validator\Exception\ValidatorException;
 
 /**
@@ -13,7 +12,7 @@ use Symfony\Component\Validator\Exception\ValidatorException;
  * @author  Clément Cazaud <opportus@gmail.com>
  * @license https://github.com/opportus/snowtricks/blob/master/LICENSE.md MIT
  */
-interface ValidatorInterface extends SymfonyValidatorInterface
+interface ValidatorInterface
 {
     /**
      * Validates by throwing an exception.

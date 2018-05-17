@@ -2,6 +2,9 @@
 
 namespace App\Entity;
 
+use App\Security\AuthorizableInterface;
+use Doctrine\Common\Collections\Collection;
+
 /**
  * The trick interface...
  *
@@ -10,35 +13,66 @@ namespace App\Entity;
  * @author  Clément Cazaud <opportus@gmail.com>
  * @license https://github.com/opportus/snowtricks/blob/master/LICENSE.md MIT
  */
-interface TrickInterface extends EntityInterface
+interface TrickInterface extends EntityInterface, TransferableDataInterface, AuthorizableInterface
 {
+    /**
+     * Gets the update datetime.
+     *
+     * @return null|\DateTimeInterface
+     */
+    public function getUpdatedAt() : ?\DateTimeInterface;
+
     /**
      * Gets the slug.
      *
-     * @return null|string
+     * @return string
      */
-    public function getSlug() : ?string;
+    public function getSlug() : string;
 
     /**
-     * Gets the title.
+     * Gets the version.
      *
-     * @return null|string
+     * @return App\Entity\TrickVersionInterface
      */
-    public function getTitle() : ?string;
+    public function getVersion() : TrickVersionInterface;
 
     /**
-     * Gets the description.
+     * Sets the version.
      *
-     * @return null|string
+     * @param  App\Entity\TrickVersionInterface $version
+     * @return App\Entity\TrickInterface
      */
-    public function getDescription() : ?string;
+    public function setVersion(TrickVersionInterface $version) : TrickInterface;
 
     /**
-     * Gets the body.
+     * Gets the versions.
      *
-     * @return null|string
+     * @return Doctrine\Common\Collections\Collection
      */
-    public function getBody() : ?string;
+    public function getVersions() : Collection;
+
+    /**
+     * Adds a version.
+     *
+     * @param  App\Entity\TrickVersionInterface $version
+     * @return App\Entity\TrickInterface
+     */
+    public function addVersion(TrickVersionInterface $version) : TrickInterface;
+
+    /**
+     * Gets the comments.
+     *
+     * @return Doctrine\Common\Collections\Collection
+     */
+    public function getComments() : Collection;
+
+    /**
+     * Adds a comment.
+     *
+     * @param  App\Entity\TrickCommentInterface $comment
+     * @return App\Entity\TrickInterface
+     */
+    public function addComment(TrickCommentInterface $comment) : TrickInterface;
 
     /**
      * Gets the group.
@@ -48,26 +82,32 @@ interface TrickInterface extends EntityInterface
     public function getGroup() : ?TrickGroupInterface;
 
     /**
-     * Sets the group.
+     * Gets the title.
      *
-     * @param  App\Entity\TrickGroupInterface $group
-     * @return App\Entity\TrickInterface
+     * @return string
      */
-    public function setGroup(TrickGroupInterface $group) : TrickInterface;
+    public function getTitle() : string;
 
     /**
-     * Removes the group.
+     * Gets the description.
      *
-     * @return App\Entity\TrickInterface
+     * @return string
      */
-    public function removeGroup() : TrickInterface;
+    public function getDescription() : string;
+
+    /**
+     * Gets the body.
+     *
+     * @return string
+     */
+    public function getBody() : string;
 
     /**
      * Gets the attachments.
      *
-     * @return array
+     * @return Doctrine\Common\Collections\Collection
      */
-    public function getAttachments() : array;
+    public function getAttachments() : Collection;
 
     /**
      * Gets the featured attachment.
@@ -84,63 +124,18 @@ interface TrickInterface extends EntityInterface
     public function getAuthors() : array;
 
     /**
-     * Checks whether or not the user is one of the authors.
+     * Gets the author.
+     *
+     * @return App\Entity\UserInterface
+     */
+    public function getAuthor() : UserInterface;
+
+    /**
+     * Checks whether the given user is an author.
      *
      * @param  App\Entity\UserInterface $user
      * @return bool
      */
-    public function isAuthor(UserInterface $user) : bool;
-
-    /**
-     * Gets the update datetime.
-     *
-     * @return null|\DateTimeInterface
-     */
-    public function getUpdatedAt() : ?\DateTimeInterface;
-
-    /**
-     * Gets the version.
-     *
-     * @return null|App\Entity\TrickVersionInterface
-     */
-    public function getVersion() : ?TrickVersionInterface;
-
-    /**
-     * Sets the version.
-     *
-     * @param  App\Entity\TrickVersionInterface $version
-     * @return App\Entity\TrickInterface
-     */
-    public function setVersion(TrickVersionInterface $version) : TrickInterface;
-
-    /**
-     * Gets the versions.
-     *
-     * @return array
-     */
-    public function getVersions() : array;
-
-    /**
-     * Adds a version.
-     *
-     * @param  App\Entity\TrickVersionInterface $version
-     * @return App\Entity\TrickInterface
-     */
-    public function addVersion(TrickVersionInterface $version) : TrickInterface;
-
-    /**
-     * Gets the comments.
-     *
-     * @return array
-     */
-    public function getComments() : array;
-
-    /**
-     * Adds a comment.
-     *
-     * @param  App\Entity\TrickCommentInterface $comment
-     * @return App\Entity\TrickInterface
-     */
-    public function addComment(TrickCommentInterface $comment) : TrickInterface;
+    public function hasAuthor(UserInterface $user) : bool;
 }
 

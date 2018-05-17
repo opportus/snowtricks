@@ -5,44 +5,355 @@ parameters:
     app_name: 'SnowTricks'
     form_theme: 'bootstrap_4_layout.html.twig'
 
-    # Will be replaced by action annotation in futur...
+    # Controller action params. Will be replaced by action annotation in futur...
     action_parameters:
-        # Home...
-        App\Controller\HomeController::getHome: ~
-        # User...
+        # Home Controller...
+        App\Controller\HomeController::getHome:
+            response:
+                -
+                    format: 'html'
+                    status: 200
+                    template: 'home/get.html.twig'
+
+        # User Controller...
         App\Controller\UserController::postUserBySignUpForm:
-        App\Controller\UserController::postUserBySignUpForm: ~
-        App\Controller\UserController::getUserSingUpEmptyForm: ~
-        App\Controller\UserController::patchUserByActivationEmailForm: ~
-        App\Controller\UserController::getUserPasswordResetRequestEmptyForm: ~
-        App\Controller\UserController::proceedByUserPasswordResetRequestForm:
+            entity:
+                class: 'App\Entity\User'
             form:
+                class: 'App\Form\Type\UserSignUpType'
+                options:
+                    data_class: 'App\Form\Data\UserData'
+                    method: 'POST'
+                    validation_groups: ['sign_up_form']
+            response:
+                -
+                    status: 201
+                    redirection:
+                        route:
+                            name: 'get_home'
+                -
+                    status: 400
+                    format: 'html'
+                    template: 'user/sign_up.html.twig'
+                -
+                    status: 409
+                    format: 'html'
+                    template: 'user/sign_up.html.twig'
+            session:
+                -
+                    status: 201
+                    flash:
+                        message:
+                            id: 'user.sign_up.notification.201'
+                            parameters:
+                                username: 'getUsername'
+                                email: 'getEmail'
+                            domain: ~
+                            locale: ~
+
+        App\Controller\UserController::getUserSignUpEmptyForm:
+            form:
+                class: 'App\Form\Type\UserSignUpType'
                 options:
                     method: 'POST'
-        App\Controller\UserController::getUserPasswordResetForm: ~
-        App\Controller\UserController::patchUserByPasswordResetForm: ~
-        App\Controller\UserController::getUserSignInEmptyForm: ~
-        # Trick...
-        App\Controller\TrickController::getTrickList: ~
+            response:
+                -
+                    format: 'html'
+                    status: 200
+                    template: 'user/sign_up.html.twig'
+        App\Controller\UserController::patchUserByActivationEmailForm:
+            entity:
+                class: 'App\Entity\User'
+                id: 'id'
+            form:
+                class: 'App\Form\Type\UserActivationEmailType'
+                options:
+                    data_class: 'App\Form\Data\UserData'
+                    method: 'PATCH'
+                    csrf_protection: false
+            response:
+                -
+                    status: 204
+                    redirection:
+                        route:
+                            name: 'get_home'
+                -
+                    status: 400
+                    redirection:
+                        route:
+                            name: 'get_home'
+                -
+                    status: 403
+                    redirection:
+                        route:
+                            name: 'get_home'
+                -
+                    status: 404
+                    redirection:
+                        route:
+                            name: 'get_home'
+            session:
+                -
+                    status: 204
+                    flash:
+                        message:
+                            id: 'user.activation.notification.204'
+                -
+                    status: 400
+                    flash:
+                        message:
+                            id: 'user.activation.notification.400'
+                -
+                    status: 403
+                    flash:
+                        message:
+                            id: 'user.activation.notification.403'
+                -
+                    status: 404
+                    flash:
+                        message:
+                            id: 'user.activation.notification.404'
+        App\Controller\UserController::getUserPasswordResetRequestEmptyForm:
+            form:
+                class: 'App\Form\Type\UserPasswordResetRequestType'
+                options:
+                    method: 'POST'
+                    data_class: 'App\Form\Data\UserData'
+            response:
+                -
+                    format: 'html'
+                    status: 200
+                    template: 'user/password_reset_request.html.twig'
+        App\Controller\UserController::proceedByUserPasswordResetRequestForm:
+            form:
+                class: 'App\Form\Type\UserPasswordResetRequestType'
+                options:
+                    method: 'POST'
+                    data_class: 'App\Form\Data\UserData'
+                    validation_groups: ['password_reset_request_form']
+            response:
+                -
+                    status: 204
+                    redirection:
+                        route:
+                            name: 'get_home'
+                -
+                    status: 400
+                    template: 'user/password_reset_request.html.twig'
+                -
+                    status: 404
+                    template: 'user/password_reset_request.html.twig'
+            session:
+                -
+                    status: 204
+                    flash:
+                        message:
+                            id: 'user.password_reset_request.notification.204'
+        App\Controller\UserController::getUserPasswordResetEmptyForm:
+            form:
+                class: 'App\Form\Type\UserPasswordResetType'
+                options:
+                    method: 'PATCH'
+            response:
+                -
+                    format: 'html'
+                    status: 200
+                    template: 'user/password_reset.html.twig'
+        App\Controller\UserController::patchUserByPasswordResetForm:
+            entity:
+                class: 'App\Entity\User'
+                id: 'id'
+            form:
+                class: 'App\Form\Type\UserPasswordResetType'
+                options:
+                    data_class: 'App\Form\Data\UserData'
+                    method: 'PATCH'
+                    validation_groups: ['password_reset_form']
+            response:
+                -
+                    status: 204
+                    redirection:
+                        route:
+                            name: 'get_home'
+                -
+                    status: 400
+                    template: 'user/password_reset_request.html.twig'
+                -
+                    status: 403
+                    redirection:
+                        route:
+                            name: 'get_home'
+                -
+                    status: 404
+                    redirection:
+                        route:
+                            name: 'get_home'
+            session:
+                -
+                    status: 204
+                    flash:
+                        message:
+                            id: 'user.password_reset.notification.204'
+                -
+                    status: 403
+                    flash:
+                        message:
+                            id: 'user.password_reset.notification.403'
+                -
+                    status: 404
+                    flash:
+                        message:
+                            id: 'user.password_reset.notification.404'
+        App\Controller\UserController::getUserSignInEmptyForm:
+            entity:
+                class: 'App\Entity\User'
+            form:
+                class: 'App\Form\Type\UserSignInType'
+                options:
+                    data_class: 'App\Form\Data\UserData'
+                    method: 'POST'
+            response:
+                -
+                    format: 'html'
+                    status: 200
+                    template: 'user/sign_in.html.twig'
+
+        # Trick Controller...
+        App\Controller\TrickController::getTrickList:
+            entity:
+                class: 'App\Entity\Trick'
+            response:
+                -
+                    format: 'json'
+                    status: 200
+                    template: 'trick/list.html.twig'
         App\Controller\TrickController::getTrick:
             entity:
+                class: 'App\Entity\Trick'
                 id: 'slug'
+            response:
+                -
+                    format: 'html'
+                    status: 200
+                    template: 'trick/get.html.twig'
         App\Controller\TrickController::deleteTrickByDeleteForm:
             entity:
+                class: 'App\Entity\Trick'
                 id: 'slug'
+            form:
+                class: 'App\Form\Type\TrickDeleteType'
+                options:
+                    method: 'DELETE'
         App\Controller\TrickController::getTrickDeleteForm:
             entity:
+                class: 'App\Entity\Trick'
                 id: 'slug'
-        # Trick Comment...
-        App\Controller\TrickCommentController::getTrickCommentList: ~
-        App\Controller\TrickCommentController::getTrickComment: ~
-        App\Controller\TrickCommentController::postTrickCommentByEditForm: ~
-        App\Controller\TrickCommentController::putTrickCommentByEditForm: ~
-        App\Controller\TrickCommentController::deleteTrickCommentByDeleteForm: ~
-        App\Controller\TrickCommentController::getTrickCommentEditForm: ~
-        App\Controller\TrickCommentController::getTrickCommentEmptyEditForm: ~
-        App\Controller\TrickCommentController::getTrickCommentDeleteForm: ~
+            form:
+                class: 'App\Form\Type\TrickDeleteType'
+                options:
+                    data_class: 'App\Form\Data\TrickData'
+            response:
+                -
+                    format: 'html'
+                    status: 200
+                    template: 'trick/delete.html.twig'
 
+        # Trick Comment Controller...
+        App\Controller\TrickCommentController::getTrickCommentList:
+            entity:
+                class: 'App\Entity\TrickComment'
+            response:
+                -
+                    format: 'json'
+                    status: 200
+                    template: 'trick/comment/list.html.twig'
+        App\Controller\TrickCommentController::getTrickComment:
+            entity:
+                class: 'App\Entity\TrickComment'
+                id: 'id'
+            response:
+                -
+                    format: 'json'
+                    status: 200
+                    template: 'trick/comment/get.html.twig'
+        App\Controller\TrickCommentController::postTrickCommentByEditForm:
+            entity:
+                class: 'App\Entity\TrickComment'
+            form:
+                class: 'App\Form\Type\TrickCommentEditType'
+                options:
+                    data_class: 'App\Form\Data\TrickCommentData'
+                    method: 'POST'
+            response:
+                -
+                    format: 'json'
+                    status: 201
+        App\Controller\TrickCommentController::putTrickCommentByEditForm:
+            entity:
+                class: 'App\Entity\TrickComment'
+                id: 'id'
+            form:
+                class: 'App\Form\Type\TrickCommentEditType'
+                options:
+                    data_class: 'App\Form\Data\TrickCommentData'
+                    method: 'PUT'
+            response:
+                -
+                    format: 'json'
+                    status: 204
+        App\Controller\TrickCommentController::deleteTrickCommentByDeleteForm:
+            entity:
+                class: 'App\Entity\TrickComment'
+                id: 'id'
+            form:
+                class: 'App\Form\Type\TrickCommentDeleteType'
+                options:
+                    method: 'DELETE'
+            response:
+                -
+                    format: 'json'
+                    status: 204
+        App\Controller\TrickCommentController::getTrickCommentEditForm:
+            entity:
+                class: 'App\Entity\TrickComment'
+                id: 'id'
+            form:
+                class: 'App\Form\Type\TrickCommentEditType'
+                options:
+                    data_class: 'App\Form\Data\TrickCommentData'
+                    method: 'PUT'
+            response:
+                -
+                    format: 'json'
+                    status: 200
+                    template: 'trick/comment/edit.html.twig'
+        App\Controller\TrickCommentController::getTrickCommentEmptyEditForm:
+            form:
+                class: 'App\Form\Type\TrickCommentEditType'
+                options:
+                    method: 'POST'
+            response:
+                -
+                    format: 'html'
+                    status: 200
+                    template: 'trick/comment/edit.html.twig'
+                -
+                    format: 'json'
+                    status: 200
+                    template: 'trick/comment/edit.html.twig'
+        App\Controller\TrickCommentController::getTrickCommentDeleteForm:
+            entity:
+                class: 'App\Entity\TrickComment'
+                id: 'id'
+            form:
+                class: 'App\Form\Type\TrickCommentDeleteType'
+                options:
+                    data_class: 'App\Form\Data\TrickCommentData'
+            response:
+                -
+                    format: 'html'
+                    status: 200
+                    template: 'trick/comment/delete.html.twig'
 
 services:
     # default configuration for services in *this* file
@@ -72,22 +383,36 @@ services:
     App\Controller\HomeController:
         arguments:
             $parameters: '%action_parameters%'
+        tags:
+            - { name: controller.service_arguments }
 
     App\Controller\UserController:
         arguments:
             $parameters: '%action_parameters%'
+        tags:
+            - { name: controller.service_arguments }
 
     App\Controller\TrickController:
         arguments:
             $parameters: '%action_parameters%'
+        tags:
+            - { name: controller.service_arguments }
 
     App\Controller\TrickCommentController:
         arguments:
             $parameters: '%action_parameters%'
+        tags:
+            - { name: controller.service_arguments }
 
     # Response Factory...
     App\HttpFoundation\ResponseFactoryInterface: '@App\HttpFoundation\ResponseFactory'
     App\HttpFoundation\ResponseFactory:
+        arguments:
+            $parameters: '%action_parameters%'
+
+    # Session Manager
+    App\HttpFoundation\SessionManagerInterface: '@App\HttpFoundation\SessionManager'
+    App\HttpFoundation\SessionManager:
         arguments:
             $parameters: '%action_parameters%'
 
@@ -101,25 +426,33 @@ services:
                     template: user/sign_up_email.html.twig
                 send_user_activation_email:
                     from: snowtricks@example.com
-                    template: user/activate_email.html.twig
+                    template: user/activation_email.html.twig
                 send_user_password_reset_email:
                     from: snowtricks@example.com
-                    template: user/reset_password_email.html.twig
+                    template: user/password_reset_email.html.twig
 
     # Validator...
     App\Validator\ValidatorInterface: '@App\Validator\Validator'
     App\Validator\Validator:
         arguments:
             $parameters: []
+            $validator: '@Symfony\Component\Validator\Validator\ValidatorInterface'
+            $logger: '@logger'
 
     # Event listener...
+    App\EventListener\ExceptionHandlerListener:
+        tags:
+            - { name: kernel.event_listener, event: kernel.exception  }
+    App\EventListener\RequestValidatorListener:
+        tags:
+            - { name: kernel.event_listener, event: kernel.request  }
+    App\EventListener\ResponseFactoryListener:
+        tags:
+            - { name: kernel.event_listener, event: kernel.view, priority: 80 }
 
     # Event subscriber...
-    App\EventSubscriber\UserPasswordEncoderSubscriber:
-        tags:
-            - { name: doctrine.event_listener, event: prePersist, priority: 100}
-            - { name: doctrine.event_listener, event: preUpdate, priority: 100}
-    App\EventSubscriber\ValidatorSubscriber:
+    App\EventSubscriber\EntityValidatorSubscriber:
         tags:
             - { name: doctrine.event_listener, event: prePersist, priority: 90}
             - { name: doctrine.event_listener, event: preUpdate, priority: 90}
+            - { name: doctrine.event_listener, event: preDelete, priority: 90}

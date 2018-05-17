@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -22,7 +23,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 class TrickVersion extends Entity implements TrickVersionInterface
 {
     /**
-     * @var null|string $title
+     * @var string $title
      *
      * @ORM\Column(name="title", type="string", length=255)
      * @Assert\NotBlank()
@@ -32,7 +33,7 @@ class TrickVersion extends Entity implements TrickVersionInterface
     protected $title;
 
     /**
-     * @var null|string $description
+     * @var string $description
      *
      * @ORM\Column(name="description", type="string", length=255)
      * @Assert\NotBlank()
@@ -42,7 +43,7 @@ class TrickVersion extends Entity implements TrickVersionInterface
     protected $description;
 
     /**
-     * @var null|string $body
+     * @var string $body
      *
      * @ORM\Column(name="body", type="text")
      * @Assert\NotBlank()
@@ -52,7 +53,7 @@ class TrickVersion extends Entity implements TrickVersionInterface
     protected $body;
 
     /**
-     * @var null|bool
+     * @var bool
      *
      * @ORM\Column(name="enabled", type="boolean")
      * @Assert\NotNull()
@@ -61,12 +62,24 @@ class TrickVersion extends Entity implements TrickVersionInterface
     protected $enabled;
 
     /**
-     * @var Doctrine\Common\Collections\Collection $attachments
+     * @var App\Entity\UserInterface $author
      *
-     * @ORM\OneToMany(targetEntity="App\Entity\TrickAttachment", mappedBy="trickVersion", cascade={"all"}, orphanRemoval=true)
+     * @ORM\ManyToOne(targetEntity="App\Entity\User")
+     * @ORM\JoinColumn(name="author_id", referencedColumnName="id", nullable=false)
+     * @Assert\NotNull()
      * @Assert\Valid()
      */
-    protected $attachments;
+    protected $author;
+
+    /**
+     * @var App\Entity\TrickInterface $trick
+     *
+     * @ORM\ManyToOne(targetEntity="App\Entity\Trick", inversedBy="versions", cascade={"persist"})
+     * @ORM\JoinColumn(name="trick_id", referencedColumnName="id", nullable=false)
+     * @Assert\NotNull()
+     * @Assert\Valid()
+     */
+    protected $trick;
 
     /**
      * @var null|App\Entity\TrickGroupInterface $group
@@ -79,40 +92,50 @@ class TrickVersion extends Entity implements TrickVersionInterface
     protected $group;
 
     /**
-     * @var null|App\Entity\TrickInterface $trick
+     * @var Doctrine\Common\Collections\Collection $attachments
      *
-     * @ORM\ManyToOne(targetEntity="App\Entity\Trick", inversedBy="versions", cascade={"persist"})
-     * @ORM\JoinColumn(name="trick_id", referencedColumnName="id", nullable=false)
-     * @Assert\NotNull()
+     * @ORM\OneToMany(targetEntity="App\Entity\TrickAttachment", mappedBy="trickVersion", cascade={"all"}, orphanRemoval=true)
      * @Assert\Valid()
      */
-    protected $trick;
-
-    /**
-     * @var null|App\Entity\UserInterface $author
-     *
-     * @ORM\ManyToOne(targetEntity="App\Entity\User")
-     * @ORM\JoinColumn(name="author_id", referencedColumnName="id", nullable=false)
-     * @Assert\NotNull()
-     * @Assert\Valid()
-     */
-    protected $author;
+    protected $attachments;
 
     /**
      * Constructs the trick version.
+     *
+     * @param string $title
+     * @param string $description
+     * @param string $body
+     * @param App\Entity\UserInterface $author
+     * @param App\Entity\TrickInterface $trick
+     * @param null|App\Entity\TrickGroupInterface $group
+     * @param null|Doctrine\Common\Collections\Collection $attachments
      */
-    public function __construct()
+    public function __construct(
+        string               $title,
+        string               $description,
+        string               $body,
+        UserInterface        $author,
+        TrickInterface       $trick,
+        ?TrickGroupInterface $group       = null,
+        ?Collection          $attachments = null
+    )
     {
-        parent::__construct();
-
-        $this->attachments = new ArrayCollection();
-        $this->current     = false;
+        $this->id          = $this->generateId();
+        $this->createdAt   = new \DateTime();
+        $this->title       = $title;
+        $this->description = $description;
+        $this->body        = $body;
+        $this->enabled     = false;
+        $this->author      = $author;
+        $this->trick       = $trick;
+        $this->group       = $group;
+        $this->attachments = $attachments === null ? new ArrayCollection() : $attachments;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function getTitle() : ?string
+    public function getTitle() : string
     {
         return $this->title;
     }
@@ -120,17 +143,7 @@ class TrickVersion extends Entity implements TrickVersionInterface
     /**
      * {@inheritdoc}
      */
-    public function setTitle(string $title) : TrickVersionInterface
-    {
-        $this->title = $title;
-
-        return $this;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getDescription() : ?string
+    public function getDescription() : string
     {
         return $this->description;
     }
@@ -138,17 +151,7 @@ class TrickVersion extends Entity implements TrickVersionInterface
     /**
      * {@inheritdoc}
      */
-    public function setDescription(string $description) : TrickVersionInterface
-    {
-        $this->description = $description;
-
-        return $this;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getBody() : ?string
+    public function getBody() : string
     {
         return $this->body;
     }
@@ -156,19 +159,19 @@ class TrickVersion extends Entity implements TrickVersionInterface
     /**
      * {@inheritdoc}
      */
-    public function setBody(string $body) : TrickVersionInterface
+    public function isEnabled() : bool
     {
-        $this->body = $body;
-
-        return $this;
+        return $this->enabled;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function isEnabled() : bool
+    public function enable() : TrickVersionInterface
     {
-        return (bool) $this->enabled;
+        $this->enabled = true;
+
+        return $this;
     }
 
     /**
@@ -184,23 +187,25 @@ class TrickVersion extends Entity implements TrickVersionInterface
     /**
      * {@inheritdoc}
      */
-    public function getAttachments() : array
+    public function getAuthor() : UserInterface
     {
-        return $this->attachments->toArray();
+        return $this->author;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function addAttachment(TrickAttachmentInterface $attachment) : TrickVersionInterface
+    public function getTrick() : TrickInterface
     {
-        $attachment->setTrickVersion($this);
+        return $this->trick;
+    }
 
-        if ($this->attachments->contains($attachment) === false) {
-            $this->attachments->add($attachment);
-        }
-
-        return $this;
+    /**
+     * {@inheritdoc}
+     */
+    public function getAttachments() : Collection
+    {
+        return clone $this->attachments;
     }
 
     /**
@@ -209,62 +214,6 @@ class TrickVersion extends Entity implements TrickVersionInterface
     public function getGroup() : ?TrickGroupInterface
     {
         return $this->group;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function setGroup(TrickGroupInterface $group) : TrickVersionInterface
-    {
-        $this->group = $group;
-
-        return $this;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getTrick() : ?TrickInterface
-    {
-        return $this->trick;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function setTrick(TrickInterface $trick, bool $enable = false) : TrickVersionInterface
-    {
-        $this->trick   = $trick;
-        $this->enabled = $enable;
-
-        if ($enable) {
-            if ($trick->getVersion() === null || $trick->getVersion()->getId() !== $this->id) {
-                $trick->setVersion($this);
-            }
-
-        } else {
-            $trick->addVersion($this);
-        }
-
-        return $this;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getAuthor() : ?UserInterface
-    {
-        return $this->author;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function setAuthor(UserInterface $author) : TrickVersionInterface
-    {
-        $this->author = $author;
-
-        return $this;
     }
 }
 

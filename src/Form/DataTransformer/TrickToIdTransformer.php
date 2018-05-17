@@ -51,7 +51,7 @@ class TrickToIdTransformer implements DataTransformerInterface
             );
         }
 
-        return (string) $value->getId();
+        return $value->getId();
     }
 
     /**
@@ -64,7 +64,7 @@ class TrickToIdTransformer implements DataTransformerInterface
         }
 
         $trick = $this->entityManager->getRepository(Trick::class)
-            ->findOneById((int) $value)
+            ->findOneById($value)
         ;
 
         if ($trick === null) {
