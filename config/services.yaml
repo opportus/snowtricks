@@ -24,7 +24,7 @@ parameters:
                 options:
                     data_class: 'App\Form\Data\UserData'
                     method: 'POST'
-                    validation_groups: ['sign_up_form']
+                    validation_groups: ['user.form.sign_up']
             response:
                 -
                     status: 201
@@ -130,7 +130,7 @@ parameters:
                 options:
                     method: 'POST'
                     data_class: 'App\Form\Data\UserData'
-                    validation_groups: ['password_reset_request_form']
+                    validation_groups: ['user.form.password_reset_request']
             response:
                 -
                     status: 204
@@ -168,7 +168,7 @@ parameters:
                 options:
                     data_class: 'App\Form\Data\UserData'
                     method: 'PATCH'
-                    validation_groups: ['password_reset_form']
+                    validation_groups: ['user.form.password_reset']
             response:
                 -
                     status: 204
@@ -236,6 +236,72 @@ parameters:
                     format: 'html'
                     status: 200
                     template: 'trick/get.html.twig'
+        App\Controller\TrickController::getTrickEditForm:
+            entity:
+                class: 'App\Entity\Trick'
+                id: 'slug'
+            form:
+                class: 'App\Form\Type\TrickEditType'
+                options:
+                    data_class: 'App\Form\Data\TrickData'
+                    method: 'PATCH'
+            response:
+                -
+                    format: 'html'
+                    status: 200
+                    template: 'trick/edit.html.twig'
+        App\Controller\TrickController::getTrickEditEmptyForm:
+            entity:
+                class: 'App\Entity\Trick'
+            form:
+                class: 'App\Form\Type\TrickEditType'
+                options:
+                    method: 'POST'
+            response:
+                -
+                    format: 'html'
+                    status: 200
+                    template: 'trick/edit.html.twig'
+        App\Controller\TrickController::postTrickByEditForm:
+            entity:
+                class: 'App\Entity\Trick'
+                id: 'slug'
+            form:
+                class: 'App\Form\Type\TrickEditType'
+                options:
+                    data_class: 'App\Form\Data\TrickData'
+                    method: 'POST'
+                    validation_groups: ['trick.form.edit']
+            response:
+                -
+                    status: 201
+                    redirection:
+                        route:
+                            name: 'get_home'
+                -
+                    status: 400
+                    format: 'html'
+                    template: 'trick/edit.html.twig'
+        App\Controller\TrickController::patchTrickByEditForm:
+            entity:
+                class: 'App\Entity\Trick'
+                id: 'slug'
+            form:
+                class: 'App\Form\Type\TrickEditType'
+                options:
+                    data_class: 'App\Form\Data\TrickData'
+                    method: 'PATCH'
+                    validation_groups: ['trick.form.edit']
+            response:
+                -
+                    status: 204
+                    redirection:
+                        route:
+                            name: 'get_home'
+                -
+                    status: 400
+                    format: 'html'
+                    template: 'trick/edit.html.twig'
         App\Controller\TrickController::deleteTrickByDeleteForm:
             entity:
                 class: 'App\Entity\Trick'
@@ -244,19 +310,10 @@ parameters:
                 class: 'App\Form\Type\TrickDeleteType'
                 options:
                     method: 'DELETE'
-        App\Controller\TrickController::getTrickDeleteForm:
-            entity:
-                class: 'App\Entity\Trick'
-                id: 'slug'
-            form:
-                class: 'App\Form\Type\TrickDeleteType'
-                options:
-                    data_class: 'App\Form\Data\TrickData'
             response:
                 -
-                    format: 'html'
-                    status: 200
-                    template: 'trick/delete.html.twig'
+                    status: 204
+                    format: 'json'
 
         # Trick Comment Controller...
         App\Controller\TrickCommentController::getTrickCommentList:
@@ -284,6 +341,7 @@ parameters:
                 options:
                     data_class: 'App\Form\Data\TrickCommentData'
                     method: 'POST'
+                    validation_groups: ['trick_comment.form.edit']
             response:
                 -
                     format: 'json'
@@ -297,6 +355,7 @@ parameters:
                 options:
                     data_class: 'App\Form\Data\TrickCommentData'
                     method: 'PUT'
+                    validation_groups: ['trick_comment.form.edit']
             response:
                 -
                     format: 'json'
@@ -341,19 +400,6 @@ parameters:
                     format: 'json'
                     status: 200
                     template: 'trick/comment/edit.html.twig'
-        App\Controller\TrickCommentController::getTrickCommentDeleteForm:
-            entity:
-                class: 'App\Entity\TrickComment'
-                id: 'id'
-            form:
-                class: 'App\Form\Type\TrickCommentDeleteType'
-                options:
-                    data_class: 'App\Form\Data\TrickCommentData'
-            response:
-                -
-                    format: 'html'
-                    status: 200
-                    template: 'trick/comment/delete.html.twig'
 
 services:
     # default configuration for services in *this* file
