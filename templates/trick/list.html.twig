@@ -14,21 +14,22 @@
             {% if is_granted('ROLE_USER') %}
                 <ul class="trick-list-item-action-list list-inline float-right">
                     <li class="list-inline-item">
-                        <i class="trick-list-item-action-list-item-edit fas fa-pencil-alt ajax-action"
-                            style="cursor:pointer;"
-                            data-url="">
-                        </i>
+                        <a href="{{ url('get_trick_edit_form', {'slug': trick.slug}) }}">
+                            <i class="trick-list-item-action-list-item-edit fas fa-pencil-alt"
+                                style="color:initial">
+                            </i>
+                        </a>
                     </li>
-                {% if is_granted('DELETE', trick) %}
-                    <li class="list-inline-item">
-                        <i class="trick-list-item-action-list-item-delete fas fa-trash ajax-action"
-                            style="cursor:pointer;"
-                            data-action="deleteTrick"
-                            data-token="{{ csrf_token('security') }}"
-                            data-url="{{ url('delete_trick_by_delete_form', {'slug': trick.slug}) }}">
-                        </i>
-                    </li>
-                {% endif %}
+                    {% if is_granted('DELETE', trick) %}
+                        <li class="list-inline-item">
+                            <i class="trick-list-item-action-list-item-delete fas fa-trash ajax-action"
+                                style="cursor:pointer;"
+                                data-action="deleteTrick"
+                                data-token="{{ csrf_token('security') }}"
+                                data-url="{{ url('delete_trick_by_delete_form', {'slug': trick.slug}) }}">
+                            </i>
+                        </li>
+                    {% endif %}
                 </ul>
             {% endif %}
         </article>

@@ -18,10 +18,11 @@
                         {% if is_granted('ROLE_USER') %}
                             <ul class="trick-show-action-list list-inline position-absolute" style="right:30px;top:30px;">
                                 <li class="list-inline-item">
-                                    <i class="trick-show-action-list-item-edit fas fa-pencil-alt ajax-action"
-                                        style="cursor:pointer;"
-                                        data-url="">
-                                    </i>
+                                    <a href="{{ url('get_trick_edit_form', {'slug': entity.slug}) }}">
+                                        <i class="trick-show-action-list-item-edit fas fa-pencil-alt"
+                                            style="cursor:pointer;color:initial">
+                                        </i>
+                                    </a>
                                 </li>
                                 {% if is_granted('DELETE', entity) %}
                                     <li class="list-inline-item">

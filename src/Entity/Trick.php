@@ -63,7 +63,7 @@ class Trick extends Entity implements TrickInterface
     /**
      * @var Doctrine\Common\Collections\Collection $versions
      *
-     * @ORM\OneToMany(targetEntity="App\Entity\TrickVersion", mappedBy="trick", cascade={"all"}, orphanRemoval=true)
+     * @ORM\OneToMany(targetEntity="App\Entity\TrickVersion", mappedBy="trick", cascade={"all"})
      * @ORM\OrderBy({"createdAt" = "DESC"})
      * @Assert\Valid()
      */
@@ -112,6 +112,10 @@ class Trick extends Entity implements TrickInterface
             $attachments
         );
 
+        $version->enable();
+
+        $this->versions->add($version);
+
         $this->setVersion($version);
     }
 
@@ -148,11 +152,11 @@ class Trick extends Entity implements TrickInterface
         }
 
         $version = new TrickVersion(
-            $this,
             $data->getTitle(),
             $data->getDescription(),
             $data->getBody(),
             $data->getAuthor(),
+            $this,
             $data->getGroup(),
             $data->getAttachments(),
             $data->getComments(),
@@ -197,15 +201,11 @@ class Trick extends Entity implements TrickInterface
             return $this->version;
         }
 
-        $criteria = Criteria::create();
-
-        $criteria->expr()->eq('enabled', true);
-
-        $version = $this->versions->matching($criteria)[0];
-
-        $this->version = $version;
-
-        return $this->version;
+        foreach ($this->versions as $version) {
+            if ($version->isEnabled()) {
+                return $this->version = $version;
+            }
+        }
     }
 
     /**
@@ -213,13 +213,15 @@ class Trick extends Entity implements TrickInterface
      */
     public function setVersion(TrickVersionInterface $version) : TrickInterface
     {
-        $this->addVersion($version);
+        if ($this->getVersion()->getId() !== $version->getId()) {
+            $this->getVersion()->disable();
 
-        if ($this->getVersion() && $this->getVersion() !== $version) {
-            $trick->getVersion()->disable();
+            $version->enable();
 
             $this->updatedAt = new \DateTime();
         }
+
+        $this->addVersion($version);
 
         $this->version = $version;
         $this->group   = $version->getGroup();
@@ -265,7 +267,7 @@ class Trick extends Entity implements TrickInterface
      */
     public function getGroup() : ?TrickGroupInterface
     {
-        return $this->group === null ? $this->group : clone $this->group;
+        return $this->group;
     }
 
     /**

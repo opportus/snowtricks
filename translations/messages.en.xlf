@@ -238,6 +238,30 @@
                 <source>trick.show.author.label</source>
                 <target>Contributor</target>
             </trans-unit>
+            <trans-unit id="trick.edit.form.placeholder.title">
+                <source>trick.edit.form.placeholder.title</source>
+                <target>Title</target>
+            </trans-unit>
+            <trans-unit id="trick.edit.form.placeholder.description">
+                <source>trick.edit.form.placeholder.description</source>
+                <target>Description</target>
+            </trans-unit>
+            <trans-unit id="trick.edit.form.placeholder.body">
+                <source>trick.edit.form.placeholder.body</source>
+                <target>Body</target>
+            </trans-unit>
+            <trans-unit id="trick.edit.form.placeholder.group">
+                <source>trick.edit.form.placeholder.group</source>
+                <target>Group</target>
+            </trans-unit>
+            <trans-unit id="trick.edit.form.button.save">
+                <source>trick.edit.form.button.save</source>
+                <target>Save</target>
+            </trans-unit>
+            <trans-unit id="trick.edit.form.button.delete">
+                <source>trick.edit.form.button.delete</source>
+                <target>Delete</target>
+            </trans-unit>
 
             <trans-unit id="home.show.title">
                 <source>home.show.title</source>

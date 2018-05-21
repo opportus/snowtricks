@@ -38,10 +38,11 @@ class AuthorizerListener
      */
     public function onFormSubmit(FormEvent $event)
     {
-        $authorable   = $event->getData();
-        $accessMethod = $event->getForm()->getConfig()->getMethod();
+        $authorable              = $event->getData();
+        $accessMethod            = $event->getForm()->getConfig()->getMethod();
+        $authorableAccessMethods = array('POST', 'PUT', 'PATCH');
 
-        if ((! $authorable instanceof AuthorableInterface) || $accessMethod !== 'POST') {
+        if ((! $authorable instanceof AuthorableInterface) || ! in_array($accessMethod, $authorableAccessMethods)) {
             return;
         }
 

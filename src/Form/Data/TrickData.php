@@ -26,27 +26,27 @@ class TrickData implements TrickDataInterface
     /**
      * @var null|string $title
      *
-     * @Assert\NotBlank()
-     * @Assert\Type(type="string")
-     * @Assert\Length(max=255)
+     * @Assert\NotBlank(groups={"trick.form.edit"})
+     * @Assert\Type(type="string", groups={"trick.form.edit"})
+     * @Assert\Length(max=255, groups={"trick.form.edit"})
      */
     protected $title;
 
     /**
      * @var null|string $description
      *
-     * @Assert\NotBlank()
-     * @Assert\Type(type="string")
-     * @Assert\Length(max=255)
+     * @Assert\NotBlank(groups={"trick.form.edit"})
+     * @Assert\Type(type="string", groups={"trick.form.edit"})
+     * @Assert\Length(max=255, groups={"trick.form.edit"})
      */
     protected $description;
 
     /**
      * @var null|string $body
      *
-     * @Assert\NotBlank()
-     * @Assert\Type(type="string")
-     * @Assert\Length(max=64512)
+     * @Assert\NotBlank(groups={"trick.form.edit"})
+     * @Assert\Type(type="string", groups={"trick.form.edit"})
+     * @Assert\Length(max=64512, groups={"trick.form.edit"})
      */
     protected $body;
 
@@ -60,8 +60,8 @@ class TrickData implements TrickDataInterface
     /**
      * @var null|App\Entity\TrickGroupInterface $group
      *
-     * @Assert\NotNull()
-     * @Assert\Valid()
+     * @Assert\NotNull(groups={"trick.form.edit"})
+     * @Assert\Valid(groups={"trick.form.edit"})
      */
     protected $group;
 
@@ -125,7 +125,7 @@ class TrickData implements TrickDataInterface
      */
     public static function createFromEntity(EntityInterface $entity) : EntityDataInterface
     {
-        if (! $data instanceof TrickInterface) {
+        if (! $entity instanceof TrickInterface) {
             throw new \InvalidArgumentException();
         }
 

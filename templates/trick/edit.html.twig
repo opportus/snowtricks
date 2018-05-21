@@ -1,0 +1,133 @@
+{% if entity == null %}
+    {% set title = 'Editing New Trick' %}
+{% else %}
+    {% set title = 'Editing «' ~ entity.title ~ '»' %}
+{% endif %}
+{% set description = title %}
+
+{% extends 'base.html.twig' %}
+{% block title %}{{ title }}{% endblock title %}
+{% block description %}{{ description }}{% endblock description %}
+{% block content %}
+    {{ parent() }}
+    <div class="trick-edit container-fluid"
+        style="background:url({{ asset('http://via.placeholder.com/1280x1024?text=+') }});background-repeat:no-repeat;background-size:100% 100vh;min-height:100vh;">
+        <div class="row">
+            <div class="trick-edit-content col-md-8 offset-md-2 mt-5 bg-white rounded border border-secondary" style="overflow:hidden;">
+                <div class="row">
+                    {% set src = 'http://via.placeholder.com/1280x1024?text=+' %}
+                    <header class="trick-edit-header col text-center justify-content-center"
+                        style="background:url({{ asset(src) }});height:50vh;padding-top:20vh;">
+                        <ul class="trick-edit-action-list list-inline position-absolute bg-light p-1 rounded border border-secondary" style="right:30px;top:30px;">
+                            <li class="list-inline-item">
+                                <i class="trick-edit-action-list-attachment-edit-item fas fa-pencil-alt ajax-action"
+                                    style="cursor:pointer;"
+                                    data-url="">
+                                </i>
+                            </li>
+                            <li class="list-inline-item">
+                                <i class="trick-edit-action-list-attachment-delete-item fas fa-trash ajax-action"
+                                    style="cursor:pointer;"
+                                    data-action="deleteTrickAttachment"
+                                    data-token="{{ csrf_token('security') }}"
+                                    data-url="">
+                                </i>
+                            </li>
+                        </ul>
+                        <h1 class="trick-edit-title">{{ title }}</h1>
+                    </header>
+                </div>
+                {% if 1 == 0 %}
+                    <ul class="trick-edit-attachment-list row mt-4 list-inline">
+                    </ul>
+                {% endif %}
+                <div class="row py-3">
+                    <div class="trick-edit col-12">
+                        {{ form_start(form, {'translation_domain': 'messages', 'attr': {'id': 'trick-edit-' ~ random() }, 'class': 'row'}) }}
+                            {{ form_errors(form) }}
+                            <div class="trick-edit-title col-12 form-group">
+                                {{ form_errors(form.title) }}
+                                {{ form_widget(
+                                    form.title,
+                                    {
+                                        'label': false,
+                                        'attr': {
+                                            'placeholder': 'trick.edit.form.placeholder.title'|trans(),
+                                            'class': 'form-control-sm'
+                                        }
+                                    }
+                                ) }}
+                            </div>
+                            <div class="trick-edit-title col-12 form-group">
+                                {{ form_errors(form.description) }}
+                                {{ form_widget(
+                                    form.description,
+                                    {
+                                        'label': false,
+                                        'attr': {
+                                            'placeholder': 'trick.edit.form.placeholder.description'|trans(),
+                                            'class': 'form-control-sm'
+                                        }
+                                    }
+                                ) }}
+                            </div>
+                            <div class="trick-edit-body col-12 form-group">
+                                {{ form_errors(form.body) }}
+                                {{ form_widget(
+                                    form.body,
+                                    {
+                                        'label': false,
+                                        'attr': {
+                                            'placeholder': 'trick.edit.form.placeholder.body'|trans(),
+                                            'class': 'form-control-sm',
+                                            'rows': '10',
+                                            'style': 'overflow:hidden;width:100%;'
+                                        }
+                                    }
+                                ) }}
+                            </div>
+                            <div class="trick-edit-group col-3 form-group">
+                                {{ form_errors(form.group) }}
+                                {{ form_widget(
+                                    form.group,
+                                    {
+                                        'label': false,
+                                        'attr': {
+                                            'placeholder': 'trick.edit.form.placeholder.group'|trans(),
+                                            'class': 'form-control-sm'
+                                        }
+                                    }
+                                ) }}
+                            </div>
+                            <div class="col-12 text-right">
+                                {% if entity != null %}
+                                    <div class="trick-edit-delete d-inline">
+                                        <button
+                                            class="btn btn-sm btn-danger ajax-action"
+                                            style="cursor:pointer;"
+                                            data-redirection="{{ url('get_home') }}"
+                                            data-action="deleteTrick"
+                                            data-url="{{ url('delete_trick_by_delete_form', app.request.attributes.get('_route_params')) }}"
+                                            data-token="{{ csrf_token('security') }}">
+                                                {{ 'trick.edit.form.button.delete'|trans() }}
+                                        </button>
+                                    </div>
+                                {% endif %}
+                                <div class="trick-edit-submit d-inline">
+                                    {{ form_widget(
+                                        form.submit,
+                                        {
+                                            'label': 'trick.edit.form.button.save'|trans(),
+                                            'attr': {'class': 'btn btn-sm', 'style': 'cursor:pointer'}
+                                        }
+                                    ) }}
+                                </div>
+                            </div>
+                            {{ form_rest(form) }}
+                        {{ form_end(form) }}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock content %}
