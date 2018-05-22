@@ -26,8 +26,8 @@ class Fixtures extends Fixture
     public function load(ObjectManager $entityManager)
     {
         $user = new User(
-            'opportus',
-            'opportus@gmail.com',
+            'Angelika',
+            'angel4ka@gmail.com',
             'azerty',
             true
         );
