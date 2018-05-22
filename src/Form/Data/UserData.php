@@ -42,27 +42,27 @@ class UserData implements UserDataInterface
     /**
      * @var null|string $username
      *
-     * @Assert\NotBlank(groups={"sign_up_form", "sign_in_form", "password_reset_request_form"})
-     * @Assert\Type(type="string", groups={"sign_up_form", "sign_in_form", "password_reset_request_form"})
-     * @Assert\Length(max=35, groups={"sign_up_form", "sign_in_form", "password_reset_request_form"})
+     * @Assert\NotBlank(groups={"user.form.sign_up", "user.form.sign_in", "user.form.password_reset_request"})
+     * @Assert\Type(type="string", groups={"user.form.sign_up", "user.form.sign_in", "user.form.password_reset_request"})
+     * @Assert\Length(max=35, groups={"user.form.sign_up", "user.form.sign_in", "user.form.password_reset_request"})
      */
     protected $username;
 
     /**
      * @var null|string $email
      *
-     * @Assert\NotBlank(groups={"sign_up_form"})
-     * @Assert\Type(type="string", groups={"sign_up_form"})
-     * @Assert\Length(max=255, groups={"sign_up_form"})
-     * @Assert\Email(groups={"sign_up_form"})
+     * @Assert\NotBlank(groups={"user.form.sign_up"})
+     * @Assert\Type(type="string", groups={"user.form.sign_up"})
+     * @Assert\Length(max=255, groups={"user.form.sign_up"})
+     * @Assert\Email(groups={"user.form.sign_up"})
      */
     protected $email;
 
     /**
      * @var null|string $plainPassword
      *
-     * @Assert\Type(type="string", groups={"sign_up_form", "password_reset_form"})
-     * @Assert\Length(max=4096, groups={"sign_up_form", "password_reset_form"})
+     * @Assert\Type(type="string", groups={"user.form.sign_up", "user.form.password_reset"})
+     * @Assert\Length(max=4096, groups={"user.form.sign_up", "user.form.password_reset"})
      */
     protected $plainPassword;
 

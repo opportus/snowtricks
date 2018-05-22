@@ -26,9 +26,9 @@ class TrickCommentData implements TrickCommentDataInterface
     /**
      * @var null|string $body
      *
-     * @Assert\NotBlank()
-     * @Assert\Type(type="string")
-     * @Assert\Length(max=64512)
+     * @Assert\NotBlank(groups={"trick_comment.form.edit"})
+     * @Assert\Type(type="string", groups={"trick_comment.form.edit"})
+     * @Assert\Length(max=64512, groups={"trick_comment.form.edit"})
      */
     protected $body;
 
