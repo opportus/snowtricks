@@ -64,7 +64,7 @@ class UserToIdTransformer implements DataTransformerInterface
         }
 
         $user = $this->entityManager->getRepository(User::class)
-            ->findOneById((int) $value)
+            ->findOneById($value)
         ;
 
         if ($user === null) {
