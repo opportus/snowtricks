@@ -14,7 +14,7 @@ use Doctrine\Common\Collections\Collection;
  * @author  Clément Cazaud <opportus@gmail.com>
  * @license https://github.com/opportus/snowtricks/blob/master/LICENSE.md MIT
  */
-interface UserInterface extends EntityInterface, TransferableDataInterface, AuthorizableInterface, AdvancedUserInterface, \Serializable
+interface UserInterface extends EntityInterface, DtoAwareInterface, AuthorizableInterface, AdvancedUserInterface, \Serializable
 {
     /**
      * Gets the email.

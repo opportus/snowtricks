@@ -2,11 +2,8 @@
 
 namespace App\Form\Data;
 
-use App\Entity\Data\UserDataInterface;
-use App\Entity\Data\EntityDataInterface;
-use App\Entity\EntityInterface;
-use App\Entity\UserInterface;
-use App\Validator\Constraints\UniqueData;
+use App\Entity\Dto\DtoInterface;
+use App\Entity\Dto\DtoTrait;
 use App\Validator\Constraints as AppAssert;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -37,8 +34,10 @@ use Symfony\Component\Validator\Constraints as Assert;
  *     groups={"password_reset_request_form"}
  * )
  */
-class UserData implements UserDataInterface
+class UserData implements DtoInterface
 {
+    use DtoTrait;
+
     /**
      * @var null|string $username
      *
@@ -46,7 +45,7 @@ class UserData implements UserDataInterface
      * @Assert\Type(type="string", groups={"user.form.sign_up", "user.form.sign_in", "user.form.password_reset_request"})
      * @Assert\Length(max=35, groups={"user.form.sign_up", "user.form.sign_in", "user.form.password_reset_request"})
      */
-    protected $username;
+    public $username;
 
     /**
      * @var null|string $email
@@ -56,7 +55,7 @@ class UserData implements UserDataInterface
      * @Assert\Length(max=255, groups={"user.form.sign_up"})
      * @Assert\Email(groups={"user.form.sign_up"})
      */
-    protected $email;
+    public $email;
 
     /**
      * @var null|string $plainPassword
@@ -64,7 +63,7 @@ class UserData implements UserDataInterface
      * @Assert\Type(type="string", groups={"user.form.sign_up", "user.form.password_reset"})
      * @Assert\Length(max=4096, groups={"user.form.sign_up", "user.form.password_reset"})
      */
-    protected $plainPassword;
+    public $plainPassword;
 
     /**
      * @var null|bool $activation
@@ -72,7 +71,7 @@ class UserData implements UserDataInterface
      * @Assert\NotNull()
      * @Assert\Type(type="bool")
      */
-    protected $activation;
+    public $activation;
 
     /**
      * @var null|array $roles
@@ -80,7 +79,7 @@ class UserData implements UserDataInterface
      * @Assert\NotBlank()
      * @Assert\Type(type="array")
      */
-    protected $roles;
+    public $roles;
 
     /**
      * Constructs the user data.
@@ -104,116 +103,6 @@ class UserData implements UserDataInterface
         $this->plainPassword = $plainPassword;
         $this->activation    = $activation;
         $this->roles         = $roles;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public static function createFromEntity(EntityInterface $entity) : EntityDataInterface
-    {
-        if (! $entity instanceof UserInterface) {
-            throw new \InvalidArgumentException();
-        }
-
-        $self = get_called_class();
-
-        return new $self(
-            $entity->getUsername(),
-            $entity->getEmail(),
-            $entity->getPlainPassword(),
-            $entity->getActivation(),
-            $entity->getRoles()
-        );
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getUsername() : ?string
-    {
-        return $this->username;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function setUsername(string $username) : UserDataInterface
-    {
-        $this->username = $username;
-
-        return $this;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getEmail() : ?string
-    {
-        return $this->email;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function setEmail(string $email) : UserDataInterface
-    {
-        $this->email = $email;
-
-        return $this;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getPlainPassword() : ?string
-    {
-        return $this->plainPassword;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function setPlainPassword(string $plainPassword) : UserDataInterface
-    {
-        $this->plainPassword = $plainPassword;
-
-        return $this;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getActivation() : ?bool
-    {
-        return $this->activation;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function setActivation(bool $activation) : UserDataInterface
-    {
-        $this->activation = $activation;
-
-        return $this;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getRoles() : ?array
-    {
-        return $this->roles;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function setRoles(array $roles) : UserDataInterface
-    {
-        $this->roles = $roles;
-
-        return $this;
     }
 }
 

@@ -2,12 +2,11 @@
 
 namespace App\Form\Data;
 
-use App\Entity\Data\EntityDataInterface;
-use App\Entity\Data\TrickCommentDataInterface;
-use App\Entity\EntityInterface;
-use App\Entity\TrickCommentInterface;
-use App\Entity\TrickInterface;
+use App\Entity\Dto\DtoInterface;
+use App\Entity\Dto\DtoTrait;
 use App\Entity\UserInterface;
+use App\Entity\TrickInterface;
+use App\Entity\TrickCommentInterface;
 use App\Security\AuthorableInterface;
 use Symfony\Component\Security\Core\User\UserInterface as SecurityUserInterface;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -21,8 +20,10 @@ use Doctrine\Common\Collections\Collection;
  * @author  Clément Cazaud <opportus@gmail.com>
  * @license https://github.com/opportus/snowtricks/blob/master/LICENSE.md MIT
  */
-class TrickCommentData implements TrickCommentDataInterface
+class TrickCommentData implements DtoInterface, AuthorableInterface
 {
+    use DtoTrait;
+
     /**
      * @var null|string $body
      *
@@ -30,7 +31,7 @@ class TrickCommentData implements TrickCommentDataInterface
      * @Assert\Type(type="string", groups={"trick_comment.form.edit"})
      * @Assert\Length(max=64512, groups={"trick_comment.form.edit"})
      */
-    protected $body;
+    public $body;
 
     /**
      * @var null|App\Entity\UserInterface $author
@@ -38,7 +39,7 @@ class TrickCommentData implements TrickCommentDataInterface
      * @Assert\NotNull()
      * @Assert\Valid()
      */
-    protected $author;
+    public $author;
 
     /**
      * @var null|App\Entity\TrickInterface $thread
@@ -46,21 +47,21 @@ class TrickCommentData implements TrickCommentDataInterface
      * @Assert\NotNull()
      * @Assert\Valid()
      */
-    protected $thread;
+    public $thread;
 
     /**
      * @var null|App\Entity\TrickCommentInterface $parent
      *
      * @Assert\Valid()
      */
-    protected $parent;
+    public $parent;
 
     /**
      * @var null|Doctrine\Common\Collections\Collection
      *
      * @Assert\Valid()
      */
-    protected $children;
+    public $children;
 
     /**
      * Constructs the trick comment data.
@@ -89,109 +90,9 @@ class TrickCommentData implements TrickCommentDataInterface
     /**
      * {@inheritdoc}
      */
-    public static function createFromEntity(EntityInterface $entity) : EntityDataInterface
-    {
-        if (! $entity instanceof TrickCommentInterface) {
-            throw new \InvalidArgumentException();
-        }
-
-        $self = get_called_class();
-
-        return new $self(
-            $entity->getBody(),
-            $entity->getAuthor(),
-            $entity->getThread(),
-            $entity->getParent(),
-            $entity->getChildren()
-        );
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getBody() : ?string
-    {
-        return $this->body;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function setBody(string $body) : TrickCommentDataInterface
-    {
-        $this->body = $body;
-
-        return $this;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getAuthor() : ?UserInterface
-    {
-        return $this->author;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
     public function setAuthor(SecurityUserInterface $author) : AuthorableInterface
     {
         $this->author = $author;
-
-        return $this;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getThread() : ?TrickInterface
-    {
-        return $this->thread;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function setThread(TrickInterface $thread) : TrickCommentDataInterface
-    {
-        $this->thread = $thread;
-
-        return $this;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getParent() : ?TrickCommentInterface
-    {
-        return $this->parent;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function setParent(TrickCommentInterface $parent) : TrickCommentDataInterface
-    {
-        $this->parent = $parent;
-
-        return $this;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getChildren() : ?Collection
-    {
-        return $this->children;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function setChildren(Collection $children) : TrickCommentDataInterface
-    {
-        $this->children = $children;
 
         return $this;
     }

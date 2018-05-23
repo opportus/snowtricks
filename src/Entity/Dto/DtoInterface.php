@@ -1,25 +1,25 @@
 <?php
 
-namespace App\Entity\Data;
+namespace App\Entity\Dto;
 
 use App\Entity\EntityInterface;
 
 /**
- * The entity data interface...
+ * The DTO interface...
  *
  * @version 0.0.1
  * @package App\Entity\Data
  * @author  Clément Cazaud <opportus@gmail.com>
  * @license https://github.com/opportus/snowtricks/blob/master/LICENSE.md MIT
  */
-interface EntityDataInterface
+interface DtoInterface
 {
     /**
-     * Creates from the entity.
+     * Creates the DTO from the entity.
      *
      * @param  App\Entity\EntityInterface $entity
-     * @return App\Entity\Data\EntityDataInterface
+     * @return App\Entity\Dto\DtoInterface
      */
-    public static function createFromEntity(EntityInterface $entity) : EntityDataInterface;
+    public static function createFromEntity(EntityInterface $entity) : DtoInterface;
 }
 

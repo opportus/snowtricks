@@ -10,6 +10,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Doctrine\ORM\EntityManagerInterface;
@@ -62,14 +63,24 @@ class TrickEditType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        if ($builder->getData() !== null && $builder->getData()->getGroup() !== null) {
-            $preferredChoices = array($this->entityManager->getReference(TrickGroup::class, $builder->getData()->getGroup()->getId()));
+        if ($builder->getData() !== null && $builder->getData()->group !== null) {
+            $preferredChoices = array($this->entityManager->getReference(TrickGroup::class, $builder->getData()->group->getId()));
 
         } else {
             $preferredChoices =array();
         }
 
         $builder
+            ->add(
+                'attachments',
+                CollectionType::class,
+                array(
+                    'allow_add'    => true,
+                    'allow_delete' => true,
+                    'delete_empty' => true,
+                    'entry_type'   => TrickAttachmentEditType::class,
+                )
+            )
             ->add(
                 'title',
                 TextType::class

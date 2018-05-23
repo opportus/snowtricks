@@ -2,8 +2,7 @@
 
 namespace App\Entity;
 
-use App\Entity\Data\EntityDataInterface;
-use App\Entity\Data\TrickDataInterface;
+use App\Entity\Dto\DtoInterface;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Criteria;
@@ -23,6 +22,8 @@ use Symfony\Component\Validator\Constraints as Assert;
  */
 class Trick extends Entity implements TrickInterface
 {
+    use DtoAwareTrait;
+
     /**
      * @var null|\DateTimeInterface $updatedAt
      *
@@ -122,45 +123,18 @@ class Trick extends Entity implements TrickInterface
     /**
      * {@inheritdoc}
      */
-    public static function createFromData(EntityDataInterface $data) : EntityInterface
+    public function updateFromDto(DtoInterface $dto) : EntityInterface
     {
-        if (! $data instanceof TrickDataInterface) {
-            throw new \InvalidArgumentException();
-        }
-
-        $self = get_called_class();
-
-        return new $self(
-            $data->getTitle(),
-            $data->getDescription(),
-            $data->getBody(),
-            $data->getAuthor(),
-            $data->getGroup(),
-            $data->getAttachments(),
-            $data->getComments(),
-            $data->getVersions()
-        );
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function updateFromData(EntityDataInterface $data) : EntityInterface
-    {
-        if (! $data instanceof TrickDataInterface) {
-            throw new \InvalidArgumentException();
-        }
-
         $version = new TrickVersion(
-            $data->getTitle(),
-            $data->getDescription(),
-            $data->getBody(),
-            $data->getAuthor(),
+            $dto->title,
+            $dto->description,
+            $dto->body,
+            $dto->author,
             $this,
-            $data->getGroup(),
-            $data->getAttachments(),
-            $data->getComments(),
-            $data->getVersions()
+            $dto->group,
+            $dto->attachments,
+            $dto->comments,
+            $dto->versions
         );
 
         $this->setVersion($version);

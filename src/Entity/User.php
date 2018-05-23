@@ -2,8 +2,7 @@
 
 namespace App\Entity;
 
-use App\Entity\Data\EntityDataInterface;
-use App\Entity\Data\UserDataInterface;
+use App\Entity\Dto\DtoInterface;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Criteria;
@@ -23,6 +22,8 @@ use Symfony\Component\Validator\Constraints as Assert;
  */
 class User extends Entity implements UserInterface
 {
+    use DtoAwareTrait;
+
     /**
      * @var string $username
      *
@@ -119,37 +120,13 @@ class User extends Entity implements UserInterface
     /**
      * {@inheritdoc}
      */
-    public static function createFromData(EntityDataInterface $data) : EntityInterface
+    public function updateFromDto(DtoInterface $dto) : EntityInterface
     {
-        if (! $data instanceof UserDataInterface) {
-            throw new \InvalidArgumentException();
+        $vars = get_object_vars($dto);
+
+        foreach ($vars as $var => $value) {
+            $this->$var = $value;
         }
-
-        $self = get_called_class();
-
-        return new $self(
-            $data->getUsername(),
-            $data->getEmail(),
-            $data->getPlainPassword(),
-            $data->getActivation(),
-            $data->getRoles()
-        );
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function updateFromData(EntityDataInterface $data) : EntityInterface
-    {
-        if (! $data instanceof UserDataInterface) {
-            throw new \InvalidArgumentException();
-        }
-
-        $this->username      = $data->getUsername();
-        $this->email         = $data->getEmail();
-        $this->plainPassword = $data->getPlainPassword();
-        $this->activation    = $data->getActivation();
-        $this->roles         = $data->getRoles();
 
         if ($this->plainPassword !== null) {
             $this->password = \password_hash($this->plainPassword, PASSWORD_BCRYPT);

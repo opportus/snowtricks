@@ -2,10 +2,8 @@
 
 namespace App\Form\Data;
 
-use App\Entity\Data\EntityDataInterface;
-use App\Entity\Data\TrickDataInterface;
-use App\Entity\EntityInterface;
-use App\Entity\TrickInterface;
+use App\Entity\Dto\DtoInterface;
+use App\Entity\Dto\DtoTrait;
 use App\Entity\UserInterface;
 use App\Entity\TrickGroupInterface;
 use App\Security\AuthorableInterface;
@@ -21,8 +19,10 @@ use Doctrine\Common\Collections\Collection;
  * @author  Clément Cazaud <opportus@gmail.com>
  * @license https://github.com/opportus/snowtricks/blob/master/LICENSE.md MIT
  */
-class TrickData implements TrickDataInterface
+class TrickData implements DtoInterface, AuthorableInterface
 {
+    use DtoTrait;
+
     /**
      * @var null|string $title
      *
@@ -30,7 +30,7 @@ class TrickData implements TrickDataInterface
      * @Assert\Type(type="string", groups={"trick.form.edit"})
      * @Assert\Length(max=255, groups={"trick.form.edit"})
      */
-    protected $title;
+    public $title;
 
     /**
      * @var null|string $description
@@ -39,7 +39,7 @@ class TrickData implements TrickDataInterface
      * @Assert\Type(type="string", groups={"trick.form.edit"})
      * @Assert\Length(max=255, groups={"trick.form.edit"})
      */
-    protected $description;
+    public $description;
 
     /**
      * @var null|string $body
@@ -48,14 +48,14 @@ class TrickData implements TrickDataInterface
      * @Assert\Type(type="string", groups={"trick.form.edit"})
      * @Assert\Length(max=64512, groups={"trick.form.edit"})
      */
-    protected $body;
+    public $body;
 
     /**
      * @var null|Doctrine\Common\Collections\Collection $attachments
      *
      * @Assert\Valid()
      */
-    protected $attachments;
+    public $attachments;
 
     /**
      * @var null|App\Entity\TrickGroupInterface $group
@@ -63,7 +63,7 @@ class TrickData implements TrickDataInterface
      * @Assert\NotNull(groups={"trick.form.edit"})
      * @Assert\Valid(groups={"trick.form.edit"})
      */
-    protected $group;
+    public $group;
 
     /**
      * @var null|App\Entity\UserInterface $author
@@ -71,21 +71,21 @@ class TrickData implements TrickDataInterface
      * @Assert\NotNull()
      * @Assert\Valid()
      */
-    protected $author;
+    public $author;
 
     /**
      * @var null|Doctrine\Common\Collections\Collection $comments
      *
      * @Assert\Valid()
      */
-    protected $comments;
+    public $comments;
 
     /**
      * @var null|Doctrine\Common\Collections\Collection $versions
      *
      * @Assert\Valid()
      */
-    protected $versions;
+    public $versions;
 
     /**
      * Constructs the trick data.
@@ -123,166 +123,9 @@ class TrickData implements TrickDataInterface
     /**
      * {@inheritdoc}
      */
-    public static function createFromEntity(EntityInterface $entity) : EntityDataInterface
-    {
-        if (! $entity instanceof TrickInterface) {
-            throw new \InvalidArgumentException();
-        }
-
-        $self = get_called_class();
-
-        return new $self(
-            $entity->getTitle(),
-            $entity->getDescription(),
-            $entity->getBody(),
-            $entity->getAttachments(),
-            $entity->getAuthor(),
-            $entity->getGroup(),
-            $entity->getComments(),
-            $entity->getVersions()
-        );
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getTitle() : ?string
-    {
-        return $this->title;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function setTitle(string $title) : TrickDataInterface
-    {
-        $this->title = $title;
-
-        return $this;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getDescription() : ?string
-    {
-        return $this->description;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function setDescription(string $description) : TrickDataInterface
-    {
-        $this->description = $description;
-
-        return $this;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getBody() : ?string
-    {
-        return $this->body;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function setBody(string $body) : TrickDataInterface
-    {
-        $this->body = $body;
-
-        return $this;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getAttachments() : ?Collection
-    {
-        return $this->attachments;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function setAttachments(Collection $attachments) : TrickDataInterface
-    {
-        $this->attachments = $attachments;
-
-        return $this;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getAuthor() : ?UserInterface
-    {
-        return $this->author;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
     public function setAuthor(SecurityUserInterface $author) : AuthorableInterface
     {
         $this->author = $author;
-
-        return $this;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getGroup() : ?TrickGroupInterface
-    {
-        return $this->group;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function setGroup(TrickGroupInterface $group) : TrickDataInterface
-    {
-        $this->group = $group;
-
-        return $this;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getVersions() : ?Collection
-    {
-        return $this->versions;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function setVersions(Collection $versions) : TrickDataInterface
-    {
-        $this->versions = $versions;
-
-        return $this;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getComments() : ?Collection
-    {
-        return $this->comments;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function setComments(Collection $comments) : TrickDataInterface
-    {
-        $this->comments = $comments;
 
         return $this;
     }

@@ -13,7 +13,7 @@ use Doctrine\Common\Collections\Collection;
  * @author  Clément Cazaud <opportus@gmail.com>
  * @license https://github.com/opportus/snowtricks/blob/master/LICENSE.md MIT
  */
-interface TrickInterface extends EntityInterface, TransferableDataInterface, AuthorizableInterface
+interface TrickInterface extends EntityInterface, DtoAwareInterface, AuthorizableInterface
 {
     /**
      * Gets the update datetime.
