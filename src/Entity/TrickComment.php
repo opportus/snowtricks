@@ -2,8 +2,7 @@
 
 namespace App\Entity;
 
-use App\Entity\Data\EntityDataInterface;
-use App\Entity\Data\TrickCommentDataInterface;
+use App\Entity\Dto\DtoInterface;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
@@ -22,6 +21,10 @@ use Symfony\Component\Validator\Constraints as Assert;
  */
 class TrickComment extends Entity implements TrickCommentInterface
 {
+    use DtoAwareTrait {
+        updateFromDto as protected updateFromDtoTrait;
+    }
+
     /**
      * @var null|\DateTimeInterface $updatedAt
      *
@@ -107,40 +110,11 @@ class TrickComment extends Entity implements TrickCommentInterface
     /**
      * {@inheritdoc}
      */
-    public static function createFromData(EntityDataInterface $data) : EntityInterface
+    public function updateFromDto(DtoInterface $dto) : EntityInterface
     {
-        if (! $data instanceof TrickCommentDataInterface) {
-            throw new \InvalidArgumentException();
-        }
-
-        $self = get_called_class();
-
-        return new $self(
-            $data->getBody(),
-            $data->getAuthor(),
-            $data->getThread(),
-            $data->getParent(),
-            $data->getChildren()
-        );
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function updateFromData(EntityDataInterface $data) : EntityInterface
-    {
-        if (! $data instanceof TrickCommentDataInterface) {
-            throw new \InvalidArgumentException();
-        }
-
-        $this->body      = $data->getBody();
-        $this->author    = $data->getAuthor();
-        $this->thread    = $data->getThread();
-        $this->parent    = $data->getParent();
-        $this->children  = $data->getChildren();
         $this->updatedAt = new \DateTime();
 
-        return $this;
+        return $this->updateFromDtoTrait($dto);
     }
 
     /**

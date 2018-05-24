@@ -160,7 +160,7 @@ abstract class Controller
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $entity = $parameters['entity']['class']::createFromData($form->getData());
+            $entity = $parameters['entity']['class']::createFromDto($form->getData());
 
             if (! $this->authorizationChecker->isGranted('POST', $entity)) {
                 return new ControllerResult(403);
@@ -177,7 +177,10 @@ abstract class Controller
         } elseif ($form->isSubmitted()) {
             return new ControllerResult(
                 400,
-                array('form' => $form->createView())
+                array(
+                    'form'   => $form->createView(),
+                    'entity' => $entity,
+                )
             );
         }
     }
@@ -213,7 +216,7 @@ abstract class Controller
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $entity->updateFromData($form->getData());
+            $entity->updateFromDto($form->getData());
 
             $this->entityManager->flush();
 
@@ -225,7 +228,10 @@ abstract class Controller
         } elseif ($form->isSubmitted()) {
             return new ControllerResult(
                 400,
-                array('form' => $form->createView())
+                array(
+                    'form'   => $form->createView(),
+                    'entity' => $entity,
+                )
             );
         }
     }
@@ -261,7 +267,7 @@ abstract class Controller
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $entity->updateFromData($form->getData());
+            $entity->updateFromDto($form->getData());
 
             $this->entityManager->flush();
 
@@ -273,7 +279,10 @@ abstract class Controller
         } elseif ($form->isSubmitted()) {
             return new ControllerResult(
                 400,
-                array('form' => $form->createView())
+                array(
+                    'form'   => $form->createView(),
+                    'entity' => $entity,
+                )
             );
         }
     }
@@ -320,7 +329,10 @@ abstract class Controller
         } elseif ($form->isSubmitted()) {
             return new ControllerResult(
                 400,
-                array('form' => $form->createView())
+                array(
+                    'form'   => $form->createView(),
+                    'entity' => $entity,
+                )
             );
         }
     }
@@ -396,7 +408,10 @@ abstract class Controller
 
         return new ControllerResult(
             200,
-            array('form' => $form->createView())
+            array(
+                'form'   => $form->createView(),
+                'entity' => isset($entity) ? $entity : null,
+            )
         );
     }
 

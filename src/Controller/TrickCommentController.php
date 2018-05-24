@@ -47,20 +47,6 @@ class TrickCommentController extends Controller
     }
 
     /**
-     * Gets trick comment delete form.
-     *
-     * @param  Symfony\Component\HttpFoundation\Request $request
-     * @return App\HttpKernel\ControllerResultInterface
-     *
-     * @Route("/trick-comment/delete/{id}", name="get_trick_comment_delete_form")
-     * @Method("GET")
-     */
-    public function getTrickCommentDeleteForm(Request $request) : ControllerResultInterface
-    {
-        return $this->getForm($request);
-    }
-
-    /**
      * Gets trick comment list.
      *
      * @param  Symfony\Component\HttpFoundation\Request $request
