@@ -2,8 +2,6 @@
 
 namespace App\Form\Data;
 
-use App\Entity\Dto\DtoInterface;
-use App\Entity\Dto\DtoTrait;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
@@ -14,10 +12,8 @@ use Symfony\Component\Validator\Constraints as Assert;
  * @author  Clément Cazaud <opportus@gmail.com>
  * @license https://github.com/opportus/snowtricks/blob/master/LICENSE.md MIT
  */
-class TrickAttachmentData implements DtoInterface
+class TrickAttachmentData
 {
-    use DtoTrait;
-
     /**
      * @var null|string $title
      *
@@ -26,15 +22,5 @@ class TrickAttachmentData implements DtoInterface
      * @Assert\Length(max=255, groups={"trick_attachment.form.edit"})
      */
     public $title;
-
-    /**
-     * Constructs the trick attachment data.
-     *
-     * @param null|string $title
-     */
-    public function __construct(?string $title = null)
-    {
-        $this->title = $title;
-    }
 }
 

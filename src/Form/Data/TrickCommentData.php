@@ -2,15 +2,9 @@
 
 namespace App\Form\Data;
 
-use App\Entity\Dto\DtoInterface;
-use App\Entity\Dto\DtoTrait;
-use App\Entity\UserInterface;
-use App\Entity\TrickInterface;
-use App\Entity\TrickCommentInterface;
 use App\Security\AuthorableInterface;
-use Symfony\Component\Security\Core\User\UserInterface as SecurityUserInterface;
+use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Validator\Constraints as Assert;
-use Doctrine\Common\Collections\Collection;
 
 /**
  * The trick comment data...
@@ -20,10 +14,8 @@ use Doctrine\Common\Collections\Collection;
  * @author  Clément Cazaud <opportus@gmail.com>
  * @license https://github.com/opportus/snowtricks/blob/master/LICENSE.md MIT
  */
-class TrickCommentData implements DtoInterface, AuthorableInterface
+class TrickCommentData implements AuthorableInterface
 {
-    use DtoTrait;
-
     /**
      * @var null|string $body
      *
@@ -64,33 +56,9 @@ class TrickCommentData implements DtoInterface, AuthorableInterface
     public $children;
 
     /**
-     * Constructs the trick comment data.
-     *
-     * @param null|string $body
-     * @param null|App\Entity\UserInterface $author
-     * @param null|App\Entity\TrickInterface $thread
-     * @param null|App\Entity\TrickCommentInterface $parent
-     * @param null\Doctrine\Common\Collections\Collection $children
-     */
-    public function __construct(
-        ?string                $body     = null,
-        ?UserInterface         $author   = null,
-        ?TrickInterface        $thread   = null,
-        ?TrickCommentInterface $parent   = null,
-        ?Collection            $children = null
-    )
-    {
-        $this->body     = $body;
-        $this->author   = $author;
-        $this->thread   = $thread;
-        $this->parent   = $parent;
-        $this->children = $children;
-    }
-
-    /**
      * {@inheritdoc}
      */
-    public function setAuthor(SecurityUserInterface $author) : AuthorableInterface
+    public function setAuthor(UserInterface $author) : AuthorableInterface
     {
         $this->author = $author;
 

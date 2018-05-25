@@ -456,7 +456,7 @@ services:
         arguments:
             $parameters: '%action_parameters%'
 
-    # Session Manager
+    # Session Manager...
     App\HttpFoundation\SessionManagerInterface: '@App\HttpFoundation\SessionManager'
     App\HttpFoundation\SessionManager:
         arguments:

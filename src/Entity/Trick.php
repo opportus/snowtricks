@@ -2,7 +2,6 @@
 
 namespace App\Entity;
 
-use App\Entity\Dto\DtoInterface;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Criteria;
@@ -22,8 +21,6 @@ use Symfony\Component\Validator\Constraints as Assert;
  */
 class Trick extends Entity implements TrickInterface
 {
-    use DtoAwareTrait;
-
     /**
      * @var null|\DateTimeInterface $updatedAt
      *
@@ -123,18 +120,27 @@ class Trick extends Entity implements TrickInterface
     /**
      * {@inheritdoc}
      */
-    public function updateFromDto(DtoInterface $dto) : EntityInterface
+    public function update(
+        string               $title,
+        string               $description,
+        string               $body,
+        UserInterface        $author,
+        ?TrickGroupInterface $group       = null,
+        ?Collection          $attachments = null,
+        ?Collection          $comments    = null,
+        ?Collection          $versions    = null
+    ) : TrickInterface
     {
         $version = new TrickVersion(
-            $dto->title,
-            $dto->description,
-            $dto->body,
-            $dto->author,
+            $title,
+            $description,
+            $body,
+            $author,
             $this,
-            $dto->group,
-            $dto->attachments,
-            $dto->comments,
-            $dto->versions
+            $group,
+            $attachments,
+            $comments,
+            $versions
         );
 
         $this->setVersion($version);

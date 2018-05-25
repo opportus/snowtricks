@@ -2,14 +2,9 @@
 
 namespace App\Form\Data;
 
-use App\Entity\Dto\DtoInterface;
-use App\Entity\Dto\DtoTrait;
-use App\Entity\UserInterface;
-use App\Entity\TrickGroupInterface;
 use App\Security\AuthorableInterface;
-use Symfony\Component\Security\Core\User\UserInterface as SecurityUserInterface;
+use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Validator\Constraints as Assert;
-use Doctrine\Common\Collections\Collection;
 
 /**
  * The trick data...
@@ -19,10 +14,8 @@ use Doctrine\Common\Collections\Collection;
  * @author  Clément Cazaud <opportus@gmail.com>
  * @license https://github.com/opportus/snowtricks/blob/master/LICENSE.md MIT
  */
-class TrickData implements DtoInterface, AuthorableInterface
+class TrickData implements AuthorableInterface
 {
-    use DtoTrait;
-
     /**
      * @var null|string $title
      *
@@ -88,42 +81,9 @@ class TrickData implements DtoInterface, AuthorableInterface
     public $versions;
 
     /**
-     * Constructs the trick data.
-     *
-     * @param null|string $title
-     * @param null|string $description
-     * @param null|string $body
-     * @param null|Doctrine\Common\Collections\Collection $attachments
-     * @param null|App\Entity\UserInterface $author
-     * @param null|App\Entity\TrickGroupInterface $group
-     * @param null|Doctrine\Common\Collections\Collection $comments
-     * @param null|Doctrine\Common\Collections\Collection $versions
-     */
-    public function __construct(
-        ?string              $title       = null,
-        ?string              $description = null,
-        ?string              $body        = null,
-        ?Collection          $attachments = null,
-        ?UserInterface       $author      = null,
-        ?TrickGroupInterface $group       = null,
-        ?Collection          $comments    = null,
-        ?Collection          $versions    = null
-    )
-    {
-        $this->title       = $title;
-        $this->description = $description;
-        $this->body        = $body;
-        $this->attachments = $attachments;
-        $this->author      = $author;
-        $this->group       = $group;
-        $this->comments    = $comments;
-        $this->versions    = $versions;
-    }
-
-    /**
      * {@inheritdoc}
      */
-    public function setAuthor(SecurityUserInterface $author) : AuthorableInterface
+    public function setAuthor(UserInterface $author) : AuthorableInterface
     {
         $this->author = $author;
 

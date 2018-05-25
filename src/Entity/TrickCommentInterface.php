@@ -13,8 +13,16 @@ use Doctrine\Common\Collections\Collection;
  * @author  Clément Cazaud <opportus@gmail.com>
  * @license https://github.com/opportus/snowtricks/blob/master/LICENSE.md MIT
  */
-interface TrickCommentInterface extends EntityInterface, DtoAwareInterface, AuthorizableInterface
+interface TrickCommentInterface extends EntityInterface, AuthorizableInterface
 {
+    /**
+     * Updates the trick comment.
+     *
+     * @param  string $body
+     * @return App\Entity\TrickCommentInterface
+     */
+    public function update(string $body) : TrickCommentInterface;
+
     /**
      * Gets the update datetime.
      *
@@ -64,21 +72,6 @@ interface TrickCommentInterface extends EntityInterface, DtoAwareInterface, Auth
      * @return bool
      */
     public function hasParent() : bool;
-
-    /**
-     * Sets the parent.
-     *
-     * @param  App\Entity\TrickCommentInterface $parent
-     * @return App\Entity\TrickCommentInterface
-     */
-    public function setParent(TrickCommentInterface $parent) : TrickCommentInterface;
-
-    /**
-     * Removes the parent.
-     *
-     * @return App\Entity\TrickCommentInterface
-     */
-    public function removeParent() : TrickCommentInterface;
 
     /**
      * Gets the children.

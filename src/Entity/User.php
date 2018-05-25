@@ -2,7 +2,6 @@
 
 namespace App\Entity;
 
-use App\Entity\Dto\DtoInterface;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Criteria;
@@ -22,8 +21,6 @@ use Symfony\Component\Validator\Constraints as Assert;
  */
 class User extends Entity implements UserInterface
 {
-    use DtoAwareTrait;
-
     /**
      * @var string $username
      *
@@ -120,13 +117,19 @@ class User extends Entity implements UserInterface
     /**
      * {@inheritdoc}
      */
-    public function updateFromDto(DtoInterface $dto) : EntityInterface
+    public function update(
+        ?string $username      = null,
+        ?string $email         = null,
+        ?string $plainPassword = null,
+        ?bool   $activation    = null,
+        ?array  $roles         = null
+    ) : UserInterface
     {
-        $vars = get_object_vars($dto);
-
-        foreach ($vars as $var => $value) {
-            $this->$var = $value;
-        }
+        $this->username      = $username ?? $username;
+        $this->email         = $email ?? $email;
+        $this->plainPassword = $plainPassword ?? $plainPassword;
+        $this->activation    = $activation ?? $activation;
+        $this->roles         = $roles ?? $roles;
 
         if ($this->plainPassword !== null) {
             $this->password = \password_hash($this->plainPassword, PASSWORD_BCRYPT);
