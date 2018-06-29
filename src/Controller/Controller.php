@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\HttpKernel\ControllerResult;
 use App\HttpKernel\ControllerResultInterface;
+use Opportus\ObjectMapper\ObjectMapperInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Form\FormFactoryInterface;
@@ -41,24 +42,32 @@ abstract class Controller
     protected $formFactory;
 
     /**
+     * @var Opportus\ObjectMapper\ObjectMapperInterface
+     */
+    protected $objectMapper;
+
+    /**
      * Constructs the app controller.
      *
      * @param array $parameters
      * @param Doctrine\ORM\EntityManagerInterface $entityManager
      * @param Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface $authorizationChecker
      * @param Symfony\Component\Form\FormFactoryInterface $formFactory
+     * @param Opportus\ObjectMapper\ObjectMapperInterface;
      */
     public function __construct(
         array                         $parameters,
         EntityManagerInterface        $entityManager,
         AuthorizationCheckerInterface $authorizationChecker,
-        FormFactoryInterface          $formFactory
+        FormFactoryInterface          $formFactory,
+        ObjectMapperInterface         $objectMapper
     )
     {
         $this->parameters           = $parameters;
         $this->entityManager        = $entityManager;
         $this->authorizationChecker = $authorizationChecker;
         $this->formFactory          = $formFactory;
+        $this->objectMapper         = $objectMapper;
     }
 
     /**
@@ -160,7 +169,7 @@ abstract class Controller
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $entity = $parameters['entity']['class']::createFromDto($form->getData());
+            $entity = $this->objectMapper->map($form->getData(), $parameters['entity']['class']);
 
             if (! $this->authorizationChecker->isGranted('POST', $entity)) {
                 return new ControllerResult(403);
@@ -209,14 +218,14 @@ abstract class Controller
 
         $form = $this->formFactory->create(
             $parameters['form']['class'],
-            $parameters['form']['options']['data_class']::createFromEntity($entity),
+            $this->objectMapper->map($entity, $parameters['form']['options']['data_class']),
             $parameters['form']['options']
         );
 
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $entity->updateFromDto($form->getData());
+            $this->objectMapper->map($form->getData(), $entity);
 
             $this->entityManager->flush();
 
@@ -260,14 +269,14 @@ abstract class Controller
 
         $form = $this->formFactory->create(
             $parameters['form']['class'],
-            $parameters['form']['options']['data_class']::createFromEntity($entity),
+            $this->objectMapper->map($entity, $parameters['form']['options']['data_class']),
             $parameters['form']['options']
         );
 
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $entity->updateFromDto($form->getData());
+            $this->objectMapper->map($form->getData(), $entity);
 
             $this->entityManager->flush();
 
@@ -394,7 +403,7 @@ abstract class Controller
         }
 
         if (isset($entity)) {
-            $data = $parameters['form']['options']['data_class']::createFromEntity($entity);
+            $data = $this->objectMapper->map($entity, $parameters['form']['options']['data_class']);
 
         } else {
             $data = null;

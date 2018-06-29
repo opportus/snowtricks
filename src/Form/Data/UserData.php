@@ -2,8 +2,6 @@
 
 namespace App\Form\Data;
 
-use App\Entity\Dto\DtoInterface;
-use App\Entity\Dto\DtoTrait;
 use App\Validator\Constraints as AppAssert;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -34,10 +32,8 @@ use Symfony\Component\Validator\Constraints as Assert;
  *     groups={"password_reset_request_form"}
  * )
  */
-class UserData implements DtoInterface
+class UserData
 {
-    use DtoTrait;
-
     /**
      * @var null|string $username
      *
@@ -80,29 +76,5 @@ class UserData implements DtoInterface
      * @Assert\Type(type="array")
      */
     public $roles;
-
-    /**
-     * Constructs the user data.
-     *
-     * @param null|string $username
-     * @param null|string $email
-     * @param null|string $plainPassword
-     * @param null|bool   $activation
-     * @param null|array  $roles
-     */
-    public function __construct(
-        ?string $username      = null,
-        ?string $email         = null,
-        ?string $plainPassword = null,
-        ?bool   $activation    = null,
-        ?array  $roles         = null
-    )
-    {
-        $this->username      = $username;
-        $this->email         = $email;
-        $this->plainPassword = $plainPassword;
-        $this->activation    = $activation;
-        $this->roles         = $roles;
-    }
 }
 

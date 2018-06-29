@@ -2,7 +2,6 @@
 
 namespace App\Entity;
 
-use App\Entity\Dto\DtoInterface;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
@@ -21,10 +20,6 @@ use Symfony\Component\Validator\Constraints as Assert;
  */
 class TrickComment extends Entity implements TrickCommentInterface
 {
-    use DtoAwareTrait {
-        updateFromDto as protected updateFromDtoTrait;
-    }
-
     /**
      * @var null|\DateTimeInterface $updatedAt
      *
@@ -110,11 +105,12 @@ class TrickComment extends Entity implements TrickCommentInterface
     /**
      * {@inheritdoc}
      */
-    public function updateFromDto(DtoInterface $dto) : EntityInterface
+    public function update(string $body) : TrickCommentInterface
     {
+        $this->body      = $body;
         $this->updatedAt = new \DateTime();
 
-        return $this->updateFromDtoTrait($dto);
+        return $this;
     }
 
     /**
@@ -171,26 +167,6 @@ class TrickComment extends Entity implements TrickCommentInterface
     public function hasParent() : bool
     {
         return (bool) $this->parent;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function setParent(TrickCommentInterface $parent) : TrickCommentInterface
-    {
-        $this->parent = $parent;
-
-        return $this;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function removeParent() : TrickCommentInterface
-    {
-        $this->parent = null;
-
-        return $this;
     }
 
     /**

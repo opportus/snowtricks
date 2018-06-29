@@ -4,7 +4,6 @@ namespace App\Form\Type;
 
 use App\Entity\TrickGroup;
 use App\EventListener\AuthorizerListener;
-use App\Form\DataTransformer\TrickGroupToIdTransformer;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -48,14 +47,12 @@ class TrickEditType extends AbstractType
      * @param App\Form\EventListener\AuthorizerListener $authorizerListener
      */
     public function __construct(
-        EntityManagerInterface    $entityManager,
-        TrickGroupToIdTransformer $trickGroupToIdTransformer,
-        AuthorizerListener        $authorizerListener
+        EntityManagerInterface $entityManager,
+        AuthorizerListener     $authorizerListener
     )
     {
-        $this->entityManager             = $entityManager;
-        $this->trickGroupToIdTransformer = $trickGroupToIdTransformer;
-        $this->authorizerListener        = $authorizerListener;
+        $this->entityManager      = $entityManager;
+        $this->authorizerListener = $authorizerListener;
     }
 
     /**
@@ -71,16 +68,6 @@ class TrickEditType extends AbstractType
         }
 
         $builder
-            ->add(
-                'attachments',
-                CollectionType::class,
-                array(
-                    'allow_add'    => true,
-                    'allow_delete' => true,
-                    'delete_empty' => true,
-                    'entry_type'   => TrickAttachmentEditType::class,
-                )
-            )
             ->add(
                 'title',
                 TextType::class

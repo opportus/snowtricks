@@ -14,8 +14,26 @@ use Doctrine\Common\Collections\Collection;
  * @author  Clément Cazaud <opportus@gmail.com>
  * @license https://github.com/opportus/snowtricks/blob/master/LICENSE.md MIT
  */
-interface UserInterface extends EntityInterface, DtoAwareInterface, AuthorizableInterface, AdvancedUserInterface, \Serializable
+interface UserInterface extends EntityInterface, AuthorizableInterface, AdvancedUserInterface, \Serializable
 {
+    /**
+     * Updates the user.
+     *
+     * @param  null|string $username
+     * @param  null|string $email
+     * @param  null|string $plainPassword
+     * @param  null|bool $activation
+     * @param  null|array $roles
+     * @return App\Entity\UserInterface
+     */
+    public function update(
+        ?string $username      = null,
+        ?string $email         = null,
+        ?string $plainPassword = null,
+        ?bool   $activation    = null,
+        ?array  $roles         = null
+    ) : UserInterface;
+
     /**
      * Gets the email.
      *

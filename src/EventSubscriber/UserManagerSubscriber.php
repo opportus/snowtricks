@@ -96,7 +96,7 @@ class UserManagerSubscriber implements EventSubscriberInterface
         }
 
         $form = $event->getControllerResult()->getData()['form'];
-        $user = $this->entityManager->getRepository(User::class)->findOneByUsername($form->getData()->getUsername());
+        $user = $this->entityManager->getRepository(User::class)->findOneByUsername($form->getData()->username);
 
         $user->createPasswordResetToken();
 

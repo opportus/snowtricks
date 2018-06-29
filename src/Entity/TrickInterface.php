@@ -13,8 +13,32 @@ use Doctrine\Common\Collections\Collection;
  * @author  Clément Cazaud <opportus@gmail.com>
  * @license https://github.com/opportus/snowtricks/blob/master/LICENSE.md MIT
  */
-interface TrickInterface extends EntityInterface, DtoAwareInterface, AuthorizableInterface
+interface TrickInterface extends EntityInterface, AuthorizableInterface
 {
+    /**
+     * Updates the trick.
+     *
+     * @param  string $title
+     * @param  string $description
+     * @param  string $body
+     * @param  App\Entity\UserInterface $author
+     * @param  null|App\Entity\TrickGroupInterface $group
+     * @param  null|Doctrine\Common\Collections\Collection $attachments
+     * @param  null|Doctrine\Common\Collections\Collection $comments
+     * @param  null|Doctrine\Common\Collections\Collection $versions
+     * @return App\Entity\TrickInterface
+     */
+    public function update(
+        string               $title,
+        string               $description,
+        string               $body,
+        UserInterface        $author,
+        ?TrickGroupInterface $group       = null,
+        ?Collection          $attachments = null,
+        ?Collection          $comments    = null,
+        ?Collection          $versions    = null
+    ) : TrickInterface;
+
     /**
      * Gets the update datetime.
      *
