@@ -47,17 +47,17 @@ class TrickCommentController extends Controller
     }
 
     /**
-     * Gets trick comment list.
+     * Gets trick comment collection.
      *
      * @param  Symfony\Component\HttpFoundation\Request $request
      * @return App\HttpKernel\ControllerResultInterface
      *
-     * @Route("/trick-comment", name="get_trick_comment_list")
+     * @Route("/trick-comment", name="get_trick_comment_collection")
      * @Method("GET")
      */
-    public function getTrickCommentList(Request $request) : ControllerResultInterface
+    public function getTrickCommentCollection(Request $request) : ControllerResultInterface
     {
-        return $this->getList($request);
+        return $this->getCollection($request);
     }
 
     /**
@@ -119,4 +119,3 @@ class TrickCommentController extends Controller
         return $this->delete($request);
     }
 }
-

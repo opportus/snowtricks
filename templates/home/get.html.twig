@@ -16,7 +16,7 @@
         </div>
         <ul id="infinite-scroll-{{ random() }}"
             class="home-show-trick-list row list-unstyled infinite-scroll"
-            data-url="{{ url('get_trick_list') }}?order[createdAt]=DESC">
+            data-url="{{ url('get_trick_collection') }}?order[createdAt]=DESC">
         </ul>
     </div>
 {% endblock content %}

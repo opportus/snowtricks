@@ -84,7 +84,7 @@
                         {% endif %}
                         <ul id="infinite-scroll-{{ random() }}"
                             class="trick-show-comment-list row mt-4 list-unstyled infinite-scroll"
-                            data-url="{{ url('get_trick_comment_list') }}?attribute[thread]={{ entity.id }}&attribute[parent]=&order[createdAt]=DESC">
+                            data-url="{{ url('get_trick_comment_collection') }}?attribute[thread]={{ entity.id }}&attribute[parent]=&order[createdAt]=DESC">
                         </ul>
                     </div>
                 </div>

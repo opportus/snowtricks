@@ -75,7 +75,7 @@
             {% if entity.hasParent == false %}
                 <ul id="infinite-scroll-{{ random() }}"
                     class="trick-comment-list-item-children-list row list-unstyled infinite-scroll infinite-scroll-collapsable"
-                    data-url="{{ url('get_trick_comment_list') }}?attribute[thread]={{ entity.thread.id }}&attribute[parent]={{ entity.id }}&order[createdAt]=ASC">
+                    data-url="{{ url('get_trick_comment_collection') }}?attribute[thread]={{ entity.thread.id }}&attribute[parent]={{ entity.id }}&order[createdAt]=ASC">
                 </ul>
             {% endif %}
         </div>

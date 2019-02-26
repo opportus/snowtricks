@@ -47,17 +47,17 @@ class TrickController extends Controller
     }
 
     /**
-     * Gets trick list.
+     * Gets trick collection.
      *
      * @param  Symfony\Component\HttpFoundation\Request $request
      * @return App\HttpKernel\ControllerResultInterface
      *
-     * @Route("/trick", name="get_trick_list")
+     * @Route("/trick", name="get_trick_collection")
      * @Method("GET")
      */
-    public function getTrickList(Request $request) : ControllerResultInterface
+    public function getTrickCollection(Request $request) : ControllerResultInterface
     {
-        return $this->getList($request);
+        return $this->getCollection($request);
     }
 
     /**
@@ -119,4 +119,3 @@ class TrickController extends Controller
         return $this->delete($request);
     }
 }
-

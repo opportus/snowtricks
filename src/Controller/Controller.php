@@ -61,8 +61,7 @@ abstract class Controller
         AuthorizationCheckerInterface $authorizationChecker,
         FormFactoryInterface          $formFactory,
         ObjectMapperInterface         $objectMapper
-    )
-    {
+    ) {
         $this->parameters           = $parameters;
         $this->entityManager        = $entityManager;
         $this->authorizationChecker = $authorizationChecker;
@@ -71,12 +70,12 @@ abstract class Controller
     }
 
     /**
-     * Gets list.
+     * Gets collection.
      *
      * @param  Symfony\Component\HttpFoundation\Request $request
      * @return App\HttpKernel\ControllerResultInterface
      */
-    protected function getList(Request $request) : ControllerResultInterface
+    protected function getCollection(Request $request) : ControllerResultInterface
     {
         $parameters = $this->resolveActionParameters($request);
 
@@ -87,7 +86,6 @@ abstract class Controller
             function ($value) {
                 if ($value === '') {
                     return null;
-
                 } else {
                     return $value;
                 }
@@ -182,7 +180,6 @@ abstract class Controller
                 201,
                 array('entity' => $entity)
             );
-
         } elseif ($form->isSubmitted()) {
             return new ControllerResult(
                 400,
@@ -233,7 +230,6 @@ abstract class Controller
                 204,
                 array('entity' => $entity)
             );
-
         } elseif ($form->isSubmitted()) {
             return new ControllerResult(
                 400,
@@ -284,7 +280,6 @@ abstract class Controller
                 204,
                 array('entity' => $entity)
             );
-
         } elseif ($form->isSubmitted()) {
             return new ControllerResult(
                 400,
@@ -334,7 +329,6 @@ abstract class Controller
                 204,
                 array('entity' => $entity)
             );
-
         } elseif ($form->isSubmitted()) {
             return new ControllerResult(
                 400,
@@ -369,7 +363,6 @@ abstract class Controller
                 202,
                 array('form' => $form)
             );
-
         } elseif ($form->isSubmitted()) {
             return new ControllerResult(
                 400,
@@ -404,7 +397,6 @@ abstract class Controller
 
         if (isset($entity)) {
             $data = $this->objectMapper->map($entity, $parameters['form']['options']['data_class']);
-
         } else {
             $data = null;
         }
@@ -482,4 +474,3 @@ abstract class Controller
         return $resolvedParameters;
     }
 }
-

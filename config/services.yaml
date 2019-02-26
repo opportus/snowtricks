@@ -219,14 +219,14 @@ parameters:
                     template: 'user/sign_in.html.twig'
 
         # Trick Controller...
-        App\Controller\TrickController::getTrickList:
+        App\Controller\TrickController::getTrickCollection:
             entity:
                 class: 'App\Entity\Trick'
             response:
                 -
                     format: 'json'
                     status: 200
-                    template: 'trick/list.html.twig'
+                    template: 'trick/collection.html.twig'
         App\Controller\TrickController::getTrick:
             entity:
                 class: 'App\Entity\Trick'
@@ -316,14 +316,14 @@ parameters:
                     format: 'json'
 
         # Trick Comment Controller...
-        App\Controller\TrickCommentController::getTrickCommentList:
+        App\Controller\TrickCommentController::getTrickCommentCollection:
             entity:
                 class: 'App\Entity\TrickComment'
             response:
                 -
                     format: 'json'
                     status: 200
-                    template: 'trick/comment/list.html.twig'
+                    template: 'trick/comment/collection.html.twig'
         App\Controller\TrickCommentController::getTrickComment:
             entity:
                 class: 'App\Entity\TrickComment'
