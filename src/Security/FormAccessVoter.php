@@ -22,7 +22,7 @@ abstract class FormAccessVoter extends Voter
     /**
      * @var Symfony\Component\HttpFoundation\RequestStack $requestStack
      */
-    protected $requestStack;
+    private $requestStack;
 
     /**
      * Constructs the user acces voter.
@@ -39,15 +39,15 @@ abstract class FormAccessVoter extends Voter
      */
     protected function supports($attribute, $subject)
     {
-        if (! in_array($attribute, array(self::GET))) {
+        if (!in_array($attribute, array(self::GET))) {
             return false;
         }
 
-        if (! $subject instanceof FormInterface) {
+        if (!$subject instanceof FormInterface) {
             return false;
         }
 
-        if (! $this->supportsSubject($subject)) {
+        if (!$this->supportsSubject($subject)) {
             return false;
         }
 
@@ -82,4 +82,3 @@ abstract class FormAccessVoter extends Voter
      */
     abstract protected function supportsSubject(FormInterface $subject) : bool;
 }
-

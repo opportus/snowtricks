@@ -21,17 +21,17 @@ class SessionManager implements SessionManagerInterface
     /**
      * @var array $parameters
      */
-    protected $parameters;
+    private $parameters;
 
     /**
      * @var Symfony\Component\HttpFoundation\Session\SessionInterface $session
      */
-    protected $session;
+    private $session;
 
     /**
      * @var Symfony\Component\Translations\TranslatorItnerface $translator
      */
-    protected $translator;
+    private $translator;
 
     /**
      * Constructs the response factory.
@@ -74,7 +74,6 @@ class SessionManager implements SessionManagerInterface
                 $parameters['flash']['message']['domain'],
                 $parameters['flash']['message']['locale']
             );
-
         } else {
             $message = $parameters['flash']['message']['id'];
         }
@@ -92,7 +91,7 @@ class SessionManager implements SessionManagerInterface
      * @param  App\HttpKernel\ControllerResultInterface $controllerResult
      * @return array
      */
-    protected function resolveParameters(Request $request, ControllerResultInterface $controllerResult) : array
+    private function resolveParameters(Request $request, ControllerResultInterface $controllerResult) : array
     {
         $parameters = array();
         $action     = $request->attributes->get('_controller');
@@ -142,4 +141,3 @@ class SessionManager implements SessionManagerInterface
         return $resolvedParameters;
     }
 }
-

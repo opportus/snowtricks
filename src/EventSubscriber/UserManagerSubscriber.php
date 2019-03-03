@@ -24,12 +24,12 @@ class UserManagerSubscriber implements EventSubscriberInterface
     /**
      * @var Doctrine\ORM\EntityManagerInterface $entityManager
      */
-    protected $entityManager;
+    private $entityManager;
 
     /**
      * @var App\Mailer\MailerInterface $mailer
      */
-    protected $mailer;
+    private $mailer;
 
     /**
      * Constucts the user manager subscriber.
@@ -112,4 +112,3 @@ class UserManagerSubscriber implements EventSubscriberInterface
         $this->mailer->sendUserPasswordResetEmail($user);
     }
 }
-

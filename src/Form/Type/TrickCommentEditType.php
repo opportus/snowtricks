@@ -29,27 +29,27 @@ class TrickCommentEditType extends AbstractType
     /**
      * @var Doctrine\ORM\EntityManagerInterface $entityManager
      */
-    protected $entityManager;
+    private $entityManager;
 
     /**
      * @var Symfony\Component\HttpFoundation\RequestStack $requestStack
      */
-    protected $requestStack;
+    private $requestStack;
 
     /**
      * @var App\EventListener\AuthorizerListener $authorizerListener
      */
-    protected $authorizerListener;
+    private $authorizerListener;
 
     /**
      * @var App\Form\DataTransformer\TrickToIdTransformer $trickToIdTransformer
      */
-    protected $trickToIdTransformer;
+    private $trickToIdTransformer;
 
     /**
      * @var App\Form\DataTransformer\TrickCommentToIdTransformer $trickCommentToIdTransformer
      */
-    protected $trickCommentToIdTransformer;
+    private $trickCommentToIdTransformer;
 
     /**
      * Constructs the trick comment type.
@@ -66,8 +66,7 @@ class TrickCommentEditType extends AbstractType
         AuthorizerListener          $authorizerListener,
         TrickToIdTransformer        $trickToIdTransformer,
         TrickCommentToIdTransformer $trickCommentToIdTransformer
-    )
-    {
+    ) {
         $this->entityManager               = $entityManager;
         $this->requestStack                = $requestStack;
         $this->authorizerListener          = $authorizerListener;
@@ -106,7 +105,7 @@ class TrickCommentEditType extends AbstractType
                 $thread = $this->entityManager->getRepository(Trick::class)->findOneById($formQuery['thread']);
             }
 
-            if (! isset($thread)) {
+            if (!isset($thread)) {
                 $thread = null;
             }
 
@@ -125,7 +124,7 @@ class TrickCommentEditType extends AbstractType
                 $parent = $this->entityManager->getRepository(TrickComment::class)->findOneById($formQuery['parent']);
             }
 
-            if (! isset($parent)) {
+            if (!isset($parent)) {
                 $parent = null;
             }
 
@@ -139,7 +138,6 @@ class TrickCommentEditType extends AbstractType
                     )
                 )
             ;
-
         } else {
             $builder
                 ->add(
@@ -162,4 +160,3 @@ class TrickCommentEditType extends AbstractType
         );
     }
 }
-

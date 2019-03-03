@@ -24,27 +24,27 @@ abstract class Controller
     /**
      * @var array $parameters
      */
-    protected $parameters;
+    private $parameters;
 
     /**
      * @var Doctrine\ORM\EntityManagerInterface $entityManager
      */
-    protected $entityManager;
+    private $entityManager;
 
     /**
      * @var Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface $authorizationChecker
      */
-    protected $authorizationChecker;
+    private $authorizationChecker;
 
     /**
      * @var Symfony\Component\Form\FormFactoryInterface $formFactory
      */
-    protected $formFactory;
+    private $formFactory;
 
     /**
      * @var Opportus\ObjectMapper\ObjectMapperInterface
      */
-    protected $objectMapper;
+    private $objectMapper;
 
     /**
      * Constructs the app controller.
@@ -105,7 +105,7 @@ abstract class Controller
         }
 
         foreach ($entities as $key => $entity) {
-            if (! $this->authorizationChecker->isGranted('GET', $entity)) {
+            if (!$this->authorizationChecker->isGranted('GET', $entity)) {
                 unset($entities[$key]);
             }
         }
@@ -138,7 +138,7 @@ abstract class Controller
             return new ControllerResult(404);
         }
 
-        if (! $this->authorizationChecker->isGranted('GET', $entity)) {
+        if (!$this->authorizationChecker->isGranted('GET', $entity)) {
             return new ControllerResult(403);
         }
 
@@ -169,7 +169,7 @@ abstract class Controller
         if ($form->isSubmitted() && $form->isValid()) {
             $entity = $this->objectMapper->map($form->getData(), $parameters['entity']['class']);
 
-            if (! $this->authorizationChecker->isGranted('POST', $entity)) {
+            if (!$this->authorizationChecker->isGranted('POST', $entity)) {
                 return new ControllerResult(403);
             }
 
@@ -259,7 +259,7 @@ abstract class Controller
             return new ControllerResult(404);
         }
 
-        if (! $this->authorizationChecker->isGranted('PATCH', $entity)) {
+        if (!$this->authorizationChecker->isGranted('PATCH', $entity)) {
             return new ControllerResult(403);
         }
 
@@ -309,7 +309,7 @@ abstract class Controller
             return new ControllerResult(404);
         }
 
-        if (! $this->authorizationChecker->isGranted('DELETE', $entity)) {
+        if (!$this->authorizationChecker->isGranted('DELETE', $entity)) {
             return new ControllerResult(403);
         }
 
@@ -390,7 +390,7 @@ abstract class Controller
                 return new ControllerResult(404);
             }
 
-            if (! $this->authorizationChecker->isGranted('GET', $entity)) {
+            if (!$this->authorizationChecker->isGranted('GET', $entity)) {
                 return new ControllerResult(403);
             }
         }
@@ -422,7 +422,7 @@ abstract class Controller
      * @param  Symfony\Component\HttpFoundation\Request $request
      * @return array
      */
-    protected function resolveActionParameters(Request $request) : array
+    private function resolveActionParameters(Request $request) : array
     {
         $action = $request->attributes->get('_controller');
 

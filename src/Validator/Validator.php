@@ -20,17 +20,17 @@ class Validator implements AppValidatorInterface
     /**
      * @var array $parameters
      */
-    protected $parameters;
+    private $parameters;
 
     /**
      * @var Symfony\Component\Validator\Validator\ValidatorInterface $validator
      */
-    protected $validator;
+    private $validator;
 
     /**
      * @var Psr\Log\LoggerInterface $logger
      */
-    protected $logger;
+    private $logger;
 
     /**
      * Constructs the validator.
@@ -67,7 +67,6 @@ class Validator implements AppValidatorInterface
     {
         try {
             $this->validateWithException($value, $constraints, $groups, $exception);
-
         } catch (\Exception $e) {
             $this->logger->critical(
                 sprintf(
@@ -86,4 +85,3 @@ class Validator implements AppValidatorInterface
         }
     }
 }
-

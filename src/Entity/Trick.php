@@ -28,7 +28,7 @@ class Trick extends Entity implements TrickInterface
      * @Assert\Type(type="object")
      * @Assert\DateTime()
      */
-    protected $updatedAt;
+    private $updatedAt;
 
     /**
      * @var string $slug
@@ -38,7 +38,7 @@ class Trick extends Entity implements TrickInterface
      * @Assert\Type(type="string")
      * @Assert\Length(max=255)
      */
-    protected $slug;
+    private $slug;
 
     /**
      * @var Doctrine\Common\Collections\Collection $comments
@@ -47,7 +47,7 @@ class Trick extends Entity implements TrickInterface
      * @ORM\OrderBy({"createdAt" = "DESC"})
      * @Assert\Valid()
      */
-    protected $comments;
+    private $comments;
 
     /**
      * @var null|App\Entity\TrickGroupInterface $group
@@ -56,7 +56,7 @@ class Trick extends Entity implements TrickInterface
      * @ORM\JoinColumn(name="group_id", referencedColumnName="id")
      * @Assert\Valid()
      */
-    protected $group;
+    private $group;
 
     /**
      * @var Doctrine\Common\Collections\Collection $versions
@@ -65,12 +65,12 @@ class Trick extends Entity implements TrickInterface
      * @ORM\OrderBy({"createdAt" = "DESC"})
      * @Assert\Valid()
      */
-    protected $versions;
+    private $versions;
 
     /**
      * @var App\Entity\TrickVersionInterface $version
      */
-    protected $version;
+    private $version;
 
     /**
      * Constructs the trick.
@@ -93,8 +93,7 @@ class Trick extends Entity implements TrickInterface
         ?Collection          $attachments = null,
         ?Collection          $comments    = null,
         ?Collection          $versions    = null
-    )
-    {
+    ) {
         $this->id        = $this->generateId();
         $this->createdAt = new \DateTime();
         $this->comments  = $comments === null ? new ArrayCollection() : $comments;
@@ -129,8 +128,7 @@ class Trick extends Entity implements TrickInterface
         ?Collection          $attachments = null,
         ?Collection          $comments    = null,
         ?Collection          $versions    = null
-    ) : TrickInterface
-    {
+    ) : TrickInterface {
         $version = new TrickVersion(
             $title,
             $description,
@@ -336,4 +334,3 @@ class Trick extends Entity implements TrickInterface
         return false;
     }
 }
-

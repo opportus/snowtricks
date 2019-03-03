@@ -24,17 +24,17 @@ class ResponseFactory implements ResponseFactoryInterface
     /**
      * @var array $parameters
      */
-    protected $parameters;
+    private $parameters;
 
     /**
      * @var Symfony\Component\Routing\RouterInterface $router
      */
-    protected $router;
+    private $router;
 
     /**
      * @var Twig_Environment $twig
      */
-    protected $twig;
+    private $twig;
 
     /**
      * Constructs the response factory.
@@ -57,7 +57,7 @@ class ResponseFactory implements ResponseFactoryInterface
     {
         $parameters  = $this->resolveResponseParameters($request, $controllerResult);
 
-        if (! empty($parameters['redirection']['route']['name'])) {
+        if (!empty($parameters['redirection']['route']['name'])) {
             $response = new RedirectResponse(
                 $this->generateRoute(
                     $parameters['redirection']['route']['name'],
@@ -66,7 +66,6 @@ class ResponseFactory implements ResponseFactoryInterface
                 ),
                 $parameters['redirection']['status']
             );
-
         } else {
             if ($this->isAcceptedContentType('html', $request)) {
                 $response = new Response(
@@ -74,7 +73,6 @@ class ResponseFactory implements ResponseFactoryInterface
                     $controllerResult->getStatusCode(),
                     $this->generateResponseHeaders($parameters, $controllerResult)
                 );
-
             } elseif ($this->isAcceptedContentType('json', $request)) {
                 $response = new JsonResponse(
                     $this->generateResponseContent($parameters, $request, $controllerResult),
@@ -95,14 +93,13 @@ class ResponseFactory implements ResponseFactoryInterface
      * @param  App\HttpKernel\ControllerResultInterface $controllerResult
      * @return string
      */
-    protected function generateResponseContent(array $parameters, Request $request, ControllerResultInterface $controllerResult) : string
+    private function generateResponseContent(array $parameters, Request $request, ControllerResultInterface $controllerResult) : string
     {
         if ($parameters['template']) {
             $content = $this->twig->render(
                 $parameters['template'],
                 $controllerResult->getData()
             );
-
         } else {
             $content = '';
         }
@@ -117,7 +114,7 @@ class ResponseFactory implements ResponseFactoryInterface
      * @param  App\HttpKernel\ControllerResultInterface $controllerResult
      * @return array
      */
-    protected function generateResponseHeaders(array $parameters, ControllerResultInterface $controllerResult) : array
+    private function generateResponseHeaders(array $parameters, ControllerResultInterface $controllerResult) : array
     {
         $headers = array();
 
@@ -150,7 +147,7 @@ class ResponseFactory implements ResponseFactoryInterface
      * @param  App\HttpKernel\ControllerResultInterface $controllerResult
      * @return string
      */
-    protected function generateRoute(string $name, array $parameters, ControllerResultInterface $controllerResult) : string
+    private function generateRoute(string $name, array $parameters, ControllerResultInterface $controllerResult) : string
     {
         if ($parameters && isset($controllerResult->getData()['entity'])) {
             $parameters = array_map(
@@ -175,7 +172,7 @@ class ResponseFactory implements ResponseFactoryInterface
      * @param  App\HttpKernel\ControllerResultInterface $controllerResult
      * @return Symfony\Component\HttpFoundation\Response
      */
-    protected function prepareResponse(Response $response, Request $request, ControllerResultInterface $controllerResult) : Response
+    private function prepareResponse(Response $response, Request $request, ControllerResultInterface $controllerResult) : Response
     {
         return $response;
     }
@@ -187,11 +184,10 @@ class ResponseFactory implements ResponseFactoryInterface
      * @param  Symfony\Component\HttpFoundation\Request $request
      * @return bool
      */
-    protected function isAcceptedContentType(string $type, Request $request) : bool
+    private function isAcceptedContentType(string $type, Request $request) : bool
     {
         if (strpos($request->headers->get('accept'), $type) === false) {
             return false;
-
         } else {
             return true;
         }
@@ -204,7 +200,7 @@ class ResponseFactory implements ResponseFactoryInterface
      * @param  App\HttpKernel\ControllerResultInterface $controllerResult
      * @return array
      */
-    protected function resolveResponseParameters(Request $request, ControllerResultInterface $controllerResult) : array
+    private function resolveResponseParameters(Request $request, ControllerResultInterface $controllerResult) : array
     {
         $parameters = array();
         $action     = $request->attributes->get('_controller');
@@ -260,4 +256,3 @@ class ResponseFactory implements ResponseFactoryInterface
         return $resolvedParameters;
     }
 }
-

@@ -20,22 +20,5 @@ interface ExceptionHandlerInterface
      * @param  \Exception $exception
      * @return Symfony\Component\HttpKernel\Exception\HttpException
      */
-    public function handleException(\Exception $exception) : HttpException;
-
-    /**
-     * Converts system's exception into appropriate HTTP exception.
-     *
-     * @param  \Exception $exception
-     * @return Symfony\Component\HttpKernel\Exception\HttpException
-     */
     public function convertToHttpException(\Exception $exception) : HttpException;
-
-    /**
-     * Logs server error exceptions.
-     *
-     * @param  Symfony\Component\HttpKernel\Exception\HttpException $exception
-     * @return App\HttpKernel\ExceptionHandlerInterface
-     */
-    public function logServerErrorException(HttpException $exception) : ExceptionHandlerInterface;
 }
-

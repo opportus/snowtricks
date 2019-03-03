@@ -20,7 +20,7 @@ class UniqueEntityValidator extends EntityValidator
      */
     public function validate($data, Constraint $constraint)
     {
-        if (! $constraint instanceof UniqueEntity) {
+        if (!$constraint instanceof UniqueEntity) {
             throw new UnexpectedTypeException();
         }
 
@@ -37,4 +37,3 @@ class UniqueEntityValidator extends EntityValidator
         }
     }
 }
-

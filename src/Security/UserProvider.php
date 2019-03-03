@@ -22,7 +22,7 @@ class UserProvider implements UserProviderInterface
     /**
      * @var App\Repository\UserRepositoryInterface $userRepository
      */
-    protected $userRepository;
+    private $userRepository;
 
     /**
      * Constructs the user provider.
@@ -75,4 +75,3 @@ class UserProvider implements UserProviderInterface
         return is_subclass_of($class, UserInterface::class);
     }
 }
-

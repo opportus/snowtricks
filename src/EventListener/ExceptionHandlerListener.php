@@ -2,10 +2,7 @@
 
 namespace App\EventListener;
 
-use App\HttpFoundation\ResponseFactoryInterface;
-use App\HttpFoundation\SessionManagerInterface;
 use App\HttpKernel\ExceptionHandlerInterface;
-use App\HttpKernel\ControllerResult;
 use Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent;
 
 /**
@@ -21,34 +18,16 @@ class ExceptionHandlerListener
     /**
      * @var App\HttpKernel\ExceptionHandlerInterface $exceptionHandler
      */
-    protected $exceptionHandler;
-
-    /**
-     * @var App\HttpFoundation\ResponseFactoryInterface $responseFactory
-     */
-    protected $responseFactory;
-
-    /**
-     * @var App\HttpFoundation\SessionManagerInterface $sessionManager
-     */
-    protected $sessionManager;
+    private $exceptionHandler;
 
     /**
      * Constructs the exception handler listener.
      *
      * @param App\HttpKernel\ExceptionHandlerInterface $exceptionHandler
-     * @param App\HttpFoundation\ResponseFactoryInterface $responseFactory
-     * @param App\HttpFoundation\SessionManagerInterface $sessionManager
      */
-    public function __construct(
-        ExceptionHandlerInterface $exceptionHandler,
-        ResponseFactoryInterface  $responseFactory,
-        SessionManagerInterface   $sessionManager
-    )
+    public function __construct(ExceptionHandlerInterface $exceptionHandler)
     {
         $this->exceptionHandler = $exceptionHandler;
-        $this->responseFactory  = $responseFactory;
-        $this->sessionManager   = $sessionManager;
     }
 
     /**
@@ -59,25 +38,7 @@ class ExceptionHandlerListener
     public function onKernelException(GetResponseForExceptionEvent $event)
     {
         $event->setException(
-            $this->exceptionHandler->handleException($event->getException())
+            $this->exceptionHandler->convertToHttpException($event->getException())
         );
-
-        if ($event->getException()->getStatusCode() >= 400 && $event->getException()->getStatusCode() < 500) {
-            $controllerResult = new ControllerResult(
-                $event->getException()->getStatusCode(),
-                array('exception' => $event->getException())
-            );
-
-            $this->sessionManager->generateFlash(
-                $event->getRequest(),
-                $controllerResult
-            );
-
-            $event->setResponse($this->responseFactory->createResponse(
-                $event->getRequest(),
-                $controllerResult
-            ));
-        }
     }
 }
-

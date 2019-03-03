@@ -19,7 +19,7 @@ class EntityValidatorSubscriber implements EventSubscriber
     /**
      * @var App\Validator\ValidatorInterface $validator
      */
-    protected $validator;
+    private $validator;
 
     /**
      * Constructs the validator subscriber.
@@ -76,4 +76,3 @@ class EntityValidatorSubscriber implements EventSubscriber
         $this->validator->validateWithExceptionAndLog($args->getEntity());
     }
 }
-

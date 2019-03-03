@@ -19,7 +19,7 @@ class AuthorizerListener
     /**
      * @var Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface $tokenStorage
      */
-    protected $tokenStorage;
+    private $tokenStorage;
 
     /**
      * Constucts the authorizer listener.
@@ -42,7 +42,7 @@ class AuthorizerListener
         $accessMethod            = $event->getForm()->getConfig()->getMethod();
         $authorableAccessMethods = array('POST', 'PUT', 'PATCH');
 
-        if ((! $authorable instanceof AuthorableInterface) || ! in_array($accessMethod, $authorableAccessMethods)) {
+        if ((!$authorable instanceof AuthorableInterface) || !in_array($accessMethod, $authorableAccessMethods)) {
             return;
         }
 
@@ -51,4 +51,3 @@ class AuthorizerListener
         $authorable->setAuthor($author);
     }
 }
-

@@ -38,7 +38,7 @@ class TrickCommentAccessVoter extends EntityAccessVoter
      */
     protected function canPut(AuthorizableInterface $subject, TokenInterface $token) : bool
     {
-        if (! $token->getUser() instanceof UserInterface) {
+        if (!$token->getUser() instanceof UserInterface) {
             return false;
         }
 
@@ -50,7 +50,7 @@ class TrickCommentAccessVoter extends EntityAccessVoter
      */
     protected function canPatch(AuthorizableInterface $subject, TokenInterface $token) : bool
     {
-        if (! $token->getUser() instanceof UserInterface) {
+        if (!$token->getUser() instanceof UserInterface) {
             return false;
         }
 
@@ -62,7 +62,7 @@ class TrickCommentAccessVoter extends EntityAccessVoter
      */
     protected function canDelete(AuthorizableInterface $subject, TokenInterface $token) : bool
     {
-        if (! $token->getUser() instanceof UserInterface) {
+        if (!$token->getUser() instanceof UserInterface) {
             return false;
         }
 
@@ -77,4 +77,3 @@ class TrickCommentAccessVoter extends EntityAccessVoter
         return $subject instanceof TrickCommentInterface;
     }
 }
-

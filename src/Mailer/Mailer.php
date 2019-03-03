@@ -24,37 +24,37 @@ class Mailer implements MailerInterface
     /**
      * @var array $parameters
      */
-    protected $parameters;
+    private $parameters;
 
     /**
      * @var \Swift_Mailer $mailer
      */
-    protected $mailer;
+    private $mailer;
 
     /**
      * @var \Twig_Environment $twig
      */
-    protected $twig;
+    private $twig;
 
     /**
      * @var Symfony\Component\Translation\TranslatorInterface $translator
      */
-    protected $translator;
+    private $translator;
 
     /**
      * @var Symfony\Component\Routing\RouterInterface $router
      */
-    protected $router;
+    private $router;
 
     /**
      * @var App\Validator\ValidatorInterface $validator
      */
-    protected $validator;
+    private $validator;
 
     /**
      * @var Psr\Log\LoggerInterface $logger
      */
-    protected $logger;
+    private $logger;
 
     /**
      * Constructs the mailer.
@@ -75,8 +75,7 @@ class Mailer implements MailerInterface
         RouterInterface     $router,
         ValidatorInterface  $validator,
         LoggerInterface     $logger
-    )
-    {
+    ) {
         $this->parameters = $parameters;
         $this->mailer     = $mailer;
         $this->twig       = $twig;
@@ -195,14 +194,13 @@ class Mailer implements MailerInterface
      * @param  string $message
      * @return App\Mailer\MailerInterface
      */
-    protected function sendEmail(
+    private function sendEmail(
         UserInterface $user,
         string        $template,
         string        $from,
         string        $subject,
         string        $message
-    ) : MailerInterface
-    {
+    ) : MailerInterface {
         try {
             $email = new Swift_Message();
 
@@ -221,7 +219,6 @@ class Mailer implements MailerInterface
             $this->mailer->send($email);
 
             return $this;
-
         } catch (\Exception $exception) {
             $this->logger->critical(
                 sprintf(
@@ -245,4 +242,3 @@ class Mailer implements MailerInterface
         return $this;
     }
 }
-

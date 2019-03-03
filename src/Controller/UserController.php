@@ -129,13 +129,16 @@ class UserController extends Controller
     {
         $controllerResult = $this->getForm($request);
 
-        return $controllerResult->setData(array_merge(
-            $controllerResult->getData(),
-            array(
-                'error'    => $authenticationUtils->getLastAuthenticationError(),
-                'username' => $authenticationUtils->getLastUsername(),
+        return new ControllerResult(
+            $controllerResult->getStatusCode(),
+            \array_merge(
+                $controllerResult->getData(),
+                array(
+                    'error'    => $authenticationUtils->getLastAuthenticationError(),
+                    'username' => $authenticationUtils->getLastUsername(),
+                )
             )
-        ));
+        );
     }
 
     /**
@@ -144,6 +147,6 @@ class UserController extends Controller
      * @Route("/user/sign-out", name="proceed_user_sign_out")
      */
     public function proceedUserSignOut()
-    {}
+    {
+    }
 }
-

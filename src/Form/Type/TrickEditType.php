@@ -2,6 +2,7 @@
 
 namespace App\Form\Type;
 
+use App\Form\Data\TrickData;
 use App\Entity\TrickGroup;
 use App\EventListener\AuthorizerListener;
 use Symfony\Component\Form\AbstractType;
@@ -27,17 +28,17 @@ class TrickEditType extends AbstractType
     /**
      * @var Doctrine\ORM\EntityManagerInterface $entityManager
      */
-    protected $entityManager;
+    private $entityManager;
 
     /**
      * @var App\Form\DataTransformer\TrickGroupToIdTransformer $trickGroupToIdTransformer
      */
-    protected $trickGroupToIdTransformer;
+    private $trickGroupToIdTransformer;
 
     /**
      * @var App\EventListener\AuthorizerListener $authorizerListener
      */
-    protected $authorizerListener;
+    private $authorizerListener;
 
     /**
      * Constructs the trick edit type.
@@ -49,8 +50,7 @@ class TrickEditType extends AbstractType
     public function __construct(
         EntityManagerInterface $entityManager,
         AuthorizerListener     $authorizerListener
-    )
-    {
+    ) {
         $this->entityManager      = $entityManager;
         $this->authorizerListener = $authorizerListener;
     }
@@ -60,9 +60,8 @@ class TrickEditType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        if ($builder->getData() !== null && $builder->getData()->group !== null) {
+        if ($builder->getData() instanceof TrickData && $builder->getData() !== null && $builder->getData()->group !== null) {
             $preferredChoices = array($this->entityManager->getReference(TrickGroup::class, $builder->getData()->group->getId()));
-
         } else {
             $preferredChoices =array();
         }
@@ -102,4 +101,3 @@ class TrickEditType extends AbstractType
         );
     }
 }
-

@@ -21,7 +21,7 @@ class TrickToIdTransformer implements DataTransformerInterface
     /**
      * @var Doctrine\ORM\EntityManagerInterface $entityManager
      */
-    protected $entityManager;
+    private $entityManager;
 
     /**
      * Constructs the trick to ID transformer.
@@ -42,7 +42,7 @@ class TrickToIdTransformer implements DataTransformerInterface
             return '';
         }
 
-        if (! $value instanceof TrickInterface) {
+        if (!$value instanceof TrickInterface) {
             throw new TransformationFailedException(
                 sprintf(
                     'The value must be an instance of %s',
@@ -59,7 +59,7 @@ class TrickToIdTransformer implements DataTransformerInterface
      */
     public function reverseTransform($value)
     {
-        if (! $value) {
+        if (!$value) {
             return null;
         }
 
@@ -79,4 +79,3 @@ class TrickToIdTransformer implements DataTransformerInterface
         return $trick;
     }
 }
-

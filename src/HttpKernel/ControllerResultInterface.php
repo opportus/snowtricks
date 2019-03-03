@@ -20,25 +20,9 @@ interface ControllerResultInterface
     public function getStatusCode() : int;
 
     /**
-     * Sets the status code.
-     *
-     * @return App\HttpKernel\ControllerResultInterface
-     */
-    public function setStatusCode(int $statusCode) : ControllerResultInterface;
-
-    /**
      * Gets the data.
      *
      * @return array
      */
     public function getData() : array;
-
-    /**
-     * Sets the data.
-     *
-     * @param  array $data
-     * @return App\HttpKernel\ControllerResultInterface
-     */
-    public function setData(array $data) : ControllerResultInterface;
 }
-

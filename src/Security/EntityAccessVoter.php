@@ -8,6 +8,7 @@ use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\Voter;
 
 use App\Entity\TrickCommentInterface;
+
 /**
  * The entity access voter...
  *
@@ -27,7 +28,7 @@ abstract class EntityAccessVoter extends Voter
     /**
      * @var Symfony\Component\HttpFoundation\RequestStack $requestStack
      */
-    protected $requestStack;
+    private $requestStack;
 
     /**
      * Constructs the user acces voter.
@@ -44,11 +45,11 @@ abstract class EntityAccessVoter extends Voter
      */
     protected function supports($attribute, $subject)
     {
-        if (! in_array($attribute, array(self::GET, self::POST, self::PUT, self::PATCH, self::DELETE))) {
+        if (!in_array($attribute, array(self::GET, self::POST, self::PUT, self::PATCH, self::DELETE))) {
             return false;
         }
 
-        if (! $subject instanceof AuthorizableInterface) {
+        if (!$subject instanceof AuthorizableInterface) {
             return false;
         }
 
@@ -131,4 +132,3 @@ abstract class EntityAccessVoter extends Voter
      */
     abstract protected function supportsSubject(AuthorizableInterface $subject) : bool;
 }
-

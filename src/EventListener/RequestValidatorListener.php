@@ -25,12 +25,12 @@ class RequestValidatorListener
     /**
      * @var Symfony\Component\HttpFoundation\RequestStack $requestStack
      */
-    protected $requestStack;
+    private $requestStack;
 
     /**
      * @var App\Validator\ValidatorInterface $validator
      */
-    protected $validator;
+    private $validator;
 
     /**
      * Constructs the request validator listener.
@@ -79,4 +79,3 @@ class RequestValidatorListener
         }
     }
 }
-

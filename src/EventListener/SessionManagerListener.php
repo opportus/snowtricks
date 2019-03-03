@@ -2,33 +2,33 @@
 
 namespace App\EventListener;
 
-use App\HttpFoundation\ResponseFactoryInterface;
+use App\HttpFoundation\SessionManagerInterface;
 use App\HttpKernel\ControllerResultInterface;
 use Symfony\Component\HttpKernel\Event\GetResponseForControllerResultEvent;
 
 /**
- * The response factory listener...
+ * The session manager listener...
  *
  * @version 0.0.1
  * @package App\EventListener
  * @author  Clément Cazaud <opportus@gmail.com>
  * @license https://github.com/opportus/snowtricks/blob/master/LICENSE.md MIT
  */
-class ResponseFactoryListener
+class SessionManagerListener
 {
     /**
-     * @var App\HttpFoundation\ResponseFactoryInterface $responseBuilder
+     * @var App\HttpFoundation\SessionManagerInterface $sessionManager
      */
-    private $responseFactory;
+    private $sessionManager;
 
     /**
      * Constructs the response factory listener.
      *
-     * @param App\HttpFoundation\ResponseFactoryInterface $responseFactory
+     * @param App\HttpFoundation\SessionManagerInterface $sessionManager
      */
-    public function __construct(ResponseFactoryInterface $responseFactory)
+    public function __construct(SessionManagerInterface $sessionManager)
     {
-        $this->responseFactory = $responseFactory;
+        $this->sessionManager  = $sessionManager;
     }
 
     /**
@@ -38,13 +38,13 @@ class ResponseFactoryListener
      */
     public function onKernelView(GetResponseForControllerResultEvent $event)
     {
-        if (! $event->getControllerResult() instanceof ControllerResultInterface) {
+        if (!$event->getControllerResult() instanceof ControllerResultInterface) {
             return;
         }
 
-        $event->setResponse($this->responseFactory->createResponse(
+        $this->sessionManager->generateFlash(
             $event->getRequest(),
             $event->getControllerResult()
-        ));
+        );
     }
 }

@@ -15,12 +15,12 @@ class ControllerResult implements ControllerResultInterface
     /**
      * @var int $statusCode
      */
-    protected $statusCode;
+    private $statusCode;
 
     /**
      * @var array $data
      */
-    protected $data;
+    private $data;
 
     /**
      * Constructs the controller result.
@@ -45,29 +45,8 @@ class ControllerResult implements ControllerResultInterface
     /**
      * {@inheritdoc}
      */
-    public function setStatusCode(int $statusCode) : ControllerResultInterface
-    {
-        $this->statusCode = $statusCode;
-
-        return $this;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
     public function getData() : array
     {
         return $this->data;
     }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function setData(array $data) : ControllerResultInterface
-    {
-        $this->data = $data;
-
-        return $this;
-    }
 }
-

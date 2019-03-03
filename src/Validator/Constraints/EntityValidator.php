@@ -18,7 +18,7 @@ abstract class EntityValidator extends ConstraintValidator
     /**
      * @var Doctrine\ORM\EntityManagerIntreface $entityManager
      */
-    protected $entityManager;
+    private $entityManager;
 
     /**
      * Constructs the entity constraint validator.
@@ -30,4 +30,3 @@ abstract class EntityValidator extends ConstraintValidator
         $this->entityManager = $entityManager;
     }
 }
-
