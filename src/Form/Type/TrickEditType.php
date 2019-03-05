@@ -31,11 +31,6 @@ class TrickEditType extends AbstractType
     private $entityManager;
 
     /**
-     * @var App\Form\DataTransformer\TrickGroupToIdTransformer $trickGroupToIdTransformer
-     */
-    private $trickGroupToIdTransformer;
-
-    /**
      * @var App\EventListener\AuthorizerListener $authorizerListener
      */
     private $authorizerListener;
@@ -44,7 +39,6 @@ class TrickEditType extends AbstractType
      * Constructs the trick edit type.
      *
      * @param Doctrine\ORM\EntityManagerInterface $entityManager
-     * @param App\Form\DataTransformer\TrickGroupToIdTransformer $trickGroupToIdTransformer
      * @param App\Form\EventListener\AuthorizerListener $authorizerListener
      */
     public function __construct(
