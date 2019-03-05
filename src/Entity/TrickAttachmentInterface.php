@@ -27,30 +27,9 @@ interface TrickAttachmentInterface extends EntityInterface
     public function getTitle();
 
     /**
-     * Gets the alt.
-     *
-     * @return string
-     */
-    public function getAlt();
-
-    /**
-     * Gets the type.
-     *
-     * @return string
-     */
-    public function getType();
-
-    /**
      * Gets the trick version.
      *
      * @return App\Entity\TrickVersionInterface
      */
     public function getTrickVersion();
-
-    /**
-     * Returns the HTML tag of the attchment.
-     *
-     * @return string
-     */
-    public function toHtml();
 }

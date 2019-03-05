@@ -15,12 +15,29 @@ use Symfony\Component\Validator\Constraints as Assert;
 class TrickAttachmentData
 {
     /**
-     * @var null|string $title
+     * @var string $src
      *
-     * @Assert\NotBlank(groups={"trick_attachment.form.edit"})
-     * @Assert\Type(type="string", groups={"trick_attachment.form.edit"})
-     * @Assert\Length(max=255, groups={"trick_attachment.form.edit"})
+     * @Assert\NotBlank()
+     * @Assert\Type(type="string")
+     * @Assert\Length(max=255)
+     * @Assert\Url()
+     */
+    public $src;
+
+    /**
+     * @var string $title
+     *
+     * @Assert\NotBlank()
+     * @Assert\Type(type="string")
+     * @Assert\Length(max=255)
      */
     public $title;
-}
 
+    /**
+     * @var null|App\Entity\TrickVersionInterface $trickVersion
+     *
+     * @Assert\NotNull()
+     * @Assert\Valid()
+     */
+    public $trickVersion;
+}

@@ -27,7 +27,7 @@ class TrickAttachment extends Entity implements TrickAttachmentInterface
      * @Assert\Length(max=255)
      * @Assert\Url()
      */
-    protected $src;
+    private $src;
 
     /**
      * @var string $title
@@ -37,28 +37,7 @@ class TrickAttachment extends Entity implements TrickAttachmentInterface
      * @Assert\Type(type="string")
      * @Assert\Length(max=255)
      */
-    protected $title;
-
-    /**
-     * @var string $alt
-     *
-     * @ORM\Column(name="alt", type="string", length=255)
-     * @Assert\NotBlank()
-     * @Assert\Type(type="string")
-     * @Assert\Length(max=255)
-     */
-    protected $alt;
-
-    /**
-     * @var string $type
-     *
-     * @ORM\Column(name="type", type="string", length=20)
-     * @Assert\NotBlank()
-     * @Assert\Type(type="string")
-     * @Assert\Length(max=20)
-     * @Assert\Choice(choices={"image/png", "image/jpeg", "image/gif", "video/mp4", "video/embed"})
-     */
-    protected $type;
+    private $title;
 
     /**
      * @var null|App\Entity\TrickVersionInterface $trickVersion
@@ -68,31 +47,26 @@ class TrickAttachment extends Entity implements TrickAttachmentInterface
      * @Assert\NotNull()
      * @Assert\Valid()
      */
-    protected $trickVersion;
+    private $trickVersion;
 
     /**
      * Constructs the attachment.
      *
      * @param string $src
      * @param string $title
-     * @param string $alt
-     * @param string $type
-     * @param App\Entity\TrickVersionInterface $version
+     * @param App\Entity\TrickVersionInterface $trickVersion
      */
     public function __construct(
         string               $src,
         string               $title,
         string               $alt,
         string               $type,
-        TrckVersionInterface $version
-    )
-    {
+        TrckVersionInterface $trickVersion
+    ) {
         $this->id           = $this->generateId();
         $this->createdAt    = new \DateTime();
         $this->src          = $src;
         $this->title        = $title;
-        $this->alt          = $alt;
-        $this->type         = $type;
         $this->trickVersion = $version;
     }
 
@@ -115,40 +89,8 @@ class TrickAttachment extends Entity implements TrickAttachmentInterface
     /**
      * {@inheritdoc}
      */
-    public function getAlt()
-    {
-        return $this->alt;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getType()
-    {
-        return $this->type;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
     public function getTrickVersion()
     {
         return $this->trickVersion;
     }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function toHtml() : string
-    {
-        if ($this->type === 'video/mp4' || $this->type === 'video/embed') {
-            $html = '<embed src="' . $this->src . '" title="' . $this->title . '"' . ($this->type === 'video/embed' ?  '' : ' type="' . $this->type . '"') . ' />';
-
-        } else {
-            $html = '<img src="' . $this->type . '" title="' . $this->title . '" alt="' . $this->alt . '" />';
-        }
-
-        return $html;
-    }
 }
-
