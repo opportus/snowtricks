@@ -1,15 +1,15 @@
 <?php
 
-namespace App\Form\Data;
+namespace App\Entity\Dto;
 
 use App\Validator\Constraints as AppAssert;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
- * The user data...
+ * The user dto...
  *
  * @version 0.0.1
- * @package App\Form\Data
+ * @package App\Entity\Dto
  * @author  Clément Cazaud <opportus@gmail.com>
  * @license https://github.com/opportus/snowtricks/blob/master/LICENSE.md MIT
  *
@@ -32,7 +32,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  *     groups={"password_reset_request_form"}
  * )
  */
-class UserData
+class UserDto
 {
     /**
      * @var null|string $username
@@ -77,4 +77,3 @@ class UserData
      */
     public $roles;
 }
-

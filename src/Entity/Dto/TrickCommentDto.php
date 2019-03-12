@@ -1,20 +1,20 @@
 <?php
 
-namespace App\Form\Data;
+namespace App\Entity\Dto;
 
 use App\Security\AuthorableInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
- * The trick comment data...
+ * The trick comment dto...
  *
  * @version 0.0.1
- * @package App\Form\Data
+ * @package App\Entity\Dto
  * @author  Clément Cazaud <opportus@gmail.com>
  * @license https://github.com/opportus/snowtricks/blob/master/LICENSE.md MIT
  */
-class TrickCommentData implements AuthorableInterface
+class TrickCommentDto implements AuthorableInterface
 {
     /**
      * @var null|string $body
@@ -65,4 +65,3 @@ class TrickCommentData implements AuthorableInterface
         return $this;
     }
 }
-

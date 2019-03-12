@@ -1,19 +1,24 @@
 <?php
 
-namespace App\Form\Data;
+namespace App\Entity\Dto;
 
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
- * The trick attachment data...
+ * The trick attachment dto...
  *
  * @version 0.0.1
- * @package App\Form\Data
+ * @package App\Entity\Dto
  * @author  Clément Cazaud <opportus@gmail.com>
  * @license https://github.com/opportus/snowtricks/blob/master/LICENSE.md MIT
  */
-class TrickAttachmentData
+class TrickAttachmentDto
 {
+    /**
+     * @var string $id
+     */
+    public $id;
+
     /**
      * @var string $src
      *

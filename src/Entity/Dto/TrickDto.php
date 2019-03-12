@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Form\Data;
+namespace App\Entity\Dto;
 
 use App\Security\AuthorableInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -10,11 +10,11 @@ use Symfony\Component\Validator\Constraints as Assert;
  * The trick data...
  *
  * @version 0.0.1
- * @package App\Form\Data
+ * @package App\Entity\Dto
  * @author  Clément Cazaud <opportus@gmail.com>
  * @license https://github.com/opportus/snowtricks/blob/master/LICENSE.md MIT
  */
-class TrickData implements AuthorableInterface
+class TrickDto implements AuthorableInterface
 {
     /**
      * @var null|string $title
@@ -90,4 +90,3 @@ class TrickData implements AuthorableInterface
         return $this;
     }
 }
-
