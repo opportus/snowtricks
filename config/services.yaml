@@ -488,16 +488,19 @@ services:
     # Event listener...
     App\EventListener\ExceptionHandlerListener:
         tags:
-            - { name: kernel.event_listener, event: kernel.exception  }
+            - { name: kernel.event_listener, event: kernel.exception }
     App\EventListener\RequestValidatorListener:
         tags:
-            - { name: kernel.event_listener, event: kernel.request  }
+            - { name: kernel.event_listener, event: kernel.request }
     App\EventListener\ResponseFactoryListener:
         tags:
             - { name: kernel.event_listener, event: kernel.view, priority: 80 }
     App\EventListener\SessionManagerListener:
         tags:
             - { name: kernel.event_listener, event: kernel.view, priority: 90 }
+    App\EventListener\ObjectMapperRecursorListener:
+        tags:
+            - { name: kernel.event_listener, event: 'opportus_object_mapper.set_target_point_value', method: 'onSetTargetPointValue' }
 
 
     # Event subscriber...
