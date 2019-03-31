@@ -20,13 +20,14 @@
                     <li id="trick-attachment-{{ attachmentCounter }}" class="trick-attachment-list-item carousel-item col-md-4 {{ active }}" data-attachment-counter="{{ attachmentCounter }}">
                         <div class="embed-responsive embed-responsive-16by9 z-depth-1">
                             {% if 'image' in attachment.type %}
-                                <img class="trick-list-item-featured-attachment embed-responsive-item img-fluid mx-auto d-block w-100"
+                                <img class="trick-list-item-attachment embed-responsive-item img-fluid mx-auto d-block w-100"
                                     src="{{ attachment.src }}">
                                 </img>
                             {% else %}
-                                <iframe class="trick-list-item-featured-attachment embed-responsive-item"
+                                <iframe class="trick-list-item-attachment embed-responsive-item"
                                     src="{{ attachment.src }}"
-                                    frameborder="0">
+                                    frameborder="0"
+                                    allowfullscreen>
                                 </iframe>
                             {% endif %}
                         </div>

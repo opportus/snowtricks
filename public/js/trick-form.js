@@ -97,11 +97,11 @@ class TrickForm
                 case 'image/jpeg':
                 case 'image/png':
                 case 'image/webp':
-                    attachmentTemplate = '<img src="'+src+'" class="img-fluid mx-auto d-block">';
+                    attachmentTemplate = '<img src="'+src+'" class="trick-list-item-attachment embed-responsive-item img-fluid mx-auto d-block w-100" />';
                     break;
                 case 'video/mpeg':
                 case 'video/avi':
-                    attachmentTemplate = '<iframe class="img-fluid mx-auto d-block" frameborder="0" width="100%" height="100%" src="'+src+'" allowfullscreen></iframe>';
+                    attachmentTemplate = '<iframe class="trick-list-item-attachment embed-responsive-item" frameborder="0" src="'+src+'" allowfullscreen></iframe>';
                     break;
                 default:
                     this.find('#trick-attachment-modal-upload-error').removeClass('d-none');
@@ -115,14 +115,16 @@ class TrickForm
                 return;
             }
 
-            attachmentTemplate = '<iframe class="img-fluid mx-auto d-block" frameborder="0" width="100%" height="100%" src="'+src+'" allowfullscreen></iframe>';
+            attachmentTemplate = '<iframe class="trick-list-item-attachment embed-responsive-item" frameborder="0" src="'+src+'" allowfullscreen></iframe>';
         } else {
             return;
         }
 
         attachmentTemplate =
-            '<div id="'+attachmentId+'" class="trick-attachment-list-item carousel-item col-md-4 '+active+'" data-attachment-counter="'+attachmentCounter+'">'+
-                attachmentTemplate+
+            '<li id="'+attachmentId+'" class="trick-attachment-list-item carousel-item col-md-4 '+active+'" data-attachment-counter="'+attachmentCounter+'">'+
+                '<div class="embed-responsive embed-responsive-16by9 z-depth-1">'+
+                    attachmentTemplate+
+                '</div>'+
                 '<ul class="trick-attachment-list-action-list list-inline position-absolute bg-light p-2 border border-secondary" style="right:30px;top:10px;">'+
                     '<li class="list-inline-item">'+
                         '<i class="trick-attachment-list-action-list-remove-item fas fa-trash-alt ajax-action" data-action="removeTrickAttachment"'+
