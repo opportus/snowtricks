@@ -4,19 +4,19 @@
 {% block content %}
     {{ parent() }}
     <div id="{{ entity.id }}" class="trick-show container-fluid"
-        style="background:url({{ asset('http://via.placeholder.com/1280x1024?text=+') }});background-repeat:no-repeat;background-size:100% 100vh;min-height:100vh;">
+        style="background:url({{ asset('img/snowtrick.jpg') }});background-repeat:no-repeat;background-size:100% 100vh;min-height:100vh;">
         <div class="row">
             <div class="trick-show-content col-md-8 offset-md-2 mt-5 bg-white" style="border:1px solid #999999">
-                <div class="row">
+                <div class="row mb-4">
                     {% if entity.featuredAttachment is not null %}
                         {% set src = entity.featuredAttachment.src %}
                     {% else %}
-                        {% set src = 'http://via.placeholder.com/1280x1024?text=+' %}
+                        {% set src = asset('img/snowtrick.jpg') %}
                     {% endif %}
                     <header class="trick-show-header col text-center justify-content-center"
                         style="background:url({{ asset(src) }});height:50vh;padding-top:20vh;">
                         {% if is_granted('ROLE_USER') %}
-                            <ul class="trick-show-action-list list-inline position-absolute" style="right:30px;top:30px;">
+                            <ul class="trick-show-action-list list-inline position-absolute" style="right:30px;top:30px;z-index:1000;">
                                 <li class="list-inline-item">
                                     <a href="{{ url('get_trick_edit_form', {'slug': entity.slug}) }}">
                                         <i class="trick-show-action-list-item-edit fas fa-pencil-alt"
@@ -37,22 +37,16 @@
                                 {% endif %}
                             </ul>
                         {% endif %}
-                        <h1 class="trick-show-title">{{ block('title') }}</h1>
-                        <div class="trick-show-description">{{ entity.description }}</div>
+                        <div class="trick-show-header-overlay" style="background:rgba(255,255,255,0.5);z-index:10;position:absolute;top:0;bottom:0;left:0;right:0;padding:30px;">
+                            <div style="position:relative;top:40%;">
+                                <h1 class="trick-show-title">{{ block('title') }}</h1>
+                                <div class="trick-show-description">{{ entity.description }}</div>
+                            </div>
+                        </div>
                     </header>
                 </div>
                 {% if entity.attachments is not empty %}
-                    <ul class="trick-show-attachment-list row mt-4 list-inline">
-                        {% for attachment in entity.attachments %}
-                            <li id="{{ attachment.id }}" class="trick-show-attachment-list-item col list-inline-item">
-                                {% if attachment.type|first() == 'i' %}
-                                    <img src="{{ attachment.src }}" alt="{{ attachment.alt }}" title="{{ attachment.title }}" />
-                                {% elseif attachment.type|first() == 'v' %}
-                                    <embed src="{{ attachment.src }}" type="{{ attachment.type }}" title="{{ attachment.title }}" />
-                                {% endif %}
-                            </li>
-                        {% endfor %}
-                    </ul>
+                    {% include 'trick/attachment/collection.html.twig' with {'entity': entity} %}
                 {% endif %}
                 <div class="row mt-4">
                     <div class="trick-show-body col">

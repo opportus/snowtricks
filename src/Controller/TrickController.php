@@ -90,18 +90,18 @@ class TrickController extends Controller
     }
 
     /**
-     * Patches the trick.
+     * Puts the trick.
      *
      * @param  Symfony\Component\HttpFoundation\Request $request
      * @return App\HttpKernel\ControllerResultInterface
      *
-     * @Route("/trick/edit/{slug}", name="patch_trick_by_edit_form")
-     * @Method("PATCH")
+     * @Route("/trick/edit/{slug}", name="put_trick_by_edit_form")
+     * @Method("PUT")
      * @Security("has_role('ROLE_USER')")
      */
-    public function patchTrickByEditForm(Request $request) : ControllerResultInterface
+    public function putTrickByEditForm(Request $request) : ControllerResultInterface
     {
-        return $this->patch($request);
+        return $this->put($request);
     }
 
     /**

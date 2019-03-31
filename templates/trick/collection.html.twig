@@ -1,13 +1,19 @@
 {% for trick in entities %}
     <li id="{{ trick.id }}" class="trick-list-item col-lg-3 col-md-4 col-sm-6 mt-2">
         <article>
-            <img class="trick-list-item-attachment img-fluid mb-2"
-                style="width:100%;"
-                src="{{ (trick.featuredAttachment is not null) ? trick.featuredAttachment.src : 'http://via.placeholder.com/200x100' }}"
-                alt="{{ (trick.featuredAttachment is not null) ? trick.featuredAttachment.alt : '' }}">
-            </img>
+            <div class="embed-responsive embed-responsive-16by9 z-depth-1 mb-2" style="">
+                {% if trick.featuredAttachment is not null %}
+                    <img class="trick-list-item-featured-attachment embed-responsive-item img-fluid mb-2 w-100"
+                        src="{{ trick.featuredAttachment.src }}">
+                    </img>
+                {% else %}
+                    <img class="trick-list-item-featured-attachment embed-responsive-item img-fluid mb-2 w-100"
+                        src="{{ asset('img/snowtrick.jpg') }}">
+                    </img>
+                {% endif %}
+            </div>
             <h2 class="trick-list-item-title d-inline-block" style="font-size:15px;">
-                <a href="{{ url('get_trick', {'slug': trick.slug}) }}">
+                <a href="{{ url('get_trick', {'slug': trick.slug}) }}" style="color:#333;">
                     {{ trick.title }}
                 </a>
             </h2>

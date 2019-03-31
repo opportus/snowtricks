@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use App\Entity\Dto\TrickAttachmentDto;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -30,7 +31,7 @@ class TrickVersion extends Entity implements TrickVersionInterface
      * @Assert\Type(type="string")
      * @Assert\Length(max=255)
      */
-    protected $title;
+    private $title;
 
     /**
      * @var string $description
@@ -40,7 +41,7 @@ class TrickVersion extends Entity implements TrickVersionInterface
      * @Assert\Type(type="string")
      * @Assert\Length(max=255)
      */
-    protected $description;
+    private $description;
 
     /**
      * @var string $body
@@ -50,7 +51,7 @@ class TrickVersion extends Entity implements TrickVersionInterface
      * @Assert\Type(type="string")
      * @Assert\Length(max=64512)
      */
-    protected $body;
+    private $body;
 
     /**
      * @var bool
@@ -59,7 +60,7 @@ class TrickVersion extends Entity implements TrickVersionInterface
      * @Assert\NotNull()
      * @Assert\Type(type="bool")
      */
-    protected $enabled;
+    private $enabled;
 
     /**
      * @var App\Entity\UserInterface $author
@@ -69,7 +70,7 @@ class TrickVersion extends Entity implements TrickVersionInterface
      * @Assert\NotNull()
      * @Assert\Valid()
      */
-    protected $author;
+    private $author;
 
     /**
      * @var App\Entity\TrickInterface $trick
@@ -79,7 +80,7 @@ class TrickVersion extends Entity implements TrickVersionInterface
      * @Assert\NotNull()
      * @Assert\Valid()
      */
-    protected $trick;
+    private $trick;
 
     /**
      * @var null|App\Entity\TrickGroupInterface $group
@@ -89,7 +90,7 @@ class TrickVersion extends Entity implements TrickVersionInterface
      * @Assert\NotNull()
      * @Assert\Valid()
      */
-    protected $group;
+    private $group;
 
     /**
      * @var Doctrine\Common\Collections\Collection $attachments
@@ -97,7 +98,7 @@ class TrickVersion extends Entity implements TrickVersionInterface
      * @ORM\OneToMany(targetEntity="App\Entity\TrickAttachment", mappedBy="trickVersion", cascade={"all"}, orphanRemoval=true)
      * @Assert\Valid()
      */
-    protected $attachments;
+    private $attachments;
 
     /**
      * Constructs the trick version.
@@ -118,8 +119,7 @@ class TrickVersion extends Entity implements TrickVersionInterface
         TrickInterface       $trick,
         ?TrickGroupInterface $group       = null,
         ?Collection          $attachments = null
-    )
-    {
+    ) {
         $this->id          = $this->generateId();
         $this->createdAt   = new \DateTime();
         $this->title       = $title;
@@ -129,7 +129,21 @@ class TrickVersion extends Entity implements TrickVersionInterface
         $this->author      = $author;
         $this->trick       = $trick;
         $this->group       = $group;
-        $this->attachments = $attachments === null ? new ArrayCollection() : $attachments;
+        $this->attachments = new ArrayCollection();
+
+        if (isset($attachments)) {
+            foreach ($attachments as $attachment) {
+                if (!$attachment instanceof TrickAttachmentDto) {
+                    continue;
+                }
+
+                $this->attachments->add(new TrickAttachment(
+                    $attachment->src,
+                    $attachment->type,
+                    $this
+                ));
+            }
+        }
     }
 
     /**
@@ -216,4 +230,3 @@ class TrickVersion extends Entity implements TrickVersionInterface
         return $this->group;
     }
 }
-

@@ -273,7 +273,6 @@ abstract class Controller
 
         if ($form->isSubmitted() && $form->isValid()) {
             $this->objectMapper->map($form->getData(), $entity);
-
             $this->entityManager->flush();
 
             return new ControllerResult(

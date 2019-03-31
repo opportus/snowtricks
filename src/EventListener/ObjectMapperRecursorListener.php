@@ -38,21 +38,19 @@ class ObjectMapperRecursorListener
      */
     public function onSetTargetPointValue(TargetPointValueAssignmentEventInterface $event)
     {
-        if ($event->hasTargetPointValueToAssign()) {
-            switch ($event->getRoute()->getFqn()) {
-                case 'App\Entity\Trick::getAttachments()=>App\Entity\Dto\TrickDto::$attachments':
-                    $trickAttachmentDtos = new ArrayCollection();
+        switch ($event->getRoute()->getFqn()) {
+            case 'App\Entity\Trick::getAttachments()=>App\Entity\Dto\TrickDto::$attachments':
+                $trickAttachmentDtos = new ArrayCollection();
 
-                    foreach ($event->getTargetPointValueToAssign() as $trickAttachment) {
-                        $trickAttachmentDto = $this->objectMapper->map($trickAttachment, 'App\Entity\Dto\TrickAttachmentDto');
+                foreach ($event->getSourcePointValue() as $trickAttachment) {
+                    $trickAttachmentDto = $this->objectMapper->map($trickAttachment, 'App\Entity\Dto\TrickAttachmentDto');
 
-                        $trickAttachmentDtos->add($trickAttachmentDto);
-                    }
-                        
-                    $event->setTargetPointValueToAssign($trickAttachmentDtos);
+                    $trickAttachmentDtos->add($trickAttachmentDto);
+                }
                     
-                    break;
-            }
+                $event->setTargetPointValueToAssign($trickAttachmentDtos);
+                
+                break;
         }
     }
 }

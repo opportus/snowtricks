@@ -2,8 +2,9 @@
 
 namespace App\Entity;
 
-use Doctrine\ORM\Mapping as ORM;
+use App\Validator\Constraints as AppAssert;
 use Symfony\Component\Validator\Constraints as Assert;
+use Doctrine\ORM\Mapping as ORM;
 
 /**
  * The trick attachment...
@@ -13,7 +14,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  * @author  Clément Cazaud <opportus@gmail.com>
  * @license https://github.com/opportus/snowtricks/blob/master/LICENSE.md MIT
  *
- * @ORM\Entity(repositoryClass="App\Repository\TrickAttachmentRepository")
+ * @ORM\Entity(repositoryClass="App\Repository\TrickAttachmentRepository", readOnly=true)
  * @ORM\Table(name="trick_attachment")
  */
 class TrickAttachment extends Entity implements TrickAttachmentInterface
@@ -30,14 +31,14 @@ class TrickAttachment extends Entity implements TrickAttachmentInterface
     private $src;
 
     /**
-     * @var string $title
+     * @var string $type
      *
-     * @ORM\Column(name="title", type="string", length=255)
+     * @ORM\Column(name="type", type="string", length=20)
      * @Assert\NotBlank()
      * @Assert\Type(type="string")
-     * @Assert\Length(max=255)
+     * @AppAssert\TrickAttachmentMimeType()
      */
-    private $title;
+    private $type;
 
     /**
      * @var null|App\Entity\TrickVersionInterface $trickVersion
@@ -53,21 +54,19 @@ class TrickAttachment extends Entity implements TrickAttachmentInterface
      * Constructs the attachment.
      *
      * @param string $src
-     * @param string $title
+     * @param string $type
      * @param App\Entity\TrickVersionInterface $trickVersion
      */
     public function __construct(
-        string               $src,
-        string               $title,
-        string               $alt,
-        string               $type,
-        TrckVersionInterface $trickVersion
+        string                $src,
+        string                $type,
+        TrickVersionInterface $trickVersion
     ) {
         $this->id           = $this->generateId();
         $this->createdAt    = new \DateTime();
         $this->src          = $src;
-        $this->title        = $title;
-        $this->trickVersion = $version;
+        $this->type         = $type;
+        $this->trickVersion = $trickVersion;
     }
 
     /**
@@ -81,9 +80,9 @@ class TrickAttachment extends Entity implements TrickAttachmentInterface
     /**
      * {@inheritdoc}
      */
-    public function getTitle()
+    public function getType()
     {
-        return $this->title;
+        return $this->type;
     }
 
     /**

@@ -12,6 +12,8 @@ class AjaxActionHandler
 
         if ($('.trick-show-comment-list')[0]) {
             mutationObserver.observe($('.trick-show-comment-list')[0], {childList: true, subtree: true});
+        } else if ($('.trick-edit')[0]) {
+            mutationObserver.observe($('.trick-edit')[0], {childList: true, subtree: true});
         }
 
         this.initialize();
@@ -212,6 +214,30 @@ class AjaxActionHandler
                 });
             }
         });
+    }
+
+    editEmbedTrickAttachment(target)
+    {
+        var trickForm = trickFormRegistry.get(target.closest('.trick-edit-content').find('form').attr('id'));
+        trickForm.getEmbedTrickAttachmentFieldset();
+    }
+
+    editUploadTrickAttachment(target)
+    {
+        var trickForm = trickFormRegistry.get(target.closest('.trick-edit-content').find('form').attr('id'));
+        trickForm.getUploadTrickAttachmentFieldset();
+    }
+
+    addTrickAttachment(target)
+    {
+        var trickForm = trickFormRegistry.get(target.closest('.trick-edit-content').find('form').attr('id'));
+        trickForm.addTrickAttachment();
+    }
+
+    removeTrickAttachment(target)
+    {
+        var trickForm = trickFormRegistry.get(target.closest('.trick-edit-content').find('form').attr('id'));
+        trickForm.removeTrickAttachment(target.closest('.trick-attachment-list-item').attr('id'));
     }
 }
 

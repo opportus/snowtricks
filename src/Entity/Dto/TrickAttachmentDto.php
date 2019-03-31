@@ -3,6 +3,7 @@
 namespace App\Entity\Dto;
 
 use Symfony\Component\Validator\Constraints as Assert;
+use App\Validator\Constraints as AppAssert;
 
 /**
  * The trick attachment dto...
@@ -15,34 +16,20 @@ use Symfony\Component\Validator\Constraints as Assert;
 class TrickAttachmentDto
 {
     /**
-     * @var string $id
-     */
-    public $id;
-
-    /**
      * @var string $src
      *
-     * @Assert\NotBlank()
-     * @Assert\Type(type="string")
-     * @Assert\Length(max=255)
-     * @Assert\Url()
+     * @Assert\NotBlank(groups={"trick.form.edit"})
+     * @Assert\Type(type="string", groups={"trick.form.edit"})
+     * @Assert\Url(groups={"trick.form.edit"})
      */
     public $src;
 
     /**
-     * @var string $title
+     * @var string $type
      *
-     * @Assert\NotBlank()
-     * @Assert\Type(type="string")
-     * @Assert\Length(max=255)
+     * @Assert\NotBlank(groups={"trick.form.edit"})
+     * @Assert\Type(type="string", groups={"trick.form.edit"})
+     * @AppAssert\TrickAttachmentMimeType()
      */
-    public $title;
-
-    /**
-     * @var null|App\Entity\TrickVersionInterface $trickVersion
-     *
-     * @Assert\NotNull()
-     * @Assert\Valid()
-     */
-    public $trickVersion;
+    public $type;
 }

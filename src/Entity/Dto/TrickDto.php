@@ -89,4 +89,28 @@ class TrickDto implements AuthorableInterface
 
         return $this;
     }
+
+    /**
+     * Adds an attachment.
+     *
+     * Used by the form component.
+     *
+     * @param App\Entity\Dto\TrickAttachmentDto $attachment
+     */
+    public function addAttachment(TrickAttachmentDto $attachment)
+    {
+        $this->attachments->add($attachment);
+    }
+
+    /**
+     * Removes an attachment.
+     *
+     * Used by the form component.
+     *
+     * @param App\Entity\Dto\TrickAttachmentDto $attachment
+     */
+    public function removeAttachment(TrickAttachmentDto $attachment)
+    {
+        $this->attachments->removeElement($attachment);
+    }
 }

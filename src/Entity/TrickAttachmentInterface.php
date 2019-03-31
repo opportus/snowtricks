@@ -20,11 +20,11 @@ interface TrickAttachmentInterface extends EntityInterface
     public function getSrc();
 
     /**
-     * Gets the title.
+     * Gets the type.
      *
      * @return string
      */
-    public function getTitle();
+    public function getType();
 
     /**
      * Gets the trick version.

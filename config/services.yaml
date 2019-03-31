@@ -244,7 +244,7 @@ parameters:
                 class: 'App\Form\Type\TrickEditType'
                 options:
                     data_class: 'App\Entity\Dto\TrickDto'
-                    method: 'PATCH'
+                    method: 'PUT'
             response:
                 -
                     format: 'html'
@@ -282,7 +282,7 @@ parameters:
                     status: 400
                     format: 'html'
                     template: 'trick/edit.html.twig'
-        App\Controller\TrickController::patchTrickByEditForm:
+        App\Controller\TrickController::putTrickByEditForm:
             entity:
                 class: 'App\Entity\Trick'
                 id: 'slug'
@@ -290,7 +290,7 @@ parameters:
                 class: 'App\Form\Type\TrickEditType'
                 options:
                     data_class: 'App\Entity\Dto\TrickDto'
-                    method: 'PATCH'
+                    method: 'PUT'
                     validation_groups: ['trick.form.edit']
             response:
                 -
@@ -461,6 +461,9 @@ services:
     App\HttpFoundation\SessionManager:
         arguments:
             $parameters: '%action_parameters%'
+
+    # File Uploader...
+    App\HttpFoundation\FileUploaderInterface: '@App\HttpFoundation\FileUploader'
 
     # Mailer...
     App\Mailer\MailerInterface: '@App\Mailer\Mailer'

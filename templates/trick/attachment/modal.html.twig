@@ -1,0 +1,25 @@
+{% block trickAttachmentModal %}
+    <div class="modal fade" id="trick-attachment-modal" tabindex="-1" role="dialog" aria-labelledby="trick-attachment-modal-itle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 class="modal-title">{{ 'trick_attachment.edit.form.title'|trans() }}</h3>
+                </div>
+                <div class="modal-error m-3">
+                    <div id="trick-attachment-modal-embed-error" class="alert alert-danger d-none" role="alert">
+                        {{ 'trick_attachment.edit.form.error.embed'|trans() }}
+                    </div>
+                    <div id="trick-attachment-modal-upload-error" class="alert alert-danger d-none" role="alert">
+                        {{ 'trick_attachment.edit.form.error.upload'|trans() }}
+                    </div>
+                </div>
+                <div class="modal-body">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">{{ 'trick_attachment.edit.form.button.cancel'|trans() }}</button>
+                    <button type="button" class="btn btn-primary ajax-action" data-action="addTrickAttachment">{{ 'trick_attachment.edit.form.button.add'|trans() }}</button>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock trickAttachmentModal %}
