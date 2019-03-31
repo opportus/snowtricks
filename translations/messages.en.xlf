@@ -282,6 +282,18 @@
                 <source>trick.edit.form.button.attachment_modal</source>
                 <target>New attachment</target>
             </trans-unit>
+            <trans-unit id="trick.delete_modal.body">
+                <source>trick.delete_modal.body</source>
+                <target>Do you really want to delete this trick?</target>
+            </trans-unit>
+            <trans-unit id="trick.delete_modal.button.cancel">
+                <source>trick.delete_modal.button.cancel</source>
+                <target>Cancel</target>
+            </trans-unit>
+            <trans-unit id="trick.delete_modal.button.ok">
+                <source>trick.delete_modal.button.ok</source>
+                <target>Ok</target>
+            </trans-unit>
 
             <trans-unit id="trick_attachment.edit.form.title">
                 <source>trick_attachment.edit.form.title</source>

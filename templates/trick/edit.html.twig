@@ -50,8 +50,12 @@
                 <div class="row py-3">
                     <div class="trick-edit col-12">
                         {{ form_start(form, {'translation_domain': 'messages', 'attr': {'id': 'trick-edit-' ~ random() }, 'class': 'row'}) }}
-                            {% include 'trick/attachment/modal.html.twig' %}
-                            {% include 'trick/attachment/collection.html.twig' with {'entity': entity, 'edit': true} %}
+                            {% block trickAttachmentAddModal %}
+                                {% include 'trick/attachment/add-modal.html.twig' %}
+                            {% endblock trickAttachmentAddModal %}
+                            {% block trickAttachmentCollection %}
+                                {% include 'trick/attachment/collection.html.twig' with {'entity': entity, 'edit': true} %}
+                            {% endblock trickAttachmentCollection %}
                             {{ form_errors(form) }}
                             <div class="trick-edit-attachments col-12 form-group">
                                 {{ form_errors(form.attachments) }}

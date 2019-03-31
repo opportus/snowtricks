@@ -198,21 +198,26 @@ class AjaxActionHandler
 
     deleteTrick(target)
     {
-        $.ajax({
-            url: target.data('url'),
-            data: {'trick_delete[_token]': target.data('token'), '_method': 'DELETE'},
-            method: 'POST',
-            dataType: 'json',
-            success: function(response, status) {
-                if (target.data('redirection')) {
-                    $(location).attr('href', target.data('redirection'))
-                    return;
-                }
+        $('#trick-delete-modal').modal();
+        $('#trick-delete-modal .btn-primary').on('click', function () {
+            $.ajax({
+                url: target.data('url'),
+                data: {'trick_delete[_token]': target.data('token'), '_method': 'DELETE'},
+                method: 'POST',
+                dataType: 'json',
+                success: function(response, status) {
+                    if (target.data('redirection')) {
+                        $(location).attr('href', target.data('redirection'))
+                        return;
+                    }
 
-                target.closest('.trick-list-item').hide('slow', function() {
-                    target.closest('.trick-list-item').remove();
-                });
-            }
+                    target.closest('.trick-list-item').hide('slow', function() {
+                        target.closest('.trick-list-item').remove();
+                    });
+
+                    $('#trick-delete-modal').modal('hide');
+                }
+            });
         });
     }
 

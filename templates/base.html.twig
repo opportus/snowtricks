@@ -95,6 +95,10 @@
                     <!-- Notification ================================================== -->
                     {% include 'notification.html.twig' %}
                 {% endblock notification %}
+                {% block trickDeleteModal %}
+                    <!-- Trick delete modal ================================================== -->
+                    {% include 'trick/delete-modal.html.twig' %}
+                {% endblock trickDeleteModal %}
             {% endblock content %}
             {% block footer %}
                 <!-- Footer ============================================================ -->
