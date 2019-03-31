@@ -1,0 +1,676 @@
+{
+    "tricks": [
+        {
+            "title": "Ollie",
+            "description": "A trick in which the snowboarder springs off the tail of the board and into the air.",
+            "body": "A trick in which the snowboarder springs off the tail of the board and into the air.",
+            "group": "Straight Airs"
+        },
+        {
+            "title": "Nollie",
+            "description": "A trick in which the snowboarder springs off the nose of the board and into the air.",
+            "body": "A trick in which the snowboarder springs off the nose of the board and into the air.",
+            "group": "Straight Airs"
+        },
+        {
+            "title": "Switch Ollie",
+            "description": "While riding switch, the snowboarder performs an ollie.",
+            "body": "While riding switch, the snowboarder performs an ollie.",
+            "group": "Straight Airs"
+        },
+        {
+            "title": "Fakie Ollie",
+            "description": "While riding switch, the snowboarder springs off of their 'new nose' and into the air.",
+            "body": "While riding switch, the snowboarder springs off of their 'new nose' and into the air. This resembles a nollie, but the snowboarder is riding in switch.",
+            "group": "Straight Airs"
+        },
+        {
+            "title": "Shifty",
+            "description": "An aerial trick in which a snowboarder twists their body in order to shift or rotate their board about 90° from its normal position beneath them.",
+            "body": "An aerial trick in which a snowboarder twists their body in order to shift or rotate their board about 90° from its normal position beneath them, and then returns the board to its original position before landing. This trick can be performed frontside or backside, and also in variation with other tricks and spins.[",
+            "group": "Straight Airs"
+        },
+        {
+            "title": "Air To Fakie",
+            "description": "Airing straight out of a vertical transition and then re-entering fakie, without rotation.",
+            "body": "Airing straight out of a vertical transition (halfpipe, quarterpipe) and then re-entering fakie, without rotation.",
+            "group": "Straight Airs"
+        },
+        {
+            "title": "Poptart",
+            "description": "Airing from fakie to forward on a quarterpipe or halfpipe without rotation.",
+            "body": "Airing from fakie to forward on a quarterpipe or halfpipe without rotation.",
+            "group": "Straight Airs"
+        },
+        {
+            "title": "One Two",
+            "description": "A trick in which the rider's front hand grabs the heel edge behind their back foot.",
+            "body": "A trick in which the rider's front hand grabs the heel edge behind their back foot.",
+            "group": "Grabs"
+        },
+        {
+            "title": "A B",
+            "description": "A trick in which the rider's rear hand grabs the heel side of the board front for the front bindings.",
+            "body": "A trick in which the rider's rear hand grabs the heel side of the board front for the front bindings.",
+            "group": "Grabs"
+        },
+        {
+            "title": "Beef Carpaccio",
+            "description": "A Roast Beef and Chicken Salad (in between the legs) at the same time with hands crossed.",
+            "body": "A Roast Beef and Chicken Salad (in between the legs) at the same time with hands crossed.",
+            "group": "Grabs"
+        },
+        {
+            "title": "Beef Curtains",
+            "description": "A Roast Beef and Chicken Salad (in between the legs) at the same time. Also known as The King or Steak Tar Tar.",
+            "body": "A Roast Beef and Chicken Salad (in between the legs) at the same time. Also known as The King or Steak Tar TarA Roast Beef and Chicken Salad (in between the legs) at the same time. Also known as The King or Steak Tar Tar.",
+            "group": "Grabs"
+        },
+        {
+            "title": "Bloody Dracula",
+            "description": "A trick in which the rider grabs the tail of the board with both hands.",
+            "body": "A trick in which the rider grabs the tail of the board with both hands. The rear hand grabs the board as it would do it during a regular tail-grab but the front hand blindly reaches for the board behind the riders back.",
+            "group": "Grabs"
+        },
+        {
+            "title": "Canadian Bacon",
+            "description": "The rear hand reaches behind the rear leg to grab the toe edge between the bindings while the rear leg is boned.",
+            "body": "The rear hand reaches behind the rear leg to grab the toe edge between the bindings while the rear leg is boned.",
+            "group": "Grabs"
+        },
+        {
+            "title": "Cannonball UFO",
+            "description": "A trick in which the nose and tail of the board are grabbed simultaneously.",
+            "body": "A trick in which the nose and tail of the board are grabbed simultaneously.",
+            "group": "Grabs"
+        },
+        {
+            "title": "Chicken Salad",
+            "description": "The rear hand reaches between the legs and grabs the heel edge between the bindings while the front leg is boned.",
+            "body": "The rear hand reaches between the legs and grabs the heel edge between the bindings while the front leg is boned. The wrist is rotated inward to complete the grab.",
+            "group": "Grabs"
+        },
+        {
+            "title": "China Air",
+            "description": "An easier version of the Japan Air; the front hand grabs the toe side in front of the front foot. Both knees are then bent.",
+            "body": "An easier version of the Japan Air; the front hand grabs the toe side in front of the front foot. Both knees are then bent.",
+            "group": "Grabs"
+        },
+        {
+            "title": "Crail",
+            "description": "The rear hand grabs the toe edge in front of the front foot while the rear leg is boned.",
+            "body": "The rear hand grabs the toe edge in front of the front foot while the rear leg is boned. Alternatively, some consider any rear handed grab in front of the front foot on the toeside edge a crail grab, classifying a grab to the nose a \"nose crail\" or \"real crail\".",
+            "group": "Grabs"
+        },
+        {
+            "title": "Cross Rocket",
+            "description": "Advanced variation of a Rocket Air, where the arms are crossed in order to grab opposite sides of the nose of the board, while the rear leg is boned straight and the front leg is tucked up.",
+            "body": "Advanced variation of a Rocket Air, where the arms are crossed in order to grab opposite sides of the nose of the board, while the rear leg is boned straight and the front leg is tucked up.",
+            "group": "Grabs"
+        },
+        {
+            "title": "Drunk Driver",
+            "description": "Similar to a Truck driver, it is a stalefish grab and mute grab performed at the same time.",
+            "body": "Similar to a Truck driver, it is a stalefish grab and mute grab performed at the same time.",
+            "group": "Grabs"
+        },
+        {
+            "title": "Frontside Indy",
+            "description": "A fundamental trick performed by grabbing the toe edge between the bindings with the trailing hand.",
+            "body": "A fundamental trick performed by grabbing the toe edge between the bindings with the trailing hand. This trick is referred to as a frontside grab on a straight air, or while performing a frontside spin. When performing a backside aerial or backside rotation, this grab is referred to as an Indy. The frontside air was popularized by skateboarder Tony Alva.",
+            "group": "Grabs"
+        },
+        {
+            "title": "Gorilla",
+            "description": "Both hands grab toeside between the bindings.",
+            "body": "Both hands grab toeside between the bindings.",
+            "group": "Grabs"
+        },
+        {
+            "title": "Japan Air",
+            "description": "The front hand grabs the toe edge in between the feet and the front knee is pulled to the board.",
+            "body": "The front hand grabs the toe edge in between the feet and the front knee is pulled to the board.",
+            "group": "Grabs"
+        },
+        {
+            "title": "Lien Air",
+            "description": "When performing a frontside air on transition, the snowboarder grabs heelside in front or behind the leading binding with their leading hand.",
+            "body": "When performing a frontside air on transition, the snowboarder grabs heelside in front or behind the leading binding with their leading hand. In order for it to be a Lien air, the board can not be tweaked and has to be kept flat. The origin of the name of the trick is the reverse spelling of skateboarder Neil Blender's first name.",
+            "group": "Grabs"
+        },
+        {
+            "title": "Korean Bacon",
+            "description": "The KB is when the leading arm reach between the legs from behind and grab the toe edge at the front foot bending the knees pulling the board to the back.",
+            "body": "The KB is when the leading arm reach between the legs from behind and grab the toe edge at the front foot bending the knees pulling the board to the back. (Tweaked).",
+            "group": "Grabs"
+        },
+        {
+            "title": "Melon",
+            "description": "The front hand reaches behind the front leg and grabs the heel edge in-between the bindings while the front leg is boned.",
+            "body": "The front hand reaches behind the front leg and grabs the heel edge in-between the bindings while the front leg is boned.",
+            "group": "Grabs"
+        },
+        {
+            "title": "Melon Water",
+            "description": "A melon grab where the rider bones the front leg and turns the board the 45° angle.",
+            "body": "A melon grab where the rider bones the front leg and turns the board the 45° angle.",
+            "group": "Grabs"
+        },
+        {
+            "title": "Method",
+            "description": "A fundamental trick performed by bending the knees to lift the board behind the rider's back, and grabbing the heel edge of the snowboard with the leading hand.",
+            "body": "A fundamental trick performed by bending the knees to lift the board behind the rider's back, and grabbing the heel edge of the snowboard with the leading hand. Variations on the method include: \n\r Power method, cross bone, or Palmer method \r Performed by grabbing the heel edge with the leading hand, and tucking up the board while kicking out the rear foot in such a way that the base of the board is facing forward. Derived from the snowboarder Chris Roach of Grass Valley, CA. Other notable riders who popularized this air include snowboarders Jamie Lynn, Shaun Palmer, Terry Kidwell, and skateboarders Steve Caballero and Christian Hosoi. \n\r Suitcase \r A method in which the knees are bent so that the front hand is able to grab the toe edge and hold the board 'like a suitcase.'",
+            "group": "Grabs"
+        },
+        {
+            "title": "Mindy",
+            "description": "Both hands grab toeside outside of the bindings.",
+            "body": "Both hands grab toeside outside of the bindings.",
+            "group": "Grabs"
+        },
+        {
+            "title": "Mule Kick",
+            "description": "An early snowboarder adaptation of the skateboarders method air.",
+            "body": "An early snowboarder adaptation of the skateboarders method air. Often called a Toyota air, after its similar posturing to the early 1980s Toyota \"Oh What A Feeling\" ad campaign featuring people jumping off the ground, performed by jumping into an aerial backbend with legs bending until nearly kicking yourself in the butt as with skiing's backscratcher air, both arms bent back high over the head and not grabbing the board. Still occasionally seen and widely regarded as terrible.",
+            "group": "Grabs"
+        },
+        {
+            "title": "Mute",
+            "description": "The front hand grabs the toe edge either between the toes or in front of the front foot.",
+            "body": "The front hand grabs the toe edge either between the toes or in front of the front foot. Variations include the Mute Stiffy, in which a mute grab is performed while straightening both legs, or alternatively, some snowboarders will grab mute and rotate the board frontside 90 degrees.",
+            "group": "Grabs"
+        },
+        {
+            "title": "Nose Grab",
+            "description": "The front hand grabs the nose of the snowboard.",
+            "body": "The front hand grabs the nose of the snowboard.",
+            "group": "Grabs"
+        },
+        {
+            "title": "Nuclear",
+            "description": "The rear hand reaches across the front of the body and grabs the heel edge in front of the front foot.",
+            "body": "The rear hand reaches across the front of the body and grabs the heel edge in front of the front foot.",
+            "group": "Grabs"
+        },
+        {
+            "title": "Pickpocket",
+            "description": "The front hand reaches behind the back and grabs the toe side of the board in front of the back foot and tweaks it back.",
+            "body": "The front hand reaches behind the back and grabs the toe side of the board in front of the back foot and tweaks it back.",
+            "group": "Grabs"
+        },
+        {
+            "title": "Perfect",
+            "description": "The front hand grabs the tail of the board.",
+            "body": "The front hand grabs the tail of the board.",
+            "group": "Grabs"
+        },
+        {
+            "title": "Roast Beef",
+            "description": "The rear hand reaches between the legs and grabs the heel edge between the bindings while the rear leg is boned.",
+            "body": "The rear hand reaches between the legs and grabs the heel edge between the bindings while the rear leg is boned.",
+            "group": "Grabs"
+        },
+        {
+            "title": "Rocket Air",
+            "description": "The front hand grabs the toe edge in front of the front foot (mute) and the back leg is boned while the board points perpendicular to the ground.",
+            "body": "The front hand grabs the toe edge in front of the front foot (mute) and the back leg is boned while the board points perpendicular to the ground.",
+            "group": "Grabs"
+        },
+        {
+            "title": "Rusty Trombone",
+            "description": "A Roast Beef and Nose grab performed at the same time.",
+            "body": "A Roast Beef and Nose grab performed at the same time.",
+            "group": "Grabs"
+        },
+        {
+            "title": "Seatbelt",
+            "description": "The front hand reaches across the body and grabs the tail while the front leg is boned. The snowboarders's arm resembles the sash of a three-point seatbelt, hence the name.",
+            "body": "The front hand reaches across the body and grabs the tail while the front leg is boned. The snowboarders's arm resembles the sash of a three-point seatbelt, hence the name.",
+            "group": "Grabs"
+        },
+        {
+            "title": "Slob",
+            "description": "The front hand grabs mute, the back leg is boned and the board is kept parallel with the ground.",
+            "body": "The front hand grabs mute, the back leg is boned and the board is kept parallel with the ground.",
+            "group": "Grabs"
+        },
+        {
+            "title": "Stiffy",
+            "description": "Grab indy in between the bindings and bone both legs 90° to the body.",
+            "body": "Grab indy in between the bindings and bone both legs 90° to the body.",
+            "group": "Grabs"
+        },
+        {
+            "title": "Stalefish",
+            "description": "Back hand grabs the heel edge of the board between the feet, around the outside of the knee.",
+            "body": "Back hand grabs the heel edge of the board between the feet, around the outside of the knee.",
+            "group": "Grabs"
+        },
+        {
+            "title": "Squirrel",
+            "description": "A trick in which the rider's front hand grabs the heel edge in front of the front foot and their rear/back hand grabs the heel edge behind the rear foot.",
+            "body": "A trick in which the rider's front hand grabs the heel edge in front of the front foot and their rear/back hand grabs the heel edge behind the rear foot.",
+            "group": "Grabs"
+        },
+        {
+            "title": "Swiss Cheese Air",
+            "description": "The rear hand reaches between the legs and grabs the heel edge in front of the front foot while the back leg is boned.",
+            "body": "The rear hand reaches between the legs and grabs the heel edge in front of the front foot while the back leg is boned.",
+            "group": "Grabs"
+        },
+        {
+            "title": "Tailfish",
+            "description": "Similar in naming convention to a Tindy, Tailfish is a portmanteau of 'Tail' and 'Stalefish'.",
+            "body": "Similar in naming convention to a Tindy, Tailfish is a portmanteau of 'Tail' and 'Stalefish'. The trailing hand grabs the heel edge between rear binding and the tail.",
+            "group": "Grabs"
+        },
+        {
+            "title": "Tail Grab",
+            "description": "The rear hand grabs the tail of the snowboard.",
+            "body": "The rear hand grabs the tail of the snowboard. Variations include straightening, or 'boning' the front leg, or 'tweaking' the board slightly frontside or backside.",
+            "group": "Grabs"
+        },
+        {
+            "title": "Taipan Air",
+            "description": "The back hand grabs the toe edge just in front of the rear foot.",
+            "body": "The back hand grabs the toe edge just in front of the rear foot. However, the arm must go around the outside of your rear knee. The board is then pulled behind the rider (tweaked). The name Taipan is a portmanteau of tail/Japan air.",
+            "group": "Grabs"
+        },
+        {
+            "title": "Tindy",
+            "description": "The tindy grab is a controversial grab, and the name is a portmanteau of 'tail' and 'indy'.",
+            "body": "The tindy grab is a controversial grab, and the name is a portmanteau of 'tail' and 'indy'. The trailing hand grabs between the rear binding and the tail on the toe edge.",
+            "group": "Grabs"
+        },
+        {
+            "title": "Truck Driver",
+            "description": "When both hands grab Indy and Melon.",
+            "body": "When both hands grab Indy and Melon.",
+            "group": "Grabs"
+        },
+        {
+            "title": "Back Flip",
+            "description": "Flipping backwards (like a standing backflip) off of a jump.",
+            "body": "Flipping backwards (like a standing backflip) off of a jump.",
+            "group": "Flips"
+        },
+        {
+            "title": "Front Flip",
+            "description": "Flipping forward (like a standing frontflip) off of a jump.",
+            "body": "Flipping forward (like a standing frontflip) off of a jump.",
+            "group": "Flips"
+        },
+        {
+            "title": "Crippler",
+            "description": "An inverted 540 degree spin performed on the frontside wall of the halfpipe",
+            "body": "An inverted 540 degree spin performed on the frontside wall of the halfpipe",
+            "group": "Flips"
+        },
+        {
+            "title": "Wildcat",
+            "description": "A backflip performed on a straight jump, with an axis of rotation in which the snowboarder flips in a backward, cartwheel-like fashion.",
+            "body": "A backflip performed on a straight jump, with an axis of rotation in which the snowboarder flips in a backward, cartwheel-like fashion. A double wildcat is called a supercat.",
+            "group": "Flips"
+        },
+        {
+            "title": "Tamedog",
+            "description": "A frontflip performed on a straight jump, with an axis of rotation in which the snowboarder flips in a forward, cartwheel-like fashion.",
+            "body": "A frontflip performed on a straight jump, with an axis of rotation in which the snowboarder flips in a forward, cartwheel-like fashion.",
+            "group": "Flips"
+        },
+        {
+            "title": "Mc Twist",
+            "description": "A forward-flipping backside 540, performed in a halfpipe, quarterpipe, or similar obstacle.",
+            "body": "A forward-flipping backside 540, performed in a halfpipe, quarterpipe, or similar obstacle. The rotation may continue beyond 540° (e.g., McTwist 720). The origin of this trick comes from vert ramp skateboarding, and was first performed on a skateboard by Mike McGill.",
+            "group": "Flips"
+        },
+        {
+            "title": "Double Mc Twist",
+            "description": "Shaun White is credited as the creator of the Double McTwist 1260, but Ben Stewart performs the trick in some of the earliest archival footage.",
+            "body": "Shaun White is credited as the creator of the Double McTwist 1260, but Ben Stewart performs the trick in some of the earliest archival footage. Shaun White was the first athlete to perform the trick in competition at the 2010 Winter Olympics giving it worldwide recognition and giving it the name \"Tomahawk\". Since then, numerous athletes have performed the Double McTwist 1260 including Iouri Podladtchikov.",
+            "group": "Flips"
+        },
+        {
+            "title": "Haakon Flip",
+            "description": "An aerial maneuver performed in a halfpipe by taking off backwards, and performing an inverted 720° rotation.",
+            "body": "An aerial maneuver performed in a halfpipe by taking off backwards, and performing an inverted 720° rotation. The rotation mimics a half-cab leading to McTwist, and is named after freestyle legend Terje Haakonsen of Norway.",
+            "group": "Flips"
+        },
+        {
+            "title": "Lando Roll",
+            "description": "A Frontside cork 540/720 method done by Alaskan snowboarder Mark Landvik.",
+            "body": "A Frontside cork 540/720 method done by Alaskan snowboarder Mark Landvik.",
+            "group": "Flips"
+        },
+        {
+            "title": "Backside Misty",
+            "description": "After a rider learns the basic backside 540 off the toes, the Misty Flip can be an easy next progression step.",
+            "body": "After a rider learns the basic backside 540 off the toes, the Misty Flip can be an easy next progression step. Misty Flip is quite different than the backside rodeo, because instead of corking over the heel edge with a back flip motion, the Misty corks off the toe edge specifically and has more of a Front Flip in the beginning of the trick, followed by a side flip coming out to the landing.",
+            "group": "Flips"
+        },
+        {
+            "title": "Frontside Misty",
+            "description": "The Frontside misty ends up looking quite a bit like a frontside rodeo in the middle of the trick, but at take off the rider uses a more frontflip type of motion to start the trick.",
+            "body": "The Frontside misty ends up looking quite a bit like a frontside rodeo in the middle of the trick, but at take off the rider uses a more frontflip type of motion to start the trick. The frontside Misty can only be done off the toes and the rider will wind up to spin frontside, then snap their trailing shoulder towards their front foot and the lead shoulder will release towards the sky. as they unwind at takeoff release. Usually grabbing Indy the rider follows the lead shoulder through the rotation to 540, 720 and even 900.",
+            "group": "Flips"
+        },
+        {
+            "title": "Chicane",
+            "description": "A chicane is a rarely done trick that involves doing a frontside 180 with a front flip on the X Axis.",
+            "body": "A chicane is a rarely done trick that involves doing a frontside 180 with a front flip on the X Axis. Opposite of the 90 roll, the chicane is frontside 90, tuck front flip, 90 degrees more to land switch, or vice versa.",
+            "group": "Flips"
+        },
+        {
+            "title": "Fontside Rodeo",
+            "description": "The basic frontside rodeo is all together a 540.",
+            "body": "The basic frontside rodeo is all together a 540. It essentially falls into a grey area between an off axis frontside 540 and a frontside 180 with a back flip blended into it. The grab choice and different line and pop factors can make it more flipy or more of an off-axis spin. Frontside rodeo can be done off the heels or toes and with a little more spin on the Z Axis can go to 720 or 900. It is possible to do it to a 1080 but, if there is too much flip in the spin, it can be hard not to over flip when going past 720 and 900. The bigger the Z Axis spin, the later the inverted part of the rotation should be. Gaining control on big spin rodeos, may lead to a double cork or a second flip rotation in the spin, if the rider has developed a comfort level with double flips on the tramp or other gymnastic environment.;Rodeo flip; frontside rodeo: A frontward-flipping frontside spin done off the toe-edge. Most commonly performed with a 540° rotation, but also performed as a 720°, 900°, etc...",
+            "group": "Flips"
+        },
+        {
+            "title": "Backside Rodeo",
+            "description": "A backward-flipping backside spin.",
+            "body": "A backward-flipping backside spin. Most commonly performed with a 540° rotation, but also performed as a 720°, 900°, etc...",
+            "group": "Flips"
+        },
+        {
+            "title": "Ninety Roll",
+            "description": "A trick performed by back-flipping toward the landing of a jump, with a total rotation of 180° backside (i.e. spin 90° backside-backflip-spin 90°), therefore landing fakie.",
+            "body": "A trick performed by back-flipping toward the landing of a jump, with a total rotation of 180° backside (i.e. spin 90° backside-backflip-spin 90°), therefore landing fakie. Essentially, this is a backside 180 backflip. This trick is sometimes confused with a backside Rodeo, though the Ninety Roll has a much more linear axis of rotation.",
+            "group": "Flips"
+        },
+        {
+            "title": "Michalchuk",
+            "description": "A trademark flip first performed in the halfpipe by Michael Michalchuk.",
+            "body": "A trademark flip first performed in the halfpipe by Michael Michalchuk. A flat-spinning, on-axis backflip often grabbing melon, indy or method and rotating 540 degrees.",
+            "group": "Flips"
+        },
+        {
+            "title": "Doublechuk",
+            "description": "A variation of the Michalchuk, but with two backflip rotations.",
+            "body": "A variation of the Michalchuk, but with two backflip rotations.",
+            "group": "Flips"
+        },
+        {
+            "title": "Rippey",
+            "description": "A back-flipping frontside 360°, typically performed with a method grab.",
+            "body": "A back-flipping frontside 360°, typically performed with a method grab. Named after its originator, Jim Rippey, although already performed 5 years earlier by former pro skateboarder and snowboarder John Cardiel.",
+            "group": "Flips"
+        },
+        {
+            "title": "Sato",
+            "description": "Halfpipe trick done by Rob Kingwill (Sato is the Japanese word for sugar).",
+            "body": "Halfpipe trick done by Rob Kingwill (Sato is the Japanese word for sugar).  It is something like a frontside McTwist. The rider rides up the transition of the pipe as if doing a frontside 540°, pops in the air and grabs frontside, then throws head, shoulders, and hips down.",
+            "group": "Flips"
+        },
+        {
+            "title": "Cork",
+            "description": "Spins are corked or corkscrew when the axis of the spin allows for the snowboarder to be oriented sideways or upside-down in the air, typically without becoming completely inverted.",
+            "body": "Spins are corked or corkscrew when the axis of the spin allows for the snowboarder to be oriented sideways or upside-down in the air, typically without becoming completely inverted (though the head and shoulders should drop below the relative position of the board). A Double-Cork refers to a rotation in which a snowboarder inverts or orients themselves sideways at two distinct times during an aerial rotation. David Benedek is the originator of the Double-Cork in the Half-pipe, but the Double-Cork is also a very common trick in Big-Air competitions. Shaun White is known for making this trick famous in the half-pipe. Several snowboarders have recently extended the limits of technical snowboarding by performing triple-cork variations, Torstein Horgmo being the first to land one in competition. Mark McMorris originated Backside Triple-Cork 1440's in 2011. In April 2015 British snowboarder and Winter Olympic medallist Billy Morgan demonstrated the world's first quadruple cork 1800.",
+            "group": "Flips"
+        },
+        {
+            "title": "Invert",
+            "description": "Overlaying term for handstands on the edge of a halfpipe",
+            "body": "Overlaying term for handstands on the edge of a halfpipe",
+            "group": "Inverted Hand Plants"
+        },
+        {
+            "title": "Handplant",
+            "description": "A 180° degree handplant in which the rear hand is planted on the lip of the wall and the rotation is frontside.",
+            "body": "A 180° degree handplant in which the rear hand is planted on the lip of the wall and the rotation is frontside.",
+            "group": "Inverted Hand Plants"
+        },
+        {
+            "title": "Sad Plant",
+            "description": "An invert with a sad grab (melon grab).",
+            "body": "An invert with a sad grab (melon grab).",
+            "group": "Inverted Hand Plants"
+        },
+        {
+            "title": "Elguerial",
+            "description": "An invert where the halfpipe wall is approached fakie, the rear hand is planted, a 360 degree backside rotation is made, and the rider lands going forward.",
+            "body": "An invert where the halfpipe wall is approached fakie, the rear hand is planted, a 360 degree backside rotation is made, and the rider lands going forward. Named after Eddie Elguera.",
+            "group": "Inverted Hand Plants"
+        },
+        {
+            "title": "Eggplant",
+            "description": "A one-handed 180° invert in which the front hand is planted on the lip of the wall and the rotation is backside.",
+            "body": "A one-handed 180° invert in which the front hand is planted on the lip of the wall and the rotation is backside.",
+            "group": "Inverted Hand Plants"
+        },
+        {
+            "title": "Eggflip",
+            "description": "An eggplant where the rider chooses to flip over in order to re-enter the pipe instead or rotating 180 degrees.",
+            "body": "An eggplant where the rider chooses to flip over in order to re-enter the pipe instead or rotating 180 degrees. This trick is performed forward to fakie or switch (fakie to forward).",
+            "group": "Inverted Hand Plants"
+        },
+        {
+            "title": "Mc Egg",
+            "description": "An invert where the rider plants the front hand on the wall, rotated 540 degrees in a backside direction and lands riding forward.",
+            "body": "An invert where the rider plants the front hand on the wall, rotated 540 degrees in a backside direction and lands riding forward.",
+            "group": "Inverted Hand Plants"
+        },
+        {
+            "title": "Andrecht",
+            "description": "A rear handed backside handplant with a front-handed grab.",
+            "body": "A rear handed backside handplant with a front-handed grab.",
+            "group": "Inverted Hand Plants"
+        },
+        {
+            "title": "Miller Flip",
+            "description": "A 360° frontside handplant to fakie.",
+            "body": "A 360° frontside handplant to fakie.",
+            "group": "Inverted Hand Plants"
+        },
+        {
+            "title": "Layback",
+            "description": "A non-inverted handplant in which the leading hand is planted during a slide.",
+            "body": "A non-inverted handplant in which the leading hand is planted during a slide. The rider literally lays back, hence the name.",
+            "group": "Inverted Hand Plants"
+        },
+        {
+            "title": "HoHo",
+            "description": "An invert but both hands are planted at the top of the halfpipe.",
+            "body": "An invert but both hands are planted at the top of the halfpipe.",
+            "group": "Inverted Hand Plants"
+        },
+        {
+            "title": "Killer Stand",
+            "description": "You make an invert but you also take your back/rear hand on front hand's elbow.",
+            "body": "You make an invert but you also take your back/rear hand on front hand's elbow.",
+            "group": "Inverted Hand Plants"
+        },
+        {
+            "title": "Fresh",
+            "description": "An invert (front hand) but back flip is boned; no grab",
+            "body": "An invert (front hand) but back flip is boned; no grab",
+            "group": "Inverted Hand Plants"
+        },
+        {
+            "title": "J Tear",
+            "description": "Inverted frontside 540 with a hand plant in the middle.",
+            "body": "Inverted frontside 540 with a hand plant in the middle. Originally a variation on the Jacoby Terror Air. This trick was invented by Mike Jacoby for a contest that didn't allow inverted aerials; inverted handplants, however, were acceptable.",
+            "group": "Inverted Hand Plants"
+        },
+        {
+            "title": "50 50",
+            "description": "A slide in which a snowboarder rides straight along a rail or other obstacle.",
+            "body": "A slide in which a snowboarder rides straight along a rail or other obstacle. This trick has its origin in skateboarding, where the trick is performed with both skateboard trucks grinding along a rail.",
+            "group": "Slides"
+        },
+        {
+            "title": "Boardside",
+            "description": "A slide performed where the riders leading foot passes over the rail on approach, with their snowboard traveling perpendicular along the rail or other obstacle.",
+            "body": "A slide performed where the riders leading foot passes over the rail on approach, with their snowboard traveling perpendicular along the rail or other obstacle. When performing a frontside boardslide, the snowboarder is facing uphill. When performing a backside boardslide, a snowboarder is facing downhill. This is often confusing to new riders learning the trick because with a frontside boardslide you are moving backward and with a backside boardslide you are moving forward.",
+            "group": "Slides"
+        },
+        {
+            "title": "Lipslide",
+            "description": "A slide performed where the rider's trailing foot passes over the rail on approach, with their snowboard traveling perpendicular along the rail or other obstacle.",
+            "body": "A slide performed where the rider's trailing foot passes over the rail on approach, with their snowboard traveling perpendicular along the rail or other obstacle. When performing a frontside lipslide, the snowboarder is facing downhill. When performing a backside lipslide, a snowboarder is facing uphill.",
+            "group": "Slides"
+        },
+        {
+            "title": "Bluntslide",
+            "description": "A slide performed where the rider's leading foot passes over the rail on approach, with their snowboard traveling perpendicular and trailing foot directly above the rail or other obstacle.",
+            "body": "A slide performed where the rider's leading foot passes over the rail on approach, with their snowboard traveling perpendicular and trailing foot directly above the rail or other obstacle (like a tailslide). When performing a frontside bluntslide, the snowboarder is facing uphill. When performing a backside bluntslide, the snowboarder is facing downhill.",
+            "group": "Slides"
+        },
+        {
+            "title": "NoseBlunt",
+            "description": "Similar to a boardslide or lipslide, but only the nose of the board is on the feature.",
+            "body": "Similar to a boardslide or lipslide, but only the nose of the board is on the feature. Proper noseslides are done with the feature directly under the front foot or farther out towards the nose.",
+            "group": "Slides"
+        },
+        {
+            "title": "Tailslide",
+            "description": "Similar to a boardslide or lipslide, but only the tail of the board is on the feature.",
+            "body": "Similar to a boardslide or lipslide, but only the tail of the board is on the feature. Proper tailslides are done with the feature directly under the back foot or farther out towards the tail.",
+            "group": "Slides"
+        },
+        {
+            "title": "Nosepress",
+            "description": "A trick performed by sliding along an obstacle, with pressure being put on the nose of the board, such that the tail of the board is raised in the air.",
+            "body": "A trick performed by sliding along an obstacle, with pressure being put on the nose of the board, such that the tail of the board is raised in the air.",
+            "group": "Slides"
+        },
+        {
+            "title": "Tailpress",
+            "description": "A trick performed by sliding along an obstacle, with pressure being put on the tail of the board, such that the nose of the board is raised in the air.",
+            "body": "A trick performed by sliding along an obstacle, with pressure being put on the tail of the board, such that the nose of the board is raised in the air.",
+            "group": "Slides"
+        },
+        {
+            "title": "MJ",
+            "description": "A slide that somewhat resembles a 50–50, a snowboarder slides along an obstacle on their toe edge, reminiscent of a dance move made popular by Michael Jackson.",
+            "body": "A slide that somewhat resembles a 50–50, a snowboarder slides along an obstacle on their toe edge, reminiscent of a dance move made popular by Michael Jackson.",
+            "group": "Slides"
+        },
+        {
+            "title": "HJ",
+            "description": "A slide that somewhat resembles a 50-50, a snowboarder slides along an obstacle on their heel edge.",
+            "body": "A slide that somewhat resembles a 50-50, a snowboarder slides along an obstacle on their heel edge.",
+            "group": "Slides"
+        },
+        {
+            "title": "Zeach",
+            "description": "A term used to describe any rail maneuver where the board is not solidly locked into the intended position.",
+            "body": "A term used to describe any rail maneuver where the board is not solidly locked into the intended position. Named after Zach Leach, who popularized feeble or smith-esque slides in the early 2000s.",
+            "group": "Slides"
+        },
+        {
+            "title": "Gutterball",
+            "description": "The Gutterball is a one footed (front foot is strapped in and the rear foot is unstrapped ) front boardslide with a backhanded seatbelt nose grab.",
+            "body": "The Gutterball is a one footed (front foot is strapped in and the rear foot is unstrapped ) front boardslide with a backhanded seatbelt nose grab, resembling the body position that someone would have after releasing a bowling ball down a bowling ally. This trick was invented and named by Jeremy Cameron which won him a first place in the Morrow Snowboards \"FAME WAR\" Best Trick contest in 2009.",
+            "group": "Slides"
+        },
+        {
+            "title": "Nose Pick",
+            "description": "Stalling on an object with the nose of the snowboard, while grabbing frontside, and then jumping back off the object into the jump you came off.",
+            "body": "Stalling on an object with the nose of the snowboard, while grabbing frontside, and then jumping back off the object into the jump you came off.",
+            "group": "Stalls"
+        },
+        {
+            "title": "Disaster",
+            "description": "A trick performed when a rider stalls on an object with their snowboard, with the point of contact between both bindings.",
+            "body": "A trick performed when a rider stalls on an object with their snowboard, with the point of contact between both bindings. The Disaster variation comes from skateboarding, and involves performing a frontside or backside 180 before stalling on the lip of the obstacle, and then re-entering.",
+            "group": "Stalls"
+        },
+        {
+            "title": "Nose Stall",
+            "description": "Similar to a board-stall, this variation involves stalling on the nose of the snowboard at the top of a transition or obstacle.",
+            "body": "Similar to a board-stall, this variation involves stalling on the nose of the snowboard at the top of a transition or obstacle.",
+            "group": "Stalls"
+        },
+        {
+            "title": "Tail",
+            "description": "The opposite of a nose-stall, this trick involves stalling on an obstacle with the tail of the snowboard.",
+            "body": "The opposite of a nose-stall, this trick involves stalling on an obstacle with the tail of the snowboard. Often performed by approaching an obstacle fakie or by doing a 180 after approaching the feature normally.",
+            "group": "Stalls"
+        },
+        {
+            "title": "Blunt",
+            "description": "Mimicking skateboarding, and similar to a board-stall, this trick is performed by stalling on an object with the tail of the board, or the nose of the board.",
+            "body": "Mimicking skateboarding, and similar to a board-stall, this trick is performed by stalling on an object with the tail of the board (blunt stall), or the nose of the board (nose blunt stall). Distinguished from a nose-stall or tail-stall because during the stall, most of the snowboard will be positioned above the obstacle and point of contact. Most if not all stalls are referred to as nose or tail presses in current snowboarding whether or not they are actually tail and nose stalls or blunt stalls. Blunt stalls are considered to be more stylish forms of nose or tail presses however.",
+            "group": "Stalls"
+        },
+        {
+            "title": "Tail Block",
+            "description": "A trick typically performed on the snow at the peak of a transition.",
+            "body": "A trick typically performed on the snow at the peak of a transition, or occasionally on an object, in which the snowboarder springs up and stands on the tail of their board while grabbing the nose of the board.",
+            "group": "Stalls"
+        },
+        {
+            "title": "Nose Block",
+            "description": "Similar to a tail-block, but performed by standing on the nose while grabbing the tail of the board.",
+            "body": "Similar to a tail-block, but performed by standing on the nose while grabbing the tail of the board.",
+            "group": "Stalls"
+        },
+        {
+            "title": "One Footed",
+            "description": "Tricks performed with one foot removed from the binding are referred to as one-footed tricks.",
+            "body": "Tricks performed with one foot removed from the binding (typically the rear foot) are referred to as one-footed tricks. One footed tricks include fast plants in which the rear foot is dropped and initiates a straight air or rotation, the boneless, which is a fast-plant with a grab; and the no-comply, which is a front-footed fast plant.",
+            "group": "Tweaks"
+        },
+        {
+            "title": "Stink Bug",
+            "description": "Grabbing Frontside or Mute with the rider's elbow passing to the inside of the knees.",
+            "body": "Grabbing Frontside or Mute with the rider's elbow passing to the inside of the knees. Style conventions dictate that during a grab, the elbow should be positioned to the outside of the knee.",
+            "group": "Tweaks"
+        },
+        {
+            "title": "Tuck Knee",
+            "description": "Where the knee of either leg is dropped down to touch the top of the board.",
+            "body": "Where the knee of either leg is dropped down to touch the top of the board. When referring to snowboarding it means that the rider attempts to put their knee on the board by putting their knee underneath the torso and then pulling down to the board.",
+            "group": "Tweaks"
+        },
+        {
+            "title": "Poke",
+            "description": "A grab trick in which the front leg only or back leg only is boned-out.",
+            "body": "A grab trick in which the front leg only or back leg only is boned-out.",
+            "group": "Tweaks"
+        },
+        {
+            "title": "Jib",
+            "description": "To ride on any surface that is not snow, or to ride on any feature in a non-traditional way.",
+            "body": "To ride on any surface that is not snow, or to ride on any feature in a non-traditional way. I.e. tapping or spinning on a death cookie or snow embankment.",
+            "group": "Miscellaneous"
+        },
+        {
+            "title": "Butter",
+            "description": "While traveling along the surface of the snow, this trick is performed by pressuring either the nose or tail of the snowboard in such a way that the opposite half of the snowboard lifts off of the snow.",
+            "body": "While traveling along the surface of the snow, this trick is performed by pressuring either the nose or tail of the snowboard in such a way that the opposite half of the snowboard lifts off of the snow, allowing for a pivot-like rotation. A butter can be performed as a partial rotation (90°), which is then reverted, as a continuous rotation (180°, 360°, etc.), or as a lead-in to an aerial maneuver. (butters are similar to blunt slides in skateboarding).",
+            "group": "Miscellaneous"
+        },
+        {
+            "title": "Manual",
+            "description": "While riding along the snow, pressuring the nose or tail such that the opposite end of the board is raised in the air.",
+            "body": "While riding along the snow, pressuring the nose or tail such that the opposite end of the board is raised in the air.",
+            "group": "Miscellaneous"
+        },
+        {
+            "title": "Pretzel",
+            "description": "Concluding a slide trick with a 270° spin opposite the direction in which you did a rotation during the trick's initiation.",
+            "body": "Concluding a slide trick with a 270° spin opposite the direction in which you did a rotation during the trick's initiation.",
+            "group": "Miscellaneous"
+        },
+        {
+            "title": "Bagel",
+            "description": "Like a Pretzel, but spinning 270° off the rail in the same direction as you got on.",
+            "body": "Like a Pretzel, but spinning 270° off the rail in the same direction as you got on.",
+            "group": "Miscellaneous"
+        },
+        {
+            "title": "Bonk",
+            "description": "To tap an object or obstacle with your board.",
+            "body": "To tap an object or obstacle with your board.",
+            "group": "Miscellaneous"
+        },
+        {
+            "title": "Pinguin Walk",
+            "description": "To 'walk' while strapped into a snowboard by alternatively springing from nose to tail, propelling the snowboarder forward in a walking fashion.",
+            "body": "To 'walk' while strapped into a snowboard by alternatively springing from nose to tail, propelling the snowboarder forward in a walking fashion. Also known as a \"Crab\" or \"Duck\" walk. This is an easy way to drop in to a slope after strapping in once you have the hang of it.<",
+            "group": "Miscellaneous"
+        }
+    ]
+}

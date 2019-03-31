@@ -9,6 +9,7 @@ use App\Entity\Trick;
 use App\Entity\TrickComment;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\Persistence\ObjectManager;
+use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * The fixtures...
@@ -25,33 +26,38 @@ class Fixtures extends Fixture
      */
     public function load(ObjectManager $entityManager)
     {
-        $user = new User(
-            'Angelika',
-            'angel4ka@gmail.com',
-            'azerty',
-            true
-        );
+        $tricks = $this->generateTricks($entityManager);
+    }
 
-        $entityManager->persist($user);
+    /**
+     * Generates the tricks.
+     *
+     * @param Doctrine\Common\Persistence\ObjectManager $entityManager
+     * @return Doctrine\Common\Collections\ArrayCollection
+     */
+    private function generateTricks(ObjectManager $entityManager) : ArrayCollection
+    {
+        $user = $this->generateUser($entityManager);
+        $trickGroups = $this->generateTrickGroups($entityManager);
+        $tricks = array();
 
-        for ($i = 0; $i < 40; $i++) {
-            $trickGroup = new TrickGroup(
-                $this->generateLoremIpsum('title'),
-                $this->generateLoremIpsum('description')
-            );
-
-            $entityManager->persist($trickGroup);
-
+        foreach ($this->getData()['tricks'] as $trickData) {
             $trick = new Trick(
-                $this->generateLoremIpsum('title'),
-                $this->generateLoremIpsum('description'),
-                $this->generateLoremIpsum(),
+                $trickData['title'],
+                $trickData['description'],
+                $trickData['body'],
                 $user,
-                $trickGroup
+                $trickGroups[$trickData['group']]
             );
 
             $entityManager->persist($trick);
 
+            $tricks[] = $trick;
+        }
+
+        $tricks = new ArrayCollection($tricks);
+
+        foreach ($tricks as $trick) {
             $trickComment = new TrickComment(
                 $this->generateLoremIpsum(),
                 $user,
@@ -71,6 +77,66 @@ class Fixtures extends Fixture
         }
 
         $entityManager->flush();
+
+        return $tricks;
+    }
+
+    /**
+     * Generates the trick groups.
+     *
+     * @param Doctrine\Common\Persistence\ObjectManager $entityManager
+     * @return Doctrine\Common\Collections\ArrayCollection
+     */
+    private function generateTrickGroups(ObjectManager $entityManager) : ArrayCollection
+    {
+        $trickGroups = array();
+
+        foreach ($this->getData()['tricks'] as $trickData) {
+            $trickGroups[$trickData['group']] = $trickData['group'];
+        }
+
+        foreach ($trickGroups as $trickGroupKey => $trickGroupTitle) {
+            $trickGroup = new TrickGroup(
+                $trickGroupTitle,
+                'No description'
+            );
+
+            $entityManager->persist($trickGroup);
+
+            $trickGroups[$trickGroupKey] = $trickGroup;
+        }
+
+        return new ArrayCollection($trickGroups);
+    }
+
+    /**
+     * Generates the user.
+     *
+     * @param Doctrine\Common\Persistence\ObjectManager $entityManager
+     * @return App\Entity\User
+     */
+    private function generateUser(ObjectManager $entityManager) : User
+    {
+        $user = new User(
+            'Clément',
+            'opportus@gmail.com',
+            'azerty',
+            true
+        );
+
+        $entityManager->persist($user);
+
+        return $user;
+    }
+
+    /**
+     * Gets the data.
+     *
+     * @return array
+     */
+    private function getData() : array
+    {
+        return \json_decode(\file_get_contents(__DIR__.'/data.json'), true);
     }
 
     /**
@@ -96,15 +162,12 @@ class Fixtures extends Fixture
             $loremIpsum = explode(' ', substr($loremIpsum, 0, 20));
             $loremIpsum = ucwords(trim(implode(' ', $loremIpsum)));
             return $loremIpsum;
-
         } elseif ($type === 'description') {
             $loremIpsum = explode(' ', substr($loremIpsum, 0, 255));
             $loremIpsum = trim(implode(' ', $loremIpsum));
             return $loremIpsum;
-
         } else {
             return $loremIpsum;
         }
     }
 }
-
