@@ -22,7 +22,7 @@ parameters:
             form:
                 class: 'App\Form\Type\UserSignUpType'
                 options:
-                    data_class: 'App\Form\Data\UserData'
+                    data_class: 'App\Entity\Dto\UserDto'
                     method: 'POST'
                     validation_groups: ['user.form.sign_up']
             response:
@@ -68,7 +68,7 @@ parameters:
             form:
                 class: 'App\Form\Type\UserActivationEmailType'
                 options:
-                    data_class: 'App\Form\Data\UserData'
+                    data_class: 'App\Entity\Dto\UserDto'
                     method: 'PATCH'
                     csrf_protection: false
             response:
@@ -118,7 +118,7 @@ parameters:
                 class: 'App\Form\Type\UserPasswordResetRequestType'
                 options:
                     method: 'POST'
-                    data_class: 'App\Form\Data\UserData'
+                    data_class: 'App\Entity\Dto\UserDto'
             response:
                 -
                     format: 'html'
@@ -129,7 +129,7 @@ parameters:
                 class: 'App\Form\Type\UserPasswordResetRequestType'
                 options:
                     method: 'POST'
-                    data_class: 'App\Form\Data\UserData'
+                    data_class: 'App\Entity\Dto\UserDto'
                     validation_groups: ['user.form.password_reset_request']
             response:
                 -
@@ -166,7 +166,7 @@ parameters:
             form:
                 class: 'App\Form\Type\UserPasswordResetType'
                 options:
-                    data_class: 'App\Form\Data\UserData'
+                    data_class: 'App\Entity\Dto\UserDto'
                     method: 'PATCH'
                     validation_groups: ['user.form.password_reset']
             response:
@@ -210,7 +210,7 @@ parameters:
             form:
                 class: 'App\Form\Type\UserSignInType'
                 options:
-                    data_class: 'App\Form\Data\UserData'
+                    data_class: 'App\Entity\Dto\UserDto'
                     method: 'POST'
             response:
                 -
@@ -243,8 +243,8 @@ parameters:
             form:
                 class: 'App\Form\Type\TrickEditType'
                 options:
-                    data_class: 'App\Form\Data\TrickData'
-                    method: 'PATCH'
+                    data_class: 'App\Entity\Dto\TrickDto'
+                    method: 'PUT'
             response:
                 -
                     format: 'html'
@@ -269,7 +269,7 @@ parameters:
             form:
                 class: 'App\Form\Type\TrickEditType'
                 options:
-                    data_class: 'App\Form\Data\TrickData'
+                    data_class: 'App\Entity\Dto\TrickDto'
                     method: 'POST'
                     validation_groups: ['trick.form.edit']
             response:
@@ -282,15 +282,15 @@ parameters:
                     status: 400
                     format: 'html'
                     template: 'trick/edit.html.twig'
-        App\Controller\TrickController::patchTrickByEditForm:
+        App\Controller\TrickController::putTrickByEditForm:
             entity:
                 class: 'App\Entity\Trick'
                 id: 'slug'
             form:
                 class: 'App\Form\Type\TrickEditType'
                 options:
-                    data_class: 'App\Form\Data\TrickData'
-                    method: 'PATCH'
+                    data_class: 'App\Entity\Dto\TrickDto'
+                    method: 'PUT'
                     validation_groups: ['trick.form.edit']
             response:
                 -
@@ -339,7 +339,7 @@ parameters:
             form:
                 class: 'App\Form\Type\TrickCommentEditType'
                 options:
-                    data_class: 'App\Form\Data\TrickCommentData'
+                    data_class: 'App\Entity\Dto\TrickCommentDto'
                     method: 'POST'
                     validation_groups: ['trick_comment.form.edit']
             response:
@@ -353,7 +353,7 @@ parameters:
             form:
                 class: 'App\Form\Type\TrickCommentEditType'
                 options:
-                    data_class: 'App\Form\Data\TrickCommentData'
+                    data_class: 'App\Entity\Dto\TrickCommentDto'
                     method: 'PUT'
                     validation_groups: ['trick_comment.form.edit']
             response:
@@ -379,7 +379,7 @@ parameters:
             form:
                 class: 'App\Form\Type\TrickCommentEditType'
                 options:
-                    data_class: 'App\Form\Data\TrickCommentData'
+                    data_class: 'App\Entity\Dto\TrickCommentDto'
                     method: 'PUT'
             response:
                 -
@@ -462,6 +462,9 @@ services:
         arguments:
             $parameters: '%action_parameters%'
 
+    # File Uploader...
+    App\HttpFoundation\FileUploaderInterface: '@App\HttpFoundation\FileUploader'
+
     # Mailer...
     App\Mailer\MailerInterface: '@App\Mailer\Mailer'
     App\Mailer\Mailer:
@@ -488,16 +491,19 @@ services:
     # Event listener...
     App\EventListener\ExceptionHandlerListener:
         tags:
-            - { name: kernel.event_listener, event: kernel.exception  }
+            - { name: kernel.event_listener, event: kernel.exception }
     App\EventListener\RequestValidatorListener:
         tags:
-            - { name: kernel.event_listener, event: kernel.request  }
+            - { name: kernel.event_listener, event: kernel.request }
     App\EventListener\ResponseFactoryListener:
         tags:
             - { name: kernel.event_listener, event: kernel.view, priority: 80 }
     App\EventListener\SessionManagerListener:
         tags:
             - { name: kernel.event_listener, event: kernel.view, priority: 90 }
+    App\EventListener\ObjectMapperRecursorListener:
+        tags:
+            - { name: kernel.event_listener, event: 'opportus_object_mapper.set_target_point_value', method: 'onSetTargetPointValue' }
 
 
     # Event subscriber...

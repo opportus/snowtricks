@@ -238,17 +238,33 @@
                 <source>trick.show.author.label</source>
                 <target>Contributor</target>
             </trans-unit>
+            <trans-unit id="trick.edit.form.label.title">
+                <source>trick.edit.form.label.title</source>
+                <target>Title</target>
+            </trans-unit>
             <trans-unit id="trick.edit.form.placeholder.title">
                 <source>trick.edit.form.placeholder.title</source>
                 <target>Title</target>
+            </trans-unit>
+            <trans-unit id="trick.edit.form.label.description">
+                <source>trick.edit.form.label.description</source>
+                <target>Description</target>
             </trans-unit>
             <trans-unit id="trick.edit.form.placeholder.description">
                 <source>trick.edit.form.placeholder.description</source>
                 <target>Description</target>
             </trans-unit>
+            <trans-unit id="trick.edit.form.label.body">
+                <source>trick.edit.form.label.body</source>
+                <target>Body</target>
+            </trans-unit>
             <trans-unit id="trick.edit.form.placeholder.body">
                 <source>trick.edit.form.placeholder.body</source>
                 <target>Body</target>
+            </trans-unit>
+            <trans-unit id="trick.edit.form.label.group">
+                <source>trick.edit.form.label.group</source>
+                <target>Group</target>
             </trans-unit>
             <trans-unit id="trick.edit.form.placeholder.group">
                 <source>trick.edit.form.placeholder.group</source>
@@ -261,6 +277,43 @@
             <trans-unit id="trick.edit.form.button.delete">
                 <source>trick.edit.form.button.delete</source>
                 <target>Delete</target>
+            </trans-unit>
+            <trans-unit id="trick.edit.form.button.attachment_modal">
+                <source>trick.edit.form.button.attachment_modal</source>
+                <target>New attachment</target>
+            </trans-unit>
+            <trans-unit id="trick.delete_modal.body">
+                <source>trick.delete_modal.body</source>
+                <target>Do you really want to delete this trick?</target>
+            </trans-unit>
+            <trans-unit id="trick.delete_modal.button.cancel">
+                <source>trick.delete_modal.button.cancel</source>
+                <target>Cancel</target>
+            </trans-unit>
+            <trans-unit id="trick.delete_modal.button.ok">
+                <source>trick.delete_modal.button.ok</source>
+                <target>Ok</target>
+            </trans-unit>
+
+            <trans-unit id="trick_attachment.edit.form.title">
+                <source>trick_attachment.edit.form.title</source>
+                <target>New attachment</target>
+            </trans-unit>
+            <trans-unit id="trick_attachment.edit.form.button.cancel">
+                <source>trick_attachment.edit.form.button.cancel</source>
+                <target>Cancel</target>
+            </trans-unit>
+            <trans-unit id="trick_attachment.edit.form.button.add">
+                <source>trick_attachment.edit.form.button.add</source>
+                <target>Add</target>
+            </trans-unit>
+            <trans-unit id="trick_attachment.edit.form.error.embed">
+                <source>trick_attachment.edit.form.error.embed</source>
+                <target>Invalid YouTube or DailyMotion embed IFrame</target>
+            </trans-unit>
+            <trans-unit id="trick_attachment.edit.form.error.upload">
+                <source>trick_attachment.edit.form.error.upload</source>
+                <target>Invalid file type</target>
             </trans-unit>
 
             <trans-unit id="home.show.title">
@@ -337,6 +390,14 @@
             <trans-unit id="base.navbar.link.title.sign_in">
                 <source>base.navbar.link.title.sign_in</source>
                 <target>Sign In</target>
+            </trans-unit>
+            <trans-unit id="base.navbar.link.anchor.new_trick">
+                <source>base.navbar.link.anchor.new_trick</source>
+                <target>New Trick</target>
+            </trans-unit>
+            <trans-unit id="base.navbar.link.title.new_trick">
+                <source>base.navbar.link.title.new_trick</source>
+                <target>New Trick</target>
             </trans-unit>
             <trans-unit id="base.navbar.link.anchor.sign_out">
                 <source>base.navbar.link.anchor.sign_out</source>

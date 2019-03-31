@@ -12,7 +12,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
  * The session manager...
  *
  * @version 0.0.1
- * @package App\HttpKernel
+ * @package App\HttpFoundation
  * @author  Clément Cazaud <opportus@gmail.com>
  * @license https://github.com/opportus/snowtricks/blob/master/LICENSE.md MIT
  */
@@ -34,7 +34,7 @@ class SessionManager implements SessionManagerInterface
     private $translator;
 
     /**
-     * Constructs the response factory.
+     * Constructs the session manager.
      *
      * @param array $parameters
      * @param Symfony\Component\HttpFoundation\Session\SessionInterface $session

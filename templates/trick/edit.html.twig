@@ -11,47 +11,72 @@
 {% block content %}
     {{ parent() }}
     <div class="trick-edit container-fluid"
-        style="background:url({{ asset('http://via.placeholder.com/1280x1024?text=+') }});background-repeat:no-repeat;background-size:100% 100vh;min-height:100vh;">
+        style="background:url({{ asset('img/snowtrick.jpg') }});background-repeat:no-repeat;background-size:100% 100vh;min-height:100vh;">
         <div class="row">
             <div class="trick-edit-content col-md-8 offset-md-2 mt-5 bg-white rounded border border-secondary" style="overflow:hidden;">
                 <div class="row">
-                    {% set src = 'http://via.placeholder.com/1280x1024?text=+' %}
+                    {% if entity is not null and entity.featuredAttachment is not null %}
+                        {% set src = entity.featuredAttachment.src %}
+                    {% else %}
+                        {% set src = 'img/snowtrick.jpg' %}
+                    {% endif %}
                     <header class="trick-edit-header col text-center justify-content-center"
                         style="background:url({{ asset(src) }});height:50vh;padding-top:20vh;">
-                        <ul class="trick-edit-action-list list-inline position-absolute bg-light p-1 rounded border border-secondary" style="right:30px;top:30px;">
-                            <li class="list-inline-item">
-                                <i class="trick-edit-action-list-attachment-edit-item fas fa-pencil-alt ajax-action"
-                                    style="cursor:pointer;"
-                                    data-url="">
-                                </i>
-                            </li>
-                            <li class="list-inline-item">
-                                <i class="trick-edit-action-list-attachment-delete-item fas fa-trash ajax-action"
-                                    style="cursor:pointer;"
-                                    data-action="deleteTrickAttachment"
-                                    data-token="{{ csrf_token('security') }}"
-                                    data-url="">
-                                </i>
-                            </li>
-                        </ul>
-                        <h1 class="trick-edit-title">{{ title }}</h1>
+                        <div class="trick-show-header-overlay" style="background:rgba(255,255,255,0.5);z-index:10;position:absolute;top:0;bottom:0;left:0;right:0;padding:30px;">
+                            <div style="position:relative;top:40%;">
+                                <h1 class="trick-edit-title">{{ title }}</h1>
+                            </div>
+                            <ul class="trick-edit-attachment-action-list list-inline position-absolute bg-light p-1 rounded border border-secondary" style="right:30px;bottom:0;">
+                                <li class="list-inline-item">
+                                    <i class="trick-edit-attachment-action-list-edit-embed-item fas fa-paste trick-edit-attachment-modal-button ajax-action"
+                                        data-action="editEmbedTrickAttachment"
+                                        data-toggle="modal"
+                                        data-target="#trick-attachment-modal"
+                                        style="cursor:pointer;">
+                                    </i>
+                                </li>
+                                <li class="list-inline-item">
+                                    <i class="trick-edit-attachment-action-list-edit-file-item fas fa-file-upload trick-edit-attachment-modal-button ajax-action"
+                                        data-action="editUploadTrickAttachment"
+                                        data-toggle="modal"
+                                        data-target="#trick-attachment-modal"
+                                        style="cursor:pointer;">
+                                    </i>
+                                </li>
+                            </ul>
+                        </div>
                     </header>
                 </div>
-                {% if 1 == 0 %}
-                    <ul class="trick-edit-attachment-list row mt-4 list-inline">
-                    </ul>
-                {% endif %}
                 <div class="row py-3">
                     <div class="trick-edit col-12">
                         {{ form_start(form, {'translation_domain': 'messages', 'attr': {'id': 'trick-edit-' ~ random() }, 'class': 'row'}) }}
+                            {% block trickAttachmentAddModal %}
+                                {% include 'trick/attachment/add-modal.html.twig' %}
+                            {% endblock trickAttachmentAddModal %}
+                            {% block trickAttachmentCollection %}
+                                {% include 'trick/attachment/collection.html.twig' with {'entity': entity, 'edit': true} %}
+                            {% endblock trickAttachmentCollection %}
                             {{ form_errors(form) }}
-                            <div class="trick-edit-title col-12 form-group">
-                                {{ form_errors(form.title) }}
+                            <div class="trick-edit-attachments col-12 form-group">
+                                {{ form_errors(form.attachments) }}
                                 {{ form_widget(
-                                    form.title,
+                                    form.attachments,
                                     {
                                         'label': false,
                                         'attr': {
+                                            'style': 'overflow:hidden;width:100%;',
+                                            'class': 'd-none'
+                                        }
+                                    }
+                                ) }}
+                            </div>
+                            <div class="trick-edit-title col-12 form-group">
+                                {{ form_errors(form.title) }}
+                                {{ form_row(
+                                    form.title,
+                                    {
+                                        'attr': {
+                                            'label': 'trick.edit.form.label.title'|trans(),
                                             'placeholder': 'trick.edit.form.placeholder.title'|trans(),
                                             'class': 'form-control-sm'
                                         }
@@ -60,11 +85,11 @@
                             </div>
                             <div class="trick-edit-title col-12 form-group">
                                 {{ form_errors(form.description) }}
-                                {{ form_widget(
+                                {{ form_row(
                                     form.description,
                                     {
-                                        'label': false,
                                         'attr': {
+                                            'label': 'trick.edit.form.label.description'|trans(),
                                             'placeholder': 'trick.edit.form.placeholder.description'|trans(),
                                             'class': 'form-control-sm'
                                         }
@@ -73,11 +98,11 @@
                             </div>
                             <div class="trick-edit-body col-12 form-group">
                                 {{ form_errors(form.body) }}
-                                {{ form_widget(
+                                {{ form_row(
                                     form.body,
                                     {
-                                        'label': false,
                                         'attr': {
+                                            'label': 'trick.edit.form.label.body'|trans(),
                                             'placeholder': 'trick.edit.form.placeholder.body'|trans(),
                                             'class': 'form-control-sm',
                                             'rows': '10',
@@ -88,11 +113,11 @@
                             </div>
                             <div class="trick-edit-group col-3 form-group">
                                 {{ form_errors(form.group) }}
-                                {{ form_widget(
+                                {{ form_row(
                                     form.group,
                                     {
-                                        'label': false,
                                         'attr': {
+                                            'label': 'trick.edit.form.label.group'|trans(),
                                             'placeholder': 'trick.edit.form.placeholder.group'|trans(),
                                             'class': 'form-control-sm'
                                         }
@@ -118,7 +143,7 @@
                                         form.submit,
                                         {
                                             'label': 'trick.edit.form.button.save'|trans(),
-                                            'attr': {'class': 'btn btn-sm', 'style': 'cursor:pointer'}
+                                            'attr': {'class': 'btn-sm', 'style': 'cursor:pointer'}
                                         }
                                     ) }}
                                 </div>

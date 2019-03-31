@@ -2,8 +2,9 @@
 
 namespace App\Entity;
 
-use Doctrine\ORM\Mapping as ORM;
+use App\Validator\Constraints as AppAssert;
 use Symfony\Component\Validator\Constraints as Assert;
+use Doctrine\ORM\Mapping as ORM;
 
 /**
  * The trick attachment...
@@ -13,7 +14,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  * @author  Clément Cazaud <opportus@gmail.com>
  * @license https://github.com/opportus/snowtricks/blob/master/LICENSE.md MIT
  *
- * @ORM\Entity(repositoryClass="App\Repository\TrickAttachmentRepository")
+ * @ORM\Entity(repositoryClass="App\Repository\TrickAttachmentRepository", readOnly=true)
  * @ORM\Table(name="trick_attachment")
  */
 class TrickAttachment extends Entity implements TrickAttachmentInterface
@@ -27,27 +28,7 @@ class TrickAttachment extends Entity implements TrickAttachmentInterface
      * @Assert\Length(max=255)
      * @Assert\Url()
      */
-    protected $src;
-
-    /**
-     * @var string $title
-     *
-     * @ORM\Column(name="title", type="string", length=255)
-     * @Assert\NotBlank()
-     * @Assert\Type(type="string")
-     * @Assert\Length(max=255)
-     */
-    protected $title;
-
-    /**
-     * @var string $alt
-     *
-     * @ORM\Column(name="alt", type="string", length=255)
-     * @Assert\NotBlank()
-     * @Assert\Type(type="string")
-     * @Assert\Length(max=255)
-     */
-    protected $alt;
+    private $src;
 
     /**
      * @var string $type
@@ -55,10 +36,9 @@ class TrickAttachment extends Entity implements TrickAttachmentInterface
      * @ORM\Column(name="type", type="string", length=20)
      * @Assert\NotBlank()
      * @Assert\Type(type="string")
-     * @Assert\Length(max=20)
-     * @Assert\Choice(choices={"image/png", "image/jpeg", "image/gif", "video/mp4", "video/embed"})
+     * @AppAssert\TrickAttachmentMimeType()
      */
-    protected $type;
+    private $type;
 
     /**
      * @var null|App\Entity\TrickVersionInterface $trickVersion
@@ -68,32 +48,25 @@ class TrickAttachment extends Entity implements TrickAttachmentInterface
      * @Assert\NotNull()
      * @Assert\Valid()
      */
-    protected $trickVersion;
+    private $trickVersion;
 
     /**
      * Constructs the attachment.
      *
      * @param string $src
-     * @param string $title
-     * @param string $alt
      * @param string $type
-     * @param App\Entity\TrickVersionInterface $version
+     * @param App\Entity\TrickVersionInterface $trickVersion
      */
     public function __construct(
-        string               $src,
-        string               $title,
-        string               $alt,
-        string               $type,
-        TrckVersionInterface $version
-    )
-    {
+        string                $src,
+        string                $type,
+        TrickVersionInterface $trickVersion
+    ) {
         $this->id           = $this->generateId();
         $this->createdAt    = new \DateTime();
         $this->src          = $src;
-        $this->title        = $title;
-        $this->alt          = $alt;
         $this->type         = $type;
-        $this->trickVersion = $version;
+        $this->trickVersion = $trickVersion;
     }
 
     /**
@@ -102,22 +75,6 @@ class TrickAttachment extends Entity implements TrickAttachmentInterface
     public function getSrc()
     {
         return $this->src;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getTitle()
-    {
-        return $this->title;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getAlt()
-    {
-        return $this->alt;
     }
 
     /**
@@ -135,20 +92,4 @@ class TrickAttachment extends Entity implements TrickAttachmentInterface
     {
         return $this->trickVersion;
     }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function toHtml() : string
-    {
-        if ($this->type === 'video/mp4' || $this->type === 'video/embed') {
-            $html = '<embed src="' . $this->src . '" title="' . $this->title . '"' . ($this->type === 'video/embed' ?  '' : ' type="' . $this->type . '"') . ' />';
-
-        } else {
-            $html = '<img src="' . $this->type . '" title="' . $this->title . '" alt="' . $this->alt . '" />';
-        }
-
-        return $html;
-    }
 }
-

@@ -12,6 +12,8 @@ class AjaxActionHandler
 
         if ($('.trick-show-comment-list')[0]) {
             mutationObserver.observe($('.trick-show-comment-list')[0], {childList: true, subtree: true});
+        } else if ($('.trick-edit')[0]) {
+            mutationObserver.observe($('.trick-edit')[0], {childList: true, subtree: true});
         }
 
         this.initialize();
@@ -196,22 +198,51 @@ class AjaxActionHandler
 
     deleteTrick(target)
     {
-        $.ajax({
-            url: target.data('url'),
-            data: {'trick_delete[_token]': target.data('token'), '_method': 'DELETE'},
-            method: 'POST',
-            dataType: 'json',
-            success: function(response, status) {
-                if (target.data('redirection')) {
-                    $(location).attr('href', target.data('redirection'))
-                    return;
-                }
+        $('#trick-delete-modal').modal();
+        $('#trick-delete-modal .btn-primary').on('click', function () {
+            $.ajax({
+                url: target.data('url'),
+                data: {'trick_delete[_token]': target.data('token'), '_method': 'DELETE'},
+                method: 'POST',
+                dataType: 'json',
+                success: function(response, status) {
+                    if (target.data('redirection')) {
+                        $(location).attr('href', target.data('redirection'))
+                        return;
+                    }
 
-                target.closest('.trick-list-item').hide('slow', function() {
-                    target.closest('.trick-list-item').remove();
-                });
-            }
+                    target.closest('.trick-list-item').hide('slow', function() {
+                        target.closest('.trick-list-item').remove();
+                    });
+
+                    $('#trick-delete-modal').modal('hide');
+                }
+            });
         });
+    }
+
+    editEmbedTrickAttachment(target)
+    {
+        var trickForm = trickFormRegistry.get(target.closest('.trick-edit-content').find('form').attr('id'));
+        trickForm.getEmbedTrickAttachmentFieldset();
+    }
+
+    editUploadTrickAttachment(target)
+    {
+        var trickForm = trickFormRegistry.get(target.closest('.trick-edit-content').find('form').attr('id'));
+        trickForm.getUploadTrickAttachmentFieldset();
+    }
+
+    addTrickAttachment(target)
+    {
+        var trickForm = trickFormRegistry.get(target.closest('.trick-edit-content').find('form').attr('id'));
+        trickForm.addTrickAttachment();
+    }
+
+    removeTrickAttachment(target)
+    {
+        var trickForm = trickFormRegistry.get(target.closest('.trick-edit-content').find('form').attr('id'));
+        trickForm.removeTrickAttachment(target.closest('.trick-attachment-list-item').attr('id'));
     }
 }
 

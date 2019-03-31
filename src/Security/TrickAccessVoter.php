@@ -38,11 +38,7 @@ class TrickAccessVoter extends EntityAccessVoter
      */
     protected function canPut(AuthorizableInterface $subject, TokenInterface $token) : bool
     {
-        if (!$token->getUser() instanceof UserInterface) {
-            return false;
-        }
-
-        return $subject->hasAuthor($token->getUser());
+        return $token->isAuthenticated();
     }
 
     /**

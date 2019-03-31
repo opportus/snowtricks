@@ -285,8 +285,8 @@ class Trick extends Entity implements TrickInterface
      */
     public function getFeaturedAttachment() : ?TrickAttachmentInterface
     {
-        foreach ($this->getVersion()->getAttachments() as $attachment) {
-            if ($attachment->getType()[0] === 'i') {
+        foreach ($this->getAttachments() as $attachment) {
+            if ($attachment->getType()[0] ==='i') {
                 return $attachment;
             }
         }

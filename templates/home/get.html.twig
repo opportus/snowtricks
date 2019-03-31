@@ -9,7 +9,7 @@
 {% block content %}
     {{ parent() }}
     <div class="home-show container-fluid"
-        style="background:url({{ asset('http://via.placeholder.com/1280x1024?text=+') }}); background-repeat:no-repeat; background-size:100% 100vh;min-height:100vh;">
+        style="background:url({{ asset('img/snowtrick.jpg') }}); background-repeat:no-repeat; background-size:100% 100vh;min-height:100vh;">
         <div class="home-show-jumbotron jumbotron jumbotron-fluid text-center" style="background-color:transparent;height:100vh;padding-top:45vh;">
             <div class="home-show-description align-middle lead">{{ block('description') }}</div>
             <i id="arrow-scroll-down" class="fas fa-arrow-down position-absolute" style="bottom:50px;cursor:pointer;font-size:30px;right:50px;"></i>

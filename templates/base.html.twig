@@ -31,9 +31,10 @@
             {% endblock fonts %}
             {% block stylesheets %}
                 <!-- Stylesheets ======================================================= -->
-                <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css" rel="stylesheet" />
+                <link href="{{ asset('css/style.css') }}" rel="stylesheet" />
+                <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet" />
                 <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" />
-                <link href="https://use.fontawesome.com/releases/v5.0.6/css/all.css" rel="stylesheet">
+                <link href="https://use.fontawesome.com/releases/v5.1.0/css/all.css" rel="stylesheet" />
             {% endblock stylesheets %}
         </head>
     {% endblock head %}
@@ -41,7 +42,7 @@
         <body>
             {% block navbar %}
                 <!-- Navbar ============================================================ -->
-                <nav class="navbar navbar-expand-md navbar-light bg-light">
+                <nav class="navbar navbar-expand-md navbar-dark" style="background-color:#2B2B2B;">
                     {% block logo %}
                         <!-- Logo ============================================================ -->
                         <a class="navbar-brand" href="{{ url('get_home') }}">
@@ -61,6 +62,11 @@
                                     </a>
                                 </li>
                                 {% if is_granted('IS_AUTHENTICATED_REMEMBERED') %}
+                                    <li class="nav-item">
+                                        <a class="nav-link" href="{{ url('get_trick_edit_empty_form') }}" title="{{ 'base.navbar.link.title.new_trick'|trans() }}">
+                                            {{ 'base.navbar.link.anchor.new_trick'|trans() }}
+                                        </a>
+                                    </li>
                                     <li class="nav-item">
                                         <a class="nav-link" href="{{ url('proceed_user_sign_out') }}" title="{{ 'base.navbar.link.title.sign_out'|trans() }}">
                                             {{ 'base.navbar.link.anchor.sign_out'|trans() }}
@@ -89,6 +95,10 @@
                     <!-- Notification ================================================== -->
                     {% include 'notification.html.twig' %}
                 {% endblock notification %}
+                {% block trickDeleteModal %}
+                    <!-- Trick delete modal ================================================== -->
+                    {% include 'trick/delete-modal.html.twig' %}
+                {% endblock trickDeleteModal %}
             {% endblock content %}
             {% block footer %}
                 <!-- Footer ============================================================ -->
@@ -102,8 +112,8 @@
             {% block javascripts %}
                 <!-- Javascripts ======================================================= -->
                 <script src="http://code.jquery.com/jquery-3.3.1.min.js"></script>
-                <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js"></script>
-                <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js"></script>
+                <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+                <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
                 <script src="{{ asset('js/ajax-action-handler.js') }}"></script>
                 <script src="{{ asset('js/trick-form.js') }}"></script>
                 <script src="{{ asset('js/trick-form-registry.js') }}"></script>
@@ -112,6 +122,7 @@
                 <script src="{{ asset('js/infinite-scroll.js') }}"></script>
                 <script src="{{ asset('js/infinite-scroll-registry.js') }}"></script>
                 <script src="{{ asset('js/arrow-scroll.js') }}"></script>
+                <script src="{{ asset('js/trick-attachment-carousel.js') }}"></script>
             {% endblock javascripts %}
         </body>
     {% endblock body %}
