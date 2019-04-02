@@ -17,19 +17,19 @@ use Symfony\Component\Validator\Constraints as Assert;
  *     entityClass="App\Entity\User",
  *     primaryKey="username",
  *     message="user.sign_up.form.message.username_conflict",
- *     groups={"sign_up_form"}
+ *     groups={"user.form.sign_up"}
  * )
  * @AppAssert\UniqueEntity(
  *     entityClass="App\Entity\User",
  *     primaryKey="email",
  *     message="user.sign_up.form.message.email_conflict",
- *     groups={"sign_up_form"}
+ *     groups={"user.form.sign_up"}
  * )
  * @AppAssert\PersistedEntity(
  *     entityClass="App\Entity\User",
  *     primaryKey="username",
  *     message="user.password_reset_request.form.message.username_not_found",
- *     groups={"password_reset_request_form"}
+ *     groups={"user.form.password_reset_request"}
  * )
  */
 class UserDto

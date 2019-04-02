@@ -24,8 +24,7 @@ class UniqueEntityValidator extends EntityValidator
             throw new UnexpectedTypeException();
         }
 
-        $getter = 'get' . $constraint->primaryKey;
-        $value  = $data->$getter();
+        $value = $data->{$constraint->primaryKey};
 
         if ($this->entityManager->getRepository($constraint->entityClass)->findOneBy(array($constraint->primaryKey => $value))) {
             $this->context->buildViolation($constraint->message)

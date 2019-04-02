@@ -185,7 +185,7 @@ abstract class Controller
                 400,
                 array(
                     'form'   => $form->createView(),
-                    'entity' => $entity,
+                    'entity' => $form->getData(),
                 )
             );
         }

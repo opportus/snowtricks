@@ -4,6 +4,7 @@ namespace App\EventSubscriber;
 
 use App\Entity\User;
 use App\Mailer\MailerInterface;
+use App\HttpKernel\ControllerResult;
 use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\HttpKernel\Event\GetResponseForControllerResultEvent;
 use Symfony\Component\Form\FormEvents;
@@ -102,10 +103,12 @@ class UserManagerSubscriber implements EventSubscriberInterface
 
         $this->entityManager->flush();
 
-        $event->getControllerResult()->setStatusCode(204);
-        $event->getControllerResult()->setData(
-            array(
-                'entity' => $user,
+        $event->setControllerResult(
+            new ControllerResult(
+                204,
+                array(
+                    'entity' => $user,
+                )
             )
         );
 

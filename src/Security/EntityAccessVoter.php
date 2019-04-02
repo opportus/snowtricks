@@ -28,7 +28,7 @@ abstract class EntityAccessVoter extends Voter
     /**
      * @var Symfony\Component\HttpFoundation\RequestStack $requestStack
      */
-    private $requestStack;
+    protected $requestStack;
 
     /**
      * Constructs the user acces voter.

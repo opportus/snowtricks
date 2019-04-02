@@ -20,12 +20,11 @@ class PersistedEntityValidator extends EntityValidator
      */
     public function validate($data, Constraint $constraint)
     {
-        if (! $constraint instanceof PersistedEntity) {
+        if (!$constraint instanceof PersistedEntity) {
             throw new UnexpectedTypeException();
         }
 
-        $getter = 'get' . $constraint->primaryKey;
-        $value  = $data->$getter();
+        $value = $data->{$constraint->primaryKey};
 
         if ($this->entityManager->getRepository($constraint->entityClass)->findOneBy(array($constraint->primaryKey => $value))) {
             return;
@@ -39,4 +38,3 @@ class PersistedEntityValidator extends EntityValidator
         ;
     }
 }
-

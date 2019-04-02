@@ -119,7 +119,7 @@ class Fixtures extends Fixture
     {
         $user = new User(
             'Clément',
-            'opportus@gmail.com',
+            'clem@clem.com',
             'azerty',
             true
         );
