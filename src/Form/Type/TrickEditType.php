@@ -65,39 +65,51 @@ class TrickEditType extends AbstractType
         $builder
             ->add(
                 'title',
-                TextType::class
+                TextType::class,
+                array(
+                    'translation_domain' => false,
+                )
             )
             ->add(
                 'description',
-                TextType::class
+                TextType::class,
+                array(
+                    'translation_domain' => false,
+                )
             )
             ->add(
                 'body',
-                TextareaType::class
+                TextareaType::class,
+                array(
+                    'translation_domain' => false,
+                )
             )
             ->add(
                 'group',
                 EntityType::class,
                 array(
-                    'class'             => TrickGroup::class,
-                    'choice_label'      => 'title',
-                    'choice_name'       => 'id',
-                    'preferred_choices' => $preferredChoices,
+                    'class'              => TrickGroup::class,
+                    'choice_label'       => 'title',
+                    'choice_name'        => 'id',
+                    'preferred_choices'  => $preferredChoices,
+                    'translation_domain' => false,
                 )
             )
             ->add(
                 'attachments',
                 CollectionType::class,
                 array(
-                    'allow_add'     => true,
-                    'allow_delete'  => true,
-                    'by_reference'  => false,
-                    'required'      => false,
-                    'delete_empty'  => true,
-                    'entry_type'    => TrickAttachmentEditType::class,
+                    'allow_add'          => true,
+                    'allow_delete'       => true,
+                    'by_reference'       => false,
+                    'required'           => false,
+                    'delete_empty'       => true,
+                    'entry_type'         => TrickAttachmentEditType::class,
+                    'translation_domain' => false,
                     'entry_options' => array(
-                        'label' => false,
-                        'data_class' => TrickAttachmentDto::class,
+                        'label'              => false,
+                        'data_class'         => TrickAttachmentDto::class,
+                        'translation_domain' => false,
                     )
                 )
             )
