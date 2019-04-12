@@ -125,9 +125,9 @@ class TrickForm
                 '<div class="embed-responsive embed-responsive-16by9 z-depth-1">'+
                     attachmentTemplate+
                 '</div>'+
-                '<ul class="trick-attachment-list-action-list list-inline position-absolute bg-light p-2 border border-secondary" style="right:30px;top:10px;">'+
+                '<ul class="trick-attachment-list-action-list list-inline position-absolute p-2" style="right:30px;top:10px;">'+
                     '<li class="list-inline-item">'+
-                        '<i class="trick-attachment-list-action-list-remove-item fas fa-trash-alt ajax-action" data-action="removeTrickAttachment"'+
+                        '<i class="trick-attachment-list-action-list-remove-item fas fa-trash-alt ajax-action" data-action="removeTrickAttachment" style="background:rgba(0,0,0,0.5);border-radius:100px;color:#ffffff;padding:15px;cursor:pointer;"'+
                             'style="cursor:pointer;">'+
                         '</i>'+
                     '</li>'+

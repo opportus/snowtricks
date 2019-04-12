@@ -294,6 +294,14 @@
                 <source>trick.delete_modal.button.ok</source>
                 <target>Ok</target>
             </trans-unit>
+            <trans-unit id="trick.edit.form.button.add_embedded_attachment">
+                <source>trick.edit.form.button.add_embedded_attachment</source>
+                <target>Add an embedded attachment</target>
+            </trans-unit>
+            <trans-unit id="trick.edit.form.button.add_uploaded_attachment">
+                <source>trick.edit.form.button.add_uploaded_attachment</source>
+                <target>Add an uploaded attachment</target>
+            </trans-unit>
 
             <trans-unit id="trick_attachment.edit.form.title">
                 <source>trick_attachment.edit.form.title</source>

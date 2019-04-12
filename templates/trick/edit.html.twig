@@ -26,13 +26,14 @@
                             <div style="position:relative;top:40%;">
                                 <h1 class="trick-edit-title">{{ title }}</h1>
                             </div>
-                            <ul class="trick-edit-attachment-action-list list-inline position-absolute bg-light p-1 rounded border border-secondary" style="right:30px;bottom:0;">
+                            <ul class="trick-edit-attachment-action-list list-inline position-absolute p-1" style="right:30px;bottom:0;">
                                 <li class="list-inline-item">
                                     <i class="trick-edit-attachment-action-list-edit-embed-item fas fa-paste trick-edit-attachment-modal-button ajax-action"
                                         data-action="editEmbedTrickAttachment"
                                         data-toggle="modal"
                                         data-target="#trick-attachment-modal"
-                                        style="cursor:pointer;">
+                                        title="{{ 'trick.edit.form.button.add_embedded_attachment'|trans }}"
+                                        style="background:rgba(0,0,0,0.5);border-radius:100px;color:#ffffff;padding:15px;cursor:pointer;">
                                     </i>
                                 </li>
                                 <li class="list-inline-item">
@@ -40,7 +41,8 @@
                                         data-action="editUploadTrickAttachment"
                                         data-toggle="modal"
                                         data-target="#trick-attachment-modal"
-                                        style="cursor:pointer;">
+                                        title="{{ 'trick.edit.form.button.add_uploaded_attachment'|trans }}"
+                                        style="background:rgba(0,0,0,0.5);border-radius:100px;color:#ffffff;padding:15px;cursor:pointer;">
                                     </i>
                                 </li>
                             </ul>
