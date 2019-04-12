@@ -5,6 +5,7 @@ namespace App\Entity\Dto;
 use App\Security\AuthorableInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Validator\Constraints as Assert;
+use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * The trick data...
@@ -99,6 +100,10 @@ class TrickDto implements AuthorableInterface
      */
     public function addAttachment(TrickAttachmentDto $attachment)
     {
+        if ($this->attachments === null) {
+            $this->attachments = new ArrayCollection();
+        }
+
         $this->attachments->add($attachment);
     }
 
