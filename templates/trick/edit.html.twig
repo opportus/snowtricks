@@ -127,7 +127,7 @@
                             <div class="col-12 text-right">
                                 {% if entity != null %}
                                     <div class="trick-edit-delete d-inline">
-                                        <button
+                                        <div
                                             class="btn btn-sm btn-danger ajax-action"
                                             style="cursor:pointer;"
                                             data-redirection="{{ url('get_home') }}"
@@ -135,7 +135,7 @@
                                             data-url="{{ url('delete_trick_by_delete_form', app.request.attributes.get('_route_params')) }}"
                                             data-token="{{ csrf_token('security') }}">
                                                 {{ 'trick.edit.form.button.delete'|trans() }}
-                                        </button>
+                                        </div>
                                     </div>
                                 {% endif %}
                                 <div class="trick-edit-submit d-inline">
