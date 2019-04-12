@@ -40,7 +40,7 @@
                         <div class="trick-show-header-overlay" style="background:rgba(255,255,255,0.5);z-index:10;position:absolute;top:0;bottom:0;left:0;right:0;padding:30px;">
                             <div style="position:relative;top:40%;">
                                 <h1 class="trick-show-title">{{ block('title') }}</h1>
-                                <div class="trick-show-description">{{ entity.description }}</div>
+                                <div class="trick-show-description">{{ entity.description|nl2br }}</div>
                             </div>
                         </div>
                     </header>
@@ -50,7 +50,7 @@
                 {% endif %}
                 <div class="row mt-4">
                     <div class="trick-show-body col">
-                        {{ entity.body }}
+                        {{ entity.body|nl2br }}
                     </div>
                 </div>
                 <div class="row mt-4">
