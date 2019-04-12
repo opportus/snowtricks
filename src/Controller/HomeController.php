@@ -5,8 +5,7 @@ namespace App\Controller;
 use App\HttpKernel\ControllerResult;
 use App\HttpKernel\ControllerResultInterface;
 use Symfony\Component\HttpFoundation\Request;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
+use Symfony\Component\Routing\Annotation\Route;
 
 /**
  * The home controller...
@@ -24,8 +23,7 @@ class HomeController extends Controller
      * @param  Symfony\Component\HttpFoundation\Request $request
      * @return App\HttpKernel\ControllerResultInterface
      *
-     * @Route("/", name="get_home")
-     * @Method("GET")
+     * @Route("/", name="get_home", methods={"GET"})
      */
     public function getHome(Request $request) : ControllerResultInterface
     {

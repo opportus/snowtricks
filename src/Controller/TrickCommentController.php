@@ -4,8 +4,7 @@ namespace App\Controller;
 
 use App\HttpKernel\ControllerResultInterface;
 use Symfony\Component\HttpFoundation\Request;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
+use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 
 /**
@@ -24,8 +23,7 @@ class TrickCommentController extends Controller
      * @param  Symfony\Component\HttpFoundation\Request $request
      * @return App\HttpKernel\ControllerResultInterface
      *
-     * @Route("/trick-comment/edit/{id}", name="get_trick_comment_edit_form")
-     * @Method("GET")
+     * @Route("/trick-comment/edit/{id}", name="get_trick_comment_edit_form", methods={"GET"})
      */
     public function getTrickCommentEditForm(Request $request) : ControllerResultInterface
     {
@@ -38,8 +36,7 @@ class TrickCommentController extends Controller
      * @param  Symfony\Component\HttpFoundation\Request $request
      * @return App\HttpKernel\ControllerResultInterface
      *
-     * @Route("/trick-comment/edit", name="get_trick_comment_empty_edit_form")
-     * @Method("GET")
+     * @Route("/trick-comment/edit", name="get_trick_comment_empty_edit_form", methods={"GET"})
      */
     public function getTrickCommentEmptyEditForm(Request $request) : ControllerResultInterface
     {
@@ -52,8 +49,7 @@ class TrickCommentController extends Controller
      * @param  Symfony\Component\HttpFoundation\Request $request
      * @return App\HttpKernel\ControllerResultInterface
      *
-     * @Route("/trick-comment", name="get_trick_comment_collection")
-     * @Method("GET")
+     * @Route("/trick-comment", name="get_trick_comment_collection", methods={"GET"})
      */
     public function getTrickCommentCollection(Request $request) : ControllerResultInterface
     {
@@ -66,8 +62,7 @@ class TrickCommentController extends Controller
      * @param  Symfony\Component\HttpFoundation\Request $request
      * @return App\HttpKernel\ControllerResultInterface
      *
-     * @Route("/trick-comment/{id}", name="get_trick_comment")
-     * @Method("GET")
+     * @Route("/trick-comment/{id}", name="get_trick_comment", methods={"GET"})
      */
     public function getTrickComment(Request $request) : ControllerResultInterface
     {
@@ -80,8 +75,7 @@ class TrickCommentController extends Controller
      * @param  Symfony\Component\HttpFoundation\Request $request
      * @return App\HttpKernel\ControllerResultInterface
      *
-     * @Route("/trick-comment/edit", name="post_trick_comment_by_edit_form")
-     * @Method("POST")
+     * @Route("/trick-comment/edit", name="post_trick_comment_by_edit_form", methods={"POST"})
      * @Security("has_role('ROLE_USER')")
      */
     public function postTrickCommentByEditForm(Request $request) : ControllerResultInterface
@@ -95,8 +89,7 @@ class TrickCommentController extends Controller
      * @param  Symfony\Component\HttpFoundation\Request $request
      * @return App\HttpKernel\ControllerResultInterface
      *
-     * @Route("/trick-comment/edit/{id}", name="put_trick_comment_by_edit_form")
-     * @Method("PUT")
+     * @Route("/trick-comment/edit/{id}", name="put_trick_comment_by_edit_form", methods={"PUT"})
      * @Security("has_role('ROLE_USER')")
      */
     public function putTrickCommentByEditForm(Request $request) : ControllerResultInterface
@@ -110,8 +103,7 @@ class TrickCommentController extends Controller
      * @param  Symfony\Component\HttpFoundation\Request $request
      * @return App\HttpKernel\ControllerResultInterface
      *
-     * @Route("/trick-comment/delete/{id}", name="delete_trick_comment_by_delete_form")
-     * @Method("DELETE")
+     * @Route("/trick-comment/delete/{id}", name="delete_trick_comment_by_delete_form", methods={"DELETE"})
      * @Security("has_role('ROLE_USER')")
      */
     public function deleteTrickCommentByDeleteForm(Request $request) : ControllerResultInterface

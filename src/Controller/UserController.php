@@ -6,8 +6,7 @@ use App\HttpKernel\ControllerResult;
 use App\HttpKernel\ControllerResultInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
+use Symfony\Component\Routing\Annotation\Route;
 
 /**
  * The user controller...
@@ -25,8 +24,7 @@ class UserController extends Controller
      * @param  Symfony\Component\HttpFoundation\Request $request
      * @return App\HttpKernel\ControllerResultInterface
      *
-     * @Route("/user/sign-up", name="get_user_sign_up_empty_form")
-     * @Method("GET")
+     * @Route("/user/sign-up", name="get_user_sign_up_empty_form", methods={"GET"})
      */
     public function getUserSignUpEmptyForm(Request $request) : ControllerResultInterface
     {
@@ -39,8 +37,7 @@ class UserController extends Controller
      * @param  Symfony\Component\HttpFoundation\Request $request
      * @return App\HttpKernel\ControllerResultInterface
      *
-     * @Route("/user/sign-up", name="post_user_by_sign_up_form")
-     * @Method("POST")
+     * @Route("/user/sign-up", name="post_user_by_sign_up_form", methods={"POST"})
      */
     public function postUserBySignUpForm(Request $request) : ControllerResultInterface
     {
@@ -53,8 +50,7 @@ class UserController extends Controller
      * @param  Symfony\Component\HttpFoundation\Request $request
      * @return App\HttpKernel\ControllerResultInterface
      *
-     * @Route("/user/activation/{id}", name="patch_user_by_activation_email_form")
-     * @Method("PATCH")
+     * @Route("/user/activation/{id}", name="patch_user_by_activation_email_form", methods={"PATCH"})
      */
     public function patchUserByActivationEmailForm(Request $request) : ControllerResultInterface
     {
@@ -67,8 +63,7 @@ class UserController extends Controller
      * @param  Symfony\Component\HttpFoundation\Request $request
      * @return App\HttpKernel\ControllerResultInterface
      *
-     * @Route("/user/password-reset-request", name="get_user_password_reset_request_empty_form")
-     * @Method("GET")
+     * @Route("/user/password-reset-request", name="get_user_password_reset_request_empty_form", methods={"GET"})
      */
     public function getUserPasswordResetRequestEmptyForm(Request $request) : ControllerResultInterface
     {
@@ -81,8 +76,7 @@ class UserController extends Controller
      * @param  Symfony\Component\HttpFoundation\Request $request
      * @return App\HttpKernel\ControllerResultInterface
      *
-     * @Route("/user/password-reset-request", name="proceed_by_user_password_reset_request_form")
-     * @Method("POST")
+     * @Route("/user/password-reset-request", name="proceed_by_user_password_reset_request_form", methods={"POST"})
      */
     public function proceedByUserPasswordResetRequestForm(Request $request) : ControllerResultInterface
     {
@@ -95,8 +89,7 @@ class UserController extends Controller
      * @param  Symfony\Component\HttpFoundation\Request $request
      * @return App\HttpKernel\ControllerResultInterface
      *
-     * @Route("/user/password-reset/{id}", name="get_user_password_reset_empty_form")
-     * @Method("GET")
+     * @Route("/user/password-reset/{id}", name="get_user_password_reset_empty_form", methods={"GET"})
      */
     public function getUserPasswordResetEmptyForm(Request $request) : ControllerResultInterface
     {
@@ -109,8 +102,7 @@ class UserController extends Controller
      * @param  Symfony\Component\HttpFoundation\Request $request
      * @return App\HttpKernel\ControllerResultInterface
      *
-     * @Route("/user/password-reset/{id}", name="patch_user_by_password_reset_form")
-     * @method("PATCH")
+     * @Route("/user/password-reset/{id}", name="patch_user_by_password_reset_form", methods={"PATCH"})
      */
     public function patchUserByPasswordResetForm(Request $request) : ControllerResultInterface
     {
