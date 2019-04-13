@@ -132,7 +132,7 @@ class TrickComment extends Entity implements TrickCommentInterface
     /**
      * {@inheritdoc}
      */
-    public function getAuthor() : UserInterface
+    public function getAuthor() : User
     {
         return $this->author;
     }
@@ -140,7 +140,7 @@ class TrickComment extends Entity implements TrickCommentInterface
     /**
      * {@inheritdoc}
      */
-    public function hasAuthor(UserInterface $author) : bool
+    public function hasAuthor(User $author) : bool
     {
         return $author->getUsername() === $this->author->getUsername();
     }

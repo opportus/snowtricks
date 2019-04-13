@@ -6,7 +6,7 @@ use App\Validator\Constraints as AppAssert;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
- * The user dto...
+ * The user dto.
  *
  * @version 0.0.1
  * @package App\Entity\Dto

@@ -2,12 +2,12 @@
 
 namespace App\EventListener;
 
-use App\Security\AuthorableInterface;
+use App\Entity\Dto\AuthorableInterface;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 /**
- * The authorizer listener...
+ * The authorizer listener.
  *
  * @version 0.0.1
  * @package App\EventListener

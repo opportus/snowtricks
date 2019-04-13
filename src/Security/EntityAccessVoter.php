@@ -2,15 +2,14 @@
 
 namespace App\Security;
 
+use App\Entity\Entity;
 use App\Security\AuthorizableInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\Voter;
 
-use App\Entity\TrickCommentInterface;
-
 /**
- * The entity access voter...
+ * The entity access voter.
  *
  * @version 0.0.1
  * @package App\Security
@@ -31,7 +30,7 @@ abstract class EntityAccessVoter extends Voter
     protected $requestStack;
 
     /**
-     * Constructs the user acces voter.
+     * Constructs the entity acces voter.
      *
      * @param Symfony\Component\HttpFoundation\RequestStack $requestStack
      */
@@ -49,7 +48,7 @@ abstract class EntityAccessVoter extends Voter
             return false;
         }
 
-        if (!$subject instanceof AuthorizableInterface) {
+        if (!$subject instanceof Entity) {
             return false;
         }
 
@@ -82,53 +81,53 @@ abstract class EntityAccessVoter extends Voter
     /**
      * Checks whether the user can get the subject.
      *
-     * @param  App\Security\AuthorizableInterface $subject
+     * @param  App\Entity\Entity $subject
      * @param  Symfony\Component\Security\Core\Authentication\Token\TokenInterface $token
      * @return bool
      */
-    abstract protected function canGet(AuthorizableInterface $subject, TokenInterface $token) : bool;
+    abstract protected function canGet(Entity $subject, TokenInterface $token) : bool;
 
     /**
      * Checks whether the user can post the subject.
      *
-     * @param  App\Security\AuthorizableInterface $subject
+     * @param  App\Entity\Entity $subject
      * @param  Symfony\Component\Security\Core\Authentication\Token\TokenInterface $token
      * @return bool
      */
-    abstract protected function canPost(AuthorizableInterface $subject, TokenInterface $token) : bool;
+    abstract protected function canPost(Entity $subject, TokenInterface $token) : bool;
 
     /**
      * Checks whether the user can put the subject.
      *
-     * @param  App\Security\AuthorizableInterface $subject
+     * @param  App\Entity\Entity $subject
      * @param  Symfony\Component\Security\Core\Authentication\Token\TokenInterface $token
      * @return bool
      */
-    abstract protected function canPut(AuthorizableInterface $subject, TokenInterface $token) : bool;
+    abstract protected function canPut(Entity $subject, TokenInterface $token) : bool;
 
     /**
      * Checks whether the user can patch the subject.
      *
-     * @param  App\Security\AuthorizableInterface $subject
+     * @param  App\Entity\Entity $subject
      * @param  Symfony\Component\Security\Core\Authentication\Token\TokenInterface $token
      * @return bool
      */
-    abstract protected function canPatch(AuthorizableInterface $subject, TokenInterface $token) : bool;
+    abstract protected function canPatch(Entity $subject, TokenInterface $token) : bool;
 
     /**
      * Checks whether the user can delete the subject.
      *
-     * @param  App\Security\AuthorizableInterface $subject
+     * @param  App\Entity\Entity $subject
      * @param  Symfony\Component\Security\Core\Authentication\Token\TokenInterface $token
      * @return bool
      */
-    abstract protected function canDelete(AuthorizableInterface $subject, TokenInterface $token) : bool;
+    abstract protected function canDelete(Entity $subject, TokenInterface $token) : bool;
 
     /**
      * Checks whether this voter supports the subject.
      *
-     * @param  App\Security\AuthorizableInterface $subject
+     * @param  App\Entity\Entity $subject
      * @return bool
      */
-    abstract protected function supportsSubject(AuthorizableInterface $subject) : bool;
+    abstract protected function supportsSubject(Entity $subject) : bool;
 }

@@ -2,12 +2,11 @@
 
 namespace App\Entity\Dto;
 
-use App\Security\AuthorableInterface;
-use Symfony\Component\Security\Core\User\UserInterface;
+use App\Entity\User;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
- * The trick comment dto...
+ * The trick comment dto.
  *
  * @version 0.0.1
  * @package App\Entity\Dto
@@ -26,7 +25,7 @@ class TrickCommentDto implements AuthorableInterface
     public $body;
 
     /**
-     * @var null|App\Entity\UserInterface $author
+     * @var null|App\Entity\User $author
      *
      * @Assert\NotNull()
      * @Assert\Valid()
@@ -58,10 +57,8 @@ class TrickCommentDto implements AuthorableInterface
     /**
      * {@inheritdoc}
      */
-    public function setAuthor(UserInterface $author) : AuthorableInterface
+    public function setAuthor(User $author)
     {
         $this->author = $author;
-
-        return $this;
     }
 }

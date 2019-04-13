@@ -2,15 +2,15 @@
 
 namespace App\Security;
 
-use App\Entity\UserInterface;
+use App\Entity\User;
 use App\Repository\UserRepositoryInterface;
-use Symfony\Component\Security\Core\User\UserInterface as SecurityUserInterface;
+use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
 use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
 
 /**
- * The user provider...
+ * The user provider.
  *
  * @version 0.0.1
  * @package App\Security
@@ -53,13 +53,13 @@ class UserProvider implements UserProviderInterface
     /**
      * {@inheritdoc}
      */
-    public function refreshUser(SecurityUserInterface $user)
+    public function refreshUser(UserInterface $user)
     {
         if ($this->supportsClass(get_class($user)) === false) {
             throw new UnsupportedUserException(
                 sprintf(
                     'Expected an instance of %s',
-                    UserInterface::class
+                    User::class
                 )
             );
         }
@@ -72,6 +72,6 @@ class UserProvider implements UserProviderInterface
      */
     public function supportsClass($class)
     {
-        return is_subclass_of($class, UserInterface::class);
+        return User::class === $class;
     }
 }

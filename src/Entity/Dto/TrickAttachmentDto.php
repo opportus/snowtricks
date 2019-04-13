@@ -6,7 +6,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 use App\Validator\Constraints as AppAssert;
 
 /**
- * The trick attachment dto...
+ * The trick attachment dto.
  *
  * @version 0.0.1
  * @package App\Entity\Dto

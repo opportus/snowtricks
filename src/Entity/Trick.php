@@ -315,7 +315,7 @@ class Trick extends Entity implements TrickInterface
     /**
      * {@inheritdoc}
      */
-    public function getAuthor() : UserInterface
+    public function getAuthor() : User
     {
         return $this->getVersion()->getAuthor();
     }
@@ -323,7 +323,7 @@ class Trick extends Entity implements TrickInterface
     /**
      * {@inheritdoc}
      */
-    public function hasAuthor(UserInterface $user) : bool
+    public function hasAuthor(User $user) : bool
     {
         foreach ($this->getAuthors() as $author) {
             if ($author->getId() === $user->getId()) {

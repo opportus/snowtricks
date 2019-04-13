@@ -2,19 +2,18 @@
 
 namespace App\Entity;
 
-use App\Security\AuthorizableInterface;
 use Symfony\Component\Security\Core\User\AdvancedUserInterface;
 use Doctrine\Common\Collections\Collection;
 
 /**
- * The user interface...
+ * The user interface.
  *
  * @version 0.0.1
  * @package App\Entity
  * @author  Clément Cazaud <opportus@gmail.com>
  * @license https://github.com/opportus/snowtricks/blob/master/LICENSE.md MIT
  */
-interface UserInterface extends EntityInterface, AuthorizableInterface, AdvancedUserInterface, \Serializable
+interface UserInterface extends EntityInterface, AdvancedUserInterface, \Serializable
 {
     /**
      * Updates the user.

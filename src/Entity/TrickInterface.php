@@ -2,18 +2,17 @@
 
 namespace App\Entity;
 
-use App\Security\AuthorizableInterface;
 use Doctrine\Common\Collections\Collection;
 
 /**
- * The trick interface...
+ * The trick interface.
  *
  * @version 0.0.1
  * @package App\Entity
  * @author  Clément Cazaud <opportus@gmail.com>
  * @license https://github.com/opportus/snowtricks/blob/master/LICENSE.md MIT
  */
-interface TrickInterface extends EntityInterface, AuthorizableInterface
+interface TrickInterface extends EntityInterface
 {
     /**
      * Updates the trick.
@@ -150,16 +149,15 @@ interface TrickInterface extends EntityInterface, AuthorizableInterface
     /**
      * Gets the author.
      *
-     * @return App\Entity\UserInterface
+     * @return App\Entity\User
      */
-    public function getAuthor() : UserInterface;
+    public function getAuthor() : User;
 
     /**
      * Checks whether the given user is an author.
      *
-     * @param  App\Entity\UserInterface $user
+     * @param  App\Entity\User $user
      * @return bool
      */
-    public function hasAuthor(UserInterface $user) : bool;
+    public function hasAuthor(User $user) : bool;
 }
-
