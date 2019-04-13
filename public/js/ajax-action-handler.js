@@ -199,7 +199,7 @@ class AjaxActionHandler
     deleteTrick(target)
     {
         $('#trick-delete-modal').modal();
-        $('#trick-delete-modal .btn-primary').on('click', function () {
+        $('#trick-delete-modal .btn-danger').on('click', function () {
             $.ajax({
                 url: target.data('url'),
                 data: {'trick_delete[_token]': target.data('token'), '_method': 'DELETE'},

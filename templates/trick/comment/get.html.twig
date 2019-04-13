@@ -2,7 +2,7 @@
     data-url="{{ url('get_trick_comment', {'id': entity.id}) }}">
     <div class="row">
         <div class="trick-comment-list-item-gravatar col-2">
-            <img class="rounded-circle" src="{{ entity.author.gravatar }}" style="width:35px;"></img>
+            <img class="rounded-circle" src="{{ entity.author.gravatar }}"></img>
         </div>
         <div class="col-10">
             <div class="row mb-3">
@@ -41,7 +41,6 @@
                 {% endif %}
                 <li class="trick-comment-list-item-action-edit-reply list-inline-item float-left" style="{{ editReplyActionStyle }}">
                     <i class="fas fa-reply ajax-action"
-                        style="cursor:pointer;"
                         title="{{ 'trick_comment.list.item.action.reply.title'|trans() }}"
                         data-action="editTrickCommentReply"
                         data-url="{{ url('get_trick_comment_empty_edit_form') }}?attribute[thread]={{ entity.thread.id }}&attribute[parent]={{ entity.hasParent ? entity.parent.id : entity.id }}">
@@ -49,7 +48,6 @@
                 </li>
                 <li class="trick-comment-list-item-action-edit list-inline-item float-left" style="{{ editActionStyle }}">
                     <i class="fas fa-pencil-alt ajax-action"
-                        style="cursor:pointer;"
                         title="{{ 'trick_comment.list.item.action.edit.title'|trans() }}"
                         data-action="editTrickComment"
                         data-url="{{ url('get_trick_comment_edit_form', {'id': entity.id}) }}">
@@ -57,7 +55,6 @@
                 </li>
                 <li class="trick-comment-list-item-action-delete list-inline-item float-left" style="{{ deleteActionStyle }}">
                     <i class="fas fa-trash ajax-action"
-                        style="cursor:pointer;"
                         title="{{ 'trick_comment.list.item.action.delete.title'|trans() }}"
                         data-action="deleteTrickComment"
                         data-url="{{ url('delete_trick_comment_by_delete_form', {'id': entity.id}) }}"
@@ -66,7 +63,6 @@
                 </li>
                 <li class="trick-comment-list-item-action-list-children list-inline-item float-right" style="{{ listChildrenActionStyle }}">
                     <i class="fas fa-ellipsis-h ajax-action"
-                        style="cursor:pointer;"
                         title="{{ 'trick_comment.list.item.action.list_children.title'|trans() }}"
                         data-action="listTrickCommentChildren">
                     </i>

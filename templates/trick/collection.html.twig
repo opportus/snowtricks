@@ -1,7 +1,7 @@
 {% for trick in entities %}
     <li id="{{ trick.id }}" class="trick-list-item col-lg-3 col-md-4 col-sm-6 mt-2">
         <article>
-            <div class="embed-responsive embed-responsive-16by9 z-depth-1 mb-2" style="">
+            <div class="embed-responsive embed-responsive-16by9 z-depth-1 mb-2">
                 {% if trick.featuredAttachment is not null %}
                     <img class="trick-list-item-featured-attachment embed-responsive-item img-fluid mb-2 w-100"
                         src="{{ trick.featuredAttachment.src }}">
@@ -12,8 +12,8 @@
                     </img>
                 {% endif %}
             </div>
-            <h2 class="trick-list-item-title d-inline-block" style="font-size:15px;">
-                <a href="{{ url('get_trick', {'slug': trick.slug}) }}" style="color:#333;">
+            <h2 class="trick-list-item-title d-inline-block">
+                <a href="{{ url('get_trick', {'slug': trick.slug}) }}">
                     {{ trick.title }}
                 </a>
             </h2>
@@ -21,15 +21,12 @@
                 <ul class="trick-list-item-action-list list-inline float-right">
                     <li class="list-inline-item">
                         <a href="{{ url('get_trick_edit_form', {'slug': trick.slug}) }}">
-                            <i class="trick-list-item-action-list-item-edit fas fa-pencil-alt"
-                                style="color:initial">
-                            </i>
+                            <i class="trick-list-item-action-list-item-edit fas fa-pencil-alt"></i>
                         </a>
                     </li>
                     {% if is_granted('DELETE', trick) %}
                         <li class="list-inline-item">
                             <i class="trick-list-item-action-list-item-delete fas fa-trash ajax-action"
-                                style="cursor:pointer;"
                                 data-action="deleteTrick"
                                 data-token="{{ csrf_token('security') }}"
                                 data-url="{{ url('delete_trick_by_delete_form', {'slug': trick.slug}) }}">

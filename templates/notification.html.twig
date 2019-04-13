@@ -6,7 +6,7 @@
             {% set label = 'danger' %}
         {% endif %}
         {% for message in messages %}
-            <div class="alert alert-{{ label }}" role="alert" style="margin-bottom:0">
+            <div class="notification alert alert-{{ label }}" role="alert">
                 {{ message }}
             </div>
         {% endfor %}

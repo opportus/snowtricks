@@ -13,40 +13,39 @@
     <div class="trick-edit container-fluid"
         style="background:url({{ asset('img/snowtrick.jpg') }});background-repeat:no-repeat;background-size:100% 100vh;min-height:100vh;">
         <div class="row">
-            <div class="trick-edit-content col-md-8 offset-md-2 mt-5 bg-white rounded border border-secondary" style="overflow:hidden;">
+            <div class="trick-edit-content col-md-8 offset-md-2 bg-white">
                 <div class="row">
                     {% if entity is not null and entity.featuredAttachment is not null %}
                         {% set src = entity.featuredAttachment.src %}
                     {% else %}
                         {% set src = 'img/snowtrick.jpg' %}
                     {% endif %}
-                    <header class="trick-edit-header col text-center justify-content-center"
-                        style="background:url({{ asset(src) }});height:50vh;padding-top:20vh;">
-                        <div class="trick-show-header-overlay" style="background:rgba(255,255,255,0.5);z-index:10;position:absolute;top:0;bottom:0;left:0;right:0;padding:30px;">
-                            <div style="position:relative;top:40%;">
-                                <h1 class="trick-edit-title">{{ title }}</h1>
-                            </div>
-                            <ul class="trick-edit-attachment-action-list list-inline position-absolute p-1" style="right:30px;bottom:0;">
-                                <li class="list-inline-item">
-                                    <i class="trick-edit-attachment-action-list-edit-embed-item fas fa-paste trick-edit-attachment-modal-button ajax-action"
-                                        data-action="editEmbedTrickAttachment"
-                                        data-toggle="modal"
-                                        data-target="#trick-attachment-modal"
-                                        title="{{ 'trick.edit.form.button.add_embedded_attachment'|trans }}"
-                                        style="background:rgba(0,0,0,0.5);border-radius:100px;color:#ffffff;padding:15px;cursor:pointer;">
-                                    </i>
-                                </li>
-                                <li class="list-inline-item">
-                                    <i class="trick-edit-attachment-action-list-edit-file-item fas fa-file-upload trick-edit-attachment-modal-button ajax-action"
-                                        data-action="editUploadTrickAttachment"
-                                        data-toggle="modal"
-                                        data-target="#trick-attachment-modal"
-                                        title="{{ 'trick.edit.form.button.add_uploaded_attachment'|trans }}"
-                                        style="background:rgba(0,0,0,0.5);border-radius:100px;color:#ffffff;padding:15px;cursor:pointer;">
-                                    </i>
-                                </li>
-                            </ul>
+                    <header class="trick-edit-header col text-center justify-content-center p-0">
+                        <div class="trick-edit-header-overlay"></div>
+                        <div class="embed-responsive embed-responsive-16by9 z-depth-1">
+                            <img class="trick-edit-header-featured-attachment embed-responsive-item w-100"
+                                src="{{ asset(src) }}">
+                            </img>
                         </div>
+                        <h1 class="trick-edit-title">{{ title }}</h1>
+                        <ul class="trick-edit-attachment-action-list list-inline position-absolute p-1">
+                            <li class="list-inline-item">
+                                <i class="trick-edit-attachment-action-list-edit-embed-item fas fa-paste trick-edit-attachment-modal-button ajax-action"
+                                    data-action="editEmbedTrickAttachment"
+                                    data-toggle="modal"
+                                    data-target="#trick-attachment-modal"
+                                    title="{{ 'trick.edit.form.button.add_embedded_attachment'|trans }}">
+                                </i>
+                            </li>
+                            <li class="list-inline-item">
+                                <i class="trick-edit-attachment-action-list-edit-file-item fas fa-file-upload trick-edit-attachment-modal-button ajax-action"
+                                    data-action="editUploadTrickAttachment"
+                                    data-toggle="modal"
+                                    data-target="#trick-attachment-modal"
+                                    title="{{ 'trick.edit.form.button.add_uploaded_attachment'|trans }}">
+                                </i>
+                            </li>
+                        </ul>
                     </header>
                 </div>
                 <div class="row py-3">
@@ -66,7 +65,6 @@
                                     {
                                         'label': false,
                                         'attr': {
-                                            'style': 'overflow:hidden;width:100%;',
                                             'class': 'd-none'
                                         }
                                     }
@@ -107,13 +105,12 @@
                                             'label': 'trick.edit.form.label.body'|trans,
                                             'placeholder': 'trick.edit.form.placeholder.body'|trans,
                                             'class': 'form-control-sm',
-                                            'rows': '10',
-                                            'style': 'overflow:hidden;width:100%;'
+                                            'rows': '10'
                                         }
                                     }
                                 ) }}
                             </div>
-                            <div class="trick-edit-group col-3 form-group">
+                            <div class="trick-edit-group col-sm-12 col-lg-3 form-group">
                                 {{ form_errors(form.group) }}
                                 {{ form_row(
                                     form.group,
@@ -131,7 +128,6 @@
                                     <div class="trick-edit-delete d-inline">
                                         <div
                                             class="btn btn-sm btn-danger ajax-action"
-                                            style="cursor:pointer;"
                                             data-redirection="{{ url('get_home') }}"
                                             data-action="deleteTrick"
                                             data-url="{{ url('delete_trick_by_delete_form', app.request.attributes.get('_route_params')) }}"
@@ -145,7 +141,7 @@
                                         form.submit,
                                         {
                                             'label': 'trick.edit.form.button.save',
-                                            'attr': {'class': 'btn-sm btn-primary', 'style': 'cursor:pointer'}
+                                            'attr': {'class': 'btn-sm btn-primary'}
                                         }
                                     ) }}
                                 </div>

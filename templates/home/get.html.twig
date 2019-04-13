@@ -1,18 +1,13 @@
 {% extends 'base.html.twig' %}
 {% block title %}{{ 'home.show.title'|trans() }}{% endblock title %}
 {% block description %}{{ 'home.show.description'|trans() }}{% endblock description %}
-{% block logo %}
-    <h1 style="margin:inherit; text-transform:inherit; font-family:inherit; font-weight:inherit; font-size:inherit; letter-spacing:inherit; line-height:inherit;">
-        {{ parent() }}
-    </h1>
-{% endblock logo %}
 {% block content %}
     {{ parent() }}
     <div class="home-show container-fluid"
-        style="background:url({{ asset('img/snowtrick.jpg') }}); background-repeat:no-repeat; background-size:100% 100vh;min-height:100vh;">
-        <div class="home-show-jumbotron jumbotron jumbotron-fluid text-center" style="background-color:transparent;height:100vh;padding-top:45vh;">
+        style="background:url({{ asset('img/snowtrick.jpg') }});">
+        <div class="home-show-jumbotron jumbotron jumbotron-fluid text-center">
             <div class="home-show-description align-middle lead">{{ block('description') }}</div>
-            <i id="arrow-scroll-down" class="fas fa-arrow-down position-absolute" style="bottom:50px;cursor:pointer;font-size:30px;right:50px;"></i>
+            <i id="arrow-scroll-down" class="arrow-scroll fas fa-arrow-down position-absolute"></i>
         </div>
         <ul id="infinite-scroll-{{ random() }}"
             class="home-show-trick-list row list-unstyled infinite-scroll"

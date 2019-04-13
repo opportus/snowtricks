@@ -238,6 +238,14 @@
                 <source>trick.show.author.label</source>
                 <target>Contributor</target>
             </trans-unit>
+            <trans-unit id="trick.show.updated_at.label">
+                <source>trick.show.updated_at.label</source>
+                <target>Updated At</target>
+            </trans-unit>
+            <trans-unit id="trick.show.created_at.label">
+                <source>trick.show.created_at.label</source>
+                <target>Created At</target>
+            </trans-unit>
             <trans-unit id="trick.edit.form.label.title">
                 <source>trick.edit.form.label.title</source>
                 <target>Title</target>
@@ -292,7 +300,7 @@
             </trans-unit>
             <trans-unit id="trick.delete_modal.button.ok">
                 <source>trick.delete_modal.button.ok</source>
-                <target>Ok</target>
+                <target>Delete</target>
             </trans-unit>
             <trans-unit id="trick.edit.form.button.add_embedded_attachment">
                 <source>trick.edit.form.button.add_embedded_attachment</source>
@@ -414,6 +422,11 @@
             <trans-unit id="base.navbar.link.title.sign_out">
                 <source>base.navbar.link.title.sign_out</source>
                 <target>Sign Out</target>
+            </trans-unit>
+
+            <trans-unit id="trick_attachment_collection.button.show">
+                <source>trick_attachment_collection.button.show</source>
+                <target>See Medias</target>
             </trans-unit>
 
         </body>

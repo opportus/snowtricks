@@ -1,4 +1,226 @@
+/* Base */
+.logo {
+    margin: inherit;
+    text-transform: inherit;
+    font-family: inherit;
+    font-weight: inherit;
+    font-size: inherit;
+    letter-spacing: inherit;
+    line-height: inherit;
+}
+
+/* Scroller */
+
+.arrow-scroll {
+    bottom: 50px;
+    cursor: pointer;
+    right: 50px;
+    font-size: 30px;
+    background: rgba(0,0,0,0.5);
+    border-radius: 100px;
+    color: #ffffff;
+    padding: 15px;
+    cursor: pointer;
+}
+
+#arrow-scroll-up {
+    display: none;
+    bottom: 50px;
+    right: 50px;
+}
+
+/* Notification */
+.notification {
+    margin-bottom: 0;
+}
+
+/* Home */
+.home-show {
+    background-repeat: no-repeat !important;
+    background-size: 100% 100vh !important;
+    min-height: 100vh !important;
+}
+
+.home-show-jumbotron {
+    background-color: transparent !important;
+    height: 100vh;
+    padding-top: 45vh !important;
+}
+
+/* Trick Collection */
+.trick-list-item-title {
+    font-size: 15px;
+}
+
+.trick-list-item-title a,
+.trick-list-item-title a:hover {
+    color: #333;
+}
+
+.trick-list-item-action-list i {
+    color: initial;
+    cursor: pointer;
+}
+
+.trick-edit-delete, .trick-edit-submit {
+    cursor: pointer;
+}
+
+.trick-edit-body textarea {
+    overflow: hidden;
+    width: 100%;
+}
+
+/* Trick Edit */
 @media (min-width: 768px) {
+    .trick-edit-content {
+        border: 1px solid #999999;
+        border-radius: 3px;
+        margin-top: 60px;
+    }
+}
+
+.trick-edit-header-overlay {
+    background:rgba(255,255,255,0.5);
+    z-index: 10;
+    position: absolute;
+    left: 0px;
+    right: 0px;
+    top: 0px;
+    bottom: 0px;
+}
+
+.trick-edit-attachment-action-list {
+    bottom: 15px;
+    right: 30px;
+    z-index: 1000;
+}
+
+.trick-edit-attachment-action-list li i {
+    background: rgba(0,0,0,0.5);
+    border-radius: 100px;
+    color: #ffffff;
+    padding: 15px;
+    cursor: pointer;
+} 
+
+.trick-edit-title {
+    position: absolute;
+    left: 0px;
+    right: 0px;
+    top: 50%;
+    z-index: 20;
+}
+
+/* Trick Show */
+@media (min-width: 768px) {
+    .trick-show-content {
+        border: 1px solid #999999;
+        border-radius: 3px;
+        margin-top: 60px;
+    }
+}
+
+.trick-show-header-overlay {
+    background:rgba(255,255,255,0.5);
+    z-index: 10;
+    position: absolute;
+    left: 0px;
+    right: 0px;
+    top: 0px;
+    bottom: 0px;
+}
+
+.trick-show-action-list {
+    right: 30px;
+    top: 30px;
+    z-index: 1000;
+}
+
+.trick-show-action-list li i {
+    background: rgba(0,0,0,0.5);
+    border-radius: 100px;
+    color: #ffffff;
+    padding: 15px;
+    cursor: pointer;
+} 
+
+.trick-show-title {
+    position: absolute;
+    left: 0px;
+    right: 0px;
+    top: 50%;
+    z-index: 20;
+}
+
+.trick-show-comment-edit {
+    border-bottom: 1px solid #999999;
+    border-top: 1px solid #999999;
+}
+
+/* Trick Comment Edit */
+.trick-comment-edit-body textarea {
+    overflow: hidden;
+    width: 100%;
+}
+
+/* Trick Comment List */
+.trick-comment-list-item-action i {
+    cursor: pointer;
+}
+
+.trick-comment-list-item-gravatar img {
+    width: 35px;
+}
+
+/* Trick Attachment Collection */
+@media (max-width:767px) {
+    #trick-attachment-carousel {
+        display: none;
+    }
+}
+
+.trick-attachment-carousel-control {
+    opacity: 1!important;
+    width: 75px !important;
+    height: 20%;
+    top: 40% !important;
+    bottom: 40% !important;
+}
+
+.trick-attachment-carousel-control.carousel-control-prev {
+    left: 15px;
+}
+
+.trick-attachment-carousel-control.carousel-control-next {
+    right: 15px;
+}
+
+.trick-attachment-carousel-control i {
+    color: #ffffff;
+    background: rgba(0,0,0,0.5);
+    border-radius: 100px;
+    padding: 15px;
+}
+
+.trick-attachment-list-action-list {
+    right: 30px;
+    top: 10px;
+}
+
+.trick-attachment-list-action-list i {
+    background: rgba(0,0,0,0.5);
+    border-radius: 100px;
+    color: #ffffff;
+    padding: 15px;
+    cursor: pointer;
+}
+
+@media (min-width: 768px) {
+    .trick-attachment-carousel-toggler {
+        display: none !important;
+    }
+
        /* show 3 items */
     .carousel-inner .active,
     .carousel-inner .active + .carousel-item,
@@ -58,4 +280,24 @@
         display: block;
         visibility: visible;
     }
+}
+
+/* Sign In */
+.sign-in {
+    min-height: 100vh;
+}
+
+/* Sign Up */
+.sign-up {
+    min-height: 100vh;
+}
+
+/* Password Reset Request */
+.password-reset-request {
+    min-height: 100vh;
+}
+
+/* Password Reset */
+.password-reset {
+    min-height: 100vh;
 }
