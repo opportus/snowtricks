@@ -7,7 +7,7 @@ use Doctrine\Common\EventSubscriber;
 use Doctrine\Common\Persistence\Event\LifecycleEventArgs;
 
 /**
- * The entity validator subscriber...
+ * The entity validator subscriber.
  *
  * @version 0.0.1
  * @package App\EventSubscriber
@@ -51,7 +51,7 @@ class EntityValidatorSubscriber implements EventSubscriber
      */
     public function prePersist(LifecycleEventArgs $args)
     {
-        $this->validator->validateWithExceptionAndLog($args->getEntity());
+        $this->validator->validateWithException($args->getEntity());
     }
 
     /**
@@ -62,7 +62,7 @@ class EntityValidatorSubscriber implements EventSubscriber
      */
     public function preUpdate(LifecycleEventArgs $args)
     {
-        $this->validator->validateWithExceptionAndLog($args->getEntity());
+        $this->validator->validateWithException($args->getEntity());
     }
 
     /**
@@ -73,6 +73,6 @@ class EntityValidatorSubscriber implements EventSubscriber
      */
     public function preDelete(LifecycleEventArgs $args)
     {
-        $this->validator->validateWithExceptionAndLog($args->getEntity());
+        $this->validator->validateWithException($args->getEntity());
     }
 }

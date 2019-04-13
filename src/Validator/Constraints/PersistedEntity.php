@@ -16,4 +16,3 @@ namespace App\Validator\Constraints;
 class PersistedEntity extends Entity
 {
 }
-

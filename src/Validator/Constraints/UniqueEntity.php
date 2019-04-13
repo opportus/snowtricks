@@ -16,4 +16,3 @@ namespace App\Validator\Constraints;
 class UniqueEntity extends Entity
 {
 }
-

@@ -10,17 +10,17 @@ use Symfony\Component\Validator\Constraints\Choice as ChoiceConstraint;
 use Symfony\Component\Validator\Constraints\Type as TypeConstraint;
 
 /**
- * The trick list query constraint...
+ * The trick collection query parameters constraint.
  *
  * @version 0.0.1
  * @package App\Validator\Constraints
  * @author  Clément Cazaud <opportus@gmail.com>
  * @license https://github.com/opportus/snowtricks/blob/master/LICENSE.md MIT
  */
-class TrickListQuery extends CollectionConstraint
+class TrickCollectionQueryParameters extends CollectionConstraint
 {
     /**
-     * Constructs the trick list query constraint.
+     * Constructs the trick collection query parameters constraint.
      */
     public function __construct()
     {

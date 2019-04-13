@@ -13,7 +13,7 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Doctrine\ORM\EntityManagerInterface;
 
 /**
- * The user manager subscriber...
+ * The user manager subscriber.
  *
  * @version 0.0.1
  * @package App\EventSubscriber

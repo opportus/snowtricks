@@ -11,17 +11,17 @@ use Symfony\Component\Validator\Constraints\Uuid as UuidConstraint;
 use Symfony\Component\Validator\Constraints\Type as TypeConstraint;
 
 /**
- * The trick comment list query constraint...
+ * The trick comment empty edit form query parameters constraint.
  *
  * @version 0.0.1
  * @package App\Validator\Constraints
  * @author  Clément Cazaud <opportus@gmail.com>
  * @license https://github.com/opportus/snowtricks/blob/master/LICENSE.md MIT
  */
-class TrickCommentListQuery extends CollectionConstraint
+class TrickCommentEmptyEditFormQueryParameters extends CollectionConstraint
 {
     /**
-     * Constructs the trick comment list query constraint.
+     * Constructs the trick comment empty edit form query parameters constraint.
      */
     public function __construct()
     {
@@ -45,7 +45,7 @@ class TrickCommentListQuery extends CollectionConstraint
     {
         return array(
             'fields'=> array(
-                'attribute' => new OptionalConstraint(array(
+                'attribute' => new RequiredConstraint(array(
                     new CollectionConstraint(array(
                         'fields' => array(
                             'thread' => new RequiredConstraint(array(
@@ -56,27 +56,6 @@ class TrickCommentListQuery extends CollectionConstraint
                                 new UuidConstraint(),
                             )),
                         ),
-                    )),
-                )),
-                'order' => new OptionalConstraint(array(
-                    new CollectionConstraint(array(
-                        'fields' => array(
-                            'createdAt' => new OptionalConstraint(array(
-                                new NotBlankConstraint(),
-                                new ChoiceConstraint(array(
-                                    'choices' => array(
-                                        'ASC',
-                                        'DESC',
-                                    )
-                                )),
-                            )),
-                        ),
-                    )),
-                )),
-                'page' => new OptionalConstraint(array(
-                    new NotBlankConstraint(),
-                    new TypeConstraint(array(
-                        'type' => 'digit'
                     )),
                 )),
             ),

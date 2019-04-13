@@ -484,15 +484,13 @@ services:
     App\Validator\ValidatorInterface: '@App\Validator\Validator'
     App\Validator\Validator:
         arguments:
-            $parameters: []
             $validator: '@Symfony\Component\Validator\Validator\ValidatorInterface'
-            $logger: '@logger'
 
     # Event listener...
     App\EventListener\ExceptionHandlerListener:
         tags:
             - { name: kernel.event_listener, event: kernel.exception }
-    App\EventListener\RequestValidatorListener:
+    App\EventListener\QueryParametersValidatorListener:
         tags:
             - { name: kernel.event_listener, event: kernel.request }
     App\EventListener\ResponseFactoryListener:
