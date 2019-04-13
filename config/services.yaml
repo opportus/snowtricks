@@ -467,18 +467,6 @@ services:
 
     # Mailer...
     App\Mailer\MailerInterface: '@App\Mailer\Mailer'
-    App\Mailer\Mailer:
-        arguments:
-            $parameters:
-                send_user_sign_up_email:
-                    from: snowtricks@example.com
-                    template: user/sign_up_email.html.twig
-                send_user_activation_email:
-                    from: snowtricks@example.com
-                    template: user/activation_email.html.twig
-                send_user_password_reset_email:
-                    from: snowtricks@example.com
-                    template: user/password_reset_email.html.twig
 
     # Validator...
     App\Validator\ValidatorInterface: '@App\Validator\Validator'

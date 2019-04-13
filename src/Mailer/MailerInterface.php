@@ -2,10 +2,10 @@
 
 namespace App\Mailer;
 
-use App\Entity\UserInterface;
+use App\Entity\User;
 
 /**
- * The mailer interface...
+ * The mailer interface.
  *
  * @version 0.0.1
  * @package App\Mailer
@@ -17,31 +17,22 @@ interface MailerInterface
     /**
      * Sends an user sign up email.
      *
-     * @param  App\Entity\UserInterface $user
-     * @return App\Mailer\MailerInterface
-     * @throws App\Exception\EntityNotValidException
-     * @throws \Swift_Exception
+     * @param App\Entity\User $user
      */
-    public function sendUserSignUpEmail(UserInterface $user) : MailerInterface;
+    public function sendUserSignUpEmail(User $user);
 
     /**
      * Sends an user activation email.
      *
-     * @param  App\Entity\UserInterface $user
-     * @return App\Mailer\MailerInterface
-     * @throws App\Exception\EntityNotValidException
-     * @throws \Swift_Exception
+     * @param App\Entity\User $user
      */
-    public function sendUserActivationEmail(UserInterface $user) : MailerInterface;
+    public function sendUserActivationEmail(User $user);
 
     /**
      * Sends an user password reset email.
      *
-     * @param  App\Entity\UserInterface $user
-     * @return App\Mailer\MailerInterface
-     * @throws App\Exception\EntityNotValidException
-     * @throws \Swift_Exception
+     * @param App\Entity\User $user
      */
-    public function sendUserPasswordResetEmail(UserInterface $user) : MailerInterface;
+    public function sendUserPasswordResetEmail(User $user);
 }
 

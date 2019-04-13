@@ -4,11 +4,10 @@ namespace App\EventSubscriber;
 
 use App\Entity\User;
 use App\Mailer\MailerInterface;
+use App\Controller\UserController;
 use App\HttpKernel\ControllerResult;
 use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\HttpKernel\Event\GetResponseForControllerResultEvent;
-use Symfony\Component\Form\FormEvents;
-use Symfony\Component\Form\FormEvent;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Doctrine\ORM\EntityManagerInterface;
 
@@ -60,12 +59,11 @@ class UserManagerSubscriber implements EventSubscriberInterface
     /**
      * Proceeds user sign up.
      *
-     * @param  Symfony\Component\HttpKernel\Event\GetResponseForControllerResultEvent $event
-     * @throws \Swift_Exception
+     * @param Symfony\Component\HttpKernel\Event\GetResponseForControllerResultEvent $event
      */
     public function proceedUserSignUp(GetResponseForControllerResultEvent $event)
     {
-        if ($event->getRequest()->attributes->get('_controller') !== 'App\Controller\UserController::postUserBySignUpForm' ||
+        if ($event->getRequest()->attributes->get('_controller') !== UserController::class.'::postUserBySignUpForm' ||
             $event->getControllerResult()->getStatusCode() !== 201
         ) {
             return;
@@ -85,12 +83,11 @@ class UserManagerSubscriber implements EventSubscriberInterface
     /**
      * Proceeds user password reset.
      *
-     * @param  Symfony\Component\HttpKernel\Event\GetResponseForControllerResultEvent $event
-     * @throws \Swift_Exception
+     * @param Symfony\Component\HttpKernel\Event\GetResponseForControllerResultEvent $event
      */
     public function proceedUserPasswordReset(GetResponseForControllerResultEvent $event)
     {
-        if ($event->getRequest()->attributes->get('_controller') !== 'App\Controller\UserController::proceedByUserPasswordResetRequestForm' ||
+        if ($event->getRequest()->attributes->get('_controller') !== UserController::class.'::proceedByUserPasswordResetRequestForm' ||
             $event->getControllerResult()->getStatusCode() !== 202
         ) {
             return;
