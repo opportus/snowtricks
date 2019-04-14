@@ -9,7 +9,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
- * The trick...
+ * The trick.
  *
  * @version 0.0.1
  * @package App\Entity
@@ -19,10 +19,10 @@ use Symfony\Component\Validator\Constraints as Assert;
  * @ORM\Entity(repositoryClass="App\Repository\TrickRepository")
  * @ORM\Table(name="trick")
  */
-class Trick extends Entity implements TrickInterface
+class Trick extends Entity
 {
     /**
-     * @var null|\DateTimeInterface $updatedAt
+     * @var null|\DateTime $updatedAt
      *
      * @ORM\Column(name="updated_at", type="datetime", nullable=true)
      * @Assert\Type(type="object")
@@ -50,10 +50,11 @@ class Trick extends Entity implements TrickInterface
     private $comments;
 
     /**
-     * @var null|App\Entity\TrickGroupInterface $group
+     * @var null|App\Entity\TrickGroup $group
      *
      * @ORM\ManyToOne(targetEntity="App\Entity\TrickGroup", inversedBy="tricks", cascade={"persist"})
-     * @ORM\JoinColumn(name="group_id", referencedColumnName="id")
+     * @ORM\JoinColumn(name="group_id", referencedColumnName="id", nullable=false)
+     * @Assert\NotNull()
      * @Assert\Valid()
      */
     private $group;
@@ -63,12 +64,13 @@ class Trick extends Entity implements TrickInterface
      *
      * @ORM\OneToMany(targetEntity="App\Entity\TrickVersion", mappedBy="trick", cascade={"all"})
      * @ORM\OrderBy({"createdAt" = "DESC"})
+     * @Assert\NotNull()
      * @Assert\Valid()
      */
     private $versions;
 
     /**
-     * @var App\Entity\TrickVersionInterface $version
+     * @var App\Entity\TrickVersion $version
      */
     private $version;
 
@@ -78,21 +80,21 @@ class Trick extends Entity implements TrickInterface
      * @param string $title
      * @param string $description
      * @param string $body
-     * @param App\Entity\UserInterface $author
-     * @param null|App\Entity\TrickGroupInterface $group
+     * @param App\Entity\User $author
+     * @param null|App\Entity\TrickGroup $group
      * @param null|Doctrine\Common\Collections\Collection $attachments
      * @param null|Doctrine\Common\Collections\Collection $comments
      * @param null|Doctrine\Common\Collections\Collection $versions
      */
     public function __construct(
-        string               $title,
-        string               $description,
-        string               $body,
-        UserInterface        $author,
-        ?TrickGroupInterface $group       = null,
-        ?Collection          $attachments = null,
-        ?Collection          $comments    = null,
-        ?Collection          $versions    = null
+        string      $title,
+        string      $description,
+        string      $body,
+        User        $author,
+        ?TrickGroup $group       = null,
+        ?Collection $attachments = null,
+        ?Collection $comments    = null,
+        ?Collection $versions    = null
     ) {
         $this->id        = $this->generateId();
         $this->createdAt = new \DateTime();
@@ -117,18 +119,27 @@ class Trick extends Entity implements TrickInterface
     }
 
     /**
-     * {@inheritdoc}
+     * Updates the trick.
+     *
+     * @param  string $title
+     * @param  string $description
+     * @param  string $body
+     * @param  App\Entity\User $author
+     * @param  null|App\Entity\TrickGroup $group
+     * @param  null|Doctrine\Common\Collections\Collection $attachments
+     * @param  null|Doctrine\Common\Collections\Collection $comments
+     * @param  null|Doctrine\Common\Collections\Collection $versions
      */
     public function update(
-        string               $title,
-        string               $description,
-        string               $body,
-        UserInterface        $author,
-        ?TrickGroupInterface $group       = null,
-        ?Collection          $attachments = null,
-        ?Collection          $comments    = null,
-        ?Collection          $versions    = null
-    ) : TrickInterface {
+        string      $title,
+        string      $description,
+        string      $body,
+        User        $author,
+        ?TrickGroup $group       = null,
+        ?Collection $attachments = null,
+        ?Collection $comments    = null,
+        ?Collection $versions    = null
+    ) {
         $version = new TrickVersion(
             $title,
             $description,
@@ -142,20 +153,22 @@ class Trick extends Entity implements TrickInterface
         );
 
         $this->setVersion($version);
-
-        return $this;
     }
 
     /**
-     * {@inheritdoc}
+     * Gets the update datetime.
+     *
+     * @return null|\DateTime
      */
-    public function getUpdatedAt() : ?\DateTimeInterface
+    public function getUpdatedAt() : ?\DateTime
     {
         return $this->updatedAt;
     }
 
     /**
-     * {@inheritdoc}
+     * Gets the slug.
+     *
+     * @return string
      */
     public function getSlug() : string
     {
@@ -163,7 +176,9 @@ class Trick extends Entity implements TrickInterface
     }
 
     /**
-     * {@inheritdoc}
+     * Gets the versions.
+     *
+     * @return Doctrine\Common\Collections\Collection
      */
     public function getVersions() : Collection
     {
@@ -171,9 +186,11 @@ class Trick extends Entity implements TrickInterface
     }
 
     /**
-     * {@inheritdoc}
+     * Gets the version.
+     *
+     * @return App\Entity\TrickVersion
      */
-    public function getVersion() : TrickVersionInterface
+    public function getVersion() : TrickVersion
     {
         if ($this->version !== null && $this->version->isEnabled()) {
             return $this->version;
@@ -187,9 +204,11 @@ class Trick extends Entity implements TrickInterface
     }
 
     /**
-     * {@inheritdoc}
+     * Sets the version.
+     *
+     * @param App\Entity\TrickVersion $version
      */
-    public function setVersion(TrickVersionInterface $version) : TrickInterface
+    public function setVersion(TrickVersion $version)
     {
         if ($this->getVersion()->getId() !== $version->getId()) {
             $this->getVersion()->disable();
@@ -204,24 +223,24 @@ class Trick extends Entity implements TrickInterface
         $this->version = $version;
         $this->group   = $version->getGroup();
         $this->slug    = preg_replace('/[\s]+/', '-', strtolower(trim($version->getTitle())));
-
-        return $this;
     }
 
     /**
-     * {@inheritdoc}
+     * Adds a version.
+     *
+     * @param App\Entity\TrickVersion $version
      */
-    public function addVersion(TrickVersionInterface $version) : TrickInterface
+    public function addVersion(TrickVersion $version)
     {
         if ($this->versions->contains($version) === false) {
             $this->versions->add($version);
         }
-
-        return $this;
     }
 
     /**
-     * {@inheritdoc}
+     * Gets the comments.
+     *
+     * @return Doctrine\Common\Collections\Collection
      */
     public function getComments() : Collection
     {
@@ -229,27 +248,31 @@ class Trick extends Entity implements TrickInterface
     }
 
     /**
-     * {@inheritdoc}
+     * Adds a comment.
+     *
+     * @param  App\Entity\TrickComment $comment
      */
-    public function addComment(TrickCommentInterface $comment) : TrickInterface
+    public function addComment(TrickComment $comment)
     {
         if ($this->comments->contains($comment) === false) {
             $this->comments->add($comment);
         }
-
-        return $this;
     }
 
     /**
-     * {@inheritdoc}
+     * Gets the group.
+     *
+     * @return null|App\Entity\TrickGroup
      */
-    public function getGroup() : ?TrickGroupInterface
+    public function getGroup() : ?TrickGroup
     {
         return $this->group;
     }
 
     /**
-     * {@inheritdoc}
+     * Gets the title.
+     *
+     * @return string
      */
     public function getTitle() : string
     {
@@ -257,7 +280,9 @@ class Trick extends Entity implements TrickInterface
     }
 
     /**
-     * {@inheritdoc}
+     * Gets the description.
+     *
+     * @return string
      */
     public function getDescription() : string
     {
@@ -265,7 +290,9 @@ class Trick extends Entity implements TrickInterface
     }
 
     /**
-     * {@inheritdoc}
+     * Gets the body.
+     *
+     * @return string
      */
     public function getBody() : string
     {
@@ -273,7 +300,9 @@ class Trick extends Entity implements TrickInterface
     }
 
     /**
-     * {@inheritdoc}
+     * Gets the attachments.
+     *
+     * @return Doctrine\Common\Collections\Collection
      */
     public function getAttachments() : Collection
     {
@@ -281,9 +310,11 @@ class Trick extends Entity implements TrickInterface
     }
 
     /**
-     * {@inheritdoc}
+     * Gets the featured attachment.
+     *
+     * @return null|App\Entity\TrickAttachment
      */
-    public function getFeaturedAttachment() : ?TrickAttachmentInterface
+    public function getFeaturedAttachment() : ?TrickAttachment
     {
         foreach ($this->getAttachments() as $attachment) {
             if ($attachment->getType()[0] ==='i') {
@@ -295,7 +326,9 @@ class Trick extends Entity implements TrickInterface
     }
 
     /**
-     * {@inheritdoc}
+     * Gets the authors.
+     *
+     * @return array
      */
     public function getAuthors() : array
     {
@@ -313,7 +346,9 @@ class Trick extends Entity implements TrickInterface
     }
 
     /**
-     * {@inheritdoc}
+     * Gets the author.
+     *
+     * @return App\Entity\User
      */
     public function getAuthor() : User
     {
@@ -321,7 +356,10 @@ class Trick extends Entity implements TrickInterface
     }
 
     /**
-     * {@inheritdoc}
+     * Checks whether the given user is an author.
+     *
+     * @param  App\Entity\User $user
+     * @return bool
      */
     public function hasAuthor(User $user) : bool
     {

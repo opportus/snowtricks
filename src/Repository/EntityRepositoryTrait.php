@@ -2,10 +2,10 @@
 
 namespace App\Repository;
 
-use App\Entity\EntityInterface;
+use App\Entity\Entity;
 
 /**
- * The entity repository trait...
+ * The entity repository trait.
  *
  * @version 0.0.1
  * @package App\Repository
@@ -18,9 +18,9 @@ trait EntityRepositoryTrait
      * Finds one entity by ID.
      *
      * @param  string $id
-     * @return null|App\Entity\EntityInterface
+     * @return null|App\Entity\Entity
      */
-    public function findOneById(string $id) : ?EntityInterface
+    public function findOneById(string $id) : ?Entity
     {
         return $this->findOneBy(
             array(
@@ -29,4 +29,3 @@ trait EntityRepositoryTrait
         );
     }
 }
-

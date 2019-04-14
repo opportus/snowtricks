@@ -7,9 +7,10 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Security\Core\User\AdvancedUserInterface;
 
 /**
- * The user...
+ * The user.
  *
  * @version 0.0.1
  * @package App\Entity
@@ -19,7 +20,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  * @ORM\Entity(repositoryClass="App\Repository\UserRepository")
  * @ORM\Table(name="user")
  */
-class User extends Entity implements UserInterface
+class User extends Entity implements AdvancedUserInterface, \Serializable
 {
     /**
      * @var string $username
@@ -115,7 +116,13 @@ class User extends Entity implements UserInterface
     }
 
     /**
-     * {@inheritdoc}
+     * Updates the user.
+     *
+     * @param null|string $username
+     * @param null|string $email
+     * @param null|string $plainPassword
+     * @param null|bool $activation
+     * @param null|array $roles
      */
     public function update(
         ?string $username      = null,
@@ -123,7 +130,7 @@ class User extends Entity implements UserInterface
         ?string $plainPassword = null,
         ?bool   $activation    = null,
         ?array  $roles         = null
-    ) : UserInterface
+    )
     {
         $this->username      = $username ?? $username;
         $this->email         = $email ?? $email;
@@ -134,8 +141,6 @@ class User extends Entity implements UserInterface
         if ($this->plainPassword !== null) {
             $this->password = \password_hash($this->plainPassword, PASSWORD_BCRYPT);
         }
-
-        return $this;
     }
 
     /**
@@ -147,7 +152,9 @@ class User extends Entity implements UserInterface
     }
 
     /**
-     * {@inheritdoc}
+     * Gets the email.
+     *
+     * @return string
      */
     public function getEmail() : string
     {
@@ -155,7 +162,9 @@ class User extends Entity implements UserInterface
     }
 
     /**
-     * {@inheritdoc}
+     * Gets the plain password.
+     *
+     * @return null|string
      */
     public function getPlainPassword() : ?string
     {
@@ -171,7 +180,9 @@ class User extends Entity implements UserInterface
     }
 
     /**
-     * {@inheritdoc}
+     * Gets the activation.
+     *
+     * @return bool
      */
     public function getActivation() : bool
     {
@@ -187,34 +198,37 @@ class User extends Entity implements UserInterface
     }
 
     /**
-     * {@inheritdoc}
+     * Adds a role.
+     *
+     * @param string $role
      */
-    public function addRole(string $role) : UserInterface
+    public function addRole(string $role)
     {
         $role = strtoupper($role);
 
         if (! in_array($role, $this->roles)) {
             $this->roles[] = $role;
         }
-
-        return $this;
     }
 
     /**
-     * {@inheritdoc}
+     * Removes a role.
+     *
+     * @param string $role
      */
-    public function removeRole(string $role) : UserInterface
+    public function removeRole(string $role)
     {
         if (false !== $key = array_search(strtoupper($role), $this->roles)) {
             unset($this->roles[$key]);
             $this->roles = array_values($this->roles);
         }
-
-        return $this;
     }
 
     /**
-     * {@inheritdoc}
+     * Checks whether or not the user has this role.
+     *
+     * @param string $role
+     * @return bool
      */
     public function hasRole(string $role) : bool
     {
@@ -222,17 +236,21 @@ class User extends Entity implements UserInterface
     }
 
     /**
-     * {@inheritdoc}
+     * Gets the activation token.
+     *
+     * @return null|App\Entity\UserToken
      */
-    public function getActivationToken() : ?UserTokenInterface
+    public function getActivationToken() : ?UserToken
     {
         return $this->getToken('activation');
     }
 
     /**
-     * {@inheritdoc}
+     * Gets the password reset token.
+     *
+     * @return null|App\Entity\UserToken
      */
-    public function getPasswordResetToken() : ?UserTokenInterface
+    public function getPasswordResetToken() : ?UserToken
     {
         return $this->getToken('password_reset');
     }
@@ -240,9 +258,9 @@ class User extends Entity implements UserInterface
     /**
      * Gets the token.
      *
-     * @return null|App\Entity\UserTokenInterface
+     * @return null|App\Entity\UserToken
      */
-    protected function getToken($type) : ?UserTokenInterface
+    protected function getToken($type) : ?UserToken
     {
         $criteria = new Criteria();
 
@@ -257,9 +275,12 @@ class User extends Entity implements UserInterface
     }
 
     /**
-     * {@inheritdoc}
+     * Creates an activation token.
+     *
+     * @param int $ttl
+     * @return App\Entity\UserToken
      */
-    public function createActivationToken(int $ttl = 24) : UserTokenInterface
+    public function createActivationToken(int $ttl = 24) : UserToken
     {
         if ($token = $this->getActivationToken()) {
             $this->tokens->removeElement($token);
@@ -273,9 +294,12 @@ class User extends Entity implements UserInterface
     }
 
     /**
-     * {@inheritdoc}
+     * Creates a password reset token.
+     *
+     * @param int $ttl
+     * @return App\Entity\UserToken
      */
-    public function createPasswordResetToken(int $ttl = 24) : UserTokenInterface
+    public function createPasswordResetToken(int $ttl = 24) : UserToken
     {
         if ($token = $this->getPasswordResetToken()) {
             $this->tokens->removeElement($token);
@@ -291,18 +315,20 @@ class User extends Entity implements UserInterface
     /**
      * Adds the token.
      *
-     * @param  App\Entity\UserTokenInterface
-     * @return App\Entity\UserInterface
+     * @param App\Entity\UserToken
      */
-    protected function addToken(UserTokenInterface $token) : UserInterface
+    protected function addToken(UserToken $token)
     {
         $this->tokens->add($token);
-
-        return $this;
     }
 
     /**
-     * {@inheritdoc}
+     * Gets the gravatar.
+     *
+     * @param null|int $size
+     * @param null|string $imageSet
+     * @param null|string $rating
+     * @return null|string
      */
     public function getGravatar(?int $size = 80, ?string $imageSet = 'mm', ?string $rating = 'g') : string
     {
@@ -310,23 +336,19 @@ class User extends Entity implements UserInterface
     }
 
     /**
-     * {@inheritdoc}
+     * Enables.
      */
-    public function enable() : UserInterface
+    public function enable()
     {
         $this->activation = true;
-
-        return $this;
     }
 
     /**
-     * {@inheritdoc}
+     * Disables.
      */
-    public function disable() : UserInterface
+    public function disable()
     {
         $this->activation = false;
-
-        return $this;
     }
 
     /**
@@ -410,11 +432,12 @@ class User extends Entity implements UserInterface
     }
 
     /**
-     * {@inheritdoc}
+     * Returns the username.
+     *
+     * @return string
      */
     public function __toString() : string
     {
         return (string) $this->username;
     }
 }
-

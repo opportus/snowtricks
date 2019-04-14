@@ -9,7 +9,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
- * The trick group...
+ * The trick group.
  *
  * @version 0.0.1
  * @package App\Entity
@@ -19,7 +19,7 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
  * @ORM\Entity(repositoryClass="App\Repository\TrickGroupRepository")
  * @ORM\Table(name="trick_group")
  */
-class TrickGroup extends Entity implements TrickGroupInterface
+class TrickGroup extends Entity
 {
     /**
      * @var string $slug
@@ -79,7 +79,9 @@ class TrickGroup extends Entity implements TrickGroupInterface
     }
 
     /**
-     * {@inheritdoc}
+     * Gets the slug.
+     *
+     * @return string
      */
     public function getSlug() : string
     {
@@ -87,7 +89,9 @@ class TrickGroup extends Entity implements TrickGroupInterface
     }
 
     /**
-     * {@inheritdoc}
+     * Gets the title.
+     *
+     * @return string
      */
     public function getTitle() : string
     {
@@ -95,7 +99,9 @@ class TrickGroup extends Entity implements TrickGroupInterface
     }
 
     /**
-     * {@inheritdoc}
+     * Gets the description.
+     *
+     * @return string
      */
     public function getDescription() : string
     {
@@ -103,7 +109,9 @@ class TrickGroup extends Entity implements TrickGroupInterface
     }
 
     /**
-     * {@inheritdoc}
+     * Gets the tricks.
+     *
+     * @return Doctrine\Common\Collections\Collection
      */
     public function getTricks() : Collection
     {
@@ -111,25 +119,24 @@ class TrickGroup extends Entity implements TrickGroupInterface
     }
 
     /**
-     * {@inheritdoc}
+     * Adds a trick.
+     *
+     * @param App\Entity\Trick $trick
      */
-    public function addTrick(TrickInterface $trick) : TrickGroupInterface
+    public function addTrick(Trick $trick)
     {
         if ($this->tricks->contains($trick) === false) {
             $this->tricks->add($trick);
         }
-
-        return $this;
     }
 
     /**
-     * {@inheritdoc}
+     * Removes a trick.
+     *
+     * @param App\Entity\Trick $trick
      */
-    public function removeTrick(TrickInterface $trick) : TrickGroupInterface
+    public function removeTrick(Trick $trick)
     {
         $this->tricks->removeElement($trick);
-
-        return $this;
     }
 }
-

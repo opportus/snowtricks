@@ -3,12 +3,11 @@
 namespace App\Repository;
 
 use App\Entity\TrickComment;
-use App\Entity\TrickCommentInterface;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 
 /**
- * The trick comment repository...
+ * The trick comment repository.
  *
  * @version 0.0.1
  * @package App\Repository
@@ -28,4 +27,3 @@ class TrickCommentRepository extends ServiceEntityRepository implements TrickCom
 
     }
 }
-

@@ -8,7 +8,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
- * The trick comment...
+ * The trick comment.
  *
  * @version 0.0.1
  * @package App\Entity
@@ -18,10 +18,10 @@ use Symfony\Component\Validator\Constraints as Assert;
  * @ORM\Entity(repositoryClass="App\Repository\TrickCommentRepository")
  * @ORM\Table(name="trick_comment")
  */
-class TrickComment extends Entity implements TrickCommentInterface
+class TrickComment extends Entity
 {
     /**
-     * @var null|\DateTimeInterface $updatedAt
+     * @var null|\DateTime $updatedAt
      *
      * @ORM\Column(name="updated_at", type="datetime", nullable=true)
      * @Assert\Type(type="object")
@@ -40,7 +40,7 @@ class TrickComment extends Entity implements TrickCommentInterface
     protected $body;
 
     /**
-     * @var App\Entity\UserInterface $author
+     * @var App\Entity\User $author
      *
      * @ORM\ManyToOne(targetEntity="App\Entity\User")
      * @ORM\JoinColumn(name="author_id", referencedColumnName="id", nullable=false)
@@ -50,7 +50,7 @@ class TrickComment extends Entity implements TrickCommentInterface
     protected $author;
 
     /**
-     * @var App\Entity\TrickInterface $thread
+     * @var App\Entity\Trick $thread
      *
      * @ORM\ManyToOne(targetEntity="App\Entity\Trick", inversedBy="comments")
      * @ORM\JoinColumn(name="thread_id", referencedColumnName="id", nullable=false)
@@ -60,7 +60,7 @@ class TrickComment extends Entity implements TrickCommentInterface
     protected $thread;
 
     /**
-     * @var null|App\Entity\TrickCommentInterface $parent
+     * @var null|App\Entity\TrickComment $parent
      *
      * @ORM\ManyToOne(targetEntity="App\Entity\TrickComment", inversedBy="children")
      * @ORM\JoinColumn(name="parent_id", referencedColumnName="id")
@@ -80,17 +80,17 @@ class TrickComment extends Entity implements TrickCommentInterface
      * Constructs the trick comment.
      *
      * @param string $body
-     * @param App\Entity\UserInterface $author
-     * @param App\Entity\TrickInterface $thread
-     * @param null|App\Entity\TrickCommentInterface $parent
+     * @param App\Entity\User $author
+     * @param App\Entity\Trick $thread
+     * @param null|App\Entity\TrickComment $parent
      * @param null|Collection $children
      */
     public function __construct(
-        string                 $body,
-        UserInterface          $author,
-        TrickInterface         $thread,
-        ?TrickCommentInterface $parent = null,
-        ?Collection            $children = null
+        string        $body,
+        User          $author,
+        Trick         $thread,
+        ?TrickComment $parent   = null,
+        ?Collection   $children = null
     )
     {
         $this->id        = $this->generateId();
@@ -103,26 +103,30 @@ class TrickComment extends Entity implements TrickCommentInterface
     }
 
     /**
-     * {@inheritdoc}
+     * Updates the trick comment.
+     *
+     * @param string $body
      */
-    public function update(string $body) : TrickCommentInterface
+    public function update(string $body)
     {
         $this->body      = $body;
         $this->updatedAt = new \DateTime();
-
-        return $this;
     }
 
     /**
-     * {@inheritdoc}
+     * Gets the update datetime.
+     *
+     * @return null|\DateTime
      */
-    public function getUpdatedAt() : ?\DateTimeInterface
+    public function getUpdatedAt() : ?\DateTime
     {
         return $this->updatedAt === null ? null : clone $this->updatedAt;
     }
 
     /**
-     * {@inheritdoc}
+     * Gets the body.
+     *
+     * @return string
      */
     public function getBody() : string
     {
@@ -130,7 +134,9 @@ class TrickComment extends Entity implements TrickCommentInterface
     }
 
     /**
-     * {@inheritdoc}
+     * Gets the author.
+     *
+     * @return App\Entity\User
      */
     public function getAuthor() : User
     {
@@ -138,7 +144,10 @@ class TrickComment extends Entity implements TrickCommentInterface
     }
 
     /**
-     * {@inheritdoc}
+     * Checks whether the given user is an author.
+     *
+     * @param  App\Entity\User $user
+     * @return bool
      */
     public function hasAuthor(User $author) : bool
     {
@@ -146,23 +155,29 @@ class TrickComment extends Entity implements TrickCommentInterface
     }
 
     /**
-     * {@inheritdoc}
+     * Gets the thread.
+     *
+     * @return App\Entity\Trick
      */
-    public function getThread() : TrickInterface
+    public function getThread() : Trick
     {
         return clone $this->thread;
     }
 
     /**
-     * {@inheritdoc}
+     * Gets the parent.
+     *
+     * @return null|App\Entity\TrickComment
      */
-    public function getParent() : ?TrickCommentInterface
+    public function getParent() : ?TrickComment
     {
         return $this->parent === null ? null : clone $this->parent;
     }
 
     /**
-     * {@inheritdoc}
+     * Checks whether or not the comment has a parent.
+     *
+     * @return bool
      */
     public function hasParent() : bool
     {
@@ -170,7 +185,9 @@ class TrickComment extends Entity implements TrickCommentInterface
     }
 
     /**
-     * {@inheritdoc}
+     * Gets the children.
+     *
+     * @return Doctrine\Common\Collections\Collection
      */
     public function getChildren() : Collection
     {
@@ -178,7 +195,9 @@ class TrickComment extends Entity implements TrickCommentInterface
     }
 
     /**
-     * {@inheritdoc}
+     * Checks whether or not the comment has children.
+     *
+     * @return bool
      */
     public function hasChildren() : bool
     {
@@ -186,29 +205,28 @@ class TrickComment extends Entity implements TrickCommentInterface
     }
 
     /**
-     * {@inheritdoc}
+     * Adds a child.
+     *
+     * @param  App\Entity\TrickComment $child
      */
-    public function addChild(TrickCommentInterface $child) : TrickCommentInterface
+    public function addChild(TrickComment $child)
     {
         $child->setParent($this);
 
         if ($this->children->contains($child) === false) {
             $this->children->add($child);
         }
-
-        return $this;
     }
 
     /**
-     * {@inheritdoc}
+     * Removes a child.
+     *
+     * @param  App\Entity\TrickComment $child
      */
-    public function removeChild(TrickCommentInterface $child) : TrickCommentInterface
+    public function removeChild(TrickComment $child)
     {
         $child->removeParent();
 
         $this->children->removeElement($child);
-
-        return $this;
     }
 }
-

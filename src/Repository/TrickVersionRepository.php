@@ -2,13 +2,11 @@
 
 namespace App\Repository;
 
-use App\Entity\TrickVersion;
-use App\Entity\TrickVersionInterface;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 
 /**
- * The trick version repository...
+ * The trick version repository.
  *
  * @version 0.0.1
  * @package App\Repository
@@ -28,4 +26,3 @@ class TrickVersionRepository extends ServiceEntityRepository implements TrickVer
 
     }
 }
-

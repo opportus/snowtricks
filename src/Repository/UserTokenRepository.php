@@ -3,12 +3,11 @@
 namespace App\Repository;
 
 use App\Entity\UserToken;
-use App\Entity\UserTokenInterface;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 
 /**
- * The user token repository...
+ * The user token repository.
  *
  * @version 0.0.1
  * @package App\Repository
@@ -31,7 +30,7 @@ class UserTokenRepository extends ServiceEntityRepository implements UserTokenRe
     /**
      * {@inheritdoc}
      */
-    public function findOneByKey(string $key) : ?UserTokenInterface
+    public function findOneByKey(string $key) : ?UserToken
     {
         return $this->findOneBy(
             array(
@@ -52,4 +51,3 @@ class UserTokenRepository extends ServiceEntityRepository implements UserTokenRe
         );
     }
 }
-

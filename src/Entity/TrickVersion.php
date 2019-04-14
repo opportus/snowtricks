@@ -9,7 +9,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
- * The trick version...
+ * The trick version.
  *
  * @version 0.0.1
  * @package App\Entity
@@ -18,11 +18,18 @@ use Symfony\Component\Validator\Constraints as Assert;
  *
  * @ORM\Entity(repositoryClass="App\Repsository\TrickVersionRepository", readOnly=true)
  * @ORM\Table(name="trick_version")
- *
- * @todo Implement custom unique title constraint validator...
  */
-class TrickVersion extends Entity implements TrickVersionInterface
+class TrickVersion extends Entity
 {
+    /**
+     * @var bool
+     *
+     * @ORM\Column(name="enabled", type="boolean")
+     * @Assert\NotNull()
+     * @Assert\Type(type="bool")
+     */
+    private $enabled;
+
     /**
      * @var string $title
      *
@@ -54,13 +61,22 @@ class TrickVersion extends Entity implements TrickVersionInterface
     private $body;
 
     /**
-     * @var bool
+     * @var null|App\Entity\TrickGroupInterface $group
      *
-     * @ORM\Column(name="enabled", type="boolean")
+     * @ORM\ManyToOne(targetEntity="App\Entity\TrickGroup")
+     * @ORM\JoinColumn(name="group_id", referencedColumnName="id", nullable=false)
      * @Assert\NotNull()
-     * @Assert\Type(type="bool")
+     * @Assert\Valid()
      */
-    private $enabled;
+    private $group;
+
+    /**
+     * @var Doctrine\Common\Collections\Collection $attachments
+     *
+     * @ORM\OneToMany(targetEntity="App\Entity\TrickAttachment", mappedBy="trickVersion", cascade={"all"}, orphanRemoval=true)
+     * @Assert\Valid()
+     */
+    private $attachments;
 
     /**
      * @var App\Entity\UserInterface $author
@@ -83,24 +99,6 @@ class TrickVersion extends Entity implements TrickVersionInterface
     private $trick;
 
     /**
-     * @var null|App\Entity\TrickGroupInterface $group
-     *
-     * @ORM\ManyToOne(targetEntity="App\Entity\TrickGroup")
-     * @ORM\JoinColumn(name="group_id", referencedColumnName="id", nullable=false)
-     * @Assert\NotNull()
-     * @Assert\Valid()
-     */
-    private $group;
-
-    /**
-     * @var Doctrine\Common\Collections\Collection $attachments
-     *
-     * @ORM\OneToMany(targetEntity="App\Entity\TrickAttachment", mappedBy="trickVersion", cascade={"all"}, orphanRemoval=true)
-     * @Assert\Valid()
-     */
-    private $attachments;
-
-    /**
      * Constructs the trick version.
      *
      * @param string $title
@@ -112,13 +110,13 @@ class TrickVersion extends Entity implements TrickVersionInterface
      * @param null|Doctrine\Common\Collections\Collection $attachments
      */
     public function __construct(
-        string               $title,
-        string               $description,
-        string               $body,
-        UserInterface        $author,
-        TrickInterface       $trick,
-        ?TrickGroupInterface $group       = null,
-        ?Collection          $attachments = null
+        string      $title,
+        string      $description,
+        string      $body,
+        User        $author,
+        Trick       $trick,
+        ?TrickGroup $group       = null,
+        ?Collection $attachments = null
     ) {
         $this->id          = $this->generateId();
         $this->createdAt   = new \DateTime();
@@ -147,31 +145,25 @@ class TrickVersion extends Entity implements TrickVersionInterface
     }
 
     /**
-     * {@inheritdoc}
+     * Enables.
      */
-    public function getTitle() : string
+    public function enable()
     {
-        return $this->title;
+        $this->enabled = true;
     }
 
     /**
-     * {@inheritdoc}
+     * Disables.
      */
-    public function getDescription() : string
+    public function disable()
     {
-        return $this->description;
+        $this->enabled = false;
     }
 
     /**
-     * {@inheritdoc}
-     */
-    public function getBody() : string
-    {
-        return $this->body;
-    }
-
-    /**
-     * {@inheritdoc}
+     * Returns whether or not this is enabled.
+     *
+     * @return bool
      */
     public function isEnabled() : bool
     {
@@ -179,43 +171,49 @@ class TrickVersion extends Entity implements TrickVersionInterface
     }
 
     /**
-     * {@inheritdoc}
+     * Gets the title.
+     *
+     * @return string
      */
-    public function enable() : TrickVersionInterface
+    public function getTitle() : string
     {
-        $this->enabled = true;
-
-        return $this;
+        return $this->title;
     }
 
     /**
-     * {@inheritdoc}
+     * Gets the description.
+     *
+     * @return string
      */
-    public function disable() : TrickVersionInterface
+    public function getDescription() : string
     {
-        $this->enabled = false;
-
-        return $this;
+        return $this->description;
     }
 
     /**
-     * {@inheritdoc}
+     * Gets the body.
+     *
+     * @return string
      */
-    public function getAuthor() : UserInterface
+    public function getBody() : string
     {
-        return $this->author;
+        return $this->body;
     }
 
     /**
-     * {@inheritdoc}
+     * Gets the group.
+     *
+     * @return null|App\Entity\TrickGroup
      */
-    public function getTrick() : TrickInterface
+    public function getGroup() : ?TrickGroup
     {
-        return $this->trick;
+        return $this->group;
     }
 
     /**
-     * {@inheritdoc}
+     * Gets the attachments.
+     *
+     * @return Doctrine\Common\Collections\Collection
      */
     public function getAttachments() : Collection
     {
@@ -223,10 +221,22 @@ class TrickVersion extends Entity implements TrickVersionInterface
     }
 
     /**
-     * {@inheritdoc}
+     * Gets the author.
+     *
+     * @return App\Entity\User
      */
-    public function getGroup() : ?TrickGroupInterface
+    public function getAuthor() : User
     {
-        return $this->group;
+        return $this->author;
+    }
+
+    /**
+     * Gets the trick.
+     *
+     * @return App\Entity\Trick
+     */
+    public function getTrick() : Trick
+    {
+        return $this->trick;
     }
 }

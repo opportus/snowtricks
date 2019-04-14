@@ -2,10 +2,8 @@
 
 namespace App\Repository;
 
-use App\Entity\TrickVersionInterface;
-
 /**
- * The trick version repository interface...
+ * The trick version repository interface.
  *
  * @version 0.0.1
  * @package App\Repository
@@ -15,4 +13,3 @@ use App\Entity\TrickVersionInterface;
 interface TrickVersionRepositoryInterface extends EntityRepositoryInterface
 {
 }
-

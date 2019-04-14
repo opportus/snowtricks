@@ -3,12 +3,11 @@
 namespace App\Repository;
 
 use App\Entity\Trick;
-use App\Entity\TrickInterface;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 
 /**
- * The trick repository...
+ * The trick repository.
  *
  * @version 0.0.1
  * @package App\Repository
@@ -31,7 +30,7 @@ class TrickRepository extends ServiceEntityRepository implements TrickRepository
     /**
      * {@inheritdoc}
      */
-    public function findOneBySlug(string $slug) : ?TrickInterface
+    public function findOneBySlug(string $slug) : ?Trick
     {
         return $this->findOneBy(
             array(
@@ -40,4 +39,3 @@ class TrickRepository extends ServiceEntityRepository implements TrickRepository
         );
     }
 }
-

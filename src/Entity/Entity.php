@@ -6,7 +6,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
- * The entity...
+ * The entity.
  *
  * @version 0.0.1
  * @package App\Entity
@@ -15,21 +15,21 @@ use Symfony\Component\Validator\Constraints as Assert;
  *
  * @ORM\MappedSuperclass
  */
-abstract class Entity implements EntityInterface
+abstract class Entity
 {
     /**
      * @var string $id
      *
      * @ORM\Id
      * @ORM\Column(name="id", type="string")
-     * @Assert\NotNull()
+     * @Assert\NotBlank()
      * @Assert\Type(type="string")
-     * @Assert\Length(max=255)
+     * @Assert\Uuid()
      */
     protected $id;
 
     /**
-     * @var \DateTimeInterface $createdAt
+     * @var \DateTime $createdAt
      *
      * @ORM\Column(name="created_at", type="datetime")
      * @Assert\NotNull()
@@ -39,7 +39,9 @@ abstract class Entity implements EntityInterface
     protected $createdAt;
 
     /**
-     * {@inheritdoc}
+     * Gets the ID.
+     *
+     * @return string
      */
     public function getId() : string
     {
@@ -47,9 +49,11 @@ abstract class Entity implements EntityInterface
     }
 
     /**
-     * {@inheritdoc}
+     * Gets the creation datetime.
+     *
+     * @return \DateTime
      */
-    public function getCreatedAt() : \DateTimeInterface
+    public function getCreatedAt() : \DateTime
     {
         return clone $this->createdAt;
     }
@@ -71,4 +75,3 @@ abstract class Entity implements EntityInterface
         return vsprintf('%s%s-%s-%s-%s-%s%s%s', str_split(bin2hex($random), 4));
     }
 }
-

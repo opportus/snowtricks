@@ -6,7 +6,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
- * The user token...
+ * The user token.
  *
  * @version 0.0.1
  * @package App\Entity
@@ -16,7 +16,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  * @ORM\Entity(repositoryClass="App\Repository\UserTokenRepository", readOnly=true)
  * @ORM\Table(name="user_token")
  */
-class UserToken extends Entity implements UserTokenInterface
+class UserToken extends Entity
 {
     /**
      * @var string $key
@@ -50,7 +50,7 @@ class UserToken extends Entity implements UserTokenInterface
     protected $ttl;
 
     /**
-     * @var App\Entity\UserInterface $user
+     * @var App\Entity\User $user
      *
      * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="tokens")
      * @ORM\JoinColumn(name="user_id", referencedColumnName="id", nullable=false)
@@ -62,11 +62,11 @@ class UserToken extends Entity implements UserTokenInterface
     /**
      * Constructs the user token.
      *
-     * @param App\Entity\UserInterface $user
+     * @param App\Entity\User $user
      * @param string $type
      * @param int $ttl
      */
-    public function __construct(UserInterface $user, string $type, int $ttl = 24)
+    public function __construct(User $user, string $type, int $ttl = 24)
     {
         $this->id        = $this->generateId();
         $this->createdAt = new \DateTime();
@@ -77,7 +77,9 @@ class UserToken extends Entity implements UserTokenInterface
     }
 
     /**
-     * {@inheritdoc}
+     * Gets the key.
+     *
+     * @return string
      */
     public function getKey() : string
     {
@@ -85,7 +87,9 @@ class UserToken extends Entity implements UserTokenInterface
     }
 
     /**
-     * {@inheritdoc}
+     * Gets the type.
+     *
+     * @return string
      */
     public function getType() : string
     {
@@ -93,7 +97,9 @@ class UserToken extends Entity implements UserTokenInterface
     }
 
     /**
-     * {@inheritdoc}
+     * Gets the ttl.
+     *
+     * @return int
      */
     public function getTtl() : int
     {
@@ -101,15 +107,19 @@ class UserToken extends Entity implements UserTokenInterface
     }
 
     /**
-     * {@inheritdoc}
+     * Gets the user.
+     *
+     * @return App\Entity\User
      */
-    public function getUser() : UserInterface
+    public function getUser() : User
     {
         return $this->user;
     }
 
     /**
-     * {@inheritdoc}
+     * Checks whether or not the token is expired.
+     *
+     * @return bool
      */
     public function isExpired() : bool
     {
@@ -121,7 +131,10 @@ class UserToken extends Entity implements UserTokenInterface
     }
 
     /**
-     * {@inheritdoc}
+     * Checks whether or not the token key is equal to the given string.
+     *
+     * @param string $token
+     * @return bool
      */
     public function hasKey(string $token) : bool
     {
@@ -129,11 +142,12 @@ class UserToken extends Entity implements UserTokenInterface
     }
 
     /**
-     * {@inheritdoc}
+     * Returns the key.
+     *
+     * @return string
      */
     public function __toString() : string
     {
-        return (string) $this->key;
+        return (string)$this->key;
     }
 }
-

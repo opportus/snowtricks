@@ -2,13 +2,13 @@
 
 namespace App\Repository;
 
-use App\Entity\EntityInterface;
+use App\Entity\Entity;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepositoryInterface;
 use Doctrine\Common\Persistence\ObjectRepository;
 use Doctrine\Common\Collections\Selectable;
 
 /**
- * The entity repository interface...
+ * The entity repository interface.
  *
  * @version 0.0.1
  * @package App\Repository
@@ -21,8 +21,7 @@ interface EntityRepositoryInterface extends ServiceEntityRepositoryInterface, Ob
      * Finds one entity by ID.
      *
      * @param  string $id
-     * @return null|App\Entity\EntityInterface
+     * @return null|App\Entity\Entity
      */
-    public function findOneById(string $id) : ?EntityInterface;
+    public function findOneById(string $id) : ?Entity;
 }
-

@@ -2,10 +2,10 @@
 
 namespace App\Repository;
 
-use App\Entity\UserTokenInterface;
+use App\Entity\UserToken;
 
 /**
- * The user token repository interface...
+ * The user token repository interface.
  *
  * @version 0.0.1
  * @package App\Repository
@@ -18,9 +18,9 @@ interface UserTokenRepositoryInterface extends EntityRepositoryInterface
      * Finds one user token by key.
      *
      * @param  string $key
-     * @return null|App\Entity\UserTokenInterface
+     * @return null|App\Entity\UserToken
      */
-    public function findOneByKey(string $key) : ?UserTokenInterface;
+    public function findOneByKey(string $key) : ?UserToken;
 
     /**
      * Finds all user tokens by user ID.
@@ -30,4 +30,3 @@ interface UserTokenRepositoryInterface extends EntityRepositoryInterface
      */
     public function findAllByUserId(int $userId) : array;
 }
-

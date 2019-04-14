@@ -3,12 +3,11 @@
 namespace App\Repository;
 
 use App\Entity\User;
-use App\Entity\UserInterface;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 
 /**
- * The user repository...
+ * The user repository.
  *
  * @version 0.0.1
  * @package App\Repository
@@ -31,7 +30,7 @@ class UserRepository extends ServiceEntityRepository implements UserRepositoryIn
     /**
      * {@inheritdoc}
      */
-    public function findOneByUsername(string $username) : ?UserInterface
+    public function findOneByUsername(string $username) : ?User
     {
         return $this->findOneBy(
             array(
@@ -43,7 +42,7 @@ class UserRepository extends ServiceEntityRepository implements UserRepositoryIn
     /**
      * {@inheritdoc}
      */
-    public function findOneByEmail(string $email) : ?UserInterface
+    public function findOneByEmail(string $email) : ?User
     {
         return $this->findOneBy(
             array(
@@ -52,4 +51,3 @@ class UserRepository extends ServiceEntityRepository implements UserRepositoryIn
         );
     }
 }
-

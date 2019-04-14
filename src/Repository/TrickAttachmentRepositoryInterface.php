@@ -2,10 +2,8 @@
 
 namespace App\Repository;
 
-use App\Entity\TrickAttachmentInterface;
-
 /**
- * The trick attachment repository interface...
+ * The trick attachment repository interface.
  *
  * @version 0.0.1
  * @package App\Repository
@@ -15,4 +13,3 @@ use App\Entity\TrickAttachmentInterface;
 interface TrickAttachmentRepositoryInterface extends EntityRepositoryInterface
 {
 }
-

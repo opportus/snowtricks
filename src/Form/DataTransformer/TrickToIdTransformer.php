@@ -3,7 +3,6 @@
 namespace App\Form\DataTransformer;
 
 use App\Entity\Trick;
-use App\Entity\TrickInterface;
 use Symfony\Component\Form\DataTransformerInterface;
 use Symfony\Component\Form\Exception\TransformationFailedException;
 use Doctrine\ORM\EntityManagerInterface;
@@ -42,7 +41,7 @@ class TrickToIdTransformer implements DataTransformerInterface
             return '';
         }
 
-        if (!$value instanceof TrickInterface) {
+        if (!$value instanceof Trick) {
             throw new TransformationFailedException(
                 sprintf(
                     'The value must be an instance of %s',

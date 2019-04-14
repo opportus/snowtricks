@@ -7,7 +7,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * The trick attachment...
+ * The trick attachment.
  *
  * @version 0.0.1
  * @package App\Entity
@@ -17,7 +17,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Entity(repositoryClass="App\Repository\TrickAttachmentRepository", readOnly=true)
  * @ORM\Table(name="trick_attachment")
  */
-class TrickAttachment extends Entity implements TrickAttachmentInterface
+class TrickAttachment extends Entity
 {
     /**
      * @var string $src
@@ -41,7 +41,7 @@ class TrickAttachment extends Entity implements TrickAttachmentInterface
     private $type;
 
     /**
-     * @var null|App\Entity\TrickVersionInterface $trickVersion
+     * @var null|App\Entity\TrickVersion $trickVersion
      *
      * @ORM\ManyToOne(targetEntity="App\Entity\TrickVersion", inversedBy="attachments")
      * @ORM\JoinColumn(name="trick_version_id", referencedColumnName="id", nullable=false)
@@ -55,12 +55,12 @@ class TrickAttachment extends Entity implements TrickAttachmentInterface
      *
      * @param string $src
      * @param string $type
-     * @param App\Entity\TrickVersionInterface $trickVersion
+     * @param App\Entity\TrickVersion $trickVersion
      */
     public function __construct(
-        string                $src,
-        string                $type,
-        TrickVersionInterface $trickVersion
+        string       $src,
+        string       $type,
+        TrickVersion $trickVersion
     ) {
         $this->id           = $this->generateId();
         $this->createdAt    = new \DateTime();
@@ -70,25 +70,31 @@ class TrickAttachment extends Entity implements TrickAttachmentInterface
     }
 
     /**
-     * {@inheritdoc}
+     * Gets the src.
+     *
+     * @return string
      */
-    public function getSrc()
+    public function getSrc() : string
     {
         return $this->src;
     }
 
     /**
-     * {@inheritdoc}
+     * Gets the type.
+     *
+     * @return string
      */
-    public function getType()
+    public function getType() : string
     {
         return $this->type;
     }
 
     /**
-     * {@inheritdoc}
+     * Gets the trick version.
+     *
+     * @return App\Entity\TrickVersion
      */
-    public function getTrickVersion()
+    public function getTrickVersion() : TrickVersion
     {
         return $this->trickVersion;
     }

@@ -2,10 +2,8 @@
 
 namespace App\Repository;
 
-use App\Entity\TrickCommentInterface;
-
 /**
- * The trick comment repository interface...
+ * The trick comment repository interface.
  *
  * @version 0.0.1
  * @package App\Repository
@@ -15,4 +13,3 @@ use App\Entity\TrickCommentInterface;
 interface TrickCommentRepositoryInterface extends EntityRepositoryInterface
 {
 }
-
