@@ -26,16 +26,4 @@ class TrickGroupRepository extends ServiceEntityRepository implements TrickGroup
         parent::__construct($registry, TrickGroup::class);
 
     }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function findOneBySlug(string $slug) : ?TrickGroup
-    {
-        return $this->findOneBy(
-            array(
-                'slug' => $slug
-            )
-        );
-    }
 }

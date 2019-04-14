@@ -26,28 +26,4 @@ class UserTokenRepository extends ServiceEntityRepository implements UserTokenRe
         parent::__construct($registry, UserToken::class);
 
     }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function findOneByKey(string $key) : ?UserToken
-    {
-        return $this->findOneBy(
-            array(
-                'key' => $key
-            )
-        );
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function findAllByUserId(int $userId) : array
-    {
-        return $this->findBy(
-            array(
-                'user' => $userId
-            )
-        );
-    }
 }

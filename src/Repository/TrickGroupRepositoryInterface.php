@@ -2,8 +2,6 @@
 
 namespace App\Repository;
 
-use App\Entity\TrickGroup;
-
 /**
  * The trick group repository interface.
  *
@@ -14,11 +12,4 @@ use App\Entity\TrickGroup;
  */
 interface TrickGroupRepositoryInterface extends EntityRepositoryInterface
 {
-    /**
-     * Finds one trick group by slug.
-     *
-     * @param  string $slug
-     * @return null|App\Entity\TrickGroup
-     */
-    public function findOneBySlug(string $slug) : ?TrickGroup;
 }
