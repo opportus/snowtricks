@@ -2,10 +2,9 @@
 
 namespace App\EventSubscriber;
 
-use App\Entity\User;
 use App\Mailer\MailerInterface;
 use App\Controller\UserController;
-use App\HttpKernel\ControllerResult;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\HttpKernel\Event\GetResponseForControllerResultEvent;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
@@ -40,7 +39,7 @@ class UserManagerSubscriber implements EventSubscriberInterface
     public function __construct(EntityManagerInterface $entityManager, MailerInterface $mailer)
     {
         $this->entityManager = $entityManager;
-        $this->mailer        = $mailer;
+        $this->mailer = $mailer;
     }
 
     /**
@@ -57,19 +56,19 @@ class UserManagerSubscriber implements EventSubscriberInterface
     }
 
     /**
-     * Proceeds user sign up.
+     * Proceeds the user sign up.
      *
      * @param Symfony\Component\HttpKernel\Event\GetResponseForControllerResultEvent $event
      */
     public function proceedUserSignUp(GetResponseForControllerResultEvent $event)
     {
         if ($event->getRequest()->attributes->get('_controller') !== UserController::class.'::postUserBySignUpForm' ||
-            $event->getControllerResult()->getStatusCode() !== 201
+            $event->getControllerResult()->getStatusCode() !== Response::HTTP_CREATED
         ) {
             return;
         }
 
-        $user = $event->getControllerResult()->getData()['entity'];
+        $user = $event->getControllerResult()->getData();
 
         $this->mailer->sendUserSignUpEmail($user);
 
@@ -81,33 +80,23 @@ class UserManagerSubscriber implements EventSubscriberInterface
     }
 
     /**
-     * Proceeds user password reset.
+     * Proceeds the user password reset.
      *
      * @param Symfony\Component\HttpKernel\Event\GetResponseForControllerResultEvent $event
      */
     public function proceedUserPasswordReset(GetResponseForControllerResultEvent $event)
     {
         if ($event->getRequest()->attributes->get('_controller') !== UserController::class.'::proceedByUserPasswordResetRequestForm' ||
-            $event->getControllerResult()->getStatusCode() !== 202
+            $event->getControllerResult()->getStatusCode() !== Response::HTTP_ACCEPTED
         ) {
             return;
         }
 
-        $form = $event->getControllerResult()->getData()['form'];
-        $user = $this->entityManager->getRepository(User::class)->findOneByUsername($form->getData()->username);
+        $user = $event->getControllerResult()->getData();
 
         $user->createPasswordResetToken();
 
         $this->entityManager->flush();
-
-        $event->setControllerResult(
-            new ControllerResult(
-                204,
-                array(
-                    'entity' => $user,
-                )
-            )
-        );
 
         $this->mailer->sendUserPasswordResetEmail($user);
     }

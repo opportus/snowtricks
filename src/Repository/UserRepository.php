@@ -42,12 +42,14 @@ class UserRepository extends ServiceEntityRepository implements UserRepositoryIn
     /**
      * {@inheritdoc}
      */
-    public function findOneByEmail(string $email) : ?User
+    public function findOneByUsernameOrThrowExceptionIfNoResult(string $username) : User
     {
-        return $this->findOneBy(
-            array(
-                'email' => $email
-            )
-        );
+        $user = $this->findOneByUsername($username);
+
+        if (null === $user) {
+            throw new EntityNotFoundException('No entity matches this set of criteria');
+        }
+
+        return $user;
     }
 }

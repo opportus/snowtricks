@@ -3,31 +3,28 @@
 namespace App\Controller;
 
 use App\HttpKernel\ControllerResult;
-use App\HttpKernel\ControllerResultInterface;
-use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 /**
- * The home controller...
+ * The home controller.
  *
  * @version 0.0.1
  * @package App\Controller
  * @author  Clément Cazaud <opportus@gmail.com>
  * @license https://github.com/opportus/snowtricks/blob/master/LICENSE.md MIT
  */
-class HomeController extends Controller
+class HomeController
 {
     /**
      * Gets home.
      *
-     * @param  Symfony\Component\HttpFoundation\Request $request
-     * @return App\HttpKernel\ControllerResultInterface
+     * @return App\HttpKernel\ControllerResult
      *
      * @Route("/", name="get_home", methods={"GET"})
      */
-    public function getHome(Request $request) : ControllerResultInterface
+    public function getHome() : ControllerResult
     {
-        return new ControllerResult(200);
+        return new ControllerResult(Response::HTTP_OK);
     }
 }
-

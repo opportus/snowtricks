@@ -3,7 +3,7 @@
 namespace App\HttpKernel;
 
 /**
- * The controller result...
+ * The controller result.
  *
  * @version 0.0.1
  * @package App\HttpKernel
@@ -18,7 +18,7 @@ class ControllerResult implements ControllerResultInterface
     private $statusCode;
 
     /**
-     * @var array $data
+     * @var mixed $data
      */
     private $data;
 
@@ -26,12 +26,12 @@ class ControllerResult implements ControllerResultInterface
      * Constructs the controller result.
      *
      * @param int $statusCode
-     * @param array $data
+     * @param mixed $data
      */
-    public function __construct(int $statusCode, array $data = array())
+    public function __construct(int $statusCode, $data = null)
     {
         $this->statusCode = $statusCode;
-        $this->data       = $data;
+        $this->data = $data;
     }
 
     /**
@@ -45,7 +45,7 @@ class ControllerResult implements ControllerResultInterface
     /**
      * {@inheritdoc}
      */
-    public function getData() : array
+    public function getData()
     {
         return $this->data;
     }

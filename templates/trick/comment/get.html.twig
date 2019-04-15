@@ -1,40 +1,43 @@
-<li id="{{ entity.id }}" class="trick-comment-list-item col-12 mt-4"
-    data-url="{{ url('get_trick_comment', {'id': entity.id}) }}">
+{% if comment is not defined %}
+    {% set comment = data %}
+{% endif %}
+<li id="{{ comment.id }}" class="trick-comment-list-item col-12 mt-4"
+    data-url="{{ url('get_trick_comment', {'id': comment.id}) }}">
     <div class="row">
         <div class="trick-comment-list-item-gravatar col-2">
-            <img class="rounded-circle" src="{{ entity.author.gravatar }}"></img>
+            <img class="rounded-circle" src="{{ comment.author.gravatar }}"></img>
         </div>
         <div class="col-10">
             <div class="row mb-3">
-                {% if entity.updatedAt %}
+                {% if comment.updatedAt %}
                     <div class="trick-comment-list-item-meta col">
-                        {{ 'trick_comment.list.item.meta.updated_at'|trans({'%author%': entity.author.username, '%updated_at%': entity.updatedAt|date()}) }}
+                        {{ 'trick_comment.list.item.meta.updated_at'|trans({'%author%': comment.author.username, '%updated_at%': comment.updatedAt|date()}) }}
                     </div>
                 {% else %}
                     <div class="trick-comment-list-item-meta col">
-                        {{ 'trick_comment.list.item.meta.created_at'|trans({'%author%': entity.author.username, '%created_at%': entity.createdAt|date()}) }}
+                        {{ 'trick_comment.list.item.meta.created_at'|trans({'%author%': comment.author.username, '%created_at%': comment.createdAt|date()}) }}
                     </div>
                 {% endif %}
             </div>
             <div class="row mb-3">
                 <div class="trick-comment-list-item-body col">
-                    {{ entity.body|nl2br }}
+                    {{ comment.body|nl2br }}
                 </div>
             </div>
             <ul class="trick-comment-list-item-action mb-5 list-inline">
-                {% if is_granted('ROLE_USER') and app.user.username != entity.author.username %}
+                {% if is_granted('ROLE_USER') and app.user.username != comment.author.username %}
                     {% set editReplyActionStyle = '' %}
                 {% else %}
                     {% set editReplyActionStyle = 'display:none;' %}
                 {% endif %}
-                {% if is_granted('ROLE_USER') and app.user.username == entity.author.username %}
+                {% if is_granted('ROLE_USER') and app.user.username == comment.author.username %}
                     {% set editActionStyle = '' %}
                     {% set deleteActionStyle = '' %}
                 {% else %}
                     {% set editActionStyle = 'display:none;' %}
                     {% set deleteActionStyle = 'display:none;' %}
                 {% endif %}
-                {% if entity.hasParent == false and entity.hasChildren %}
+                {% if comment.hasParent == false and comment.hasChildren %}
                     {% set listChildrenActionStyle = '' %}
                 {% else %}
                     {% set listChildrenActionStyle = 'display:none;' %}
@@ -43,21 +46,21 @@
                     <i class="fas fa-reply ajax-action"
                         title="{{ 'trick_comment.list.item.action.reply.title'|trans() }}"
                         data-action="editTrickCommentReply"
-                        data-url="{{ url('get_trick_comment_empty_edit_form') }}?attribute[thread]={{ entity.thread.id }}&attribute[parent]={{ entity.hasParent ? entity.parent.id : entity.id }}">
+                        data-url="{{ url('get_trick_comment_empty_edit_form') }}?attribute[thread]={{ comment.thread.id }}&attribute[parent]={{ comment.hasParent ? comment.parent.id : comment.id }}">
                     </i>
                 </li>
                 <li class="trick-comment-list-item-action-edit list-inline-item float-left" style="{{ editActionStyle }}">
                     <i class="fas fa-pencil-alt ajax-action"
                         title="{{ 'trick_comment.list.item.action.edit.title'|trans() }}"
                         data-action="editTrickComment"
-                        data-url="{{ url('get_trick_comment_edit_form', {'id': entity.id}) }}">
+                        data-url="{{ url('get_trick_comment_edit_form', {'id': comment.id}) }}">
                     </i>
                 </li>
                 <li class="trick-comment-list-item-action-delete list-inline-item float-left" style="{{ deleteActionStyle }}">
                     <i class="fas fa-trash ajax-action"
                         title="{{ 'trick_comment.list.item.action.delete.title'|trans() }}"
                         data-action="deleteTrickComment"
-                        data-url="{{ url('delete_trick_comment_by_delete_form', {'id': entity.id}) }}"
+                        data-url="{{ url('delete_trick_comment_by_delete_form', {'id': comment.id}) }}"
                         data-token="{{ csrf_token('security') }}">
                     </i>
                 </li>
@@ -68,10 +71,10 @@
                     </i>
                 </li>
             </ul>
-            {% if entity.hasParent == false %}
+            {% if comment.hasParent == false %}
                 <ul id="infinite-scroll-{{ random() }}"
                     class="trick-comment-list-item-children-list row list-unstyled infinite-scroll infinite-scroll-collapsable"
-                    data-url="{{ url('get_trick_comment_collection') }}?attribute[thread]={{ entity.thread.id }}&attribute[parent]={{ entity.id }}&order[createdAt]=ASC">
+                    data-url="{{ url('get_trick_comment_collection') }}?attribute[thread]={{ comment.thread.id }}&attribute[parent]={{ comment.id }}&order[createdAt]=ASC">
                 </ul>
             {% endif %}
         </div>

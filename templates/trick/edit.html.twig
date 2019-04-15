@@ -1,7 +1,9 @@
-{% if entity == null %}
+{% set trick = data.getData() %}
+{% set form = data.createView() %}
+{% if trick is null %}
     {% set title = 'Editing New Trick' %}
 {% else %}
-    {% set title = 'Editing «' ~ entity.title ~ '»' %}
+    {% set title = 'Editing «' ~ trick.title ~ '»' %}
 {% endif %}
 {% set description = title %}
 
@@ -15,8 +17,8 @@
         <div class="row">
             <div class="trick-edit-content col-md-8 offset-md-2 bg-white">
                 <div class="row">
-                    {% if entity is not null and entity.featuredAttachment is not null %}
-                        {% set src = entity.featuredAttachment.src %}
+                    {% if trick is not null and trick.featuredAttachment is not null %}
+                        {% set src = trick.featuredAttachment.src %}
                     {% else %}
                         {% set src = 'img/snowtrick.jpg' %}
                     {% endif %}
@@ -55,7 +57,7 @@
                                 {% include 'trick/attachment/add-modal.html.twig' %}
                             {% endblock trickAttachmentAddModal %}
                             {% block trickAttachmentCollection %}
-                                {% include 'trick/attachment/collection.html.twig' with {'entity': entity, 'edit': true} %}
+                                {% include 'trick/attachment/collection.html.twig' with {'entity': trick, 'edit': true} %}
                             {% endblock trickAttachmentCollection %}
                             {{ form_errors(form) }}
                             <div class="trick-edit-attachments col-12 form-group">
@@ -124,13 +126,13 @@
                                 ) }}
                             </div>
                             <div class="col-12 text-right">
-                                {% if entity != null %}
+                                {% if trick.id is defined %}
                                     <div class="trick-edit-delete d-inline">
                                         <div
                                             class="btn btn-sm btn-danger ajax-action"
                                             data-redirection="{{ url('get_home') }}"
                                             data-action="deleteTrick"
-                                            data-url="{{ url('delete_trick_by_delete_form', app.request.attributes.get('_route_params')) }}"
+                                            data-url="{{ url('delete_trick', app.request.attributes.get('_route_params')) }}"
                                             data-token="{{ csrf_token('security') }}">
                                                 {{ 'trick.edit.form.button.delete'|trans() }}
                                         </div>

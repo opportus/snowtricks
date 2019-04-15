@@ -44,14 +44,14 @@ class TrickDto implements AuthorableInterface
     public $body;
 
     /**
-     * @var null|Doctrine\Common\Collections\Collection $attachments
+     * @var null|Doctrine\Common\Collections\ArrayCollection $attachments
      *
      * @Assert\Valid()
      */
     public $attachments;
 
     /**
-     * @var null|App\Entity\TrickGroupInterface $group
+     * @var null|App\Entity\TrickGroup $group
      *
      * @Assert\NotNull(groups={"trick.form.edit"})
      * @Assert\Valid(groups={"trick.form.edit"})
@@ -67,18 +67,23 @@ class TrickDto implements AuthorableInterface
     public $author;
 
     /**
-     * @var null|Doctrine\Common\Collections\Collection $comments
+     * @var null|Doctrine\Common\Collections\ArrayCollection $comments
      *
      * @Assert\Valid()
      */
     public $comments;
 
     /**
-     * @var null|Doctrine\Common\Collections\Collection $versions
+     * @var null|Doctrine\Common\Collections\ArrayCollection $versions
      *
      * @Assert\Valid()
      */
     public $versions;
+
+    /**
+     * @var null|App\Entity\Dto\TrickAttachmentDto $featuredAttachment
+     */
+    public $featuredAttachment;
 
     /**
      * {@inheritdoc}

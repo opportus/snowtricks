@@ -2,11 +2,10 @@
 
 namespace App\EventListener;
 
-use App\HttpKernel\ExceptionHandlerInterface;
 use Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent;
 
 /**
- * The exception handler listener...
+ * The exception handler listener.
  *
  * @version 0.0.1
  * @package App\EventListener
@@ -16,18 +15,18 @@ use Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent;
 class ExceptionHandlerListener
 {
     /**
-     * @var App\HttpKernel\ExceptionHandlerInterface $exceptionHandler
+     * @var App\HttpKernel\ExceptionHandlerInterface[] $exceptionHandlers
      */
-    private $exceptionHandler;
+    private $exceptionHandlers;
 
     /**
      * Constructs the exception handler listener.
      *
-     * @param App\HttpKernel\ExceptionHandlerInterface $exceptionHandler
+     * @param App\HttpKernel\ExceptionHandlerInterface[] $exceptionHandler
      */
-    public function __construct(ExceptionHandlerInterface $exceptionHandler)
+    public function __construct(array $exceptionHandlers)
     {
-        $this->exceptionHandler = $exceptionHandler;
+        $this->exceptionHandlers = $exceptionHandlers;
     }
 
     /**
@@ -37,8 +36,12 @@ class ExceptionHandlerListener
      */
     public function onKernelException(GetResponseForExceptionEvent $event)
     {
-        $event->setException(
-            $this->exceptionHandler->convertToHttpException($event->getException())
-        );
+        foreach ($this->exceptionHandlers as $exceptionHandler) {
+            if ($exceptionHandler->supports($event->getException())) {
+                $event->setResponse($exceptionHandler->handle($event->getRequest()));
+
+                return;
+            }
+        }
     }
 }

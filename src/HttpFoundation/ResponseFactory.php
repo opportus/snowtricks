@@ -3,6 +3,7 @@
 namespace App\HttpFoundation;
 
 use App\HttpKernel\ControllerResultInterface;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -27,6 +28,11 @@ class ResponseFactory implements ResponseFactoryInterface
     private $parameters;
 
     /**
+     * @var Symfony\Component\HttpFoundation\RequestStack $requestStack
+     */
+    private $requestStack;
+
+    /**
      * @var Symfony\Component\Routing\RouterInterface $router
      */
     private $router;
@@ -42,12 +48,14 @@ class ResponseFactory implements ResponseFactoryInterface
      * @param array $parameters
      * @param Symfony\Component\Routing\RouterInterface $router
      * @param Twig_Environment $twig
+     * @param Symfony\Component\HttpFoundation\RequestStack $requestStack
      */
-    public function __construct(array $parameters, RouterInterface $router, Twig_Environment $twig)
+    public function __construct(array $parameters, RouterInterface $router, Twig_Environment $twig, RequestStack $requestStack)
     {
         $this->parameters = $parameters;
-        $this->router     = $router;
-        $this->twig       = $twig;
+        $this->router = $router;
+        $this->twig = $twig;
+        $this->requestStack = $requestStack;
     }
 
     /**
@@ -98,7 +106,7 @@ class ResponseFactory implements ResponseFactoryInterface
         if ($parameters['template']) {
             $content = $this->twig->render(
                 $parameters['template'],
-                $controllerResult->getData()
+                ['data' => $controllerResult->getData()]
             );
         } else {
             $content = '';

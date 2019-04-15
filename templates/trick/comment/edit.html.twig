@@ -1,3 +1,4 @@
+{% set form = data.createView() %}
 {% if form.id.vars.value %}
     {% set action       = url('put_trick_comment_by_edit_form', {'id': form.id.vars.value}) %}
     {% set ajaxAction   = 'updateTrickComment' %}

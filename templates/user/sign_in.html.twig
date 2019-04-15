@@ -1,4 +1,7 @@
 {% extends 'base.html.twig' %}
+{% set form = data.form.createView() %}
+{% set error = data.error %}
+{% set username = data.username %}
 {% block title %}{{ 'user.sign_in.page.title'|trans }}{% endblock title %}
 {% block description %}{{ 'user.sign_in.page.description'|trans }}{% endblock description %}
 {% block content %}

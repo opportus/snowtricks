@@ -133,7 +133,7 @@ parameters:
                     validation_groups: ['user.form.password_reset_request']
             response:
                 -
-                    status: 204
+                    status: 202
                     redirection:
                         route:
                             name: 'get_home'
@@ -302,7 +302,7 @@ parameters:
                     status: 400
                     format: 'html'
                     template: 'trick/edit.html.twig'
-        App\Controller\TrickController::deleteTrickByDeleteForm:
+        App\Controller\TrickController::deleteTrick:
             entity:
                 class: 'App\Entity\Trick'
                 id: 'slug'
@@ -425,30 +425,16 @@ services:
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
 
-    # Controller...
-    App\Controller\HomeController:
-        arguments:
-            $parameters: '%action_parameters%'
+    # Param converters...
+    App\ParamConverter\SubmittedEntityParamConverter:
         tags:
-            - { name: controller.service_arguments }
-
-    App\Controller\UserController:
-        arguments:
-            $parameters: '%action_parameters%'
+            - { name: request.param_converter, converter: app.submitted_entity_param_converter }
+    App\ParamConverter\EntityFormParamConverter:
         tags:
-            - { name: controller.service_arguments }
-
-    App\Controller\TrickController:
-        arguments:
-            $parameters: '%action_parameters%'
+            - { name: request.param_converter, converter: app.entity_form_param_converter }
+    App\ParamConverter\EntityCollectionParamConverter:
         tags:
-            - { name: controller.service_arguments }
-
-    App\Controller\TrickCommentController:
-        arguments:
-            $parameters: '%action_parameters%'
-        tags:
-            - { name: controller.service_arguments }
+            - { name: request.param_converter, converter: app.entity_collection_param_converter }
 
     # Response Factory...
     App\HttpFoundation\ResponseFactoryInterface: '@App\HttpFoundation\ResponseFactory'
@@ -473,6 +459,14 @@ services:
     App\Validator\Validator:
         arguments:
             $validator: '@Symfony\Component\Validator\Validator\ValidatorInterface'
+
+    # Exception handlers...
+    App\HttpKernel\EntityNotFoundExceptionHandler:
+        tags:
+            - { name: exception_handler }
+    App\HttpKernel\InvalidSubmittedEntityExceptionHandler:
+        tags:
+            - { name: exception_handler }
 
     # Event listener...
     App\EventListener\ExceptionHandlerListener:

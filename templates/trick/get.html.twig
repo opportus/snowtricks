@@ -1,6 +1,7 @@
 {% extends 'base.html.twig' %}
+{% set entity = data %}
 {% block title %}{{ entity.title }}{% endblock title %}
-{% block description %}{{ entity.description }}{% endblock description %}
+{% block description %}{{ data.description }}{% endblock description %}
 {% block content %}
     {{ parent() }}
     <div id="{{ entity.id }}" class="trick-show container-fluid"
@@ -33,7 +34,7 @@
                                             data-action="deleteTrick"
                                             data-redirection="{{ url('get_home') }}"
                                             data-token="{{ csrf_token('security') }}"
-                                            data-url="{{ url('delete_trick_by_delete_form', {'slug': entity.slug}) }}">
+                                            data-url="{{ url('delete_trick', {'slug': entity.slug}) }}">
                                         </i>
                                     </li>
                                 {% endif %}

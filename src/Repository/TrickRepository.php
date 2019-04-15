@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\Trick;
+use App\Exception\EntityNotFoundException;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 
@@ -25,5 +26,19 @@ class TrickRepository extends ServiceEntityRepository implements TrickRepository
     {
         parent::__construct($registry, Trick::class);
 
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function findOneBySlugOrThrowExceptionIfNoResult(string $slug) : Trick
+    {
+        $trick = $this->findOneBy(['slug' => $slug]);
+
+        if (null === $trick) {
+            throw new EntityNotFoundException('No entity matches this set of criteria');
+        }
+
+        return $trick;
     }
 }

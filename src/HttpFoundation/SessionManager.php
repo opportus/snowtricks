@@ -60,7 +60,7 @@ class SessionManager implements SessionManagerInterface
 
         if ($this->translator->getCatalogue()->has($parameters['flash']['message']['id'])) {
             if ($parameters['flash']['message']['parameters']) {
-                $entity = $controllerResult->getData()['entity'];
+                $entity = $controllerResult->getData();
 
                 foreach ($parameters['flash']['message']['parameters'] as $id => $property) {
                     $parameters['flash']['message']['parameters']['%' . $id . '%'] = $entity->$property();

@@ -8,7 +8,7 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 
 /**
- * The user password reset request type...
+ * The user password reset request type.
  *
  * @version 0.0.1
  * @package App\Form\Type

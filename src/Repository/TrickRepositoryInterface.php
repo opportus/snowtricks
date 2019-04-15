@@ -2,6 +2,8 @@
 
 namespace App\Repository;
 
+use App\Entity\Trick;
+
 /**
  * The trick repository interface.
  *
@@ -12,4 +14,12 @@ namespace App\Repository;
  */
 interface TrickRepositoryInterface extends EntityRepositoryInterface
 {
+    /**
+     * Finds one trick by slug or throws exception if no result.
+     *
+     * @param  string $slug
+     * @return App\Entity\Trick
+     * @throws App\Exception\EntityNotFoundException
+     */
+    public function findOneBySlugOrThrowExceptionIfNoResult(string $slug) : Trick;
 }

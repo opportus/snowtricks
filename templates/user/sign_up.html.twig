@@ -1,4 +1,5 @@
 {% extends 'base.html.twig' %}
+{% set form = data.createView() %}
 {% block title %}{{ 'user.sign_up.page.title'|trans() }}{% endblock title %}
 {% block description %}{{ 'user.sign_up.page.description'|trans() }}{% endblock description %}
 {% block content %}

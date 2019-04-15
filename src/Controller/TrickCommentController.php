@@ -2,112 +2,238 @@
 
 namespace App\Controller;
 
-use App\HttpKernel\ControllerResultInterface;
-use Symfony\Component\HttpFoundation\Request;
+use App\Entity\TrickComment;
+use App\HttpKernel\ControllerResult;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Routing\Annotation\Route;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
+use Doctrine\Common\Collections\ArrayCollection;
 
 /**
- * The trick comment controller...
+ * The trick comment controller.
  *
  * @version 0.0.1
  * @package App\Controller
  * @author  Clément Cazaud <opportus@gmail.com>
  * @license https://github.com/opportus/snowtricks/blob/master/LICENSE.md MIT
  */
-class TrickCommentController extends Controller
+class TrickCommentController
 {
+    use ControllerTrait;
+
     /**
-     * Gets trick comment edit form.
+     * Gets the trick comment edit form.
      *
-     * @param  Symfony\Component\HttpFoundation\Request $request
-     * @return App\HttpKernel\ControllerResultInterface
+     * @param Symfony\Component\Form\FormInterface $form
+     * @return App\HttpKernel\ControllerResult
      *
      * @Route("/trick-comment/edit/{id}", name="get_trick_comment_edit_form", methods={"GET"})
+     * 
+     * @IsGranted("IS_AUTHENTICATED_FULLY")
+     *
+     * @ParamConverter(
+     *     "form",
+     *     class="App\Entity\TrickComment",
+     *     converter="app.entity_form_param_converter",
+     *     options={
+     *         "id"="id",
+     *         "form_type"="App\Form\Type\TrickCommentEditType",
+     *         "form_options"={
+     *             "data_class"="App\Entity\Dto\TrickCommentDto",
+     *             "method"="PUT"
+     *         },
+     *         "repository_method"="findOneByIdOrThrowExceptionIfNoResult"
+     *     }
+     * )
      */
-    public function getTrickCommentEditForm(Request $request) : ControllerResultInterface
+    public function getTrickCommentEditForm(FormInterface $form) : ControllerResult
     {
-        return $this->getForm($request);
+        return new ControllerResult(
+            Response::HTTP_OK,
+            $form
+        );
     }
 
     /**
-     * Gets trick comment empty edit form.
+     * Gets the trick comment empty edit form.
      *
-     * @param  Symfony\Component\HttpFoundation\Request $request
-     * @return App\HttpKernel\ControllerResultInterface
+     * @param Symfony\Component\Form\FormInterface $form
+     * @return App\HttpKernel\ControllerResult
      *
      * @Route("/trick-comment/edit", name="get_trick_comment_empty_edit_form", methods={"GET"})
+     * 
+     * @IsGranted("IS_AUTHENTICATED_FULLY")
+     *
+     * @ParamConverter(
+     *     "form",
+     *     class="App\Entity\TrickComment",
+     *     converter="app.entity_form_param_converter",
+     *     options={
+     *         "form_type"="App\Form\Type\TrickCommentEditType",
+     *         "form_options"={
+     *             "data_class"="App\Entity\Dto\TrickCommentDto",
+     *             "method"="POST"
+     *         }
+     *     }
+     * )
      */
-    public function getTrickCommentEmptyEditForm(Request $request) : ControllerResultInterface
+    public function getTrickCommentEmptyEditForm(FormInterface $form) : ControllerResult
     {
-        return $this->getForm($request);
+        return new ControllerResult(
+            Response::HTTP_OK,
+            $form
+        );
     }
 
     /**
-     * Gets trick comment collection.
+     * Gets the trick comment collection.
      *
-     * @param  Symfony\Component\HttpFoundation\Request $request
-     * @return App\HttpKernel\ControllerResultInterface
+     * @param Doctrine\Common\Collections\ArrayCollection $trickCommentCollection
+     * @return App\HttpKernel\ControllerResult
      *
      * @Route("/trick-comment", name="get_trick_comment_collection", methods={"GET"})
+     * 
+     * @ParamConverter(
+     *     "trickCommentCollection",
+     *     class="App\Entity\TrickComment",
+     *     converter="app.entity_collection_param_converter",
+     *     options={
+     *         "repository_method"="findAllByCriteriaOrThrowExceptionIfNoResult"
+     *     }
+     * )
      */
-    public function getTrickCommentCollection(Request $request) : ControllerResultInterface
+    public function getTrickCommentCollection(ArrayCollection $trickCommentCollection) : ControllerResult
     {
-        return $this->getCollection($request);
+        return new ControllerResult(
+            Response::HTTP_OK,
+            $trickCommentCollection
+        );
     }
 
     /**
-     * Gets trick comment.
+     * Gets the trick comment.
      *
-     * @param  Symfony\Component\HttpFoundation\Request $request
-     * @return App\HttpKernel\ControllerResultInterface
+     * @param App\Entity\TrickComment $trickComment
+     * @return App\HttpKernel\ControllerResult
      *
      * @Route("/trick-comment/{id}", name="get_trick_comment", methods={"GET"})
+     * 
+     * @ParamConverter(
+     *     "trickComment",
+     *     class="App\Entity\TrickComment",
+     *     options={
+     *         "id"="id",
+     *         "repository_method"="findOneByIdOrThrowExceptionIfNoResult"
+     *     }
+     * )
      */
-    public function getTrickComment(Request $request) : ControllerResultInterface
+    public function getTrickComment(TrickComment $trickComment) : ControllerResult
     {
-        return $this->get($request);
+        return new ControllerResult(
+            Response::HTTP_OK,
+            $trickComment
+        );
     }
 
     /**
-     * Posts trick comment by edit form.
+     * Posts the trick comment by edit form.
      *
-     * @param  Symfony\Component\HttpFoundation\Request $request
-     * @return App\HttpKernel\ControllerResultInterface
+     * @param App\Entity\TrickComment $trickComment
+     * @return App\HttpKernel\ControllerResult
      *
      * @Route("/trick-comment/edit", name="post_trick_comment_by_edit_form", methods={"POST"})
-     * @Security("has_role('ROLE_USER')")
+     * 
+     * @IsGranted("IS_AUTHENTICATED_FULLY")
+     * 
+     * @ParamConverter(
+     *     "trickComment",
+     *     class="App\Entity\TrickComment",
+     *     converter="app.submitted_entity_param_converter",
+     *     options={
+     *         "form_type"="App\Form\Type\TrickCommentEditType",
+     *         "form_options"={
+     *             "data_class"="App\Entity\Dto\TrickCommentDto",
+     *             "method"="POST",
+     *             "validation_groups"={"trick_comment.form.edit"}
+     *         }
+     *     }
+     * )
      */
-    public function postTrickCommentByEditForm(Request $request) : ControllerResultInterface
+    public function postTrickCommentByEditForm(TrickComment $trickComment) : ControllerResult
     {
-        return $this->post($request);
+        $this->entityManager->persist($trickComment);
+        $this->entityManager->flush();
+
+        return new ControllerResult(
+            Response::HTTP_CREATED,
+            $trickComment
+        );
     }
 
     /**
-     * Puts trick comment by edit form.
+     * Puts the trick comment by edit form.
      *
-     * @param  Symfony\Component\HttpFoundation\Request $request
-     * @return App\HttpKernel\ControllerResultInterface
+     * @param App\Entity\TrickComment $trickComment
+     * @return App\HttpKernel\ControllerResult
      *
      * @Route("/trick-comment/edit/{id}", name="put_trick_comment_by_edit_form", methods={"PUT"})
-     * @Security("has_role('ROLE_USER')")
+     * 
+     * @ParamConverter(
+     *     "trickComment",
+     *     class="App\Entity\TrickComment",
+     *     converter="app.submitted_entity_param_converter",
+     *     options={
+     *         "id"="id",
+     *         "form_type"="App\Form\Type\TrickCommentEditType",
+     *         "form_options"={
+     *             "data_class"="App\Entity\Dto\TrickCommentDto",
+     *             "method"="PUT",
+     *             "validation_groups"={"trick_comment.form.edit"}
+     *         },
+     *         "repository_method"="findOneByIdOrThrowExceptionIfNoResult",
+     *         "grant"="PUT"
+     *     }
+     * )
      */
-    public function putTrickCommentByEditForm(Request $request) : ControllerResultInterface
+    public function putTrickCommentByEditForm(TrickComment $trickComment) : ControllerResult
     {
-        return $this->put($request);
+        $this->entityManager->flush();
+
+        return new ControllerResult(
+            Response::HTTP_NO_CONTENT,
+            $trickComment
+        );
     }
 
     /**
-     * Deletes trick comment by delete form.
+     * Deletes the trick comment by delete form.
      *
-     * @param  Symfony\Component\HttpFoundation\Request $request
-     * @return App\HttpKernel\ControllerResultInterface
+     * @param App\Entity\TrickComment $trickComment
+     * @return App\HttpKernel\ControllerResult
      *
      * @Route("/trick-comment/delete/{id}", name="delete_trick_comment_by_delete_form", methods={"DELETE"})
-     * @Security("has_role('ROLE_USER')")
+     * 
+     * @IsGranted("DELETE", subject="trickComment")
+     * 
+     * @ParamConverter(
+     *     "trickComment",
+     *     class="App\Entity\TrickComment",
+     *     options={
+     *         "id"="id",
+     *         "repository_method"="findOneByIdOrThrowExceptionIfNoResult"
+     *     }
+     * )
      */
-    public function deleteTrickCommentByDeleteForm(Request $request) : ControllerResultInterface
+    public function deleteTrickCommentByDeleteForm(TrickComment $trickComment) : ControllerResult
     {
-        return $this->delete($request);
+        $this->entityManager->remove($trickComment);
+        $this->entityManager->flush();
+
+        return new ControllerResult(
+            Response::HTTP_NO_CONTENT,
+            null
+        );
     }
 }

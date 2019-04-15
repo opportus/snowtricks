@@ -23,10 +23,11 @@ interface UserRepositoryInterface extends EntityRepositoryInterface
     public function findOneByUsername(string $username) : ?User;
 
     /**
-     * Finds one user by email.
+     * Finds one user by username or throws exception if no result.
      *
-     * @param  string $email
-     * @return null|App\Entity\User
+     * @param  string $username
+     * @return App\Entity\User
+     * @throws App\Exception\EntityNotFoundException
      */
-    public function findOneByEmail(string $email) : ?User;
+    public function findOneByUsernameOrThrowExceptionIfNoResult(string $username) : User;
 }
