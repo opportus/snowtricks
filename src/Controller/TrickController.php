@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Trick;
+use App\Annotation;
 use App\HttpKernel\ControllerResult;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Form\FormInterface;

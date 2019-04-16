@@ -484,6 +484,9 @@ services:
     App\EventListener\ObjectMapperRecursorListener:
         tags:
             - { name: kernel.event_listener, event: 'opportus_object_mapper.set_target_point_value', method: 'onSetTargetPointValue' }
+    App\EventListener\ControllerAnnotationReaderListener:
+        tags:
+            - { name: kernel.event_listener, event: kernel.controller }
 
 
     # Event subscriber...
