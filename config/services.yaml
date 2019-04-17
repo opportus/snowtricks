@@ -436,12 +436,6 @@ services:
         tags:
             - { name: request.param_converter, converter: app.entity_collection_param_converter }
 
-    # Response Factory...
-    App\HttpFoundation\ResponseFactoryInterface: '@App\HttpFoundation\ResponseFactory'
-    App\HttpFoundation\ResponseFactory:
-        arguments:
-            $parameters: '%action_parameters%'
-
     # Session Manager...
     App\HttpFoundation\SessionManagerInterface: '@App\HttpFoundation\SessionManager'
     App\HttpFoundation\SessionManager:
@@ -468,6 +462,11 @@ services:
         tags:
             - { name: exception_handler }
 
+    # View builders...
+    App\View\TwigViewBuilder:
+        tags:
+            - { name: view_builder }
+
     # Event listener...
     App\EventListener\ExceptionHandlerListener:
         tags:
@@ -475,7 +474,7 @@ services:
     App\EventListener\QueryParametersValidatorListener:
         tags:
             - { name: kernel.event_listener, event: kernel.request }
-    App\EventListener\ResponseFactoryListener:
+    App\EventListener\ResponseBuilderListener:
         tags:
             - { name: kernel.event_listener, event: kernel.view, priority: 80 }
     App\EventListener\SessionManagerListener:

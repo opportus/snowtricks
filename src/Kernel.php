@@ -3,6 +3,7 @@
 namespace App;
 
 use App\DependencyInjection\Compiler\ExceptionHandlerPass;
+use App\DependencyInjection\Compiler\ViewBuilderPass;
 use Symfony\Bundle\FrameworkBundle\Kernel\MicroKernelTrait;
 use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -66,5 +67,6 @@ class Kernel extends BaseKernel
     protected function build(ContainerBuilder $container): void
     {
         $container->addCompilerPass(new ExceptionHandlerPass());
+        $container->addCompilerPass(new ViewBuilderPass());
     }
 }

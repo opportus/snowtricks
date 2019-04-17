@@ -44,6 +44,19 @@ class UserController
      *         }
      *     }
      * )
+     * 
+     * @App\Annotation\Response(
+     *     content=@App\Annotation\View(
+     *         format="text/html",
+     *         builder="App\View\TwigViewBuilder",
+     *         options={
+     *             "template"="user/sign_up.html.twig"
+     *         }
+     *     ),
+     *     statusCode=Response::HTTP_OK,
+     *     headers={},
+     *     options={}
+     * )
      */
     public function getUserSignUpEmptyForm(FormInterface $form) : ControllerResult
     {
@@ -74,6 +87,30 @@ class UserController
      *         }
      *     }
      * )
+     * 
+     * @App\Annotation\Response(
+     *     statusCode=Response::HTTP_SEE_OTHER,
+     *     headers={
+     *         "location"=@App\Annotation\Route(
+     *             name="get_home",
+     *             parameters={}
+     *         )
+     *     },
+     *     options={}
+     * )
+     * 
+     * @App\Annotation\Response(
+     *     content=@App\Annotation\View(
+     *         format="text/html",
+     *         builder="App\View\TwigViewBuilder",
+     *         options={
+     *             "template"="user/sign_up.html.twig"
+     *         }
+     *     ),
+     *     statusCode=Response::HTTP_BAD_REQUEST,
+     *     headers={},
+     *     options={}
+     * )
      */
     public function postUserBySignUpForm(User $user) : ControllerResult
     {
@@ -81,7 +118,7 @@ class UserController
         $this->entityManager->flush();
 
         return new ControllerResult(
-            Response::HTTP_CREATED,
+            Response::HTTP_SEE_OTHER,
             $user
         );
     }
@@ -110,13 +147,24 @@ class UserController
      *         "grant"="PATCH"
      *     }
      * )
+     * 
+     * @App\Annotation\Response(
+     *     statusCode=Response::HTTP_SEE_OTHER,
+     *     headers={
+     *         "location"=@App\Annotation\Route(
+     *             name="get_home",
+     *             parameters={}
+     *         )
+     *     },
+     *     options={}
+     * )
      */
     public function patchUserByActivationEmailForm(User $user) : ControllerResult
     {
         $this->entityManager->flush();
 
         return new ControllerResult(
-            Response::HTTP_NO_CONTENT,
+            Response::HTTP_SEE_OTHER,
             $user
         );
     }
@@ -140,6 +188,19 @@ class UserController
      *             "method"="GET"
      *         }
      *     }
+     * )
+     * 
+     * @App\Annotation\Response(
+     *     content=@App\Annotation\View(
+     *         format="text/html",
+     *         builder="App\View\TwigViewBuilder",
+     *         options={
+     *             "template"="user/password_reset_request.html.twig"
+     *         }
+     *     ),
+     *     statusCode=Response::HTTP_OK,
+     *     headers={},
+     *     options={}
      * )
      */
     public function getUserPasswordResetRequestEmptyForm(FormInterface $form) : ControllerResult
@@ -173,11 +234,48 @@ class UserController
      *         "repository_method"="findOneByUsernameOrThrowExceptionIfNoResult"
      *     }
      * )
+     * 
+     * @App\Annotation\Response(
+     *     statusCode=Response::HTTP_SEE_OTHER,
+     *     headers={
+     *         "location"=@App\Annotation\Route(
+     *             name="get_home",
+     *             parameters={}
+     *         )
+     *     },
+     *     options={}
+     * )
+     * 
+     * @App\Annotation\Response(
+     *     content=@App\Annotation\View(
+     *         format="text/html",
+     *         builder="App\View\TwigViewBuilder",
+     *         options={
+     *             "template"="user/password_reset_request.html.twig"
+     *         }
+     *     ),
+     *     statusCode=Response::HTTP_BAD_REQUEST,
+     *     headers={},
+     *     options={}
+     * )
+     * 
+     * @App\Annotation\Response(
+     *     content=@App\Annotation\View(
+     *         format="text/html",
+     *         builder="App\View\TwigViewBuilder",
+     *         options={
+     *             "template"="user/password_reset_request.html.twig"
+     *         }
+     *     ),
+     *     statusCode=Response::HTTP_NOT_FOUND,
+     *     headers={},
+     *     options={}
+     * )
      */
     public function proceedByUserPasswordResetRequestForm(User $user) : ControllerResult
     {
         return new ControllerResult(
-            Response::HTTP_ACCEPTED,
+            Response::HTTP_SEE_OTHER,
             $user
         );
     }
@@ -201,6 +299,19 @@ class UserController
      *             "method"="PATCH"
      *         }
      *     }
+     * )
+     * 
+     * @App\Annotation\Response(
+     *     content=@App\Annotation\View(
+     *         format="text/html",
+     *         builder="App\View\TwigViewBuilder",
+     *         options={
+     *             "template"="user/password_reset.html.twig"
+     *         }
+     *     ),
+     *     statusCode=Response::HTTP_OK,
+     *     headers={},
+     *     options={}
      * )
      */
     public function getUserPasswordResetEmptyForm(FormInterface $form) : ControllerResult
@@ -235,13 +346,63 @@ class UserController
      *         "grant"="PATCH"
      *     }
      * )
+     * 
+     * @App\Annotation\Response(
+     *     statusCode=Response::HTTP_SEE_OTHER,
+     *     headers={
+     *         "location"=@App\Annotation\Route(
+     *             name="get_home",
+     *             parameters={}
+     *         )
+     *     },
+     *     options={}
+     * )
+     * 
+     * @App\Annotation\Response(
+     *     content=@App\Annotation\View(
+     *         format="text/html",
+     *         builder="App\View\TwigViewBuilder",
+     *         options={
+     *             "template"="user/password_reset.html.twig"
+     *         }
+     *     ),
+     *     statusCode=Response::HTTP_BAD_REQUEST,
+     *     headers={},
+     *     options={}
+     * )
+     * 
+     * @App\Annotation\Response(
+     *     content=@App\Annotation\View(
+     *         format="text/html",
+     *         builder="App\View\TwigViewBuilder",
+     *         options={
+     *             "template"="user/password_reset.html.twig"
+     *         }
+     *     ),
+     *     statusCode=Response::HTTP_NOT_FOUND,
+     *     headers={},
+     *     options={}
+     * )
+     * 
+     * @App\Annotation\Response(
+     *     content=@App\Annotation\View(
+     *         format="text/html",
+     *         builder="App\View\TwigViewBuilder",
+     *         options={
+     *             "template"="user/password_reset.html.twig"
+     *         }
+     *     ),
+     *     statusCode=Response::HTTP_FORBIDDEN,
+     *     headers={},
+     *     options={}
+     * )
      */
     public function patchUserByPasswordResetForm(User $user) : ControllerResult
     {
         $this->entityManager->flush();
 
         return new ControllerResult(
-            Response::HTTP_NO_CONTENT,
+            Response::HTTP_SEE_OTHER,
             $user
         );
     }
@@ -265,6 +426,19 @@ class UserController
      *             "method"="POST"
      *         }
      *     }
+     * )
+     * 
+     * @App\Annotation\Response(
+     *     content=@App\Annotation\View(
+     *         format="text/html",
+     *         builder="App\View\TwigViewBuilder",
+     *         options={
+     *             "template"="user/sign_in.html.twig"
+     *         }
+     *     ),
+     *     statusCode=Response::HTTP_OK,
+     *     headers={},
+     *     options={}
      * )
      */
     public function getUserSignInEmptyForm(FormInterface $form, AuthenticationUtils $authenticationUtils) : ControllerResult

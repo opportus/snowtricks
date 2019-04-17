@@ -2,33 +2,33 @@
 
 namespace App\EventListener;
 
-use App\HttpFoundation\ResponseFactoryInterface;
-use App\HttpKernel\ControllerResultInterface;
+use App\HttpFoundation\ResponseBuilderInterface;
+use App\HttpKernel\ControllerResult;
 use Symfony\Component\HttpKernel\Event\GetResponseForControllerResultEvent;
 
 /**
- * The response factory listener...
+ * The response builder listener.
  *
  * @version 0.0.1
  * @package App\EventListener
  * @author  Clément Cazaud <opportus@gmail.com>
  * @license https://github.com/opportus/snowtricks/blob/master/LICENSE.md MIT
  */
-class ResponseFactoryListener
+class ResponseBuilderListener
 {
     /**
-     * @var App\HttpFoundation\ResponseFactoryInterface $responseBuilder
+     * @var App\HttpFoundation\ResponseBuilderInterface $responseBuilder
      */
-    private $responseFactory;
+    private $responseBuilder;
 
     /**
-     * Constructs the response factory listener.
+     * Constructs the response builder listener.
      *
-     * @param App\HttpFoundation\ResponseFactoryInterface $responseFactory
+     * @param App\HttpFoundation\ResponseBuilderInterface $responseBuilder
      */
-    public function __construct(ResponseFactoryInterface $responseFactory)
+    public function __construct(ResponseBuilderInterface $responseBuilder)
     {
-        $this->responseFactory = $responseFactory;
+        $this->responseBuilder = $responseBuilder;
     }
 
     /**
@@ -38,11 +38,11 @@ class ResponseFactoryListener
      */
     public function onKernelView(GetResponseForControllerResultEvent $event)
     {
-        if (! $event->getControllerResult() instanceof ControllerResultInterface) {
+        if (!$event->getControllerResult() instanceof ControllerResult) {
             return;
         }
 
-        $event->setResponse($this->responseFactory->createResponse(
+        $event->setResponse($this->responseBuilder->build(
             $event->getRequest(),
             $event->getControllerResult()
         ));

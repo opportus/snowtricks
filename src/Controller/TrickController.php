@@ -2,8 +2,8 @@
 
 namespace App\Controller;
 
+use App;
 use App\Entity\Trick;
-use App\Annotation;
 use App\HttpKernel\ControllerResult;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Form\FormInterface;
@@ -48,6 +48,19 @@ class TrickController
      *         "repository_method"="findOneBySlugOrThrowExceptionIfNoResult"
      *     }
      * )
+     * 
+     * @App\Annotation\Response(
+     *     content=@App\Annotation\View(
+     *         format="text/html",
+     *         builder="App\View\TwigViewBuilder",
+     *         options={
+     *             "template"="trick/edit.html.twig"
+     *         }
+     *     ),
+     *     statusCode=Response::HTTP_OK,
+     *     headers={},
+     *     options={}
+     * )
      */
     public function getTrickEditForm(FormInterface $form) : ControllerResult
     {
@@ -79,6 +92,19 @@ class TrickController
      *         }
      *     }
      * )
+     * 
+     * @App\Annotation\Response(
+     *     content=@App\Annotation\View(
+     *         format="text/html",
+     *         builder="App\View\TwigViewBuilder",
+     *         options={
+     *             "template"="trick/edit.html.twig"
+     *         }
+     *     ),
+     *     statusCode=Response::HTTP_OK,
+     *     headers={},
+     *     options={}
+     * )
      */
     public function getTrickEditEmptyForm(FormInterface $form) : ControllerResult
     {
@@ -104,6 +130,19 @@ class TrickController
      *         "repository_method"="findAllByCriteriaOrThrowExceptionIfNoResult"
      *     }
      * )
+     * 
+     * @App\Annotation\Response(
+     *     content=@App\Annotation\View(
+     *         format="application/json",
+     *         builder="App\View\TwigViewBuilder",
+     *         options={
+     *             "template"="trick/collection.html.twig"
+     *         }
+     *     ),
+     *     statusCode=Response::HTTP_OK,
+     *     headers={},
+     *     options={}
+     * )
      */
     public function getTrickCollection(ArrayCollection $trickCollection) : ControllerResult
     {
@@ -128,6 +167,19 @@ class TrickController
      *         "id"="slug",
      *         "repository_method"="findOneBySlugOrThrowExceptionIfNoResult"
      *     }
+     * )
+     * 
+     * @App\Annotation\Response(
+     *     content=@App\Annotation\View(
+     *         format="text/html",
+     *         builder="App\View\TwigViewBuilder",
+     *         options={
+     *             "template"="trick/get.html.twig"
+     *         }
+     *     ),
+     *     statusCode=Response::HTTP_OK,
+     *     headers={},
+     *     options={}
      * )
      */
     public function getTrick(Trick $trick) : ControllerResult
@@ -161,6 +213,30 @@ class TrickController
      *         }
      *     }
      * )
+     * 
+     * @App\Annotation\Response(
+     *     statusCode=Response::HTTP_SEE_OTHER,
+     *     headers={
+     *         "location"=@App\Annotation\Route(
+     *             name="get_home",
+     *             parameters={}
+     *         )
+     *     },
+     *     options={}
+     * )
+     * 
+     * @App\Annotation\Response(
+     *     content=@App\Annotation\View(
+     *         format="text/html",
+     *         builder="App\View\TwigViewBuilder",
+     *         options={
+     *             "template"="trick/edit.html.twig"
+     *         }
+     *     ),
+     *     statusCode=Response::HTTP_BAD_REQUEST,
+     *     headers={},
+     *     options={}
+     * )
      */
     public function postTrickByEditForm(Trick $trick) : ControllerResult
     {
@@ -168,7 +244,7 @@ class TrickController
         $this->entityManager->flush();
 
         return new ControllerResult(
-            Response::HTTP_CREATED,
+            Response::HTTP_SEE_OTHER,
             $trick
         );
     }
@@ -198,13 +274,37 @@ class TrickController
      *         "repository_method"="findOneBySlugOrThrowExceptionIfNoResult"
      *     }
      * )
+     * 
+     * @App\Annotation\Response(
+     *     statusCode=Response::HTTP_SEE_OTHER,
+     *     headers={
+     *         "location"=@App\Annotation\Route(
+     *             name="get_home",
+     *             parameters={}
+     *         )
+     *     },
+     *     options={}
+     * )
+     * 
+     * @App\Annotation\Response(
+     *     content=@App\Annotation\View(
+     *         format="text/html",
+     *         builder="App\View\TwigViewBuilder",
+     *         options={
+     *             "template"="trick/edit.html.twig"
+     *         }
+     *     ),
+     *     statusCode=Response::HTTP_BAD_REQUEST,
+     *     headers={},
+     *     options={}
+     * )
      */
     public function putTrickByEditForm(Trick $trick) : ControllerResult
     {
         $this->entityManager->flush();
 
         return new ControllerResult(
-            Response::HTTP_NO_CONTENT,
+            Response::HTTP_SEE_OTHER,
             $trick
         );
     }
@@ -226,6 +326,12 @@ class TrickController
      *         "id"="slug",
      *         "repository_method"="findOneBySlugOrThrowExceptionIfNoResult"
      *     }
+     * )
+     * 
+     * @App\Annotation\Response(
+     *     statusCode=Response::HTTP_NO_CONTENT,
+     *     headers={},
+     *     options={}
      * )
      */
     public function deleteTrick(Trick $trick) : ControllerResult

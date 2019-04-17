@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App;
 use App\Entity\TrickComment;
 use App\HttpKernel\ControllerResult;
 use Symfony\Component\HttpFoundation\Response;
@@ -47,6 +48,19 @@ class TrickCommentController
      *         "repository_method"="findOneByIdOrThrowExceptionIfNoResult"
      *     }
      * )
+     * 
+     * @App\Annotation\Response(
+     *     content=@App\Annotation\View(
+     *         format="application/json",
+     *         builder="App\View\TwigViewBuilder",
+     *         options={
+     *             "template"="trick/comment/edit.html.twig"
+     *         }
+     *     ),
+     *     statusCode=Response::HTTP_OK,
+     *     headers={},
+     *     options={}
+     * )
      */
     public function getTrickCommentEditForm(FormInterface $form) : ControllerResult
     {
@@ -78,6 +92,32 @@ class TrickCommentController
      *         }
      *     }
      * )
+     * 
+     * @App\Annotation\Response(
+     *     content=@App\Annotation\View(
+     *         format="application/json",
+     *         builder="App\View\TwigViewBuilder",
+     *         options={
+     *             "template"="trick/comment/edit.html.twig"
+     *         }
+     *     ),
+     *     statusCode=Response::HTTP_OK,
+     *     headers={},
+     *     options={}
+     * )
+     * 
+     * @App\Annotation\Response(
+     *     content=@App\Annotation\View(
+     *         format="text/html",
+     *         builder="App\View\TwigViewBuilder",
+     *         options={
+     *             "template"="trick/comment/edit.html.twig"
+     *         }
+     *     ),
+     *     statusCode=Response::HTTP_OK,
+     *     headers={},
+     *     options={}
+     * )
      */
     public function getTrickCommentEmptyEditForm(FormInterface $form) : ControllerResult
     {
@@ -103,6 +143,19 @@ class TrickCommentController
      *         "repository_method"="findAllByCriteriaOrThrowExceptionIfNoResult"
      *     }
      * )
+     * 
+     * @App\Annotation\Response(
+     *     content=@App\Annotation\View(
+     *         format="application/json", 
+     *         builder="App\View\TwigViewBuilder",
+     *         options={
+     *             "template"="trick/comment/collection.html.twig"
+     *         }
+     *     ),
+     *     statusCode=Response::HTTP_OK,
+     *     headers={},
+     *     options={}
+     * )
      */
     public function getTrickCommentCollection(ArrayCollection $trickCommentCollection) : ControllerResult
     {
@@ -127,6 +180,19 @@ class TrickCommentController
      *         "id"="id",
      *         "repository_method"="findOneByIdOrThrowExceptionIfNoResult"
      *     }
+     * )
+     * 
+     * @App\Annotation\Response(
+     *     content=@App\Annotation\View(
+     *         format="application/json", 
+     *         builder="App\View\TwigViewBuilder",
+     *         options={
+     *             "template"="trick/comment/get.html.twig"
+     *         }
+     *     ),
+     *     statusCode=Response::HTTP_OK,
+     *     headers={},
+     *     options={}
      * )
      */
     public function getTrickComment(TrickComment $trickComment) : ControllerResult
@@ -160,6 +226,12 @@ class TrickCommentController
      *         }
      *     }
      * )
+     * 
+     * @App\Annotation\Response(
+     *     statusCode=Response::HTTP_NO_CONTENT,
+     *     headers={},
+     *     options={}
+     * )
      */
     public function postTrickCommentByEditForm(TrickComment $trickComment) : ControllerResult
     {
@@ -167,7 +239,7 @@ class TrickCommentController
         $this->entityManager->flush();
 
         return new ControllerResult(
-            Response::HTTP_CREATED,
+            Response::HTTP_NO_CONTENT,
             $trickComment
         );
     }
@@ -195,6 +267,12 @@ class TrickCommentController
      *         "repository_method"="findOneByIdOrThrowExceptionIfNoResult",
      *         "grant"="PUT"
      *     }
+     * )
+     * 
+     * @App\Annotation\Response(
+     *     statusCode=Response::HTTP_NO_CONTENT,
+     *     headers={},
+     *     options={}
      * )
      */
     public function putTrickCommentByEditForm(TrickComment $trickComment) : ControllerResult
@@ -224,6 +302,12 @@ class TrickCommentController
      *         "id"="id",
      *         "repository_method"="findOneByIdOrThrowExceptionIfNoResult"
      *     }
+     * )
+     *
+     * @App\Annotation\Response(
+     *     statusCode=Response::HTTP_NO_CONTENT,
+     *     headers={},
+     *     options={}
      * )
      */
     public function deleteTrickCommentByDeleteForm(TrickComment $trickComment) : ControllerResult

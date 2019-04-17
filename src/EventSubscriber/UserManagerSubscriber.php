@@ -63,7 +63,7 @@ class UserManagerSubscriber implements EventSubscriberInterface
     public function proceedUserSignUp(GetResponseForControllerResultEvent $event)
     {
         if ($event->getRequest()->attributes->get('_controller') !== UserController::class.'::postUserBySignUpForm' ||
-            $event->getControllerResult()->getStatusCode() !== Response::HTTP_CREATED
+            $event->getControllerResult()->getStatusCode() !== Response::HTTP_SEE_OTHER
         ) {
             return;
         }
@@ -87,7 +87,7 @@ class UserManagerSubscriber implements EventSubscriberInterface
     public function proceedUserPasswordReset(GetResponseForControllerResultEvent $event)
     {
         if ($event->getRequest()->attributes->get('_controller') !== UserController::class.'::proceedByUserPasswordResetRequestForm' ||
-            $event->getControllerResult()->getStatusCode() !== Response::HTTP_ACCEPTED
+            $event->getControllerResult()->getStatusCode() !== Response::HTTP_SEE_OTHER
         ) {
             return;
         }
