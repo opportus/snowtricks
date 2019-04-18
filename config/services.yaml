@@ -438,9 +438,6 @@ services:
 
     # Session Manager...
     App\HttpFoundation\SessionManagerInterface: '@App\HttpFoundation\SessionManager'
-    App\HttpFoundation\SessionManager:
-        arguments:
-            $parameters: '%action_parameters%'
 
     # File Uploader...
     App\HttpFoundation\FileUploaderInterface: '@App\HttpFoundation\FileUploader'

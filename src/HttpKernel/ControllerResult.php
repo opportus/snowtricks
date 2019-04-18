@@ -10,7 +10,7 @@ namespace App\HttpKernel;
  * @author  Clément Cazaud <opportus@gmail.com>
  * @license https://github.com/opportus/snowtricks/blob/master/LICENSE.md MIT
  */
-class ControllerResult implements ControllerResultInterface
+class ControllerResult
 {
     /**
      * @var int $statusCode

@@ -3,11 +3,11 @@
 namespace App\EventListener;
 
 use App\HttpFoundation\SessionManagerInterface;
-use App\HttpKernel\ControllerResultInterface;
+use App\HttpKernel\ControllerResult;
 use Symfony\Component\HttpKernel\Event\GetResponseForControllerResultEvent;
 
 /**
- * The session manager listener...
+ * The session manager listener.
  *
  * @version 0.0.1
  * @package App\EventListener
@@ -22,13 +22,13 @@ class SessionManagerListener
     private $sessionManager;
 
     /**
-     * Constructs the response factory listener.
+     * Constructs the session manager listener.
      *
      * @param App\HttpFoundation\SessionManagerInterface $sessionManager
      */
     public function __construct(SessionManagerInterface $sessionManager)
     {
-        $this->sessionManager  = $sessionManager;
+        $this->sessionManager = $sessionManager;
     }
 
     /**
@@ -38,13 +38,20 @@ class SessionManagerListener
      */
     public function onKernelView(GetResponseForControllerResultEvent $event)
     {
-        if (!$event->getControllerResult() instanceof ControllerResultInterface) {
+        $controllerResult = $event->getControllerResult();
+
+        if (!\is_object($controllerResult) || !$controllerResult instanceof ControllerResult) {
             return;
         }
 
-        $this->sessionManager->generateFlash(
-            $event->getRequest(),
-            $event->getControllerResult()
-        );
+        if (null === $flashAnnotations = $event->getRequest()->attributes->get('_flash')) {
+            return;
+        }
+
+        foreach ($flashAnnotations as $flashAnnotation) {
+            if ($flashAnnotation->getStatusCode() === $controllerResult->getStatusCode()) {
+                $this->sessionManager->generateFlash($flashAnnotation, $controllerResult);
+            }
+        }
     }
 }

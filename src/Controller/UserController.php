@@ -111,6 +111,21 @@ class UserController
      *     headers={},
      *     options={}
      * )
+     * 
+     * @App\Annotation\Flash(
+     *     statusCode=Response::HTTP_SEE_OTHER,
+     *     message=@App\Annotation\Trans(
+     *         id="user.sign_up.notification.201",
+     *         parameters={
+     *             "username"=@App\Annotation\DatumGetterReference(
+     *                 name="getUsername"
+     *             ),
+     *             "email"=@App\Annotation\DatumGetterReference(
+     *                 name="getEmail"
+     *             )
+     *         }
+     *     )
+     * )
      */
     public function postUserBySignUpForm(User $user) : ControllerResult
     {
@@ -157,6 +172,34 @@ class UserController
      *         )
      *     },
      *     options={}
+     * )
+     * 
+     * @App\Annotation\Flash(
+     *     statusCode=Response::HTTP_SEE_OTHER,
+     *     message=@App\Annotation\Trans(
+     *         id="user.activation.notification.204"
+     *     )
+     * )
+     * 
+     * @App\Annotation\Flash(
+     *     statusCode=Response::HTTP_BAD_REQUEST,
+     *     message=@App\Annotation\Trans(
+     *         id="user.activation.notification.400"
+     *     )
+     * )
+     * 
+     * @App\Annotation\Flash(
+     *     statusCode=Response::HTTP_FORBIDDEN,
+     *     message=@App\Annotation\Trans(
+     *         id="user.activation.notification.403"
+     *     )
+     * )
+     * 
+     * @App\Annotation\Flash(
+     *     statusCode=Response::HTTP_NOT_FOUND,
+     *     message=@App\Annotation\Trans(
+     *         id="user.activation.notification.404"
+     *     )
      * )
      */
     public function patchUserByActivationEmailForm(User $user) : ControllerResult
@@ -270,6 +313,13 @@ class UserController
      *     statusCode=Response::HTTP_NOT_FOUND,
      *     headers={},
      *     options={}
+     * )
+     * 
+     * @App\Annotation\Flash(
+     *     statusCode=Response::HTTP_SEE_OTHER,
+     *     message=@App\Annotation\Trans(
+     *         id="user.password_reset_request.notification.204"
+     *     )
      * )
      */
     public function proceedByUserPasswordResetRequestForm(User $user) : ControllerResult
@@ -395,6 +445,27 @@ class UserController
      *     statusCode=Response::HTTP_FORBIDDEN,
      *     headers={},
      *     options={}
+     * )
+     * 
+     * @App\Annotation\Flash(
+     *     statusCode=Response::HTTP_SEE_OTHER,
+     *     message=@App\Annotation\Trans(
+     *         id="user.password_reset.notification.204"
+     *     )
+     * )
+     * 
+     * @App\Annotation\Flash(
+     *     statusCode=Response::HTTP_FORBIDDEN,
+     *     message=@App\Annotation\Trans(
+     *         id="user.password_reset.notification.403"
+     *     )
+     * )
+     * 
+     * @App\Annotation\Flash(
+     *     statusCode=Response::HTTP_NOT_FOUND,
+     *     message=@App\Annotation\Trans(
+     *         id="user.password_reset.notification.404"
+     *     )
      * )
      */
     public function patchUserByPasswordResetForm(User $user) : ControllerResult

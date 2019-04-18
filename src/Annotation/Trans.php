@@ -2,6 +2,8 @@
 
 namespace App\Annotation;
 
+use App\Exception\InvalidAnnotationException;
+
 /**
  * The trans annotation.
  *
@@ -45,13 +47,25 @@ class Trans extends AbstractAnnotation
      * Constructs the trans annotation.
      * 
      * @param array $values
+     * @throws App\Exception\InvalidAnnotationException
      */
     public function __construct(array $values)
     {
         $this->id = $values['id'];
         $this->parameters = $values['parameters'] ?? [];
-        $this->$domain = $values['domain'] ?? null;
-        $this->$locale = $values['locale'] ?? null;
+        $this->domain = $values['domain'] ?? null;
+        $this->locale = $values['locale'] ?? null;
+
+        foreach ($this->parameters as $parameterKey => $parameterValue) {
+            if (!$parameterValue instanceof AbstractDatumReference) {
+                throw new InvalidAnnotationException(\sprintf(
+                    'Parameter "%s" of annotation @%s must have as value an annotation of type %s.',
+                    (string)$parameterKey,
+                    self::class,
+                    AbstractDatumReference::class
+                ));
+            }
+        }
     }
 
     /**

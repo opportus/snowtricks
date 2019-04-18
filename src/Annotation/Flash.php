@@ -9,20 +9,20 @@ namespace App\Annotation;
  * @package App\Annotation
  * @author  Clément Cazaud <opportus@gmail.com>
  * @license https://github.com/opportus/snowtricks/blob/master/LICENSE.md MIT
- * 
+ *
  * @Annotation
- * @Target("ANNOTATION")
+ * @Target("METHOD")
  * @Attributes({
- *     @Attribute("type", type="string", required=true),
+ *     @Attribute("statusCode", type="integer", required=true),
  *     @Attribute("message", type="App\Annotation\Trans", required=true)
  * })
  */
 class Flash extends AbstractAnnotation
 {
     /**
-     * @var string $type
+     * @var int $statusCode
      */
-    private $type;
+    private $statusCode;
 
     /**
      * @var App\Annotation\Trans $message
@@ -31,28 +31,28 @@ class Flash extends AbstractAnnotation
 
     /**
      * Constructs the flash annotation.
-     * 
+     *
      * @param array $values
      */
     public function __construct(array $values)
     {
-        $this->type = $values['type'];
+        $this->statusCode = $values['statusCode'];
         $this->message = $values['message'];
     }
 
     /**
-     * Gets the type.
-     * 
-     * @return string
+     * Gets the status code.
+     *
+     * @return int
      */
-    public function getType(): string
+    public function getStatusCode(): int
     {
-        return $this->type;
+        return $this->statusCode;
     }
 
     /**
      * Gets the message.
-     * 
+     *
      * @return App\Annotation\Trans
      */
     public function getMessage(): Trans

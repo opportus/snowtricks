@@ -2,11 +2,11 @@
 
 namespace App\HttpFoundation;
 
-use App\HttpKernel\ControllerResultInterface;
-use Symfony\Component\HttpFoundation\Request;
+use App\Annotation\Flash as FlashAnnotation;
+use App\HttpKernel\ControllerResult;
 
 /**
- * The session manager interface...
+ * The session manager interface.
  *
  * @version 0.0.1
  * @package App\HttpFoundation
@@ -16,11 +16,10 @@ use Symfony\Component\HttpFoundation\Request;
 interface SessionManagerInterface
 {
     /**
-     * Generates the flash message.
+     * Generates the flash.
      *
-     * @param  Symfony\Component\HttpFoundation\Request $request
-     * @param  App\HttpKernel\ControllerResultInterface $controllerResult
+     * @param App\Annotation\Flash $flashAnnotation
+     * @param  App\HttpKernel\ControllerResult $controllerResult
      */
-    public function generateFlash(Request $request, ControllerResultInterface $controllerResult);
+    public function generateFlash(FlashAnnotation $flashAnnotation, ControllerResult $controllerResult);
 }
-
