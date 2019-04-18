@@ -5,14 +5,14 @@ namespace App\Controller;
 use Doctrine\ORM\EntityManagerInterface;
 
 /**
- * The controller trait.
+ * The abstract entity controller.
  *
  * @version 0.0.1
  * @package App\Controller
  * @author  Clément Cazaud <opportus@gmail.com>
  * @license https://github.com/opportus/snowtricks/blob/master/LICENSE.md MIT
  */
-Trait ControllerTrait
+abstract class AbstractEntityController
 {
     /**
      * @var Doctrine\ORM\EntityManagerInterface $entityManager
@@ -20,7 +20,7 @@ Trait ControllerTrait
     protected $entityManager;
 
     /**
-     * Constructs the app controller.
+     * Constructs the abstract entity controller.
      *
      * @param Doctrine\ORM\EntityManagerInterface $entityManager
      */

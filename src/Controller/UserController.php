@@ -21,10 +21,8 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
  * @author  Clément Cazaud <opportus@gmail.com>
  * @license https://github.com/opportus/snowtricks/blob/master/LICENSE.md MIT
  */
-class UserController
+class UserController extends AbstractEntityController
 {
-    use ControllerTrait;
-
     /**
      * Gets the user sign up empty form.
      *

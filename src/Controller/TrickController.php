@@ -20,10 +20,8 @@ use Doctrine\Common\Collections\ArrayCollection;
  * @author  Clément Cazaud <opportus@gmail.com>
  * @license https://github.com/opportus/snowtricks/blob/master/LICENSE.md MIT
  */
-class TrickController
+class TrickController extends AbstractEntityController
 {
-    use ControllerTrait;
-
     /**
      * Get the trick edit form.
      *
