@@ -38,13 +38,15 @@ class ResponseBuilderListener
      */
     public function onKernelView(GetResponseForControllerResultEvent $event)
     {
-        if (!$event->getControllerResult() instanceof ControllerResult) {
+        $controllerResult = $event->getControllerResult();
+
+        if (!\is_object($controllerResult) || !$controllerResult instanceof ControllerResult) {
             return;
         }
 
         $event->setResponse($this->responseBuilder->build(
             $event->getRequest(),
-            $event->getControllerResult()
+            $controllerResult
         ));
     }
 }
