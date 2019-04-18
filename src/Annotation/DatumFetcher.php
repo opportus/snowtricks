@@ -63,7 +63,6 @@ class DatumFetcher implements DatumFetcherInterface
                 \gettype($datum)
             ));
         }
-        exit;
 
         return $datum;
     }
