@@ -2,6 +2,7 @@
 
 namespace App\Annotation;
 
+use AbstractDatumReference as DatumReference;
 use App\Exception\DatumFetchingException;
 
 /**
@@ -62,6 +63,7 @@ class DatumFetcher implements DatumFetcherInterface
                 \gettype($datum)
             ));
         }
+        exit;
 
         return $datum;
     }

@@ -45,7 +45,7 @@ class TrickToIdTransformer implements DataTransformerInterface
             throw new TransformationFailedException(
                 sprintf(
                     'The value must be an instance of %s',
-                    TrickInterface::class
+                    Trick::class
                 )
             );
         }

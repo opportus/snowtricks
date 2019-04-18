@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App;
 use App\Entity\User;
 use App\HttpKernel\ControllerResult;
 use Symfony\Component\HttpFoundation\Request;
