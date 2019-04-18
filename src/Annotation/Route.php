@@ -2,6 +2,8 @@
 
 namespace App\Annotation;
 
+use Doctrine\Annotations\AnnotationException;
+
 /**
  * The route annotation.
  *
@@ -38,6 +40,17 @@ class Route extends AbstractAnnotation
     {
         $this->name = $values['name'];
         $this->parameters = $values['parameters'] ?? [];
+
+        foreach ($this->parameters as $parameterKey => $parameterValue) {
+            if (!\is_string($parameterValue) && !(\is_object($parameterValue) && $parameterValue instanceof AbstractDatumReference)) {
+                throw AnnotationException::typeError(\sprintf(
+                    'Parameter "%s" of annotation @%s must have as value either a string or an annotation of type %s.',
+                    (string)$parameterKey,
+                    self::class,
+                    AbstractDatumReference::class
+                ));
+            }
+        }
     }
 
     /**

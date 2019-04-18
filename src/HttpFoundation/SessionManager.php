@@ -2,13 +2,9 @@
 
 namespace App\HttpFoundation;
 
-use App\Exception\FlashGenerationException;
-use App\Annotation\Flash as FlashAnnotation;
-use App\Annotation\DatumGetterReference;
-use App\Annotation\DatumPropertyReference;
-use App\Annotation\DatumKeyReference;
 use App\HttpKernel\ControllerResult;
-use Symfony\Component\HttpFoundation\Request;
+use App\Annotation\Flash as FlashAnnotation;
+use App\Annotation\DatumFetcherInterface;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Translation\TranslatorInterface;
 
@@ -28,6 +24,11 @@ class SessionManager implements SessionManagerInterface
     private $session;
 
     /**
+     * @var App\Annotation\DatumFetcherInterface $datumFetcher
+     */
+    private $datumFetcher;
+
+    /**
      * @var Symfony\Component\Translations\TranslatorItnerface $translator
      */
     private $translator;
@@ -36,11 +37,13 @@ class SessionManager implements SessionManagerInterface
      * Constructs the session manager.
      *
      * @param Symfony\Component\HttpFoundation\Session\SessionInterface $session
+     * @param App\Annotation\DatumFetcherInterface $datumFetcher
      * @param Symfony\Component\HttpFoundation\Translation\TranslatorInterface $translator
      */
-    public function __construct(SessionInterface $session, TranslatorInterface $translator)
+    public function __construct(SessionInterface $session, DatumFetcherInterface $datumFetcher, TranslatorInterface $translator)
     {
         $this->session = $session;
+        $this->datumFetcher = $datumFetcher;
         $this->translator = $translator;
     }
 
@@ -56,34 +59,7 @@ class SessionManager implements SessionManagerInterface
 
         $data = $controllerResult->getData();
         foreach ($transParameters as $key => $reference) {
-            if ($reference instanceof DatumGetterReference) {
-                if (!\is_callable([$data, $reference->getName()])) {
-                    throw new FlashGenerationException(\sprintf(
-                        'Controller result\'s data neither is an object or has a public method called "%s".',
-                        $reference
-                    ));
-                }
-
-                $transParameters[$key] = $data->{$reference}();
-            } elseif ($reference instanceof DatumPropertyReference) {
-                if (!\is_object($data) || !\property_exists($data, $reference->getName()) || !\array_key_exists($reference->getName(), \get_object_vars($data))) {
-                    throw new FlashGenerationException(\sprintf(
-                        'Controller result\'s data neither is an object or has a public property called "%s".',
-                        $reference
-                    ));
-                }
-
-                $transParameters[$key] = $data->{$reference};
-            } elseif ($reference instanceof DatumKeyReference) {
-                if (!\is_array($data) || !\array_key_exists($reference->getName(), $data)) {
-                    throw new FlashGenerationException(\sprintf(
-                        'Controller result\'s data neither is an array or has a key called "%s".',
-                        $reference
-                    ));
-                }
-
-                $transParameters[$key] = $data[$reference];
-            }
+            $transParameters[$key] = $this->datumFetcher->fetch($reference, $data);
         }
 
         $statusCode = $flashAnnotation->getStatusCode();

@@ -5,8 +5,10 @@ namespace App\HttpFoundation;
 use App\Exception\ResponseBuildingException;
 use App\View\ViewBuilderInterface;
 use App\HttpKernel\ControllerResult;
+use App\Annotation\DatumFetcherInterface;
+use App\Annotation\AbstractDatumReference;
+use App\Annotation\Route;
 use App\Annotation\Response as ResponseAnnotation;
-use App\Annotation\Route as RouteAnnotation;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\RouterInterface;
@@ -27,6 +29,11 @@ class ResponseBuilder implements ResponseBuilderInterface
     private $viewBuilders;
 
     /**
+     * @var App\Annotation\DatumFetcherInterface $datumFetcher
+     */
+    private $datumFetcher;
+
+    /**
      * @var Symfony\Component\Routing\RouterInterface $router
      */
     private $router;
@@ -35,11 +42,13 @@ class ResponseBuilder implements ResponseBuilderInterface
      * Constructs the response builder.
      *
      * @param App\View\ViewBuilderInterface[] $viewBuilders
+     * @param App\Annotation\DatumFetcherInterface $datumFetcher
      * @param Symfony\Component\Routing\RouterInterface $router
      */
-    public function __construct(array $viewBuilders, RouterInterface $router)
+    public function __construct(array $viewBuilders, DatumFetcherInterface $datumFetcher, RouterInterface $router)
     {
         $this->viewBuilders = $viewBuilders;
+        $this->datumFetcher = $datumFetcher;
         $this->router = $router;
     }
 
@@ -101,7 +110,7 @@ class ResponseBuilder implements ResponseBuilderInterface
 
                 if (!$viewBuilder->supports($viewAnnotation)) {
                     throw new ResponseBuildingException(\sprintf(
-                        'View builder "%s" does not support the current view',
+                        'View builder "%s" does not support the current view.',
                         $viewAnnotation->getBuilder()
                     ));
                 }
@@ -122,30 +131,27 @@ class ResponseBuilder implements ResponseBuilderInterface
         }
 
         // Defines headers...
-        $headers = [];
-        foreach ($responseAnnotation->getHeaders() as $key => $value) {
-            if (!\is_string($value) && !(\is_object($value) && $value instanceof RouteAnnotation)) {
-                throw new ResponseBuildingException(\sprintf(
-                    'Values of "%s" headers must be only of type string or "%s", got a value of type "%s".',
-                    ResponseAnnotation::class,
-                    RouteAnnotation::class,
-                    \gettype($value)
-                ));
-            }
-
-            if (\is_object($value)) {
+        $data = $controllerResult->getData();
+        $headers = $responseAnnotation->getHeaders();
+        foreach ($headers as $name => $value) {
+            if (\is_string($value)) {
+                continue;
+            } elseif ($value instanceof AbstractDatumReference) {
+                $headers[$name] = $this->datumFetcher->fetch($value, $data);
+            } elseif ($value instanceof Route) {
                 $routeName = $value->getName();
                 $routeParameters = $value->getParameters();
 
-                $resolvedRouteParameters = [];
-                foreach ($routeParameters as $routeParameter) {
-                    $resolvedRouteParameters[$routeParameter] = $request->attributes->get($routeParameter);
+                foreach ($routeParameters as $key => $value) {
+                    if (\is_string($value)) {
+                        continue;
+                    } elseif ($value instanceof AbstractDatumReference) {
+                        $routeParameters[$key] = $this->datumFetcher->fetch($value, $data);
+                    }
                 }
 
-                $value = $this->router->generate($routeName, $resolvedRouteParameters);
+                $headers[$name] = $this->router->generate($routeName, $routeParameters);
             }
-
-            $headers[$key] = $value;
         }
 
         if ($content) {

@@ -2,6 +2,8 @@
 
 namespace App\Annotation;
 
+use Doctrine\Annotations\AnnotationException;
+
 /**
  * The response annotation.
  *
@@ -52,6 +54,18 @@ class Response extends AbstractAnnotation
         $this->statusCode = $values['statusCode'];
         $this->headers = $values['headers'] ?? [];
         $this->options = $values['options'] ?? [];
+
+        foreach ($this->headers as $headerName => $headerValue) {
+            if (!\is_string($headerValue) && !(\is_object($headerValue) && ($headerValue instanceof AbstractDatumReference || $headerValue instanceof Route))) {
+                throw AnnotationException::typeError(\sprintf(
+                    'Header "%s" of annotation @%s must have as value either a string or an annotation of type %s or %s.',
+                    (string)$headerName,
+                    self::class,
+                    AbstractDatumReference::class,
+                    Route::class
+                ));
+            }
+        }
     }
 
     /**

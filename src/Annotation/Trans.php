@@ -2,7 +2,7 @@
 
 namespace App\Annotation;
 
-use App\Exception\InvalidAnnotationException;
+use Doctrine\Annotations\AnnotationException;
 
 /**
  * The trans annotation.
@@ -57,8 +57,8 @@ class Trans extends AbstractAnnotation
         $this->locale = $values['locale'] ?? null;
 
         foreach ($this->parameters as $parameterKey => $parameterValue) {
-            if (!$parameterValue instanceof AbstractDatumReference) {
-                throw new InvalidAnnotationException(\sprintf(
+            if (!\is_object($parameterValue) || !$parameterValue instanceof AbstractDatumReference) {
+                throw AnnotationException::typeError(\sprintf(
                     'Parameter "%s" of annotation @%s must have as value an annotation of type %s.',
                     (string)$parameterKey,
                     self::class,
