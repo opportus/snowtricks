@@ -39,7 +39,7 @@ class Validator implements AppValidatorInterface
         $constraintViolationList = $this->validator->validate($value, $constraints, $groups);
 
         if ($constraintViolationList->count() > 0) {
-            throw new ValdiatorException(
+            throw new ValidatorException(
                 (string)$constraintViolationList
             );
         }
