@@ -2,12 +2,12 @@
 
 namespace App\HttpFoundation;
 
-use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\File\File;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpKernel\KernelInterface;
 
 /**
- * The file uploader...
+ * The file uploader.
  *
  * @version 0.0.1
  * @package App\HttpFoundation
@@ -27,30 +27,46 @@ class FileUploader implements FileUploaderInterface
     private $kernel;
 
     /**
+     * @var string $uploadBaseDir
+     */
+    private $uploadBaseDir;
+
+    /**
+     * @var string $uploadBaseDirHttp
+     */
+    private $uploadBaseDirHttp;
+
+    /**
      * Constructs the file uploader.
      *
      * @param Symfony\Component\HttpFoundation\RequestStack $requestStack
      * @param Symfony\Component\HttpKernel\KernelInterface $kernel
+     * @param string $uploadBaseDir Relative to the root dir of the kernel
+     * @param string $uploadBaseDirHttp
      */
-    public function __construct(RequestStack $requestStack, KernelInterface $kernel)
+    public function __construct(RequestStack $requestStack, KernelInterface $kernel, string $uploadBaseDir = '', string $uploadBaseDirHttp = '')
     {
         $this->requestStack = $requestStack;
         $this->kernel = $kernel;
+        $this->uploadBaseDir = '' === $uploadBaseDir ? $uploadBaseDir : \DIRECTORY_SEPARATOR.\trim($uploadBaseDir, \DIRECTORY_SEPARATOR);
+        $this->uploadBaseDirHttp = '' === $uploadBaseDirHttp ? $uploadBaseDirHttp : '/'.\trim($uploadBaseDirHttp, '/');
     }
 
     /**
      * {@inheritdoc}
      */
-    public function upload(File $file, string $dir) : string
+    public function upload(File $file, string $dir): string
     {
-        $dir = trim($dir, '/ \\');
-        $fileName = md5(uniqid()).'.'.$file->guessExtension();
+        $dir = '' === $dir ? $dir : \DIRECTORY_SEPARATOR.\trim($dir, \DIRECTORY_SEPARATOR);
+        $fileName = \md5(\uniqid()).'.'.$file->guessExtension();
 
         $file->move(
-            $this->kernel->getRootDir().'/../public/'.$dir,
+            $this->kernel->getRootDir().$this->uploadBaseDir.$dir,
             $fileName
         );
 
-        return $this->requestStack->getCurrentRequest()->getSchemeAndHttpHost().'/snowtricks.com/public/'.$dir.'/'.$fileName;
+        $request = $this->requestStack->getCurrentRequest();
+
+        return $request->getSchemeAndHttpHost().$this->uploadBaseDirHttp.$dir.'/'.$fileName;
     }
 }
