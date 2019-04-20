@@ -57,9 +57,6 @@ services:
             - { name: view_builder }
 
     # Event listener...
-    App\EventListener\QueryParametersValidatorListener:
-        tags:
-            - { name: kernel.event_listener, event: kernel.request }
     App\EventListener\ObjectMapperRecursorListener:
         tags:
             - { name: kernel.event_listener, event: 'opportus_object_mapper.set_target_point_value', method: 'onSetTargetPointValue' }

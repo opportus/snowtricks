@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App;
 use App\Entity\Trick;
+use App\Validator\Constraints\TrickCollectionQueryParameters;
 use App\HttpKernel\ControllerResult;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Form\FormInterface;
@@ -131,7 +132,8 @@ class TrickController extends AbstractEntityController
      *     class="App\Entity\Trick",
      *     converter="app.entity_collection_param_converter",
      *     options={
-     *         "repository_method"="findAllByCriteria"
+     *         "repository_method"="findAllByCriteria",
+     *         "query_constraint"=TrickCollectionQueryParameters::class
      *     }
      * )
      * 

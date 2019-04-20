@@ -15,7 +15,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
  * @author  Clément Cazaud <opportus@gmail.com>
  * @license https://github.com/opportus/snowtricks/blob/master/LICENSE.md MIT
  */
-class EntityFormParamConverter extends AbstractFormAwareParamConverter implements ParamConverterInterface
+class EntityFormParamConverter extends AbstractParamConverter implements ParamConverterInterface
 {
     /**
      * {@inheritdoc}
@@ -46,6 +46,22 @@ class EntityFormParamConverter extends AbstractFormAwareParamConverter implement
 
         if (!isset($configuration->getOptions()['form_type']) || !\is_subclass_of($configuration->getOptions()['form_type'], AbstractType::class)) {
             return false;
+        }
+
+        if (isset($configuration->getOptions()['query_constraint'])) {
+            if (!\is_string($configuration->getOptions()['query_constraint'])) {
+                return false;
+            }
+
+            if (!\class_exists($configuration->getOptions()['query_constraint'])) {
+                return false;
+            }
+
+            $constraintClassReflection = new \ReflectionClass($configuration->getOptions()['query_constraint']);
+
+            if (null !== $constraintClassReflection->getConstructor() && 0 !== $constraintClassReflection->getConstructor()->getNumberOfRequiredParameters()) {
+                return false;
+            }
         }
 
         return true;

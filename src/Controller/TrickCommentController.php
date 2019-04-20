@@ -4,6 +4,8 @@ namespace App\Controller;
 
 use App;
 use App\Entity\TrickComment;
+use App\Validator\Constraints\TrickCommentCollectionQueryParameters;
+use App\Validator\Constraints\TrickCommentEmptyEditFormQueryParameters;
 use App\HttpKernel\ControllerResult;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Form\FormInterface;
@@ -93,7 +95,8 @@ class TrickCommentController extends AbstractEntityController
      *         "form_options"={
      *             "data_class"="App\Entity\Dto\TrickCommentDto",
      *             "method"="POST"
-     *         }
+     *         },
+     *         "query_constraint"=TrickCommentEmptyEditFormQueryParameters::class
      *     }
      * )
      * 
@@ -140,7 +143,8 @@ class TrickCommentController extends AbstractEntityController
      *     class="App\Entity\TrickComment",
      *     converter="app.entity_collection_param_converter",
      *     options={
-     *         "repository_method"="findAllByCriteria"
+     *         "repository_method"="findAllByCriteria",
+     *         "query_constraint"=TrickCommentCollectionQueryParameters::class
      *     }
      * )
      * 

@@ -8,45 +8,51 @@ use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Form\FormFactoryInterface;
+use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Doctrine\ORM\EntityManagerInterface;
 use Opportus\ObjectMapper\ObjectMapperInterface;
 
 /**
- * The abstract form aware param converter.
+ * The abstract param converter.
  *
  * @version 0.0.1
  * @package App\ParamConverter
  * @author  Clément Cazaud <opportus@gmail.com>
  * @license https://github.com/opportus/snowtricks/blob/master/LICENSE.md MIT
  */
-abstract class AbstractFormAwareParamConverter
+abstract class AbstractParamConverter
 {
     /**
      * @var Doctrine\ORM\EntityManagerInterface $entityManager
      */
-    protected $entityManager;
+    private $entityManager;
 
     /**
      * @var Symfony\Component\Form\FormFactoryInterface $formFactory
      */
-    protected $formFactory;
+    private $formFactory;
 
     /**
      * @var Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface $authorizationChecker
      */
-    protected $authorizationChecker;
+    private $authorizationChecker;
+
+    /**
+     * @var Symfony\Component\Validator\Validator\ValidatorInterface $validator
+     */
+    private $validator;
 
     /**
      * @var Opportus\ObjectMapper\ObjectMapperInterface $objectMapper
      */
-    protected $objectMapper;
+    private $objectMapper;
 
     /**
      * @var App\Annotation\DatumFetcherInterface $datumFetcher
      */
-    protected $datumFetcher;
+    private $datumFetcher;
 
     /**
      * Constructs the abstract form aware param converter.
@@ -54,6 +60,7 @@ abstract class AbstractFormAwareParamConverter
      * @param Doctrine\ORM\EntityManagerInterface $entityManager
      * @param Symfony\Component\Form\FormFactoryInterface $formFactory
      * @param Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface $authorizationChecker
+     * @param Symfony\Component\Validator\Validator\ValidatorInterface $validator
      * @param Opportus\ObjectMapper\ObjectMapperInterface $objectMapper
      * @param App\Annotation\DatumFetcherInterface $datumFetcher
      */
@@ -61,12 +68,14 @@ abstract class AbstractFormAwareParamConverter
         EntityManagerInterface $entityManager,
         FormFactoryInterface $formFactory,
         AuthorizationCheckerInterface $authorizationChecker,
+        ValidatorInterface $validator,
         ObjectMapperInterface $objectMapper,
         DatumFetcherInterface $datumFetcher
     ) {
         $this->entityManager = $entityManager;
         $this->formFactory = $formFactory;
         $this->authorizationChecker = $authorizationChecker;
+        $this->validator = $validator;
         $this->objectMapper = $objectMapper;
         $this->datumFetcher = $datumFetcher;
     }
@@ -111,30 +120,7 @@ abstract class AbstractFormAwareParamConverter
     }
 
     /**
-     * Normalizes the param converter configuration.
-     * 
-     * @param Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter $config
-     * @return Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter
-     */
-    protected function normalizeConfiguration(ParamConverter $config): ParamConverter
-    {
-        $options = $config->getOptions();
-
-        $options['id'] = $options['id'] ?? 'id';
-        $options['grant'] = $options['grant'] ?? null;
-        $options['repository_method'] = $options['repository_method'] ?? null;
-        $options['form_type'] = $options['form_type'] ?? null;
-        $options['form_name'] = $options['form_name'] ?? 'form';
-        $options['form_options'] = $options['form_options'] ?? [];
-        $options['form_options']['data_class'] = $options['form_options']['data_class'] ?? null;
-
-        $config->setOptions($options);
-
-        return $config;
-    }
-
-    /**
-     * Gets the entity.
+     * Gets the entity from a request.
      * 
      * @param Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter $config
      * @param Symfony\Component\HttpFoundation\Request $request
@@ -163,7 +149,7 @@ abstract class AbstractFormAwareParamConverter
     }
 
     /**
-     * Gets the entity.
+     * Gets the entity from a form.
      * 
      * @param Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter $config
      * @param Symfony\Component\Form\FormInterface $form
@@ -186,6 +172,57 @@ abstract class AbstractFormAwareParamConverter
     }
 
     /**
+     * Gets the entity collection from a request.
+     * 
+     * @param Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter $config
+     * @param Symfony\Component\HttpFoundation\Request $request
+     * @return mixed
+     * @throws App\HttpKernel\ControllerException
+     */
+    protected function getEntityCollectionFromRequest(ParamConverter $config, Request $request)
+    {
+        $limit = $request->query->getInt($config->getOptions()['limit'], 10);
+        $offset = ($request->query->getInt($config->getOptions()['page'], 1) - 1) * $limit;
+        $order = $request->query->get($config->getOptions()['order'], []);
+        $criteria = array_map(
+            function ($value) {
+                if ($value === '') {
+                    return null;
+                } else {
+                    return $value;
+                }
+            },
+            $request->query->get($config->getOptions()['attribute'], [])
+        );
+
+        $args = [$criteria, $order, $limit, $offset];
+
+        if (null === $config->getOptions()['repository_method']) {
+            $entityCollection = $this->entityManager->getRepository($config->getClass())->findBy(...$args);
+        } else {
+            $entityCollection = $this->entityManager->getRepository($config->getClass())->{$config->getOptions()['repository_method']}(...$args);
+        }
+
+        if (0 >= \count($entityCollection)) {
+            throw new ControllerException(Response::HTTP_NOT_FOUND);
+        }
+
+        return $entityCollection;
+    }
+
+    /**
+     * Maps objects.
+     * 
+     * @param object|array $sources
+     * @param object|array|string $targets
+     * @return object|array
+     */
+    protected function map($sources, $targets)
+    {
+        return $this->objectMapper->map($sources, $targets);
+    }
+
+    /**
      * Checks the entity access authorization.
      * 
      * @param Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter $config
@@ -200,7 +237,24 @@ abstract class AbstractFormAwareParamConverter
     }
 
     /**
-     * Defines whether or not the param converter must set the form data.
+     * Validates the query.
+     * 
+     * @param Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter $config
+     * @param Symfony\Component\HttpFoundation\Request $request
+     * @throws App\HttpKernel\ControllerException
+     */
+    protected function validateQuery(ParamConverter $config, Request $request)
+    {
+        $constraint = $config->getOptions()['query_constraint'];
+        $constraintViolationList = $this->validator->validate($request->query->all(), new $constraint());
+
+        if (0 !== \count($constraintViolationList)) {
+            throw new ControllerException(Response::HTTP_BAD_REQUEST, $constraintViolationList);
+        }
+    }
+
+    /**
+     * Defines whether the param converter must set the form data.
      * 
      * @param Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter $config
      * @param Symfony\Component\HttpFoundation\Request $request
@@ -212,7 +266,7 @@ abstract class AbstractFormAwareParamConverter
     }
 
     /**
-     * Defines whether or not the param converter must check the entity access authorization.
+     * Defines whether the param converter must check the entity access authorization.
      * 
      * @param Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter $config
      * @return bool
@@ -223,7 +277,7 @@ abstract class AbstractFormAwareParamConverter
     }
     
     /**
-     * Defines whether or not the param converter must map the entity to the form data.
+     * Defines whether the param converter must map the entity to the form data.
      * 
      * @param Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter $config
      * @return bool
@@ -231,5 +285,44 @@ abstract class AbstractFormAwareParamConverter
     protected function mustMapEntityToFormData(ParamConverter $config): bool
     {
         return null !== $config->getOptions()['form_options']['data_class'] && $config->getClass() !== $config->getOptions()['form_options']['data_class'];
+    }
+
+    /**
+     * Defines whether the param converter must validate the query.
+     * 
+     * @param Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter $config
+     * @return bool
+     */
+    protected function mustValidateQuery(ParamConverter $config): bool
+    {
+        return null !== $config->getOptions()['query_constraint'];
+    }
+
+    /**
+     * Normalizes the param converter configuration.
+     * 
+     * @param Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter $config
+     * @return Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter
+     */
+    protected function normalizeConfiguration(ParamConverter $config): ParamConverter
+    {
+        $options = $config->getOptions();
+
+        $options['id'] = $options['id'] ?? 'id';
+        $options['grant'] = $options['grant'] ?? null;
+        $options['repository_method'] = $options['repository_method'] ?? null;
+        $options['form_type'] = $options['form_type'] ?? null;
+        $options['form_name'] = $options['form_name'] ?? 'form';
+        $options['form_options'] = $options['form_options'] ?? [];
+        $options['form_options']['data_class'] = $options['form_options']['data_class'] ?? null;
+        $options['query_constraint'] = $options['query_constraint'] ?? null;
+        $options['limit'] = $options['limit'] ?? 'limit';
+        $options['page'] = $options['page'] ?? 'page';
+        $options['order'] = $options['order'] ?? 'order';
+        $options['attribute'] = $options['attribute'] ?? 'attribute';
+
+        $config->setOptions($options);
+
+        return $config;
     }
 }

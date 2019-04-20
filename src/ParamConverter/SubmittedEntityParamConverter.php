@@ -17,12 +17,10 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
  * @author  Clément Cazaud <opportus@gmail.com>
  * @license https://github.com/opportus/snowtricks/blob/master/LICENSE.md MIT
  */
-class SubmittedEntityParamConverter extends AbstractFormAwareParamConverter implements ParamConverterInterface
+class SubmittedEntityParamConverter extends AbstractParamConverter implements ParamConverterInterface
 {
     /**
      * {@inheritdoc}
-     * 
-     * @throws App\HttpKernel\ControllerException
      */
     public function apply(Request $request, ParamConverter $configuration)
     {
@@ -36,9 +34,9 @@ class SubmittedEntityParamConverter extends AbstractFormAwareParamConverter impl
             if ($this->mustMapEntityToFormData($configuration)) {
                 if ($this->mustSetFormData($configuration, $request)) {
                     $entity = $this->getEntityFromRequest($configuration, $request);
-                    $entity = $this->objectMapper->map($form->getData(), $entity);
+                    $entity = $this->map($form->getData(), $entity);
                 } else {
-                    $entity = $this->objectMapper->map($form->getData(), $configuration->getClass());
+                    $entity = $this->map($form->getData(), $configuration->getClass());
                 }
             } else {
                 $entity = $form->getData();

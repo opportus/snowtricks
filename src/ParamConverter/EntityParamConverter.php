@@ -3,7 +3,6 @@
 namespace App\ParamConverter;
 
 use App\HttpKernel\ControllerException;
-use App\Annotation\AbstractDatumReference;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Form\AbstractType;
@@ -18,7 +17,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
  * @author  Clément Cazaud <opportus@gmail.com>
  * @license https://github.com/opportus/snowtricks/blob/master/LICENSE.md MIT
  */
-class EntityParamConverter extends AbstractFormAwareParamConverter implements ParamConverterInterface
+class EntityParamConverter extends AbstractParamConverter implements ParamConverterInterface
 {
     /**
      * {@inheritdoc}
