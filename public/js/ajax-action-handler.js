@@ -204,7 +204,7 @@ class AjaxActionHandler
                 url: target.data('url'),
                 data: {'trick_delete[_token]': target.data('token'), '_method': 'DELETE'},
                 method: 'POST',
-                dataType: 'json',
+                dataType: 'html',
                 success: function(response, status) {
                     if (target.data('redirection')) {
                         $(location).attr('href', target.data('redirection'))
