@@ -19,7 +19,7 @@ interface TrickRepositoryInterface extends EntityRepositoryInterface
      *
      * @param  string $slug
      * @return App\Entity\Trick
-     * @throws App\Exception\EntityNotFoundException
+     * @throws Doctrine\ORM\EntityNotFoundException
      */
     public function findOneBySlugOrThrowExceptionIfNoResult(string $slug) : Trick;
 }

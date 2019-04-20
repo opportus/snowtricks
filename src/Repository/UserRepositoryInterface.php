@@ -27,7 +27,7 @@ interface UserRepositoryInterface extends EntityRepositoryInterface
      *
      * @param  string $username
      * @return App\Entity\User
-     * @throws App\Exception\EntityNotFoundException
+     * @throws Doctrine\ORM\EntityNotFoundException
      */
     public function findOneByUsernameOrThrowExceptionIfNoResult(string $username) : User;
 }

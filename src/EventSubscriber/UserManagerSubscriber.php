@@ -49,8 +49,8 @@ class UserManagerSubscriber implements EventSubscriberInterface
     {
         return array(
             KernelEvents::VIEW => array(
-                array('proceedUserSignUp', 90),
-                array('proceedUserPasswordReset', 90),
+                array('proceedUserSignUp', 100),
+                array('proceedUserPasswordReset', 100),
             ),
         );
     }

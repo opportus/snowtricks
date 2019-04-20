@@ -2,10 +2,12 @@
 
 namespace App\ParamConverter;
 
+use App\HttpKernel\ControllerException;
+use App\Annotation\DatumFetcherInterface;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Form\FormFactoryInterface;
-use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Doctrine\ORM\EntityManagerInterface;
@@ -42,23 +44,31 @@ abstract class AbstractFormAwareParamConverter
     protected $objectMapper;
 
     /**
+     * @var App\Annotation\DatumFetcherInterface $datumFetcher
+     */
+    protected $datumFetcher;
+
+    /**
      * Constructs the abstract form aware param converter.
      *
      * @param Doctrine\ORM\EntityManagerInterface $entityManager
      * @param Symfony\Component\Form\FormFactoryInterface $formFactory
      * @param Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface $authorizationChecker
      * @param Opportus\ObjectMapper\ObjectMapperInterface $objectMapper
+     * @param App\Annotation\DatumFetcherInterface $datumFetcher
      */
     public function __construct(
         EntityManagerInterface $entityManager,
         FormFactoryInterface $formFactory,
         AuthorizationCheckerInterface $authorizationChecker,
-        ObjectMapperInterface $objectMapper
+        ObjectMapperInterface $objectMapper,
+        DatumFetcherInterface $datumFetcher
     ) {
         $this->entityManager = $entityManager;
         $this->formFactory = $formFactory;
         $this->authorizationChecker = $authorizationChecker;
         $this->objectMapper = $objectMapper;
+        $this->datumFetcher = $datumFetcher;
     }
 
     /**
@@ -67,7 +77,7 @@ abstract class AbstractFormAwareParamConverter
      * @param Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter $config
      * @param Symfony\Component\HttpFoundation\Request $request
      * @return Symfony\Component\Form\FormInterface
-     * @throws Symfony\Component\Security\Core\Exception\AccessDeniedException
+     * @throws App\HttpKernel\ControllerException
      */
     protected function createForm(ParamConverter $config, Request $request): FormInterface
     {
@@ -77,15 +87,17 @@ abstract class AbstractFormAwareParamConverter
         if (!$this->mustSetFormData($config, $request)) {
             $formData = null;
         } else {
-            $entity = $this->getEntity($config, $request);
+            try {
+                $entity = $this->getEntityFromRequest($config, $request);
+            } catch (ControllerException $controllerException) {
+                throw new ControllerException(
+                    $controllerException->getStatusCode(),
+                    $this->formFactory->create($formType, null, $formOptions)
+                );
+            }
 
             if ($this->mustCheckEntityAccessAuthorization($config)) {
-                if (!$this->authorizationChecker->isGranted($config->getOptions()['grant'], $entity)) {
-                    throw new AccessDeniedException(\sprintf(
-                        'The current user cannot access to the subject of type "%s".',
-                        $config->getClass()
-                    ));
-                }
+                $this->checkEntityAccessAuthorization($config, $entity);
             }
 
             if ($this->mustMapEntityToFormData($config)) {
@@ -111,6 +123,7 @@ abstract class AbstractFormAwareParamConverter
         $options['id'] = $options['id'] ?? 'id';
         $options['grant'] = $options['grant'] ?? null;
         $options['repository_method'] = $options['repository_method'] ?? null;
+        $options['form_type'] = $options['form_type'] ?? null;
         $options['form_name'] = $options['form_name'] ?? 'form';
         $options['form_options'] = $options['form_options'] ?? [];
         $options['form_options']['data_class'] = $options['form_options']['data_class'] ?? null;
@@ -125,20 +138,64 @@ abstract class AbstractFormAwareParamConverter
      * 
      * @param Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter $config
      * @param Symfony\Component\HttpFoundation\Request $request
-     * @return mixed
+     * @return object
+     * @throws App\HttpKernel\ControllerException
      */
-    protected function getEntity(ParamConverter $config, Request $request)
+    protected function getEntityFromRequest(ParamConverter $config, Request $request): object
     {
         if (null === $config->getOptions()['repository_method']) {
-            return $this->entityManager->getRepository($config->getClass())
+            $entity = $this->entityManager->getRepository($config->getClass())
                 ->findOneBy([
                     $config->getOptions()['id'] => $request->attributes->get($config->getOptions()['id'])
                 ])
             ;
         } else {
-            return $this->entityManager->getRepository($config->getClass())
+            $entity = $this->entityManager->getRepository($config->getClass())
                 ->{$config->getOptions()['repository_method']}($request->attributes->get($config->getOptions()['id']))
             ;
+        }
+
+        if (null === $entity) {
+            throw new ControllerException(Response::HTTP_NOT_FOUND);
+        }
+
+        return $entity;
+    }
+
+    /**
+     * Gets the entity.
+     * 
+     * @param Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter $config
+     * @param Symfony\Component\Form\FormInterface $form
+     * @return object
+     * @throws App\HttpKernel\ControllerException
+     */
+    protected function getEntityFromForm(ParamConverter $config, FormInterface $form): object
+    {
+        $id = $this->datumFetcher->fetch($config->getOptions()['id'], $form->getData());
+
+        $entity = $this->entityManager->getRepository($config->getClass())
+            ->{$config->getOptions()['repository_method']}($id)
+        ;
+
+        if (null === $entity) {
+            throw new ControllerException(Response::HTTP_NOT_FOUND);
+        }
+
+        return $entity;
+    }
+
+    /**
+     * Checks the entity access authorization.
+     * 
+     * @param Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter $config
+     * @param object $entity
+     * @throws App\HttpKernel\ControllerException
+     */
+    protected function checkEntityAccessAuthorization(ParamConverter $config, object $entity)
+    {
+        if (!$this->authorizationChecker->isGranted($config->getOptions()['grant'], $entity)) {
+            throw new ControllerException(Response::HTTP_FORBIDDEN, $entity);
         }
     }
 

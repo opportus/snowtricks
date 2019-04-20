@@ -25,16 +25,14 @@ class HomeController
      * @Route("/", name="get_home", methods={"GET"})
      * 
      * @App\Annotation\Response(
+     *     statusCode=Response::HTTP_OK,
      *     content=@App\Annotation\View(
      *         format="text/html",
      *         builder="App\View\TwigViewBuilder",
      *         options={
      *             "template"="home/get.html.twig"
      *         }
-     *     ),
-     *     statusCode=Response::HTTP_OK,
-     *     headers={},
-     *     options={}
+     *     )
      * )
      */
     public function getHome() : ControllerResult

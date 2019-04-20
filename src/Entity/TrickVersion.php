@@ -16,7 +16,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  * @author  Clément Cazaud <opportus@gmail.com>
  * @license https://github.com/opportus/snowtricks/blob/master/LICENSE.md MIT
  *
- * @ORM\Entity(repositoryClass="App\Repsository\TrickVersionRepository", readOnly=true)
+ * @ORM\Entity(repositoryClass="App\Repository\TrickVersionRepository", readOnly=true)
  * @ORM\Table(name="trick_version")
  */
 class TrickVersion extends Entity

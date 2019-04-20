@@ -2,7 +2,7 @@
 
 namespace App\HttpFoundation;
 
-use App\HttpKernel\ControllerResult;
+use App\HttpKernel\ControllerResultInterface;
 use App\Annotation\Flash as FlashAnnotation;
 use App\Annotation\DatumFetcherInterface;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
@@ -50,7 +50,7 @@ class SessionManager implements SessionManagerInterface
     /**
      * {@inheritdoc}
      */
-    public function generateFlash(FlashAnnotation $flashAnnotation, ControllerResult $controllerResult)
+    public function generateFlash(FlashAnnotation $flashAnnotation, ControllerResultInterface $controllerResult)
     {
         $transId = $flashAnnotation->getMessage()->getId();
         $transParameters = $flashAnnotation->getMessage()->getParameters();

@@ -3,7 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\Trick;
-use App\Exception\EntityNotFoundException;
+use Doctrine\ORM\EntityNotFoundException;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 

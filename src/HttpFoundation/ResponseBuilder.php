@@ -4,7 +4,9 @@ namespace App\HttpFoundation;
 
 use App\Exception\ResponseBuildingException;
 use App\View\ViewBuilderInterface;
+use App\HttpKernel\ControllerResultInterface;
 use App\HttpKernel\ControllerResult;
+use App\HttpKernel\ControllerException;
 use App\Annotation\DatumFetcherInterface;
 use App\Annotation\AbstractDatumReference;
 use App\Annotation\Route;
@@ -55,7 +57,7 @@ class ResponseBuilder implements ResponseBuilderInterface
     /**
      * {@inheritdoc}
      */
-    public function build(Request $request, ControllerResult $controllerResult): Response
+    public function build(Request $request, ControllerResultInterface $controllerResult): Response
     {
         if (empty($request->attributes->get('_response', []))) {
             throw new ResponseBuildingException(\sprintf(

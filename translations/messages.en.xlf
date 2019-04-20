@@ -4,6 +4,23 @@
     <file source-language="en" datatype="plaintext" original="file.ext">
         <body>
 
+            <trans-unit id="error.not_found.title">
+                <source>error.not_found.title</source>
+                <target>Page Not Found</target>
+            </trans-unit>
+            <trans-unit id="error.not_found.description">
+                <source>error.not_found.description</source>
+                <target>Oops, looks like the resource you are looking for does not exist...</target>
+            </trans-unit>
+            <trans-unit id="error.forbidden.title">
+                <source>error.forbidden.title</source>
+                <target>Forbidden</target>
+            </trans-unit>
+            <trans-unit id="error.forbidden.description">
+                <source>error.forbidden.description</source>
+                <target>Oops, looks like you do not have the authorization for this action...</target>
+            </trans-unit>
+
             <trans-unit id="user.sign_up.notification.201">
                 <source>user.sign_up.notification.201</source>
                 <target>Welcome %username%! An email has been sent to %email%. It contains an activation link you must click in order to activate your account.</target>
@@ -111,8 +128,8 @@
                 <target>Sign In</target>
             </trans-unit>
 
-            <trans-unit id="user.activation.notification.204">
-                <source>user.activation.notification.204</source>
+            <trans-unit id="user.activation.notification.303">
+                <source>user.activation.notification.303</source>
                 <target>Congrats. Your account is now activated.</target>
             </trans-unit>
             <trans-unit id="user.activation.notification.403">
@@ -146,13 +163,9 @@
                 </target>
             </trans-unit>
 
-            <trans-unit id="user.password_reset_request.notification.204">
-                <source>user.password_reset_request.notification.204</source>
+            <trans-unit id="user.password_reset_request.notification.303">
+                <source>user.password_reset_request.notification.303</source>
                 <target>An email has been sent to you. It contains a link you must click in order to reset your password.</target>
-            </trans-unit>
-            <trans-unit id="user.password_reset_request.notification.404">
-                <source>user.password_reset_request.notification.404</source>
-                <target>User does not exist.</target>
             </trans-unit>
             <trans-unit id="user.password_reset_request.notification.500">
                 <source>user.password_reset_request.notification.500</source>
@@ -179,9 +192,9 @@
                 <target>User not found</target>
             </trans-unit>
 
-            <trans-unit id="user.password_reset.notification.204">
-                <source>user.password_reset.notification.204</source>
-                <target>Your password has been updated.</target>
+            <trans-unit id="user.password_reset.notification.303">
+                <source>user.password_reset.notification.303</source>
+                <target>Your password has been successfully updated.</target>
             </trans-unit>
             <trans-unit id="user.password_reset.notification.403">
                 <source>user.password_reset.notification.403</source>
@@ -309,6 +322,10 @@
             <trans-unit id="trick.edit.form.button.add_uploaded_attachment">
                 <source>trick.edit.form.button.add_uploaded_attachment</source>
                 <target>Add an uploaded attachment</target>
+            </trans-unit>
+            <trans-unit id="trick.edit.form.message.title_conflict">
+                <source>trick.edit.form.message.title_conflict</source>
+                <target>Another trick with the same title already exist.</target>
             </trans-unit>
 
             <trans-unit id="trick_attachment.edit.form.title">

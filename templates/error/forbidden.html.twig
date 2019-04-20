@@ -1,0 +1,12 @@
+{% extends 'base.html.twig' %}
+{% block title %}{{ 'error.forbidden.title'|trans }}{% endblock title %}
+{% block description %}{{ 'error.forbidden.description'|trans }}{% endblock description %}
+{% block content %}
+    {{ parent() }}
+    <div class="error-forbidden container-fluid p-0">
+        <div class="error-forbidden-jumbotron jumbotron jumbotron-fluid text-center">
+            <h1 class="error-forbidden-title align-middle">{{ block('title') }}</h1>
+            <div class="error-forbidden-description align-middle lead">{{ block('description') }}</div>
+        </div>
+    </div>
+{% endblock content %}

@@ -29,7 +29,7 @@ class TrickController extends AbstractEntityController
      * @return App\HttpKernel\ControllerResult
      *
      * @Route("/trick/edit/{slug}", name="get_trick_edit_form", methods={"GET"})
-     *
+     * 
      * @IsGranted("IS_AUTHENTICATED_FULLY")
      *
      * @ParamConverter(
@@ -42,22 +42,30 @@ class TrickController extends AbstractEntityController
      *         "form_options"={
      *             "data_class"="App\Entity\Dto\TrickDto",
      *             "method"="PUT"
-     *         },
-     *         "repository_method"="findOneBySlugOrThrowExceptionIfNoResult"
+     *         }
      *     }
      * )
      * 
      * @App\Annotation\Response(
+     *     statusCode=Response::HTTP_OK,
      *     content=@App\Annotation\View(
      *         format="text/html",
      *         builder="App\View\TwigViewBuilder",
      *         options={
      *             "template"="trick/edit.html.twig"
      *         }
-     *     ),
-     *     statusCode=Response::HTTP_OK,
-     *     headers={},
-     *     options={}
+     *     )
+     * )
+     * 
+     * @App\Annotation\Response(
+     *     statusCode=Response::HTTP_NOT_FOUND,
+     *     content=@App\Annotation\View(
+     *         format="text/html",
+     *         builder="App\View\TwigViewBuilder",
+     *         options={
+     *             "template"="error/not-found.html.twig"
+     *         }
+     *     )
      * )
      */
     public function getTrickEditForm(FormInterface $form) : ControllerResult
@@ -75,7 +83,7 @@ class TrickController extends AbstractEntityController
      * @return App\HttpKernel\ControllerResult
      *
      * @Route("/trick/edit", name="get_trick_edit_empty_form", methods={"GET"})
-     *
+     * 
      * @IsGranted("IS_AUTHENTICATED_FULLY")
      *
      * @ParamConverter(
@@ -92,17 +100,15 @@ class TrickController extends AbstractEntityController
      * )
      * 
      * @App\Annotation\Response(
+     *     statusCode=Response::HTTP_OK,
      *     content=@App\Annotation\View(
      *         format="text/html",
      *         builder="App\View\TwigViewBuilder",
      *         options={
      *             "template"="trick/edit.html.twig"
      *         }
-     *     ),
-     *     statusCode=Response::HTTP_OK,
-     *     headers={},
-     *     options={}
-     * )
+     *     )
+     * ) 
      */
     public function getTrickEditEmptyForm(FormInterface $form) : ControllerResult
     {
@@ -125,21 +131,23 @@ class TrickController extends AbstractEntityController
      *     class="App\Entity\Trick",
      *     converter="app.entity_collection_param_converter",
      *     options={
-     *         "repository_method"="findAllByCriteriaOrThrowExceptionIfNoResult"
+     *         "repository_method"="findAllByCriteria"
      *     }
      * )
      * 
      * @App\Annotation\Response(
+     *     statusCode=Response::HTTP_OK,
      *     content=@App\Annotation\View(
      *         format="application/json",
      *         builder="App\View\TwigViewBuilder",
      *         options={
      *             "template"="trick/collection.html.twig"
      *         }
-     *     ),
-     *     statusCode=Response::HTTP_OK,
-     *     headers={},
-     *     options={}
+     *     )
+     * )
+     * 
+     * @App\Annotation\Response(
+     *     statusCode=Response::HTTP_NOT_FOUND
      * )
      */
     public function getTrickCollection(ArrayCollection $trickCollection) : ControllerResult
@@ -161,23 +169,32 @@ class TrickController extends AbstractEntityController
      * @ParamConverter(
      *     "trick",
      *     class="App\Entity\Trick",
+     *     converter="app.entity_param_converter",
      *     options={
-     *         "id"="slug",
-     *         "repository_method"="findOneBySlugOrThrowExceptionIfNoResult"
+     *         "id"="slug"
      *     }
      * )
      * 
      * @App\Annotation\Response(
+     *     statusCode=Response::HTTP_OK,
      *     content=@App\Annotation\View(
      *         format="text/html",
      *         builder="App\View\TwigViewBuilder",
      *         options={
      *             "template"="trick/get.html.twig"
      *         }
-     *     ),
-     *     statusCode=Response::HTTP_OK,
-     *     headers={},
-     *     options={}
+     *     )
+     * )
+     * 
+     * @App\Annotation\Response(
+     *     statusCode=Response::HTTP_NOT_FOUND,
+     *     content=@App\Annotation\View(
+     *         format="text/html",
+     *         builder="App\View\TwigViewBuilder",
+     *         options={
+     *             "template"="error/not-found.html.twig"
+     *         }
+     *     )
      * )
      */
     public function getTrick(Trick $trick) : ControllerResult
@@ -195,7 +212,7 @@ class TrickController extends AbstractEntityController
      * @return App\HttpKernel\ControllerResult
      *
      * @Route("/trick/edit", name="post_trick_by_edit_form", methods={"POST"})
-     *
+     * 
      * @IsGranted("IS_AUTHENTICATED_FULLY")
      *
      * @ParamConverter(
@@ -216,24 +233,23 @@ class TrickController extends AbstractEntityController
      *     statusCode=Response::HTTP_SEE_OTHER,
      *     headers={
      *         "location"=@App\Annotation\Route(
-     *             name="get_home",
-     *             parameters={}
+     *             name="get_trick",
+     *             parameters={
+     *                 "slug"=@App\Annotation\DatumGetterReference(name="getSlug")
+     *             }
      *         )
-     *     },
-     *     options={}
+     *     }
      * )
      * 
      * @App\Annotation\Response(
+     *     statusCode=Response::HTTP_BAD_REQUEST,
      *     content=@App\Annotation\View(
      *         format="text/html",
      *         builder="App\View\TwigViewBuilder",
      *         options={
      *             "template"="trick/edit.html.twig"
      *         }
-     *     ),
-     *     statusCode=Response::HTTP_BAD_REQUEST,
-     *     headers={},
-     *     options={}
+     *     )
      * )
      */
     public function postTrickByEditForm(Trick $trick) : ControllerResult
@@ -268,8 +284,7 @@ class TrickController extends AbstractEntityController
      *             "data_class"="App\Entity\Dto\TrickDto",
      *             "method"="PUT",
      *             "validation_groups"={"trick.form.edit"}
-     *         },
-     *         "repository_method"="findOneBySlugOrThrowExceptionIfNoResult"
+     *         }
      *     }
      * )
      * 
@@ -277,24 +292,23 @@ class TrickController extends AbstractEntityController
      *     statusCode=Response::HTTP_SEE_OTHER,
      *     headers={
      *         "location"=@App\Annotation\Route(
-     *             name="get_home",
-     *             parameters={}
+     *             name="get_trick",
+     *             parameters={
+     *                 "slug"=@App\Annotation\DatumGetterReference(name="getSlug")
+     *             }
      *         )
-     *     },
-     *     options={}
+     *     }
      * )
      * 
      * @App\Annotation\Response(
+     *     statusCode=Response::HTTP_BAD_REQUEST,
      *     content=@App\Annotation\View(
      *         format="text/html",
      *         builder="App\View\TwigViewBuilder",
      *         options={
      *             "template"="trick/edit.html.twig"
      *         }
-     *     ),
-     *     statusCode=Response::HTTP_BAD_REQUEST,
-     *     headers={},
-     *     options={}
+     *     )
      * )
      */
     public function putTrickByEditForm(Trick $trick) : ControllerResult
@@ -314,22 +328,48 @@ class TrickController extends AbstractEntityController
      * @return App\HttpKernel\ControllerResult
      *
      * @Route("/trick/delete/{slug}", name="delete_trick", methods={"DELETE"})
-     *
-     * @IsGranted("DELETE", subject="trick")
-     *
+     * 
+     * @IsGranted("IS_AUTHENTICATED_FULLY")
+     * 
      * @ParamConverter(
      *     "trick",
      *     class="App\Entity\Trick",
+     *     converter="app.entity_param_converter",
      *     options={
      *         "id"="slug",
-     *         "repository_method"="findOneBySlugOrThrowExceptionIfNoResult"
+     *         "grant"="DELETE"
      *     }
      * )
      * 
      * @App\Annotation\Response(
-     *     statusCode=Response::HTTP_NO_CONTENT,
-     *     headers={},
-     *     options={}
+     *     statusCode=Response::HTTP_SEE_OTHER,
+     *     headers={
+     *         "location"=@App\Annotation\Route(
+     *             name="get_home"
+     *         )
+     *     }
+     * )
+     * 
+     * @App\Annotation\Response(
+     *     statusCode=Response::HTTP_NOT_FOUND,
+     *     content=@App\Annotation\View(
+     *         format="text/html",
+     *         builder="App\View\TwigViewBuilder",
+     *         options={
+     *             "template"="error/not-found.html.twig"
+     *         }
+     *     )
+     * )
+     * 
+     * @App\Annotation\Response(
+     *     statusCode=Response::HTTP_FORBIDDEN,
+     *     content=@App\Annotation\View(
+     *         format="text/html",
+     *         builder="App\View\TwigViewBuilder",
+     *         options={
+     *             "template"="error/forbidden.html.twig"
+     *         }
+     *     )
      * )
      */
     public function deleteTrick(Trick $trick) : ControllerResult
@@ -338,7 +378,7 @@ class TrickController extends AbstractEntityController
         $this->entityManager->flush();
 
         return new ControllerResult(
-            Response::HTTP_NO_CONTENT,
+            Response::HTTP_SEE_OTHER,
             null
         );
     }

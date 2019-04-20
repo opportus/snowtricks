@@ -1,0 +1,12 @@
+{% extends 'base.html.twig' %}
+{% block title %}{{ 'error.internal-server-error.title'|trans }}{% endblock title %}
+{% block description %}{{ 'error.internal-server-error.description'|trans }}{% endblock description %}
+{% block content %}
+    {{ parent() }}
+    <div class="error-internal-server-error container-fluid p-0">
+        <div class="error-internal-server-error-jumbotron jumbotron jumbotron-fluid text-center">
+            <h1 class="error-internal-server-error-title align-middle">{{ block('title') }}</h1>
+            <div class="error-internal-server-error-description align-middle lead">{{ block('description') }}</div>
+        </div>
+    </div>
+{% endblock content %}

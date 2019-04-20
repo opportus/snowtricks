@@ -39,14 +39,9 @@ services:
     App\ParamConverter\EntityCollectionParamConverter:
         tags:
             - { name: request.param_converter, converter: app.entity_collection_param_converter }
-
-    # Exception handlers...
-    App\HttpKernel\EntityNotFoundExceptionHandler:
+    App\ParamConverter\EntityParamConverter:
         tags:
-            - { name: exception_handler }
-    App\HttpKernel\InvalidSubmittedEntityExceptionHandler:
-        tags:
-            - { name: exception_handler }
+            - { name: request.param_converter, converter: app.entity_param_converter }
 
     # View builders...
     App\View\TwigViewBuilder:
@@ -54,18 +49,9 @@ services:
             - { name: view_builder }
 
     # Event listener...
-    App\EventListener\ExceptionHandlerListener:
-        tags:
-            - { name: kernel.event_listener, event: kernel.exception }
     App\EventListener\QueryParametersValidatorListener:
         tags:
             - { name: kernel.event_listener, event: kernel.request }
-    App\EventListener\ResponseBuilderListener:
-        tags:
-            - { name: kernel.event_listener, event: kernel.view, priority: 80 }
-    App\EventListener\SessionManagerListener:
-        tags:
-            - { name: kernel.event_listener, event: kernel.view, priority: 90 }
     App\EventListener\ObjectMapperRecursorListener:
         tags:
             - { name: kernel.event_listener, event: 'opportus_object_mapper.set_target_point_value', method: 'onSetTargetPointValue' }

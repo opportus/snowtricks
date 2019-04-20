@@ -3,6 +3,7 @@
 namespace App\Entity\Dto;
 
 use App\Entity\User;
+use App\Validator\Constraints as AppAssert;
 use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\Common\Collections\ArrayCollection;
 
@@ -13,6 +14,13 @@ use Doctrine\Common\Collections\ArrayCollection;
  * @package App\Entity\Dto
  * @author  Clément Cazaud <opportus@gmail.com>
  * @license https://github.com/opportus/snowtricks/blob/master/LICENSE.md MIT
+ * 
+ * @AppAssert\UniqueEntity(
+ *     entityClass="App\Entity\TrickVersion",
+ *     primaryKey="title",
+ *     message="trick.edit.form.message.title_conflict",
+ *     groups={"trick.form.edit"}
+ * )
  */
 class TrickDto implements AuthorableInterface
 {

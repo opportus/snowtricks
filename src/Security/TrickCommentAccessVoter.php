@@ -4,6 +4,7 @@ namespace App\Security;
 
 use App\Entity\Entity;
 use App\Entity\TrickComment;
+use Symfony\Component\Security\Core\Authentication\Token\AnonymousToken;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 
 /**
@@ -29,7 +30,7 @@ class TrickCommentAccessVoter extends EntityAccessVoter
      */
     protected function canPost(Entity $subject, TokenInterface $token) : bool
     {
-        return $token->isAuthenticated();
+        return AnonymousToken::class !== \get_class($token);
     }
 
     /**

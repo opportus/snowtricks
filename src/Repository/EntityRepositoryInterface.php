@@ -31,7 +31,7 @@ interface EntityRepositoryInterface extends ServiceEntityRepositoryInterface, Ob
      *
      * @param  string $id
      * @return App\Entity\Entity
-     * @throws App\Exception\EntityNotFoundException
+     * @throws Doctrine\ORM\EntityNotFoundException
      */
     public function findOneByIdOrThrowExceptionIfNoResult(string $id) : Entity;
 
@@ -54,7 +54,7 @@ interface EntityRepositoryInterface extends ServiceEntityRepositoryInterface, Ob
      * @param int|null $limit
      * @param int|null $offset
      * @return Doctrine\Common\Collections\ArrayCollection
-     * @throws App\Exception\EntityNotFoundException
+     * @throws Doctrine\ORM\EntityNotFoundException
      */
     public function findAllByCriteriaOrThrowExceptionIfNoResult(array $criteria, ?array $orderBy = null, $limit = null, $offset = null) : ArrayCollection;
 }

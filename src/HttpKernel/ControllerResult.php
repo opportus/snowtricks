@@ -10,18 +10,10 @@ namespace App\HttpKernel;
  * @author  Clément Cazaud <opportus@gmail.com>
  * @license https://github.com/opportus/snowtricks/blob/master/LICENSE.md MIT
  */
-class ControllerResult
+class ControllerResult implements ControllerResultInterface
 {
-    /**
-     * @var int $statusCode
-     */
-    private $statusCode;
-
-    /**
-     * @var mixed $data
-     */
-    private $data;
-
+    use ControllerResultTrait;
+    
     /**
      * Constructs the controller result.
      *
@@ -32,21 +24,5 @@ class ControllerResult
     {
         $this->statusCode = $statusCode;
         $this->data = $data;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getStatusCode() : int
-    {
-        return $this->statusCode;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getData()
-    {
-        return $this->data;
     }
 }

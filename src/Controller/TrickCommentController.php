@@ -43,21 +43,27 @@ class TrickCommentController extends AbstractEntityController
      *             "data_class"="App\Entity\Dto\TrickCommentDto",
      *             "method"="PUT"
      *         },
-     *         "repository_method"="findOneByIdOrThrowExceptionIfNoResult"
+     *         "grant"="PUT"
      *     }
      * )
      * 
      * @App\Annotation\Response(
+     *     statusCode=Response::HTTP_OK,
      *     content=@App\Annotation\View(
      *         format="application/json",
      *         builder="App\View\TwigViewBuilder",
      *         options={
      *             "template"="trick/comment/edit.html.twig"
      *         }
-     *     ),
-     *     statusCode=Response::HTTP_OK,
-     *     headers={},
-     *     options={}
+     *     )
+     * )
+     * 
+     * @App\Annotation\Response(
+     *     statusCode=Response::HTTP_FORBIDDEN
+     * )
+     * 
+     * @App\Annotation\Response(
+     *     statusCode=Response::HTTP_NOT_FOUND
      * )
      */
     public function getTrickCommentEditForm(FormInterface $form) : ControllerResult
@@ -92,29 +98,25 @@ class TrickCommentController extends AbstractEntityController
      * )
      * 
      * @App\Annotation\Response(
+     *     statusCode=Response::HTTP_OK,
      *     content=@App\Annotation\View(
      *         format="application/json",
      *         builder="App\View\TwigViewBuilder",
      *         options={
      *             "template"="trick/comment/edit.html.twig"
      *         }
-     *     ),
-     *     statusCode=Response::HTTP_OK,
-     *     headers={},
-     *     options={}
+     *     )
      * )
      * 
      * @App\Annotation\Response(
+     *     statusCode=Response::HTTP_OK,
      *     content=@App\Annotation\View(
      *         format="text/html",
      *         builder="App\View\TwigViewBuilder",
      *         options={
      *             "template"="trick/comment/edit.html.twig"
      *         }
-     *     ),
-     *     statusCode=Response::HTTP_OK,
-     *     headers={},
-     *     options={}
+     *     )
      * )
      */
     public function getTrickCommentEmptyEditForm(FormInterface $form) : ControllerResult
@@ -138,21 +140,23 @@ class TrickCommentController extends AbstractEntityController
      *     class="App\Entity\TrickComment",
      *     converter="app.entity_collection_param_converter",
      *     options={
-     *         "repository_method"="findAllByCriteriaOrThrowExceptionIfNoResult"
+     *         "repository_method"="findAllByCriteria"
      *     }
      * )
      * 
      * @App\Annotation\Response(
+     *     statusCode=Response::HTTP_OK,
      *     content=@App\Annotation\View(
      *         format="application/json", 
      *         builder="App\View\TwigViewBuilder",
      *         options={
      *             "template"="trick/comment/collection.html.twig"
      *         }
-     *     ),
-     *     statusCode=Response::HTTP_OK,
-     *     headers={},
-     *     options={}
+     *     )
+     * )
+     * 
+     * @App\Annotation\Response(
+     *     statusCode=Response::HTTP_NOT_FOUND
      * )
      */
     public function getTrickCommentCollection(ArrayCollection $trickCommentCollection) : ControllerResult
@@ -174,23 +178,22 @@ class TrickCommentController extends AbstractEntityController
      * @ParamConverter(
      *     "trickComment",
      *     class="App\Entity\TrickComment",
-     *     options={
-     *         "id"="id",
-     *         "repository_method"="findOneByIdOrThrowExceptionIfNoResult"
-     *     }
+     *     converter="app.entity_param_converter"
      * )
      * 
      * @App\Annotation\Response(
+     *     statusCode=Response::HTTP_OK,
      *     content=@App\Annotation\View(
      *         format="application/json", 
      *         builder="App\View\TwigViewBuilder",
      *         options={
      *             "template"="trick/comment/get.html.twig"
      *         }
-     *     ),
-     *     statusCode=Response::HTTP_OK,
-     *     headers={},
-     *     options={}
+     *     )
+     * )
+     * 
+     * @App\Annotation\Response(
+     *     statusCode=Response::HTTP_NOT_FOUND
      * )
      */
     public function getTrickComment(TrickComment $trickComment) : ControllerResult
@@ -226,9 +229,7 @@ class TrickCommentController extends AbstractEntityController
      * )
      * 
      * @App\Annotation\Response(
-     *     statusCode=Response::HTTP_NO_CONTENT,
-     *     headers={},
-     *     options={}
+     *     statusCode=Response::HTTP_NO_CONTENT
      * )
      */
     public function postTrickCommentByEditForm(TrickComment $trickComment) : ControllerResult
@@ -250,27 +251,33 @@ class TrickCommentController extends AbstractEntityController
      *
      * @Route("/trick-comment/edit/{id}", name="put_trick_comment_by_edit_form", methods={"PUT"})
      * 
+     * @IsGranted("IS_AUTHENTICATED_FULLY")
+     * 
      * @ParamConverter(
      *     "trickComment",
      *     class="App\Entity\TrickComment",
      *     converter="app.submitted_entity_param_converter",
      *     options={
-     *         "id"="id",
      *         "form_type"="App\Form\Type\TrickCommentEditType",
      *         "form_options"={
      *             "data_class"="App\Entity\Dto\TrickCommentDto",
      *             "method"="PUT",
      *             "validation_groups"={"trick_comment.form.edit"}
      *         },
-     *         "repository_method"="findOneByIdOrThrowExceptionIfNoResult",
      *         "grant"="PUT"
      *     }
      * )
      * 
      * @App\Annotation\Response(
-     *     statusCode=Response::HTTP_NO_CONTENT,
-     *     headers={},
-     *     options={}
+     *     statusCode=Response::HTTP_NO_CONTENT
+     * )
+     * 
+     * @App\Annotation\Response(
+     *     statusCode=Response::HTTP_FORBIDDEN
+     * )
+     * 
+     * @App\Annotation\Response(
+     *     statusCode=Response::HTTP_NOT_FOUND
      * )
      */
     public function putTrickCommentByEditForm(TrickComment $trickComment) : ControllerResult
@@ -291,21 +298,24 @@ class TrickCommentController extends AbstractEntityController
      *
      * @Route("/trick-comment/delete/{id}", name="delete_trick_comment_by_delete_form", methods={"DELETE"})
      * 
-     * @IsGranted("DELETE", subject="trickComment")
+     * @IsGranted("IS_AUTHENTICATED_FULLY")
      * 
      * @ParamConverter(
      *     "trickComment",
      *     class="App\Entity\TrickComment",
-     *     options={
-     *         "id"="id",
-     *         "repository_method"="findOneByIdOrThrowExceptionIfNoResult"
-     *     }
+     *     converter="app.entity_param_converter"
      * )
      *
      * @App\Annotation\Response(
-     *     statusCode=Response::HTTP_NO_CONTENT,
-     *     headers={},
-     *     options={}
+     *     statusCode=Response::HTTP_NO_CONTENT
+     * )
+     * 
+     * @App\Annotation\Response(
+     *     statusCode=Response::HTTP_FORBIDDEN
+     * )
+     * 
+     * @App\Annotation\Response(
+     *     statusCode=Response::HTTP_NOT_FOUND
      * )
      */
     public function deleteTrickCommentByDeleteForm(TrickComment $trickComment) : ControllerResult

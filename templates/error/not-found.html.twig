@@ -1,0 +1,12 @@
+{% extends 'base.html.twig' %}
+{% block title %}{{ 'error.not_found.title'|trans }}{% endblock title %}
+{% block description %}{{ 'error.not_found.description'|trans }}{% endblock description %}
+{% block content %}
+    {{ parent() }}
+    <div class="error-not-found container-fluid p-0">
+        <div class="error-not-found-jumbotron jumbotron jumbotron-fluid text-center">
+            <h1 class="error-not-found-title align-middle">{{ block('title') }}</h1>
+            <div class="error-not-found-description align-middle lead">{{ block('description') }}</div>
+        </div>
+    </div>
+{% endblock content %}

@@ -47,6 +47,25 @@
     padding-top: 45vh !important;
 }
 
+/* Error Internal Server Error */
+
+.error-internal-server-error {
+    min-height: 100vh;
+}
+
+/* Error Not Found */
+
+.error-not-found {
+    min-height: 100vh;
+}
+
+/* Error Forbidden */
+
+.error-forbidden {
+    min-height: 100vh;
+}
+
+
 /* Trick Collection */
 .trick-list-item-title {
     font-size: 15px;

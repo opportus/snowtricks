@@ -2,7 +2,7 @@
 
 namespace App\Annotation;
 
-use AbstractDatumReference as DatumReference;
+use App\Annotation\AbstractDatumReference as DatumReference;
 
 /**
  * The datum fetcher interface.

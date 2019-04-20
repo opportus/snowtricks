@@ -2,7 +2,7 @@
 
 namespace App\Annotation;
 
-use AbstractDatumReference as DatumReference;
+use App\Annotation\AbstractDatumReference as DatumReference;
 use App\Exception\DatumFetchingException;
 
 /**
@@ -29,7 +29,7 @@ class DatumFetcher implements DatumFetcherInterface
                 ));
             }
 
-            $datum = $data->{$datumReference}();
+            $datum = $data->{$datumReference->getName()}();
         } elseif ($datumReference instanceof DatumPropertyReference) {
             if (!\is_object($data) || !\property_exists($data, $datumReference->getName()) || !\array_key_exists($datumReference->getName(), \get_object_vars($data))) {
                 throw new DatumFetchingException(\sprintf(
@@ -39,7 +39,7 @@ class DatumFetcher implements DatumFetcherInterface
                 ));
             }
 
-            $datum = $data->{$datumReference};
+            $datum = $data->{$datumReference->getName()};
         } elseif ($datumReference instanceof DatumKeyReference) {
             if (!\is_array($data) || !\array_key_exists($datumReference->getName(), $data)) {
                 throw new DatumFetchingException(\sprintf(
@@ -49,7 +49,7 @@ class DatumFetcher implements DatumFetcherInterface
                 ));
             }
 
-            $datum = $data[$datumReference];
+            $datum = $data[$datumReference->getName()];
         } else {
             throw new DatumFetchingException(\sprintf(
                 'Reference of type "%s" is not supported.',

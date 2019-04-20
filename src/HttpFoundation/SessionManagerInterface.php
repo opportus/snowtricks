@@ -3,7 +3,7 @@
 namespace App\HttpFoundation;
 
 use App\Annotation\Flash as FlashAnnotation;
-use App\HttpKernel\ControllerResult;
+use App\HttpKernel\ControllerResultInterface;
 
 /**
  * The session manager interface.
@@ -19,7 +19,7 @@ interface SessionManagerInterface
      * Generates the flash.
      *
      * @param App\Annotation\Flash $flashAnnotation
-     * @param  App\HttpKernel\ControllerResult $controllerResult
+     * @param  App\HttpKernel\ControllerResultInterface $controllerResult
      */
-    public function generateFlash(FlashAnnotation $flashAnnotation, ControllerResult $controllerResult);
+    public function generateFlash(FlashAnnotation $flashAnnotation, ControllerResultInterface $controllerResult);
 }

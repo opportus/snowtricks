@@ -2,7 +2,9 @@
 
 namespace App\ParamConverter;
 
+use App\HttpKernel\ControllerException;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Sensio\Bundle\FrameworkExtraBundle\Request\ParamConverter\ParamConverterInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Doctrine\ORM\EntityManagerInterface;
@@ -59,12 +61,17 @@ class EntityCollectionParamConverter implements ParamConverterInterface
             $request->query->get($attributeKey, array())
         );
 
-        $entityCollection = $this->entityManager->getRepository($entityClass)->{$repositoryMethod}(
-            $criteria,
-            $order,
-            $limit,
-            $offset
-        );
+        $args = [$criteria, $order, $limit, $offset];
+
+        if (null === $repositoryMethod) {
+            $entityCollection = $this->entityManager->getRepository($entityClass)->findBy(...$args);
+        } else {
+            $entityCollection = $this->entityManager->getRepository($entityClass)->{$repositoryMethod}(...$args);
+        }
+
+        if (0 >= \count($entityCollection)) {
+            throw new ControllerException(Response::HTTP_NOT_FOUND);
+        }
 
         $request->attributes->set($configuration->getName(), $entityCollection);
 

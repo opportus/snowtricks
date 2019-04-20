@@ -1,6 +1,6 @@
 {% if app.request.hasPreviousSession %}
     {% for status, messages in app.flashes %}
-        {% if status|first == 2 %}
+        {% if status|first == 2 or status|first == 3 %}
             {% set label = 'success' %}
         {% elseif status|first == 4 or status|first == 5 %}
             {% set label = 'danger' %}

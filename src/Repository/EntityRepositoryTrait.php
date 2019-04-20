@@ -3,7 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\Entity;
-use App\Exception\EntityNotFoundException;
+use Doctrine\ORM\EntityNotFoundException;
 use Doctrine\Common\Collections\ArrayCollection;
 
 /**
@@ -32,7 +32,7 @@ trait EntityRepositoryTrait
      *
      * @param  string $id
      * @return App\Entity\Entity
-     * @throws App\Exception\EntityNotFoundException
+     * @throws Doctrine\ORM\EntityNotFoundException
      */
     public function findOneByIdOrThrowExceptionIfNoResult(string $id) : Entity
     {
@@ -67,7 +67,7 @@ trait EntityRepositoryTrait
      * @param int|null $limit
      * @param int|null $offset
      * @return Doctrine\Common\Collections\ArrayCollection
-     * @throws App\Exception\EntityNotFoundException
+     * @throws Doctrine\ORM\EntityNotFoundException
      */
     public function findAllByCriteriaOrThrowExceptionIfNoResult(array $criteria, ?array $orderBy = null, $limit = null, $offset = null) : ArrayCollection
     {

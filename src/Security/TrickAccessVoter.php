@@ -4,6 +4,7 @@ namespace App\Security;
 
 use App\Entity\Entity;
 use App\Entity\Trick;
+use Symfony\Component\Security\Core\Authentication\Token\AnonymousToken;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 
 /**
@@ -29,7 +30,7 @@ class TrickAccessVoter extends EntityAccessVoter
      */
     protected function canPost(Entity $subject, TokenInterface $token) : bool
     {
-        return $token->isAuthenticated();
+        return AnonymousToken::class !== \get_class($token);
     }
 
     /**
@@ -37,7 +38,7 @@ class TrickAccessVoter extends EntityAccessVoter
      */
     protected function canPut(Entity $subject, TokenInterface $token) : bool
     {
-        return $token->isAuthenticated();
+        return AnonymousToken::class !== \get_class($token);
     }
 
     /**
@@ -45,7 +46,7 @@ class TrickAccessVoter extends EntityAccessVoter
      */
     protected function canPatch(Entity $subject, TokenInterface $token) : bool
     {
-        return $token->isAuthenticated();
+        return AnonymousToken::class !== \get_class($token);
     }
 
     /**

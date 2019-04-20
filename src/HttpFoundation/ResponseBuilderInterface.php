@@ -2,7 +2,7 @@
 
 namespace App\HttpFoundation;
 
-use App\HttpKernel\ControllerResult;
+use App\HttpKernel\ControllerResultInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -20,9 +20,9 @@ interface ResponseBuilderInterface
      * Builds the response.
      *
      * @param  Symfony\Component\HttpFoundation\Request $request
-     * @param  App\HttpKernel\ControllerResult $controllerResult
+     * @param  App\HttpKernel\ControllerResultInterface $controllerResult
      * @return Symfony\Component\HttpFoundation\Response
      * @throws App\Exception\ResponseBuildingException
      */
-    public function build(Request $request, ControllerResult $controllerResult): Response;
+    public function build(Request $request, ControllerResultInterface $controllerResult): Response;
 }

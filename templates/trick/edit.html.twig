@@ -126,7 +126,7 @@
                                 ) }}
                             </div>
                             <div class="col-12 text-right">
-                                {% if trick.id is defined %}
+                                {% if trick is not null and app.request.attributes.get('_route_params').slug is defined %}
                                     <div class="trick-edit-delete d-inline">
                                         <div
                                             class="btn btn-sm btn-danger ajax-action"
