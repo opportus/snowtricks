@@ -38,15 +38,24 @@ class AuthorizerListener
      */
     public function onFormSubmit(FormEvent $event)
     {
-        $authorable              = $event->getData();
-        $accessMethod            = $event->getForm()->getConfig()->getMethod();
-        $authorableAccessMethods = array('POST', 'PUT', 'PATCH');
+        $authorable = $event->getData();
 
-        if ((!$authorable instanceof AuthorableInterface) || !in_array($accessMethod, $authorableAccessMethods)) {
+        if (!\is_object($authorable) || !$authorable instanceof AuthorableInterface) {
+            return;
+        }
+
+        $accessMethod = $event->getForm()->getConfig()->getMethod();
+        $authorableAccessMethods = ['POST', 'PUT', 'PATCH'];
+
+        if (!\in_array($accessMethod, $authorableAccessMethods)) {
             return;
         }
 
         $author = $this->tokenStorage->getToken()->getUser();
+
+        if (null === $author) {
+            return;
+        }
 
         $authorable->setAuthor($author);
     }
