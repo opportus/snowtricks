@@ -6,14 +6,14 @@ use App\HttpFoundation\FileUploaderInterface;
 use Symfony\Component\Form\FormEvent;
 
 /**
- * The trick attachment DTO builder listener.
+ * The trick attachment data builder listener.
  *
  * @version 0.0.1
  * @package App\EventListener
  * @author  Clément Cazaud <opportus@gmail.com>
  * @license https://github.com/opportus/snowtricks/blob/master/LICENSE.md MIT
  */
-class TrickAttachmentDtoBuilderListener
+class TrickAttachmentDataBuilderListener
 {
     /**
      * @var App\HttpFoundation\FileUploaderInterface $fileUploader
@@ -21,7 +21,7 @@ class TrickAttachmentDtoBuilderListener
     private $fileUploader;
 
     /**
-     * Constructs the trick attachment DTO builder listener.
+     * Constructs the trick attachment data builder listener.
      * 
      * @param App\HttpFoundation\FileUploaderInterface $fileUploader
      */
@@ -31,7 +31,7 @@ class TrickAttachmentDtoBuilderListener
     }
 
     /**
-     * Builds the trick attachment DTO.
+     * Builds the trick attachment data.
      *
      * @param Symfony\Component\Form\FormEvent $event
      */
@@ -44,16 +44,11 @@ class TrickAttachmentDtoBuilderListener
             return;
         }
 
-        if ($form->get('embed')->getViewData()) {
+        if ($embed = $form->get('embed')->getViewData()) {
             $data->type = 'video/embed';
-            $data->src = $form->get('embed')->getViewData();
-        } elseif ($form->get('upload')->getViewData()) {
-            $file = $form->get('upload')->getViewData();
-
+            $data->src = $embed;
+        } elseif ($file = $form->get('upload')->getViewData()) {
             $data->type = $file->getMimeType();
-
-            $file = $form->get('upload')->getViewData();
-
             $data->src = $this->fileUploader->upload($file, 'trick-attachments');
         }
     }

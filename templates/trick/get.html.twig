@@ -63,11 +63,9 @@
                                 {{ 'trick.show.group.label'|trans() }}: {{ entity.group.title }}
                             </li>
                         {% endif %}
-                        {% for author in entity.authors %}
-                            <li id="{{ author.id }}" class="trick-show-author list-inline-item badge badge-pill badge-secondary">
-                                {{ 'trick.show.author.label'|trans() }}: {{ author.username }}
-                            </li>
-                        {% endfor %}
+                        <li id="{{ entity.author.id }}" class="trick-show-author list-inline-item badge badge-pill badge-secondary">
+                            {{ 'trick.show.author.label'|trans() }}: {{ entity.author.username }}
+                        </li>
                         {% if entity.updatedAt is defined %}
                             <li class="trick-show-updated-at list-inline-item badge badge-pill badge-secondary">
                                 {{ 'trick.show.updated_at.label'|trans() }}: {{ entity.updatedAt|date() }}

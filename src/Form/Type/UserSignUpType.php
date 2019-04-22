@@ -2,17 +2,17 @@
 
 namespace App\Form\Type;
 
-use App\Entity\User;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
-use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
- * The user sign up type...
+ * The user sign up type.
+ * 
+ * @todo Decouple view.
  *
  * @version 0.0.1
  * @package App\Form\Type
@@ -30,35 +30,34 @@ class UserSignUpType extends AbstractType
             ->add(
                 'username',
                 TextType::class,
-                array(
+                [
                     'attr'  => array('autocomplete' => 'username'),
                     'label' => 'user.sign_up.form.label.username',
-                )
+                ]
             )
             ->add(
                 'email',
                 EmailType::class,
-                array(
+                [
                     'attr'  => array('autocomplete' => 'email'),
                     'label' => 'user.sign_up.form.label.email',
-                )
+                ]
             )
             ->add(
-                'plainPassword',
+                'password',
                 PasswordType::class,
-                array(
+                [
                     'attr'  => array('autocomplete' => 'new-password'),
                     'label' => 'user.sign_up.form.label.password',
-                )
+                ]
             )
             ->add(
                 'submit',
                 SubmitType::class,
-                array(
+                [
                     'label' => 'user.sign_up.form.label.submit',
-                )
+                ]
             )
         ;
     }
 }
-

@@ -8,7 +8,7 @@ use Symfony\Component\Form\Exception\TransformationFailedException;
 use Doctrine\ORM\EntityManagerInterface;
 
 /**
- * The trick to ID transformer...
+ * The trick to ID transformer.
  *
  * @version 0.0.1
  * @package App\Form\DataTransformer
@@ -42,12 +42,7 @@ class TrickToIdTransformer implements DataTransformerInterface
         }
 
         if (!$value instanceof Trick) {
-            throw new TransformationFailedException(
-                sprintf(
-                    'The value must be an instance of %s',
-                    Trick::class
-                )
-            );
+            throw new TransformationFailedException(\sprintf('The value must be an instance of %s', Trick::class));
         }
 
         return $value->getId();
@@ -67,12 +62,7 @@ class TrickToIdTransformer implements DataTransformerInterface
         ;
 
         if ($trick === null) {
-            throw new TransformationFailedException(
-                sprintf(
-                    'Trick %s not found',
-                    $value
-                )
-            );
+            throw new TransformationFailedException(\sprintf('Trick %s not found', $value));
         }
 
         return $trick;

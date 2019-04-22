@@ -61,13 +61,9 @@
                 <source>user.sign_up.form.label.password</source>
                 <target>Password</target>
             </trans-unit>
-            <trans-unit id="user.sign_up.form.message.username_conflict">
-                <source>user.sign_up.form.message.username_conflict</source>
-                <target>This username is already used</target>
-            </trans-unit>
-            <trans-unit id="user.sign_up.form.message.email_conflict">
-                <source>user.sign_up.form.message.email_conflict</source>
-                <target>This email is already used</target>
+            <trans-unit id="user.sign_up.form.message.conflict">
+                <source>user.sign_up.form.message.conflict</source>
+                <target>This %attribute% is already used</target>
             </trans-unit>
             <trans-unit id="user.sign_up.form.label.submit">
                 <source>user.sign_up.form.label.submit</source>
@@ -258,6 +254,10 @@
             <trans-unit id="trick.show.created_at.label">
                 <source>trick.show.created_at.label</source>
                 <target>Created At</target>
+            </trans-unit>
+            <trans-unit id="trick.edit.success">
+                <source>trick.edit.success</source>
+                <target>The trick has been successfully saved</target>
             </trans-unit>
             <trans-unit id="trick.edit.form.label.title">
                 <source>trick.edit.form.label.title</source>

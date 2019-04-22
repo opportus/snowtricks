@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Entity\Dto;
+namespace App\Form\Data;
 
 use App\Entity\User;
 
@@ -8,7 +8,7 @@ use App\Entity\User;
  * The authorable interface.
  *
  * @version 0.0.1
- * @package App\Entity\Dto
+ * @package App\Form\Data
  * @author  Clément Cazaud <opportus@gmail.com>
  * @license https://github.com/opportus/snowtricks/blob/master/LICENSE.md MIT
  */

@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App;
 use App\HttpKernel\ControllerResult;
+use App\View\TwigViewBuilder;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
@@ -28,7 +29,7 @@ class HomeController
      *     statusCode=Response::HTTP_OK,
      *     content=@App\Annotation\View(
      *         format="text/html",
-     *         builder="App\View\TwigViewBuilder",
+     *         builder=TwigViewBuilder::class,
      *         options={
      *             "template"="home/get.html.twig"
      *         }

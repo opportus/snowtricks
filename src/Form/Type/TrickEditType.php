@@ -2,8 +2,8 @@
 
 namespace App\Form\Type;
 
-use App\Entity\Dto\TrickDto;
-use App\Entity\Dto\TrickAttachmentDto;
+use App\Form\Data\TrickData;
+use App\Form\Data\TrickAttachmentData;
 use App\Entity\TrickGroup;
 use App\EventListener\AuthorizerListener;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -11,14 +11,15 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
-use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
-use Doctrine\ORM\EntityManagerInterface;
 
 /**
- * The trick edit type...
+ * The trick edit type.
+ * 
+ * @todo Decouple view.
  *
  * @version 0.0.1
  * @package App\Form\Type
@@ -28,11 +29,6 @@ use Doctrine\ORM\EntityManagerInterface;
 class TrickEditType extends AbstractType
 {
     /**
-     * @var Doctrine\ORM\EntityManagerInterface $entityManager
-     */
-    private $entityManager;
-
-    /**
      * @var App\EventListener\AuthorizerListener $authorizerListener
      */
     private $authorizerListener;
@@ -40,14 +36,10 @@ class TrickEditType extends AbstractType
     /**
      * Constructs the trick edit type.
      *
-     * @param Doctrine\ORM\EntityManagerInterface $entityManager
      * @param App\EventListener\AuthorizerListener $authorizerListener
      */
-    public function __construct(
-        EntityManagerInterface $entityManager,
-        AuthorizerListener     $authorizerListener
-    ) {
-        $this->entityManager      = $entityManager;
+    public function __construct(AuthorizerListener $authorizerListener)
+    {
         $this->authorizerListener = $authorizerListener;
     }
 
@@ -56,49 +48,49 @@ class TrickEditType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        if ($builder->getData() instanceof TrickDto && $builder->getData() !== null && $builder->getData()->group !== null) {
-            $preferredChoices = array($this->entityManager->getReference(TrickGroup::class, $builder->getData()->group->getId()));
+        if (\is_object($builder->getData()) && $builder->getData() instanceof TrickData && null !== $builder->getData()->group) {
+            $groupPreferredChoices = [$builder->getData()->group];
         } else {
-            $preferredChoices =array();
+            $groupPreferredChoices = [];
         }
 
         $builder
             ->add(
                 'title',
                 TextType::class,
-                array(
+                [
                     'translation_domain' => false,
-                )
+                ]
             )
             ->add(
                 'description',
                 TextType::class,
-                array(
+                [
                     'translation_domain' => false,
-                )
+                ]
             )
             ->add(
                 'body',
                 TextareaType::class,
-                array(
+                [
                     'translation_domain' => false,
-                )
+                ]
             )
             ->add(
                 'group',
                 EntityType::class,
-                array(
+                [
                     'class'              => TrickGroup::class,
                     'choice_label'       => 'title',
                     'choice_name'        => 'id',
-                    'preferred_choices'  => $preferredChoices,
+                    'preferred_choices'  => $groupPreferredChoices,
                     'translation_domain' => false,
-                )
+                ]
             )
             ->add(
                 'attachments',
                 CollectionType::class,
-                array(
+                [
                     'allow_add'          => true,
                     'allow_delete'       => true,
                     'by_reference'       => false,
@@ -108,10 +100,10 @@ class TrickEditType extends AbstractType
                     'translation_domain' => false,
                     'entry_options' => array(
                         'label'              => false,
-                        'data_class'         => TrickAttachmentDto::class,
+                        'data_class'         => TrickAttachmentData::class,
                         'translation_domain' => false,
                     )
-                )
+                ]
             )
             ->add(
                 'submit',
@@ -119,7 +111,7 @@ class TrickEditType extends AbstractType
             )
             ->addEventListener(
                 FormEvents::SUBMIT,
-                array($this->authorizerListener, 'onFormSubmit')
+                [$this->authorizerListener, 'onFormSubmit']
             )
         ;
     }
@@ -129,8 +121,8 @@ class TrickEditType extends AbstractType
      */
     public function configureOptions(OptionsResolver $resolver)
     {
-        $resolver->setDefaults(array(
-            'data_class' => TrickDto::class,
-        ));
+        $resolver->setDefaults([
+            'data_class' => TrickData::class,
+        ]);
     }
 }

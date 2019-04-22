@@ -1,19 +1,19 @@
 <?php
 
-namespace App\Entity\Dto;
+namespace App\Form\Data;
 
 use App\Entity\User;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
- * The trick comment dto.
+ * The trick comment data.
  *
  * @version 0.0.1
- * @package App\Entity\Dto
+ * @package App\Form\Data
  * @author  Clément Cazaud <opportus@gmail.com>
  * @license https://github.com/opportus/snowtricks/blob/master/LICENSE.md MIT
  */
-class TrickCommentDto implements AuthorableInterface
+class TrickCommentData implements AuthorableInterface
 {
     /**
      * @var null|string $body
@@ -23,14 +23,6 @@ class TrickCommentDto implements AuthorableInterface
      * @Assert\Length(max=64512, groups={"trick_comment.form.edit"})
      */
     public $body;
-
-    /**
-     * @var null|App\Entity\User $author
-     *
-     * @Assert\NotNull()
-     * @Assert\Valid()
-     */
-    public $author;
 
     /**
      * @var null|App\Entity\TrickInterface $thread
@@ -48,11 +40,12 @@ class TrickCommentDto implements AuthorableInterface
     public $parent;
 
     /**
-     * @var null|Doctrine\Common\Collections\Collection
+     * @var null|App\Entity\User $author
      *
+     * @Assert\NotNull()
      * @Assert\Valid()
      */
-    public $children;
+    public $author;
 
     /**
      * {@inheritdoc}

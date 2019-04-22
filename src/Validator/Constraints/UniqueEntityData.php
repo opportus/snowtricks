@@ -5,14 +5,17 @@ namespace App\Validator\Constraints;
 use Symfony\Component\Validator\Constraint;
 
 /**
- * The  entity base constraint.
+ * The unique entity data constraint.
  *
  * @version 0.0.1
  * @package App\Validator\Constraints
  * @author  Clément Cazaud <opportus@gmail.com>
  * @license https://github.com/opportus/snowtricks/blob/master/LICENSE.md MIT
+ *
+ * @Annotation
+ * @Target({"CLASS"})
  */
-abstract class Entity extends Constraint
+class UniqueEntityData extends Constraint
 {
     /**
      * @var string $entityClass
@@ -20,9 +23,14 @@ abstract class Entity extends Constraint
     public $entityClass;
 
     /**
-     * @var string $primaryKey
+     * @var string $entityIdentifier
      */
-    public $primaryKey;
+    public $entityIdentifier;
+
+    /**
+     * @var array $data
+     */
+    public $data;
 
     /**
      * @var string $message
@@ -36,7 +44,8 @@ abstract class Entity extends Constraint
     {
         return array(
             'entityClass',
-            'primaryKey',
+            'entityIdentifier',
+            'data',
             'message',
         );
     }
@@ -49,4 +58,3 @@ abstract class Entity extends Constraint
         return self::CLASS_CONSTRAINT;
     }
 }
-

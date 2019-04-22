@@ -26,16 +26,16 @@ class UserActivationEmailType extends AbstractType
             ->add(
                 'activation',
                 CheckboxType::class,
-                array(
+                [
                     'data' => true,
-                )
+                ]
             )
             ->add(
                 'token',
                 HiddenType::class,
-                array(
+                [
                     'mapped' => false,
-                )
+                ]
             )
         ;
     }

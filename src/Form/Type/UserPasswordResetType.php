@@ -8,7 +8,9 @@ use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 
 /**
- * The user reset password type...
+ * The user password reset type.
+ * 
+ * @todo Decouple view.
  *
  * @version 0.0.1
  * @package App\Form\Type
@@ -24,21 +26,20 @@ class UserPasswordResetType extends AbstractType
     {
         $builder
             ->add(
-                'plainPassword',
+                'password',
                 PasswordType::class,
-                array(
+                [
                     'attr'  => array('autocomplete' => 'new-password'),
                     'label' => 'user.password_reset.form.label.password',
-                )
+                ]
             )
             ->add(
                 'submit',
                 SubmitType::class,
-                array(
+                [
                     'label' => 'user.password_reset.form.label.submit',
-                )
+                ]
             )
         ;
     }
 }
-

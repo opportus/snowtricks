@@ -47,23 +47,35 @@ class UserAccessVoter extends EntityAccessVoter
     protected function canPatch(Entity $subject, TokenInterface $token) : bool
     {
         if ($this->requestStack->getCurrentRequest()->attributes->get('_controller') === UserController::class.'::patchUserByActivationEmailForm') {
-            $token = $subject->getActivationToken();
+            $token = $subject->getLastActivationToken();
 
             if ($token === null) {
                 return false;
             }
 
-            return $token->hasKey($this->requestStack->getCurrentRequest()->request->get('user_activation_email')['token']) && !$token->isExpired();
+            $requestToken = $this->requestStack->getCurrentRequest()->attributes->get('user_activation_email')['token'];
+
+            if (null === $requestToken) {
+                return false;
+            }
+
+            return \hash_equals((string)$token, $requestToken) && !$token->isExpired();
         }
 
         if ($this->requestStack->getCurrentRequest()->attributes->get('_controller') === UserController::class.'::patchUserByPasswordResetForm') {
-            $token = $subject->getPasswordResetToken();
+            $token = $subject->getLastPasswordResetToken();
 
             if ($token === null) {
                 return false;
             }
 
-            return $token->hasKey($this->requestStack->getCurrentRequest()->query->get('user_password_reset_email')['token']) && !$token->isExpired();
+            $requestToken = $this->requestStack->getCurrentRequest()->query->get('user_password_reset_email')['token'];
+
+            if (null === $requestToken) {
+                return false;
+            }
+
+            return \hash_equals((string)$token, $requestToken) && !$token->isExpired();
         }
 
         return $subject->getUsername() === $token->getUsername();

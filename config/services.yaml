@@ -57,9 +57,9 @@ services:
             - { name: view_builder }
 
     # Event listener...
-    App\EventListener\ObjectMapperRecursorListener:
+    App\EventListener\TrickBuilderListener:
         tags:
-            - { name: kernel.event_listener, event: 'opportus_object_mapper.set_target_point_value', method: 'onSetTargetPointValue' }
+            - { name: kernel.event_listener, event: 'opportus_object_mapper.set_instantiated_target_point_value', method: 'onSetInstantiatedTargetPointValue' }
     App\EventListener\ControllerAnnotationReaderListener:
         tags:
             - { name: kernel.event_listener, event: kernel.controller }

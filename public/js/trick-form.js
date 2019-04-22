@@ -54,7 +54,7 @@ class TrickForm
     {
         var attachmentFieldset = this.find('#trick_edit_attachments').attr('data-prototype'),
             attachmentList = this.find('.trick-attachment-list'),
-            attachmentCounter = attachmentList.children().length,
+            attachmentCounter = Math.floor(Math.random()*1000),
             attachmentModal = this.find('#trick-attachment-modal');
 
         attachmentFieldset = $(attachmentFieldset.replace(/__name__/g, attachmentCounter));

@@ -4,6 +4,13 @@ namespace App\Controller;
 
 use App;
 use App\Entity\User;
+use App\Form\Type\UserSignUpType;
+use App\Form\Type\UserSignInType;
+use App\Form\Type\UserPasswordResetRequestType;
+use App\Form\Type\UserPasswordResetType;
+use App\Form\Type\UserActivationEmailType;
+use App\Form\Data\UserData;
+use App\View\TwigViewBuilder;
 use App\HttpKernel\ControllerResult;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -33,12 +40,12 @@ class UserController extends AbstractEntityController
      * 
      * @ParamConverter(
      *     "form",
-     *     class="App\Entity\User",
+     *     class=User::class,
      *     converter="app.entity_form_param_converter",
      *     options={
-     *         "form_type"="App\Form\Type\UserSignUpType",
+     *         "form_type"=UserSignUpType::class,
      *         "form_options"={
-     *             "data_class"="App\Entity\Dto\UserDto",
+     *             "data_class"=UserData::class,
      *             "method"="POST"
      *         }
      *     }
@@ -48,7 +55,7 @@ class UserController extends AbstractEntityController
      *     statusCode=Response::HTTP_OK,
      *     content=@App\Annotation\View(
      *         format="text/html",
-     *         builder="App\View\TwigViewBuilder",
+     *         builder=TwigViewBuilder::class,
      *         options={
      *             "template"="user/sign_up.html.twig"
      *         }
@@ -73,12 +80,12 @@ class UserController extends AbstractEntityController
      * 
      * @ParamConverter(
      *     "user",
-     *     class="App\Entity\User",
+     *     class=User::class,
      *     converter="app.submitted_entity_param_converter",
      *     options={
-     *         "form_type"="App\Form\Type\UserSignUpType",
+     *         "form_type"=UserSignUpType::class,
      *         "form_options"={
-     *             "data_class"="App\Entity\Dto\UserDto",
+     *             "data_class"=UserData::class,
      *             "method"="POST",
      *             "validation_groups"= {"user.form.sign_up"}
      *         }
@@ -96,7 +103,7 @@ class UserController extends AbstractEntityController
      *     statusCode=Response::HTTP_BAD_REQUEST,
      *     content=@App\Annotation\View(
      *         format="text/html",
-     *         builder="App\View\TwigViewBuilder",
+     *         builder=TwigViewBuilder::class,
      *         options={
      *             "template"="user/sign_up.html.twig"
      *         }
@@ -108,8 +115,8 @@ class UserController extends AbstractEntityController
      *     message=@App\Annotation\Trans(
      *         id="user.sign_up.notification.201",
      *         parameters={
-     *             "username"=@App\Annotation\DatumGetterReference(name="getUsername"),
-     *             "email"=@App\Annotation\DatumGetterReference(name="getEmail")
+     *             "%username%"=@App\Annotation\DatumGetterReference(name="getUsername"),
+     *             "%email%"=@App\Annotation\DatumGetterReference(name="getEmail")
      *         }
      *     )
      * )
@@ -135,12 +142,12 @@ class UserController extends AbstractEntityController
      * 
      * @ParamConverter(
      *     "user",
-     *     class="App\Entity\User",
+     *     class=User::class,
      *     converter="app.submitted_entity_param_converter",
      *     options={
-     *         "form_type"="App\Form\Type\UserActivationEmailType",
+     *         "form_type"=UserActivationEmailType::class,
      *         "form_options"={
-     *             "data_class"="App\Entity\Dto\UserDto",
+     *             "data_class"=UserData::class,
      *             "method"="PATCH",
      *             "csrf_protection"=false
      *         },
@@ -195,12 +202,12 @@ class UserController extends AbstractEntityController
      * 
      * @ParamConverter(
      *     "form",
-     *     class="App\Entity\User",
+     *     class=User::class,
      *     converter="app.entity_form_param_converter",
      *     options={
-     *         "form_type"="App\Form\Type\UserPasswordResetRequestType",
+     *         "form_type"=UserPasswordResetRequestType::class,
      *         "form_options"={
-     *             "data_class"="App\Entity\Dto\UserDto",
+     *             "data_class"=UserData::class,
      *             "method"="GET"
      *         }
      *     }
@@ -210,7 +217,7 @@ class UserController extends AbstractEntityController
      *     statusCode=Response::HTTP_OK,
      *     content=@App\Annotation\View(
      *         format="text/html",
-     *         builder="App\View\TwigViewBuilder",
+     *         builder=TwigViewBuilder::class,
      *         options={
      *             "template"="user/password_reset_request.html.twig"
      *         }
@@ -235,13 +242,13 @@ class UserController extends AbstractEntityController
      * 
      * @ParamConverter(
      *     "user",
-     *     class="App\Entity\User",
+     *     class=User::class,
      *     converter="app.entity_param_converter",
      *     options={
      *         "id"=@App\Annotation\DatumPropertyReference(name="username"),
-     *         "form_type"="App\Form\Type\UserPasswordResetRequestType",
+     *         "form_type"=UserPasswordResetRequestType::class,
      *         "form_options"={
-     *             "data_class"="App\Entity\Dto\UserDto",
+     *             "data_class"=UserData::class,
      *             "method"="GET",
      *             "validation_groups"={"user.form.password_reset_request"}
      *         },
@@ -260,7 +267,7 @@ class UserController extends AbstractEntityController
      *     statusCode=Response::HTTP_BAD_REQUEST,
      *     content=@App\Annotation\View(
      *         format="text/html",
-     *         builder="App\View\TwigViewBuilder",
+     *         builder=TwigViewBuilder::class,
      *         options={
      *             "template"="user/password_reset_request.html.twig"
      *         }
@@ -290,12 +297,12 @@ class UserController extends AbstractEntityController
      * 
      * @ParamConverter(
      *     "form",
-     *     class="App\Entity\User",
+     *     class=User::class,
      *     converter="app.entity_form_param_converter",
      *     options={
-     *         "form_type"="App\Form\Type\UserPasswordResetType",
+     *         "form_type"=UserPasswordResetType::class,
      *         "form_options"={
-     *             "data_class"="App\Entity\Dto\UserDto",
+     *             "data_class"=UserData::class,
      *             "method"="PATCH"
      *         }
      *     }
@@ -305,7 +312,7 @@ class UserController extends AbstractEntityController
      *     statusCode=Response::HTTP_OK,
      *     content=@App\Annotation\View(
      *         format="text/html",
-     *         builder="App\View\TwigViewBuilder",
+     *         builder=TwigViewBuilder::class,
      *         options={
      *             "template"="user/password_reset.html.twig"
      *         }
@@ -316,7 +323,7 @@ class UserController extends AbstractEntityController
      *     statusCode=Response::HTTP_NOT_FOUND,
      *     content=@App\Annotation\View(
      *         format="text/html",
-     *         builder="App\View\TwigViewBuilder",
+     *         builder=TwigViewBuilder::class,
      *         options={
      *             "template"="user/password_reset.html.twig"
      *         }
@@ -346,12 +353,12 @@ class UserController extends AbstractEntityController
      * 
      * @ParamConverter(
      *     "user",
-     *     class="App\Entity\User",
+     *     class=User::class,
      *     converter="app.submitted_entity_param_converter",
      *     options={
-     *         "form_type"="App\Form\Type\UserPasswordResetType",
+     *         "form_type"=UserPasswordResetType::class,
      *         "form_options"={
-     *             "data_class"="App\Entity\Dto\UserDto",
+     *             "data_class"=UserData::class,
      *             "method"="PATCH",
      *             "validation_groups"= {"user.form.password_reset"}
      *         },
@@ -370,7 +377,7 @@ class UserController extends AbstractEntityController
      *     statusCode=Response::HTTP_BAD_REQUEST,
      *     content=@App\Annotation\View(
      *         format="text/html",
-     *         builder="App\View\TwigViewBuilder",
+     *         builder=TwigViewBuilder::class,
      *         options={
      *             "template"="user/password_reset.html.twig"
      *         }
@@ -381,9 +388,9 @@ class UserController extends AbstractEntityController
      *     statusCode=Response::HTTP_FORBIDDEN,
      *     content=@App\Annotation\View(
      *         format="text/html",
-     *         builder="App\View\TwigViewBuilder",
+     *         builder=TwigViewBuilder::class,
      *         options={
-     *             "template"="user/password_reset.html.twig"
+     *             "template"="error/forbidden.html.twig"
      *         }
      *     )
      * )
@@ -392,9 +399,9 @@ class UserController extends AbstractEntityController
      *     statusCode=Response::HTTP_NOT_FOUND,
      *     content=@App\Annotation\View(
      *         format="text/html",
-     *         builder="App\View\TwigViewBuilder",
+     *         builder=TwigViewBuilder::class,
      *         options={
-     *             "template"="user/password_reset.html.twig"
+     *             "template"="error/not_found.html.twig"
      *         }
      *     )
      * )
@@ -434,12 +441,12 @@ class UserController extends AbstractEntityController
      * 
      * @ParamConverter(
      *     "form",
-     *     class="App\Entity\User",
+     *     class=User::class,
      *     converter="app.entity_form_param_converter",
      *     options={
-     *         "form_type"="App\Form\Type\UserSignInType",
+     *         "form_type"=UserSignInType::class,
      *         "form_options"={
-     *             "data_class"="App\Entity\Dto\UserDto",
+     *             "data_class"=UserData::class,
      *             "method"="POST"
      *         }
      *     }
@@ -449,7 +456,7 @@ class UserController extends AbstractEntityController
      *     statusCode=Response::HTTP_OK,
      *     content=@App\Annotation\View(
      *         format="text/html",
-     *         builder="App\View\TwigViewBuilder",
+     *         builder=TwigViewBuilder::class,
      *         options={
      *             "template"="user/sign_in.html.twig"
      *         }

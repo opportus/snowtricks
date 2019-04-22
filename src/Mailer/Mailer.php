@@ -101,14 +101,14 @@ class Mailer implements MailerInterface
             'user.activation.email.subject',
             array(
                 '%username%'    => $user->getUsername(),
-                '%action_ttl%'  => $user->getActivationToken()->getTtl(),
+                '%action_ttl%'  => $user->getLastActivationToken()->getTtl(),
             )
         );
         $message = $this->translator->trans(
             'user.activation.email.message',
             array(
                 '%username%'    => $user->getUsername(),
-                '%action_ttl%'  => $user->getActivationToken()->getTtl(),
+                '%action_ttl%'  => $user->getLastActivationToken()->getTtl(),
             )
         );
 
@@ -129,14 +129,14 @@ class Mailer implements MailerInterface
             'user.password_reset.email.subject',
             array(
                 '%username%'    => $user->getUsername(),
-                '%action_ttl%'  => $user->getPasswordResetToken()->getTtl(),
+                '%action_ttl%'  => $user->getLastPasswordResetToken()->getTtl(),
             )
         );
         $message = $this->translator->trans(
             'user.password_reset.email.message',
             array(
                 '%username%'    => $user->getUsername(),
-                '%action_ttl%'  => $user->getPasswordResetToken()->getTtl(),
+                '%action_ttl%'  => $user->getLastPasswordResetToken()->getTtl(),
             )
         );
 

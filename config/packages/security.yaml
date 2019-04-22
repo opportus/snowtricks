@@ -20,7 +20,7 @@ security:
                 login_path: get_user_sign_in_empty_form
                 check_path: get_user_sign_in_empty_form
                 username_parameter: 'user_sign_in[username]'
-                password_parameter: 'user_sign_in[plainPassword]'
+                password_parameter: 'user_sign_in[password]'
                 csrf_parameter: 'user_sign_in[_token]'
             logout:
                 path: proceed_user_sign_out

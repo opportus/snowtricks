@@ -2,15 +2,17 @@
 
 namespace App\Entity;
 
+use Symfony\Component\Validator\Constraints as Assert;
+use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Criteria;
-use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * The trick.
  *
+ * @todo Implement slug constraint.
+ * 
  * @version 0.0.1
  * @package App\Entity
  * @author  Clément Cazaud <opportus@gmail.com>
@@ -41,6 +43,64 @@ class Trick extends Entity
     private $slug;
 
     /**
+     * @var string $title
+     *
+     * @ORM\Column(name="title", type="string", length=255, unique=true)
+     * @Assert\NotBlank()
+     * @Assert\Type(type="string")
+     * @Assert\Length(max=255)
+     */
+    private $title;
+
+    /**
+     * @var string $description
+     *
+     * @ORM\Column(name="description", type="string", length=255)
+     * @Assert\NotBlank()
+     * @Assert\Type(type="string")
+     * @Assert\Length(max=255)
+     */
+    private $description;
+
+    /**
+     * @var string $body
+     *
+     * @ORM\Column(name="body", type="text")
+     * @Assert\NotBlank()
+     * @Assert\Type(type="string")
+     * @Assert\Length(max=64512)
+     */
+    private $body;
+
+    /**
+     * @var null|App\Entity\TrickGroup $group
+     *
+     * @ORM\ManyToOne(targetEntity="App\Entity\TrickGroup", cascade={"persist"})
+     * @ORM\JoinColumn(name="group_id", referencedColumnName="id", nullable=false)
+     * @Assert\NotNull()
+     * @Assert\Valid()
+     */
+    private $group;
+
+    /**
+     * @var Doctrine\Common\Collections\Collection $attachments
+     *
+     * @ORM\OneToMany(targetEntity="App\Entity\TrickAttachment", mappedBy="trick", cascade={"all"}, orphanRemoval=true)
+     * @Assert\Valid()
+     */
+    private $attachments;
+
+    /**
+     * @var App\Entity\UserInterface $author
+     *
+     * @ORM\ManyToOne(targetEntity="App\Entity\User")
+     * @ORM\JoinColumn(name="author_id", referencedColumnName="id", nullable=false)
+     * @Assert\NotNull()
+     * @Assert\Valid()
+     */
+    private $author;
+
+    /**
      * @var Doctrine\Common\Collections\Collection $comments
      *
      * @ORM\OneToMany(targetEntity="App\Entity\TrickComment", mappedBy="thread", cascade={"all"}, orphanRemoval=true)
@@ -50,109 +110,31 @@ class Trick extends Entity
     private $comments;
 
     /**
-     * @var null|App\Entity\TrickGroup $group
-     *
-     * @ORM\ManyToOne(targetEntity="App\Entity\TrickGroup", inversedBy="tricks", cascade={"persist"})
-     * @ORM\JoinColumn(name="group_id", referencedColumnName="id", nullable=false)
-     * @Assert\NotNull()
-     * @Assert\Valid()
-     */
-    private $group;
-
-    /**
-     * @var Doctrine\Common\Collections\Collection $versions
-     *
-     * @ORM\OneToMany(targetEntity="App\Entity\TrickVersion", mappedBy="trick", cascade={"all"})
-     * @ORM\OrderBy({"createdAt" = "DESC"})
-     * @Assert\NotNull()
-     * @Assert\Valid()
-     */
-    private $versions;
-
-    /**
-     * @var App\Entity\TrickVersion $version
-     */
-    private $version;
-
-    /**
      * Constructs the trick.
      *
      * @param string $title
      * @param string $description
      * @param string $body
+     * @param App\Entity\TrickGroup $group
      * @param App\Entity\User $author
-     * @param null|App\Entity\TrickGroup $group
-     * @param null|Doctrine\Common\Collections\Collection $attachments
-     * @param null|Doctrine\Common\Collections\Collection $comments
-     * @param null|Doctrine\Common\Collections\Collection $versions
      */
     public function __construct(
-        string      $title,
-        string      $description,
-        string      $body,
-        User        $author,
-        ?TrickGroup $group       = null,
-        ?Collection $attachments = null,
-        ?Collection $comments    = null,
-        ?Collection $versions    = null
+        string $title,
+        string $description,
+        string $body,
+        TrickGroup $group,
+        User $author
     ) {
-        $this->id        = $this->generateId();
+        $this->id = $this->generateId();
         $this->createdAt = new \DateTime();
-        $this->comments  = $comments === null ? new ArrayCollection() : $comments;
-        $this->versions  = $versions === null ? new ArrayCollection() : $versions;
-
-        $version = new TrickVersion(
-            $title,
-            $description,
-            $body,
-            $author,
-            $this,
-            $group,
-            $attachments
-        );
-
-        $version->enable();
-
-        $this->versions->add($version);
-
-        $this->setVersion($version);
-    }
-
-    /**
-     * Updates the trick.
-     *
-     * @param  string $title
-     * @param  string $description
-     * @param  string $body
-     * @param  App\Entity\User $author
-     * @param  null|App\Entity\TrickGroup $group
-     * @param  null|Doctrine\Common\Collections\Collection $attachments
-     * @param  null|Doctrine\Common\Collections\Collection $comments
-     * @param  null|Doctrine\Common\Collections\Collection $versions
-     */
-    public function update(
-        string      $title,
-        string      $description,
-        string      $body,
-        User        $author,
-        ?TrickGroup $group       = null,
-        ?Collection $attachments = null,
-        ?Collection $comments    = null,
-        ?Collection $versions    = null
-    ) {
-        $version = new TrickVersion(
-            $title,
-            $description,
-            $body,
-            $author,
-            $this,
-            $group,
-            $attachments,
-            $comments,
-            $versions
-        );
-
-        $this->setVersion($version);
+        $this->slug = $this->slugify($title);
+        $this->title = $title;
+        $this->description = $description;
+        $this->body = $body;
+        $this->group = $group;
+        $this->author = $author;
+        $this->attachments = new ArrayCollection();
+        $this->comments = new ArrayCollection();
     }
 
     /**
@@ -160,7 +142,7 @@ class Trick extends Entity
      *
      * @return null|\DateTime
      */
-    public function getUpdatedAt() : ?\DateTime
+    public function getUpdatedAt(): ?\DateTime
     {
         return $this->updatedAt;
     }
@@ -170,103 +152,9 @@ class Trick extends Entity
      *
      * @return string
      */
-    public function getSlug() : string
+    public function getSlug(): string
     {
         return $this->slug;
-    }
-
-    /**
-     * Gets the versions.
-     *
-     * @return Doctrine\Common\Collections\Collection
-     */
-    public function getVersions() : Collection
-    {
-        return clone $this->versions;
-    }
-
-    /**
-     * Gets the version.
-     *
-     * @return App\Entity\TrickVersion
-     */
-    public function getVersion() : TrickVersion
-    {
-        if ($this->version !== null && $this->version->isEnabled()) {
-            return $this->version;
-        }
-
-        foreach ($this->versions as $version) {
-            if ($version->isEnabled()) {
-                return $this->version = $version;
-            }
-        }
-    }
-
-    /**
-     * Sets the version.
-     *
-     * @param App\Entity\TrickVersion $version
-     */
-    public function setVersion(TrickVersion $version)
-    {
-        if ($this->getVersion()->getId() !== $version->getId()) {
-            $this->getVersion()->disable();
-
-            $version->enable();
-
-            $this->updatedAt = new \DateTime();
-        }
-
-        $this->addVersion($version);
-
-        $this->version = $version;
-        $this->group   = $version->getGroup();
-        $this->slug    = preg_replace('/[\s]+/', '-', strtolower(trim($version->getTitle())));
-    }
-
-    /**
-     * Adds a version.
-     *
-     * @param App\Entity\TrickVersion $version
-     */
-    public function addVersion(TrickVersion $version)
-    {
-        if ($this->versions->contains($version) === false) {
-            $this->versions->add($version);
-        }
-    }
-
-    /**
-     * Gets the comments.
-     *
-     * @return Doctrine\Common\Collections\Collection
-     */
-    public function getComments() : Collection
-    {
-        return clone $this->comments;
-    }
-
-    /**
-     * Adds a comment.
-     *
-     * @param  App\Entity\TrickComment $comment
-     */
-    public function addComment(TrickComment $comment)
-    {
-        if ($this->comments->contains($comment) === false) {
-            $this->comments->add($comment);
-        }
-    }
-
-    /**
-     * Gets the group.
-     *
-     * @return null|App\Entity\TrickGroup
-     */
-    public function getGroup() : ?TrickGroup
-    {
-        return $this->group;
     }
 
     /**
@@ -274,9 +162,20 @@ class Trick extends Entity
      *
      * @return string
      */
-    public function getTitle() : string
+    public function getTitle(): string
     {
-        return $this->getVersion()->getTitle();
+        return $this->title;
+    }
+
+    /**
+     * Sets the title.
+     * 
+     * @param string $title
+     */
+    public function setTitle(string $title)
+    {
+        $this->title = $title;
+        $this->updatedAt = new \DateTime();
     }
 
     /**
@@ -284,9 +183,20 @@ class Trick extends Entity
      *
      * @return string
      */
-    public function getDescription() : string
+    public function getDescription(): string
     {
-        return $this->getVersion()->getDescription();
+        return $this->description;
+    }
+
+    /**
+     * Sets the description.
+     * 
+     * @param string $description
+     */
+    public function setDescription(string $description)
+    {
+        $this->description = $description;
+        $this->updatedAt = new \DateTime();
     }
 
     /**
@@ -294,9 +204,43 @@ class Trick extends Entity
      *
      * @return string
      */
-    public function getBody() : string
+    public function getBody(): string
     {
-        return $this->getVersion()->getBody();
+        return $this->body;
+    }
+
+    /**
+     * Sets the body.
+     * 
+     * @param string $body
+     */
+    public function setBody(string $body)
+    {
+        $this->body = $body;
+        $this->updatedAt = new \DateTime();
+    }
+
+    /**
+     * Gets the group.
+     *
+     * @return App\Entity\TrickGroup
+     *
+     * @todo This was possibly null...
+     */
+    public function getGroup(): TrickGroup
+    {
+        return $this->group;
+    }
+
+    /**
+     * Sets the group.
+     * 
+     * @param App\Entity\TrickGroup $group
+     */
+    public function setGroup(TrickGroup $group)
+    {
+        $this->group = $group;
+        $this->updatedAt = new \DateTime();
     }
 
     /**
@@ -304,9 +248,52 @@ class Trick extends Entity
      *
      * @return Doctrine\Common\Collections\Collection
      */
-    public function getAttachments() : Collection
+    public function getAttachments(): Collection
     {
-        return $this->getVersion()->getAttachments();
+        return $this->attachments;
+    }
+
+    /**
+     * Sets the attachments.
+     *
+     * @param Doctrine\Common\Collections\Collection $attachments
+     */
+    public function setAttachments(Collection $attachments)
+    {
+        $this->attachments = $attachments;
+        $this->updatedAt = new \DateTime();
+    }
+
+    /**
+     * Adds an attachment.
+     * 
+     * @param App\Entity\TrickAttachment $attachment
+     */
+    public function addAttachment(TrickAttachment $attachment)
+    {
+        $criteria = new Criteria();
+
+        if (0 < \count($this->attachments->matching(
+            $criteria->where(
+                $criteria->expr()->eq('src', $attachment->getSrc())
+            )
+        ))) {
+            return;
+        }
+
+        $this->attachments->add($attachment);
+        $this->updatedAt = new \DateTime();
+    }
+
+    /**
+     * Removes an attachment.
+     * 
+     * @param App\Entity\TrickAttachment $attachment
+     */
+    public function removeAttachment(TrickAttachment $attachment)
+    {
+        $this->attachments->removeElement($attachment);
+        $this->updatedAt = new \DateTime();
     }
 
     /**
@@ -314,10 +301,10 @@ class Trick extends Entity
      *
      * @return null|App\Entity\TrickAttachment
      */
-    public function getFeaturedAttachment() : ?TrickAttachment
+    public function getFeaturedAttachment(): ?TrickAttachment
     {
-        foreach ($this->getAttachments() as $attachment) {
-            if ($attachment->getType()[0] ==='i') {
+        foreach ($this->attachments as $attachment) {
+            if ('i' === $attachment->getType()[0]) {
                 return $attachment;
             }
         }
@@ -326,49 +313,55 @@ class Trick extends Entity
     }
 
     /**
-     * Gets the authors.
-     *
-     * @return array
-     */
-    public function getAuthors() : array
-    {
-        $authors = array();
-
-        foreach ($this->versions as $version) {
-            if (in_array($version->getAuthor(), $authors)) {
-                continue;
-            }
-
-            $authors[] = $version->getAuthor();
-        }
-
-        return $authors;
-    }
-
-    /**
      * Gets the author.
      *
      * @return App\Entity\User
      */
-    public function getAuthor() : User
+    public function getAuthor(): User
     {
-        return $this->getVersion()->getAuthor();
+        return $this->author;
     }
 
     /**
-     * Checks whether the given user is an author.
-     *
-     * @param  App\Entity\User $user
+     * Sets the author.
+     * 
+     * @param App\Entity\User $author
+     */
+    public function setAuthor(User $author)
+    {
+        $this->author = $author;
+        $this->updatedAt = new \DateTime();
+    }
+
+    /**
+     * Checks whether this trick has the author.
+     * 
+     * @param App\Entity\User $user
      * @return bool
      */
-    public function hasAuthor(User $user) : bool
+    public function hasAuthor(User $user): bool
     {
-        foreach ($this->getAuthors() as $author) {
-            if ($author->getId() === $user->getId()) {
-                return true;
-            }
-        }
+        return $user->getId() === $this->author->getId();
+    }
 
-        return false;
+    /**
+     * Gets the comments.
+     *
+     * @return Doctrine\Common\Collections\Collection
+     */
+    public function getComments(): Collection
+    {
+        return $this->comments;
+    }
+
+    /**
+     * Slugifies.
+     *
+     * @param string $str
+     * @return string
+     */
+    private function slugify(string $str): string
+    {
+        return \preg_replace('/[\s]+/', '-', \strtolower(\trim($str)));
     }
 }

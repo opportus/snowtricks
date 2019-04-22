@@ -4,6 +4,9 @@ namespace App\Controller;
 
 use App;
 use App\Entity\TrickComment;
+use App\Form\Type\TrickCommentEditType;
+use App\Form\Data\TrickCommentData;
+use App\View\TwigViewBuilder;
 use App\Validator\Constraints\TrickCommentCollectionQueryParameters;
 use App\Validator\Constraints\TrickCommentEmptyEditFormQueryParameters;
 use App\HttpKernel\ControllerResult;
@@ -36,13 +39,13 @@ class TrickCommentController extends AbstractEntityController
      *
      * @ParamConverter(
      *     "form",
-     *     class="App\Entity\TrickComment",
+     *     class=TrickComment::class,
      *     converter="app.entity_form_param_converter",
      *     options={
      *         "id"="id",
-     *         "form_type"="App\Form\Type\TrickCommentEditType",
+     *         "form_type"=TrickCommentEditType::class,
      *         "form_options"={
-     *             "data_class"="App\Entity\Dto\TrickCommentDto",
+     *             "data_class"=TrickCommentData::class,
      *             "method"="PUT"
      *         },
      *         "grant"="PUT"
@@ -53,7 +56,7 @@ class TrickCommentController extends AbstractEntityController
      *     statusCode=Response::HTTP_OK,
      *     content=@App\Annotation\View(
      *         format="application/json",
-     *         builder="App\View\TwigViewBuilder",
+     *         builder=TwigViewBuilder::class,
      *         options={
      *             "template"="trick/comment/edit.html.twig"
      *         }
@@ -88,12 +91,12 @@ class TrickCommentController extends AbstractEntityController
      *
      * @ParamConverter(
      *     "form",
-     *     class="App\Entity\TrickComment",
+     *     class=TrickComment::class,
      *     converter="app.entity_form_param_converter",
      *     options={
-     *         "form_type"="App\Form\Type\TrickCommentEditType",
+     *         "form_type"=TrickCommentEditType::class,
      *         "form_options"={
-     *             "data_class"="App\Entity\Dto\TrickCommentDto",
+     *             "data_class"=TrickCommentData::class,
      *             "method"="POST"
      *         },
      *         "query_constraint"=TrickCommentEmptyEditFormQueryParameters::class
@@ -104,7 +107,7 @@ class TrickCommentController extends AbstractEntityController
      *     statusCode=Response::HTTP_OK,
      *     content=@App\Annotation\View(
      *         format="application/json",
-     *         builder="App\View\TwigViewBuilder",
+     *         builder=TwigViewBuilder::class,
      *         options={
      *             "template"="trick/comment/edit.html.twig"
      *         }
@@ -115,7 +118,7 @@ class TrickCommentController extends AbstractEntityController
      *     statusCode=Response::HTTP_OK,
      *     content=@App\Annotation\View(
      *         format="text/html",
-     *         builder="App\View\TwigViewBuilder",
+     *         builder=TwigViewBuilder::class,
      *         options={
      *             "template"="trick/comment/edit.html.twig"
      *         }
@@ -140,7 +143,7 @@ class TrickCommentController extends AbstractEntityController
      * 
      * @ParamConverter(
      *     "trickCommentCollection",
-     *     class="App\Entity\TrickComment",
+     *     class=TrickComment::class,
      *     converter="app.entity_collection_param_converter",
      *     options={
      *         "repository_method"="findAllByCriteria",
@@ -152,7 +155,7 @@ class TrickCommentController extends AbstractEntityController
      *     statusCode=Response::HTTP_OK,
      *     content=@App\Annotation\View(
      *         format="application/json", 
-     *         builder="App\View\TwigViewBuilder",
+     *         builder=TwigViewBuilder::class,
      *         options={
      *             "template"="trick/comment/collection.html.twig"
      *         }
@@ -181,7 +184,7 @@ class TrickCommentController extends AbstractEntityController
      * 
      * @ParamConverter(
      *     "trickComment",
-     *     class="App\Entity\TrickComment",
+     *     class=TrickComment::class,
      *     converter="app.entity_param_converter"
      * )
      * 
@@ -189,7 +192,7 @@ class TrickCommentController extends AbstractEntityController
      *     statusCode=Response::HTTP_OK,
      *     content=@App\Annotation\View(
      *         format="application/json", 
-     *         builder="App\View\TwigViewBuilder",
+     *         builder=TwigViewBuilder::class,
      *         options={
      *             "template"="trick/comment/get.html.twig"
      *         }
@@ -220,12 +223,12 @@ class TrickCommentController extends AbstractEntityController
      * 
      * @ParamConverter(
      *     "trickComment",
-     *     class="App\Entity\TrickComment",
+     *     class=TrickComment::class,
      *     converter="app.submitted_entity_param_converter",
      *     options={
-     *         "form_type"="App\Form\Type\TrickCommentEditType",
+     *         "form_type"=TrickCommentEditType::class,
      *         "form_options"={
-     *             "data_class"="App\Entity\Dto\TrickCommentDto",
+     *             "data_class"=TrickCommentData::class,
      *             "method"="POST",
      *             "validation_groups"={"trick_comment.form.edit"}
      *         }
@@ -259,12 +262,12 @@ class TrickCommentController extends AbstractEntityController
      * 
      * @ParamConverter(
      *     "trickComment",
-     *     class="App\Entity\TrickComment",
+     *     class=TrickComment::class,
      *     converter="app.submitted_entity_param_converter",
      *     options={
-     *         "form_type"="App\Form\Type\TrickCommentEditType",
+     *         "form_type"=TrickCommentEditType::class,
      *         "form_options"={
-     *             "data_class"="App\Entity\Dto\TrickCommentDto",
+     *             "data_class"=TrickCommentData::class,
      *             "method"="PUT",
      *             "validation_groups"={"trick_comment.form.edit"}
      *         },
@@ -306,7 +309,7 @@ class TrickCommentController extends AbstractEntityController
      * 
      * @ParamConverter(
      *     "trickComment",
-     *     class="App\Entity\TrickComment",
+     *     class=TrickComment::class,
      *     converter="app.entity_param_converter"
      * )
      *

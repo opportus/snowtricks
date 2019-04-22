@@ -2,10 +2,10 @@
 
 namespace App\Entity;
 
+use Symfony\Component\Validator\Constraints as Assert;
+use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * The trick comment.
@@ -27,7 +27,7 @@ class TrickComment extends Entity
      * @Assert\Type(type="object")
      * @Assert\DateTime()
      */
-    protected $updatedAt;
+    private $updatedAt;
 
     /**
      * @var string $body
@@ -37,17 +37,7 @@ class TrickComment extends Entity
      * @Assert\Type(type="string")
      * @Assert\Length(max=64512)
      */
-    protected $body;
-
-    /**
-     * @var App\Entity\User $author
-     *
-     * @ORM\ManyToOne(targetEntity="App\Entity\User")
-     * @ORM\JoinColumn(name="author_id", referencedColumnName="id", nullable=false)
-     * @Assert\NotNull()
-     * @Assert\Valid()
-     */
-    protected $author;
+    private $body;
 
     /**
      * @var App\Entity\Trick $thread
@@ -57,7 +47,17 @@ class TrickComment extends Entity
      * @Assert\NotNull()
      * @Assert\Valid()
      */
-    protected $thread;
+    private $thread;
+
+    /**
+     * @var App\Entity\User $author
+     *
+     * @ORM\ManyToOne(targetEntity="App\Entity\User")
+     * @ORM\JoinColumn(name="author_id", referencedColumnName="id", nullable=false)
+     * @Assert\NotNull()
+     * @Assert\Valid()
+     */
+    private $author;
 
     /**
      * @var null|App\Entity\TrickComment $parent
@@ -66,7 +66,7 @@ class TrickComment extends Entity
      * @ORM\JoinColumn(name="parent_id", referencedColumnName="id")
      * @Assert\Valid()
      */
-    protected $parent;
+    private $parent;
 
     /**
      * @var Doctrine\Common\Collections\Collection $children
@@ -74,43 +74,29 @@ class TrickComment extends Entity
      * @ORM\OneToMany(targetEntity="App\Entity\TrickComment", mappedBy="parent", cascade={"all"})
      * @Assert\Valid()
      */
-    protected $children;
+    private $children;
 
     /**
      * Constructs the trick comment.
      *
      * @param string $body
-     * @param App\Entity\User $author
      * @param App\Entity\Trick $thread
+     * @param App\Entity\User $author
      * @param null|App\Entity\TrickComment $parent
-     * @param null|Collection $children
      */
     public function __construct(
-        string        $body,
-        User          $author,
-        Trick         $thread,
-        ?TrickComment $parent   = null,
-        ?Collection   $children = null
-    )
-    {
-        $this->id        = $this->generateId();
+        string $body,
+        Trick $thread,
+        User $author,
+        ?TrickComment $parent = null
+    ) {
+        $this->id = $this->generateId();
         $this->createdAt = new \DateTime();
-        $this->body      = $body;
-        $this->author    = $author;
-        $this->thread    = $thread;
-        $this->parent    = $parent;
-        $this->children  = $children === null ? new ArrayCollection() : $children;
-    }
-
-    /**
-     * Updates the trick comment.
-     *
-     * @param string $body
-     */
-    public function update(string $body)
-    {
-        $this->body      = $body;
-        $this->updatedAt = new \DateTime();
+        $this->body = $body;
+        $this->thread = $thread;
+        $this->author = $author;
+        $this->parent = $parent;
+        $this->children = new ArrayCollection();
     }
 
     /**
@@ -118,9 +104,9 @@ class TrickComment extends Entity
      *
      * @return null|\DateTime
      */
-    public function getUpdatedAt() : ?\DateTime
+    public function getUpdatedAt(): ?\DateTime
     {
-        return $this->updatedAt === null ? null : clone $this->updatedAt;
+        return $this->updatedAt;
     }
 
     /**
@@ -128,30 +114,20 @@ class TrickComment extends Entity
      *
      * @return string
      */
-    public function getBody() : string
+    public function getBody(): string
     {
         return $this->body;
     }
 
     /**
-     * Gets the author.
-     *
-     * @return App\Entity\User
+     * Sets the body.
+     * 
+     * @param string $body
      */
-    public function getAuthor() : User
+    public function setBody(string $body)
     {
-        return $this->author;
-    }
-
-    /**
-     * Checks whether the given user is an author.
-     *
-     * @param  App\Entity\User $user
-     * @return bool
-     */
-    public function hasAuthor(User $author) : bool
-    {
-        return $author->getUsername() === $this->author->getUsername();
+        $this->body = $body;
+        $this->updatedAt = new \DateTime();
     }
 
     /**
@@ -159,9 +135,30 @@ class TrickComment extends Entity
      *
      * @return App\Entity\Trick
      */
-    public function getThread() : Trick
+    public function getThread(): Trick
     {
-        return clone $this->thread;
+        return $this->thread;
+    }
+
+    /**
+     * Gets the author.
+     *
+     * @return App\Entity\User
+     */
+    public function getAuthor(): User
+    {
+        return $this->author;
+    }
+
+    /**
+     * Checks whether this comment has the author.
+     * 
+     * @param App\Entity\User $user
+     * @return bool
+     */
+    public function hasAuthor(User $user): bool
+    {
+        return $user->getId() === $this->author->getId();
     }
 
     /**
@@ -169,19 +166,9 @@ class TrickComment extends Entity
      *
      * @return null|App\Entity\TrickComment
      */
-    public function getParent() : ?TrickComment
+    public function getParent(): ?TrickComment
     {
-        return $this->parent === null ? null : clone $this->parent;
-    }
-
-    /**
-     * Checks whether or not the comment has a parent.
-     *
-     * @return bool
-     */
-    public function hasParent() : bool
-    {
-        return (bool) $this->parent;
+        return $this->parent;
     }
 
     /**
@@ -189,44 +176,8 @@ class TrickComment extends Entity
      *
      * @return Doctrine\Common\Collections\Collection
      */
-    public function getChildren() : Collection
+    public function getChildren(): Collection
     {
-        return clone $this->children;
-    }
-
-    /**
-     * Checks whether or not the comment has children.
-     *
-     * @return bool
-     */
-    public function hasChildren() : bool
-    {
-        return ! $this->children->isEmpty();
-    }
-
-    /**
-     * Adds a child.
-     *
-     * @param  App\Entity\TrickComment $child
-     */
-    public function addChild(TrickComment $child)
-    {
-        $child->setParent($this);
-
-        if ($this->children->contains($child) === false) {
-            $this->children->add($child);
-        }
-    }
-
-    /**
-     * Removes a child.
-     *
-     * @param  App\Entity\TrickComment $child
-     */
-    public function removeChild(TrickComment $child)
-    {
-        $child->removeParent();
-
-        $this->children->removeElement($child);
+        return $this->children;
     }
 }

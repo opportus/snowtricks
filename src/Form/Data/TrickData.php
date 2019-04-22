@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Entity\Dto;
+namespace App\Form\Data;
 
 use App\Entity\User;
 use App\Validator\Constraints as AppAssert;
@@ -8,22 +8,28 @@ use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\Common\Collections\ArrayCollection;
 
 /**
- * The trick dto.
+ * The trick data.
  *
  * @version 0.0.1
- * @package App\Entity\Dto
+ * @package App\Form\Data
  * @author  Clément Cazaud <opportus@gmail.com>
  * @license https://github.com/opportus/snowtricks/blob/master/LICENSE.md MIT
- * 
- * @AppAssert\UniqueEntity(
- *     entityClass="App\Entity\TrickVersion",
- *     primaryKey="title",
+ *
+ * @AppAssert\UniqueEntityData(
+ *     entityClass="App\Entity\Trick",
+ *     entityIdentifier="id",
+ *     data={"title"},
  *     message="trick.edit.form.message.title_conflict",
  *     groups={"trick.form.edit"}
  * )
  */
-class TrickDto implements AuthorableInterface
+class TrickData implements AuthorableInterface
 {
+    /**
+     * @var null|string $id
+     */
+    public $id;
+
     /**
      * @var null|string $title
      *
@@ -52,19 +58,24 @@ class TrickDto implements AuthorableInterface
     public $body;
 
     /**
-     * @var null|Doctrine\Common\Collections\ArrayCollection $attachments
-     *
-     * @Assert\Valid()
-     */
-    public $attachments;
-
-    /**
      * @var null|App\Entity\TrickGroup $group
      *
      * @Assert\NotNull(groups={"trick.form.edit"})
      * @Assert\Valid(groups={"trick.form.edit"})
      */
     public $group;
+
+    /**
+     * @var null|Doctrine\Common\Collections\Collection $attachments
+     *
+     * @Assert\Valid()
+     */
+    public $attachments;
+
+    /**
+     * @var null|App\Entity\TrickAttachment
+     */
+    public $featuredAttachment;
 
     /**
      * @var null|App\Entity\User $author
@@ -75,26 +86,9 @@ class TrickDto implements AuthorableInterface
     public $author;
 
     /**
-     * @var null|Doctrine\Common\Collections\ArrayCollection $comments
-     *
-     * @Assert\Valid()
-     */
-    public $comments;
-
-    /**
-     * @var null|Doctrine\Common\Collections\ArrayCollection $versions
-     *
-     * @Assert\Valid()
-     */
-    public $versions;
-
-    /**
-     * @var null|App\Entity\Dto\TrickAttachmentDto $featuredAttachment
-     */
-    public $featuredAttachment;
-
-    /**
      * {@inheritdoc}
+     * 
+     * Used by the authorizer listener on form submit.
      */
     public function setAuthor(User $author)
     {
@@ -106,9 +100,9 @@ class TrickDto implements AuthorableInterface
      *
      * Used by the form component.
      *
-     * @param App\Entity\Dto\TrickAttachmentDto $attachment
+     * @param App\Form\Data\TrickAttachmentData $attachment
      */
-    public function addAttachment(TrickAttachmentDto $attachment)
+    public function addAttachment(TrickAttachmentData $attachment)
     {
         if ($this->attachments === null) {
             $this->attachments = new ArrayCollection();
@@ -122,9 +116,9 @@ class TrickDto implements AuthorableInterface
      *
      * Used by the form component.
      *
-     * @param App\Entity\Dto\TrickAttachmentDto $attachment
+     * @param App\Form\Data\TrickAttachmentData $attachment
      */
-    public function removeAttachment(TrickAttachmentDto $attachment)
+    public function removeAttachment(TrickAttachmentData $attachment)
     {
         $this->attachments->removeElement($attachment);
     }

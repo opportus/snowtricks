@@ -41,32 +41,29 @@ class TrickAttachment extends Entity
     private $type;
 
     /**
-     * @var null|App\Entity\TrickVersion $trickVersion
+     * @var null|App\Entity\Trick $trick
      *
-     * @ORM\ManyToOne(targetEntity="App\Entity\TrickVersion", inversedBy="attachments")
-     * @ORM\JoinColumn(name="trick_version_id", referencedColumnName="id", nullable=false)
+     * @ORM\ManyToOne(targetEntity="App\Entity\Trick", inversedBy="attachments")
+     * @ORM\JoinColumn(name="trick_id", referencedColumnName="id", nullable=false)
      * @Assert\NotNull()
      * @Assert\Valid()
      */
-    private $trickVersion;
+    private $trick;
 
     /**
      * Constructs the attachment.
      *
      * @param string $src
      * @param string $type
-     * @param App\Entity\TrickVersion $trickVersion
+     * @param App\Entity\Trick $trick
      */
-    public function __construct(
-        string       $src,
-        string       $type,
-        TrickVersion $trickVersion
-    ) {
-        $this->id           = $this->generateId();
-        $this->createdAt    = new \DateTime();
-        $this->src          = $src;
-        $this->type         = $type;
-        $this->trickVersion = $trickVersion;
+    public function __construct(string $src, string $type, Trick $trick)
+    {
+        $this->id = $this->generateId();
+        $this->createdAt = new \DateTime();
+        $this->src = $src;
+        $this->type = $type;
+        $this->trick = $trick;
     }
 
     /**
@@ -74,7 +71,7 @@ class TrickAttachment extends Entity
      *
      * @return string
      */
-    public function getSrc() : string
+    public function getSrc(): string
     {
         return $this->src;
     }
@@ -84,18 +81,18 @@ class TrickAttachment extends Entity
      *
      * @return string
      */
-    public function getType() : string
+    public function getType(): string
     {
         return $this->type;
     }
 
     /**
-     * Gets the trick version.
+     * Gets the trick.
      *
-     * @return App\Entity\TrickVersion
+     * @return App\Entity\Trick
      */
-    public function getTrickVersion() : TrickVersion
+    public function getTrick(): Trick
     {
-        return $this->trickVersion;
+        return $this->trick;
     }
 }

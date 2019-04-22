@@ -2,8 +2,8 @@
 
 namespace App\Entity;
 
-use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
+use Doctrine\ORM\Mapping as ORM;
 
 /**
  * The user token.
@@ -18,6 +18,9 @@ use Symfony\Component\Validator\Constraints as Assert;
  */
 class UserToken extends Entity
 {
+    const ACTIVATION_TYPE = 'activation';
+    const PASSWORD_RESET_TYPE = 'password_reset';
+
     /**
      * @var string $key
      *
@@ -26,7 +29,7 @@ class UserToken extends Entity
      * @Assert\Type(type="string")
      * @Assert\Length(max=255)
      */
-    protected $key;
+    private $key;
 
     /**
      * @var string $type
@@ -37,7 +40,7 @@ class UserToken extends Entity
      * @Assert\Length(max=20)
      * @Assert\Choice(choices={"activation", "password_reset"})
      */
-    protected $type;
+    private $type;
 
     /**
      * @var int $ttl
@@ -47,7 +50,7 @@ class UserToken extends Entity
      * @Assert\Type(type="integer")
      * @Assert\Range(min=1, max=32767)
      */
-    protected $ttl;
+    private $ttl;
 
     /**
      * @var App\Entity\User $user
@@ -57,23 +60,23 @@ class UserToken extends Entity
      * @Assert\NotNull()
      * @Assert\Valid()
      */
-    protected $user;
+    private $user;
 
     /**
      * Constructs the user token.
      *
      * @param App\Entity\User $user
      * @param string $type
-     * @param int $ttl
+     * @param null|int $ttl
      */
-    public function __construct(User $user, string $type, int $ttl = 24)
+    public function __construct(User $user, string $type, ?int $ttl = 24)
     {
-        $this->id        = $this->generateId();
+        $this->id = $this->generateId();
         $this->createdAt = new \DateTime();
-        $this->key       = rtrim(strtr(base64_encode(random_bytes(32)), '+/', '-_'), '=');
-        $this->type      = $type;
-        $this->ttl       = $ttl;
-        $this->user      = $user;
+        $this->key = \rtrim(\strtr(\base64_encode(\random_bytes(32)), '+/', '-_'), '=');
+        $this->user = $user;
+        $this->type = $type;
+        $this->ttl = $ttl ?? 24;
     }
 
     /**
@@ -81,7 +84,7 @@ class UserToken extends Entity
      *
      * @return string
      */
-    public function getKey() : string
+    public function getKey(): string
     {
         return $this->key;
     }
@@ -91,17 +94,17 @@ class UserToken extends Entity
      *
      * @return string
      */
-    public function getType() : string
+    public function getType(): string
     {
         return $this->type;
     }
 
     /**
-     * Gets the ttl.
+     * Gets the TTL.
      *
      * @return int
      */
-    public function getTtl() : int
+    public function getTtl(): int
     {
         return $this->ttl;
     }
@@ -111,34 +114,19 @@ class UserToken extends Entity
      *
      * @return App\Entity\User
      */
-    public function getUser() : User
+    public function getUser(): User
     {
         return $this->user;
     }
 
     /**
-     * Checks whether or not the token is expired.
+     * Checks whether the token is expired.
      *
      * @return bool
      */
-    public function isExpired() : bool
+    public function isExpired(): bool
     {
-        return
-            $this->createdAt !== null &&
-            $this->ttl !== null &&
-            $this->createdAt->diff(new \DateTime())->h > $this->ttl
-        ;
-    }
-
-    /**
-     * Checks whether or not the token key is equal to the given string.
-     *
-     * @param string $token
-     * @return bool
-     */
-    public function hasKey(string $token) : bool
-    {
-        return hash_equals($this->key, $token);
+        return $this->createdAt->diff(new \DateTime())->h > $this->ttl;
     }
 
     /**
@@ -146,8 +134,8 @@ class UserToken extends Entity
      *
      * @return string
      */
-    public function __toString() : string
+    public function __toString(): string
     {
-        return (string)$this->key;
+        return $this->key;
     }
 }

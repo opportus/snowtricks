@@ -9,6 +9,8 @@ use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 
 /**
  * The user password reset request type.
+ * 
+ * @todo Decouple view.
  *
  * @version 0.0.1
  * @package App\Form\Type
@@ -26,19 +28,18 @@ class UserPasswordResetRequestType extends AbstractType
             ->add(
                 'username',
                 TextType::class,
-                array(
+                [
                     'attr'  => array('autocomplete' => 'username'),
                     'label' => 'user.password_reset_request.form.label.username',
-                )
+                ]
             )
             ->add(
                 'submit',
                 SubmitType::class,
-                array(
+                [
                     'label' => 'user.password_reset_request.form.label.submit',
-                )
+                ]
             )
         ;
     }
 }
-

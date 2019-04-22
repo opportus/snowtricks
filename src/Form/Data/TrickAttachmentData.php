@@ -1,19 +1,19 @@
 <?php
 
-namespace App\Entity\Dto;
+namespace App\Form\Data;
 
-use Symfony\Component\Validator\Constraints as Assert;
 use App\Validator\Constraints as AppAssert;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
- * The trick attachment dto.
+ * The trick attachment data.
  *
  * @version 0.0.1
- * @package App\Entity\Dto
+ * @package App\Form\Data
  * @author  Clément Cazaud <opportus@gmail.com>
  * @license https://github.com/opportus/snowtricks/blob/master/LICENSE.md MIT
  */
-class TrickAttachmentDto
+class TrickAttachmentData
 {
     /**
      * @var string $src
@@ -29,7 +29,7 @@ class TrickAttachmentDto
      *
      * @Assert\NotBlank(groups={"trick.form.edit"})
      * @Assert\Type(type="string", groups={"trick.form.edit"})
-     * @AppAssert\TrickAttachmentMimeType()
+     * @AppAssert\TrickAttachmentMimeType(groups={"trick.form.edit"})
      */
     public $type;
 }

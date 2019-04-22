@@ -1,39 +1,39 @@
 <?php
 
-namespace App\Entity\Dto;
+namespace App\Form\Data;
 
 use App\Validator\Constraints as AppAssert;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
- * The user dto.
+ * The user data.
  *
  * @version 0.0.1
- * @package App\Entity\Dto
+ * @package App\Form\Data
  * @author  Clément Cazaud <opportus@gmail.com>
  * @license https://github.com/opportus/snowtricks/blob/master/LICENSE.md MIT
  *
- * @AppAssert\UniqueEntity(
+ * @AppAssert\UniqueEntityData(
  *     entityClass="App\Entity\User",
- *     primaryKey="username",
- *     message="user.sign_up.form.message.username_conflict",
- *     groups={"user.form.sign_up"}
- * )
- * @AppAssert\UniqueEntity(
- *     entityClass="App\Entity\User",
- *     primaryKey="email",
- *     message="user.sign_up.form.message.email_conflict",
+ *     entityIdentifier="id",
+ *     data={"username", "email"},
+ *     message="user.sign_up.form.message.conflict",
  *     groups={"user.form.sign_up"}
  * )
  * @AppAssert\PersistedEntity(
  *     entityClass="App\Entity\User",
- *     primaryKey="username",
+ *     entityIdentifier="username",
  *     message="user.password_reset_request.form.message.username_not_found",
  *     groups={"user.form.password_reset_request"}
  * )
  */
-class UserDto
+class UserData
 {
+    /**
+     * @var null|int $id
+     */
+    public $id;
+
     /**
      * @var null|string $username
      *
@@ -54,12 +54,12 @@ class UserDto
     public $email;
 
     /**
-     * @var null|string $plainPassword
+     * @var null|string $password
      *
      * @Assert\Type(type="string", groups={"user.form.sign_up", "user.form.password_reset"})
      * @Assert\Length(max=4096, groups={"user.form.sign_up", "user.form.password_reset"})
      */
-    public $plainPassword;
+    public $password;
 
     /**
      * @var null|bool $activation
@@ -68,12 +68,4 @@ class UserDto
      * @Assert\Type(type="bool")
      */
     public $activation;
-
-    /**
-     * @var null|array $roles
-     *
-     * @Assert\NotBlank()
-     * @Assert\Type(type="array")
-     */
-    public $roles;
 }

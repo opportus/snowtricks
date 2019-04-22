@@ -42,12 +42,7 @@ class TrickCommentToIdTransformer implements DataTransformerInterface
         }
 
         if (!$value instanceof TrickComment) {
-            throw new TransformationFailedException(
-                sprintf(
-                    'The value must be an instance of %s',
-                    TrickComment::class
-                )
-            );
+            throw new TransformationFailedException(\sprintf('The value must be an instance of %s', TrickComment::class));
         }
 
         return $value->getId();
@@ -67,12 +62,7 @@ class TrickCommentToIdTransformer implements DataTransformerInterface
         ;
 
         if ($trickComment === null) {
-            throw new TransformationFailedException(
-                sprintf(
-                    'Trick comment %s not found',
-                    $value
-                )
-            );
+            throw new TransformationFailedException(\sprintf('Trick comment %s not found', $value));
         }
 
         return $trickComment;

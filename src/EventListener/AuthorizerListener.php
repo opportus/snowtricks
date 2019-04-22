@@ -2,7 +2,7 @@
 
 namespace App\EventListener;
 
-use App\Entity\Dto\AuthorableInterface;
+use App\Form\Data\AuthorableInterface;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
@@ -48,6 +48,7 @@ class AuthorizerListener
         $authorableAccessMethods = ['POST', 'PUT', 'PATCH'];
 
         if (!\in_array($accessMethod, $authorableAccessMethods)) {
+        exit;
             return;
         }
 

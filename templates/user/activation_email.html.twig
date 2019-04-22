@@ -1,7 +1,7 @@
 <p>{{ message | nl2br }}</p>
 <form action="{{ url('patch_user_by_activation_email_form', {id: user.id}) }}" method="POST">
     <input type="hidden" name="user_activation_email[activation]" value="0" />
-    <input type="hidden" name="user_activation_email[token]" value="{{ user.activationToken }}" />
+    <input type="hidden" name="user_activation_email[token]" value="{{ user.lastActivationToken }}" />
     <input type="hidden" name="_method" value="PATCH" />
     <button type="submit">{{ 'user.activation.email.form.label.submit'|trans() }}</button>
 </form>
