@@ -274,7 +274,6 @@ class User extends Entity implements AdvancedUserInterface, \Serializable
      */
     public function eraseCredentials()
     {
-        $this->plainPassword = null;
     }
 
     /**

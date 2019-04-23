@@ -162,14 +162,31 @@ class UserController extends AbstractEntityController
      *     }
      * )
      * 
-     * @App\Annotation\Flash(
-     *     statusCode=Response::HTTP_SEE_OTHER,
-     *     message=@App\Annotation\Trans(id="user.activation.notification.303")
+     * @App\Annotation\Response(
+     *     statusCode=Response::HTTP_FORBIDDEN,
+     *     content=@App\Annotation\View(
+     *         format="text/html",
+     *         builder=TwigViewBuilder::class,
+     *         options={
+     *             "template"="error/forbidden.html.twig"
+     *         }
+     *     )
+     * )
+     * 
+     * @App\Annotation\Response(
+     *     statusCode=Response::HTTP_NOT_FOUND,
+     *     content=@App\Annotation\View(
+     *         format="text/html",
+     *         builder=TwigViewBuilder::class,
+     *         options={
+     *             "template"="error/not-found.html.twig"
+     *         }
+     *     )
      * )
      * 
      * @App\Annotation\Flash(
-     *     statusCode=Response::HTTP_BAD_REQUEST,
-     *     message=@App\Annotation\Trans(id="user.activation.notification.400")
+     *     statusCode=Response::HTTP_SEE_OTHER,
+     *     message=@App\Annotation\Trans(id="user.activation.notification.303")
      * )
      * 
      * @App\Annotation\Flash(

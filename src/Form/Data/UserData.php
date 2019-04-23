@@ -62,10 +62,10 @@ class UserData
     public $password;
 
     /**
-     * @var null|bool $activation
+     * @var bool $activation
      *
      * @Assert\NotNull()
      * @Assert\Type(type="bool")
      */
-    public $activation;
+    public $activation = false;
 }

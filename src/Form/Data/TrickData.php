@@ -66,7 +66,7 @@ class TrickData implements AuthorableInterface
     public $group;
 
     /**
-     * @var null|Doctrine\Common\Collections\Collection $attachments
+     * @var Doctrine\Common\Collections\Collection $attachments
      *
      * @Assert\Valid()
      */
@@ -84,6 +84,14 @@ class TrickData implements AuthorableInterface
      * @Assert\Valid()
      */
     public $author;
+
+    /**
+     * Cosntructs the trick data.
+     */
+    public function __construct()
+    {
+        $this->attachments = new ArrayCollection();
+    }
 
     /**
      * {@inheritdoc}

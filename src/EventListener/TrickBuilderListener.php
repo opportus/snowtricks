@@ -55,9 +55,7 @@ class TrickBuilderListener
                 
                 return;
             case 'App\Form\Data\TrickData::$attachments=>App\Entity\Trick::setAttachments()::$attachments':
-                if (null === $event->getSourcePointValue()) {
-                    $event->setTargetPointValueToAssign(new ArrayCollection());
-
+                if ($event->getSourcePointValue()->isEmpty()) {
                     return;
                 }
 

@@ -53,7 +53,7 @@ class UserAccessVoter extends EntityAccessVoter
                 return false;
             }
 
-            $requestToken = $this->requestStack->getCurrentRequest()->attributes->get('user_activation_email')['token'];
+            $requestToken = $this->requestStack->getCurrentRequest()->request->get('user_activation_email')['token'];
 
             if (null === $requestToken) {
                 return false;
