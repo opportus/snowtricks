@@ -9,7 +9,11 @@ use App\Form\Type\UserSignInType;
 use App\Form\Type\UserPasswordResetRequestType;
 use App\Form\Type\UserPasswordResetType;
 use App\Form\Type\UserActivationEmailType;
-use App\Form\Data\UserData;
+use App\Form\Data\UserSignUpData;
+use App\Form\Data\UserSignInData;
+use App\Form\Data\UserPasswordResetRequestData;
+use App\Form\Data\UserPasswordResetData;
+use App\Form\Data\UserActivationEmailData;
 use App\View\TwigViewBuilder;
 use App\HttpKernel\ControllerResult;
 use Symfony\Component\HttpFoundation\Request;
@@ -45,7 +49,7 @@ class UserController extends AbstractEntityController
      *     options={
      *         "form_type"=UserSignUpType::class,
      *         "form_options"={
-     *             "data_class"=UserData::class,
+     *             "data_class"=UserSignUpData::class,
      *             "method"="POST"
      *         }
      *     }
@@ -85,7 +89,7 @@ class UserController extends AbstractEntityController
      *     options={
      *         "form_type"=UserSignUpType::class,
      *         "form_options"={
-     *             "data_class"=UserData::class,
+     *             "data_class"=UserSignUpData::class,
      *             "method"="POST",
      *             "validation_groups"= {"user.form.sign_up"}
      *         }
@@ -147,7 +151,7 @@ class UserController extends AbstractEntityController
      *     options={
      *         "form_type"=UserActivationEmailType::class,
      *         "form_options"={
-     *             "data_class"=UserData::class,
+     *             "data_class"=UserActivationEmailData::class,
      *             "method"="PATCH",
      *             "csrf_protection"=false
      *         },
@@ -224,7 +228,7 @@ class UserController extends AbstractEntityController
      *     options={
      *         "form_type"=UserPasswordResetRequestType::class,
      *         "form_options"={
-     *             "data_class"=UserData::class,
+     *             "data_class"=UserPasswordResetRequestData::class,
      *             "method"="GET"
      *         }
      *     }
@@ -265,7 +269,7 @@ class UserController extends AbstractEntityController
      *         "id"=@App\Annotation\DatumPropertyReference(name="username"),
      *         "form_type"=UserPasswordResetRequestType::class,
      *         "form_options"={
-     *             "data_class"=UserData::class,
+     *             "data_class"=UserPasswordResetRequestData::class,
      *             "method"="GET",
      *             "validation_groups"={"user.form.password_reset_request"}
      *         },
@@ -319,7 +323,7 @@ class UserController extends AbstractEntityController
      *     options={
      *         "form_type"=UserPasswordResetType::class,
      *         "form_options"={
-     *             "data_class"=UserData::class,
+     *             "data_class"=UserPasswordResetData::class,
      *             "method"="PATCH"
      *         }
      *     }
@@ -375,7 +379,7 @@ class UserController extends AbstractEntityController
      *     options={
      *         "form_type"=UserPasswordResetType::class,
      *         "form_options"={
-     *             "data_class"=UserData::class,
+     *             "data_class"=UserPasswordResetData::class,
      *             "method"="PATCH",
      *             "validation_groups"= {"user.form.password_reset"}
      *         },
@@ -463,7 +467,7 @@ class UserController extends AbstractEntityController
      *     options={
      *         "form_type"=UserSignInType::class,
      *         "form_options"={
-     *             "data_class"=UserData::class,
+     *             "data_class"=UserSignInData::class,
      *             "method"="POST"
      *         }
      *     }
@@ -497,7 +501,7 @@ class UserController extends AbstractEntityController
      * 
      * Handled by the Security component.
      *
-     * @Route("/user/sign-out", name="proceed_user_sign_out", methods={"POST"})
+     * @Route("/user/sign-out", name="proceed_user_sign_out", methods={"GET"})
      */
     public function proceedUserSignOut()
     {

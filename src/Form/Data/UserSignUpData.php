@@ -6,7 +6,7 @@ use App\Validator\Constraints as AppAssert;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
- * The user data.
+ * The user sign up data.
  *
  * @version 0.0.1
  * @package App\Form\Data
@@ -20,14 +20,8 @@ use Symfony\Component\Validator\Constraints as Assert;
  *     message="user.sign_up.form.message.conflict",
  *     groups={"user.form.sign_up"}
  * )
- * @AppAssert\PersistedEntity(
- *     entityClass="App\Entity\User",
- *     entityIdentifier="username",
- *     message="user.password_reset_request.form.message.username_not_found",
- *     groups={"user.form.password_reset_request"}
- * )
  */
-class UserData
+class UserSignUpData
 {
     /**
      * @var null|int $id
@@ -37,9 +31,9 @@ class UserData
     /**
      * @var null|string $username
      *
-     * @Assert\NotBlank(groups={"user.form.sign_up", "user.form.sign_in", "user.form.password_reset_request"})
-     * @Assert\Type(type="string", groups={"user.form.sign_up", "user.form.sign_in", "user.form.password_reset_request"})
-     * @Assert\Length(max=35, groups={"user.form.sign_up", "user.form.sign_in", "user.form.password_reset_request"})
+     * @Assert\NotBlank(groups={"user.form.sign_up"})
+     * @Assert\Type(type="string", groups={"user.form.sign_up"})
+     * @Assert\Length(max=35, groups={"user.form.sign_up"})
      */
     public $username;
 
@@ -56,16 +50,8 @@ class UserData
     /**
      * @var null|string $password
      *
-     * @Assert\Type(type="string", groups={"user.form.sign_up", "user.form.password_reset"})
-     * @Assert\Length(max=4096, groups={"user.form.sign_up", "user.form.password_reset"})
+     * @Assert\Type(type="string", groups={"user.form.sign_up"})
+     * @Assert\Length(max=4096, groups={"user.form.sign_up"})
      */
     public $password;
-
-    /**
-     * @var bool $activation
-     *
-     * @Assert\NotNull()
-     * @Assert\Type(type="bool")
-     */
-    public $activation = false;
 }
