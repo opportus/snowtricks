@@ -10,8 +10,6 @@ use Doctrine\Common\Collections\Criteria;
 
 /**
  * The trick.
- *
- * @todo Implement slug constraint.
  * 
  * @version 0.0.1
  * @package App\Entity
@@ -224,8 +222,6 @@ class Trick extends Entity
      * Gets the group.
      *
      * @return App\Entity\TrickGroup
-     *
-     * @todo This was possibly null...
      */
     public function getGroup(): TrickGroup
     {
