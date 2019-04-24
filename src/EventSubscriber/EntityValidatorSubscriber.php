@@ -39,7 +39,7 @@ class EntityValidatorSubscriber implements EventSubscriber
         return array(
             'prePersist',
             'preUpdate',
-            'preDelete'
+            'preRemove'
         );
     }
 
@@ -71,7 +71,7 @@ class EntityValidatorSubscriber implements EventSubscriber
      * @param  Doctrine\Common\Persistence\Event\LifecycleEventArgs $args
      * @throws Symfony\Component\Validator\Exception\ValidatorException
      */
-    public function preDelete(LifecycleEventArgs $args)
+    public function preRemove(LifecycleEventArgs $args)
     {
         $this->validator->validateWithException($args->getEntity());
     }

@@ -15,17 +15,27 @@ use Symfony\Component\HttpFoundation\File\File;
 interface FileManagerInterface
 {
     /**
-     * Adds a file to the upload pool.
+     * Adds the file to the write pool.
      * 
      * @param Symfony\Component\HttpFoundation\File\File $file
-     * @return string The URI of the uploaded file
+     * @return string The URI of the file
      */
-    public function addToUploadPool(File $file): string;
+    public function addToWriteFilePool(File $file): string;
 
     /**
-     * Uploads the pool.
+     * Writes the file that has been previously added to the pool.
      * 
+     * @param string $fileUri
+     * @return bool
      * @throws Symfony\Component\HttpFoundation\File\Exception\FileException
      */
-    public function uploadPool();
+    public function writeFile(string $fileUri): bool;
+
+    /**
+     * Removes the file.
+     * 
+     * @param string $fileUri
+     * @return bool
+     */
+    public function removeFile(string $fileUri): bool;
 }

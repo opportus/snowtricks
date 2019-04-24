@@ -4,8 +4,8 @@ parameters:
     locale: 'en'
     app_name: 'SnowTricks'
     form_theme: 'bootstrap_4_layout.html.twig'
-    upload_base_dir: '../public/upload'
-    upload_base_dir_http: 'snowtricks.com/public/upload'
+    file_base_path: '/srv/http/snowtricks.com/public/upload'
+    file_base_uri: 'http://vps320850.ovh.net/snowtricks.com/public/upload'
 
 services:
     # default configuration for services in *this* file
@@ -34,8 +34,8 @@ services:
     # File Manager...
     App\HttpFoundation\FileManager:
         arguments:
-            $uploadBaseDir: '%upload_base_dir%'
-            $uploadBaseDirHttp: '%upload_base_dir_http%'
+            $fileBasePath: '%file_base_path%'
+            $fileBaseUri: '%file_base_uri%'
 
     # Param converter...
     App\ParamConverter\SubmittedEntityParamConverter:
@@ -63,13 +63,14 @@ services:
     App\EventListener\ControllerAnnotationReaderListener:
         tags:
             - { name: kernel.event_listener, event: kernel.controller }
-    App\EventListener\FileManagerListener:
-        tags:
-            - { name: kernel.event_listener, event: kernel.view, priority: 150}
 
     # Event subscriber...
     App\EventSubscriber\EntityValidatorSubscriber:
         tags:
             - { name: doctrine.event_listener, event: prePersist, priority: 90}
             - { name: doctrine.event_listener, event: preUpdate, priority: 90}
-            - { name: doctrine.event_listener, event: preDelete, priority: 90}
+            - { name: doctrine.event_listener, event: preRemove, priority: 90}
+    App\EventSubscriber\FileManagerSubscriber:
+        tags:
+            - { name: doctrine.event_listener, event: postPersist, priority: 90}
+            - { name: doctrine.event_listener, event: postRemove, priority: 90}

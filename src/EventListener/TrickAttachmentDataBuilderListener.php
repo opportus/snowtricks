@@ -49,7 +49,7 @@ class TrickAttachmentDataBuilderListener
             $data->src = $embed;
         } elseif ($file = $form->get('upload')->getViewData()) {
             $data->type = $file->getMimeType();
-            $data->src = $this->fileManager->addToUploadPool($file);
+            $data->src = $this->fileManager->addToWriteFilePool($file);
         }
     }
 }

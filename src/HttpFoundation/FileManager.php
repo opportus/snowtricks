@@ -17,68 +17,83 @@ use Symfony\Component\HttpKernel\KernelInterface;
 class FileManager implements FileManagerInterface
 {
     /**
-     * @var Symfony\Component\HttpFoundation\RequestStack $requestStack
+     * @var string $fileBasePath
      */
-    private $requestStack;
+    private $fileBasePath;
 
     /**
-     * @var Symfony\Component\HttpKernel\KernelInterface $kernel
+     * @var string $fileBaseUri
      */
-    private $kernel;
+    private $fileBaseUri;
 
     /**
-     * @var string $uploadBaseDir
+     * @var Symfony\Component\HttpFoundation\File\File[] $writeFilePool
      */
-    private $uploadBaseDir;
-
-    /**
-     * @var string $uploadBaseDirHttp
-     */
-    private $uploadBaseDirHttp;
-
-    /**
-     * @var callable[] $uploadPool
-     */
-    private $uploadPool = [];
+    private $writeFilePool = [];
 
     /**
      * Constructs the file manager.
      *
-     * @param Symfony\Component\HttpFoundation\RequestStack $requestStack
-     * @param Symfony\Component\HttpKernel\KernelInterface $kernel
-     * @param string $uploadBaseDir Relative to the root dir of the kernel
-     * @param string $uploadBaseDirHttp
+     * @param string $fileBasePath
+     * @param string $fileBaseUri
      */
-    public function __construct(RequestStack $requestStack, KernelInterface $kernel, string $uploadBaseDir = '', string $uploadBaseDirHttp = '')
+    public function __construct(string $fileBasePath, string $fileBaseUri)
     {
-        $this->requestStack = $requestStack;
-        $this->kernel = $kernel;
-        $this->uploadBaseDir = '' === $uploadBaseDir ? $uploadBaseDir : \DIRECTORY_SEPARATOR.\trim($uploadBaseDir, \DIRECTORY_SEPARATOR);
-        $this->uploadBaseDirHttp = '' === $uploadBaseDirHttp ? $uploadBaseDirHttp : '/'.\trim($uploadBaseDirHttp, '/');
+        $this->fileBasePath = \rtrim($fileBasePath, \DIRECTORY_SEPARATOR).\DIRECTORY_SEPARATOR;
+        $this->fileBaseUri = \rtrim($fileBaseUri, '/').'/';
     }
 
     /**
      * {@inheritdoc}
      */
-    public function addToUploadPool(File $file): string
+    public function addToWriteFilePool(File $file): string
     {
-        $fileBasePath = $this->kernel->getRootDir().$this->uploadBaseDir;
         $fileName = \md5(\uniqid()).'.'.$file->guessExtension();
+        $fileUri = $this->fileBaseUri.$fileName;
 
-        $this->uploadPool[] = function () use ($file, $fileBasePath, $fileName) {
-            $file->move($fileBasePath, $fileName);
-        };
+        $this->writeFilePool[$fileUri] = $file;
 
-        return $this->requestStack->getCurrentRequest()->getSchemeAndHttpHost().$this->uploadBaseDirHttp.'/'.$fileName;
+        return $fileUri;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function uploadPool()
+    public function writeFile(string $fileUri): bool
     {
-        foreach ($this->uploadPool as $upload) {
-            $upload();
+        if (false === \array_key_exists($fileUri, $this->writeFilePool)) {
+            return false;
         }
+
+        if (false === $fileName = $this->getFileNameFromFileUri($fileUri)) {
+            return false;
+        }
+
+        return (bool) $this->writeFilePool[$fileUri]->move($this->fileBasePath, $fileName);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function removeFile(string $fileUri): bool
+    {
+        if (false === $fileName = $this->getFileNameFromFileUri($fileUri)) {
+            return false;
+        }
+
+        return \unlink($this->fileBasePath.$fileName);
+    }
+
+    /**
+     * Gets the file name form the file URI.
+     * 
+     * @param string $fileUri
+     * @return string|bool
+     */
+    private function getFileNameFromFileUri(string $fileUri)
+    {
+        $fileName = \substr($fileUri, \strrpos($fileUri, '/') + 1);
+
+        return empty($fileName) ? false : $fileName;
     }
 }
