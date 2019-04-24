@@ -4,8 +4,8 @@ parameters:
     locale: 'en'
     app_name: 'SnowTricks'
     form_theme: 'bootstrap_4_layout.html.twig'
-    upload_base_dir: '../public'
-    upload_base_dir_http: 'snowtricks.com/public'
+    upload_base_dir: '../public/upload'
+    upload_base_dir_http: 'snowtricks.com/public/upload'
 
 services:
     # default configuration for services in *this* file
@@ -31,8 +31,8 @@ services:
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
 
-    # File Uploader...
-    App\HttpFoundation\FileUploader:
+    # File Manager...
+    App\HttpFoundation\FileManager:
         arguments:
             $uploadBaseDir: '%upload_base_dir%'
             $uploadBaseDirHttp: '%upload_base_dir_http%'
@@ -63,7 +63,9 @@ services:
     App\EventListener\ControllerAnnotationReaderListener:
         tags:
             - { name: kernel.event_listener, event: kernel.controller }
-
+    App\EventListener\FileManagerListener:
+        tags:
+            - { name: kernel.event_listener, event: kernel.view, priority: 150}
 
     # Event subscriber...
     App\EventSubscriber\EntityValidatorSubscriber:

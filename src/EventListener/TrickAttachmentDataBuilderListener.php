@@ -2,7 +2,7 @@
 
 namespace App\EventListener;
 
-use App\HttpFoundation\FileUploaderInterface;
+use App\HttpFoundation\FileManagerInterface;
 use Symfony\Component\Form\FormEvent;
 
 /**
@@ -16,18 +16,18 @@ use Symfony\Component\Form\FormEvent;
 class TrickAttachmentDataBuilderListener
 {
     /**
-     * @var App\HttpFoundation\FileUploaderInterface $fileUploader
+     * @var App\HttpFoundation\FileManagerInterface $fileManager
      */
-    private $fileUploader;
+    private $fileManager;
 
     /**
      * Constructs the trick attachment data builder listener.
      * 
-     * @param App\HttpFoundation\FileUploaderInterface $fileUploader
+     * @param App\HttpFoundation\FileManagerInterface $fileManager
      */
-    public function __construct(FileUploaderInterface $fileUploader)
+    public function __construct(FileManagerInterface $fileManager)
     {
-        $this->fileUploader = $fileUploader;
+        $this->fileManager = $fileManager;
     }
 
     /**
@@ -49,7 +49,7 @@ class TrickAttachmentDataBuilderListener
             $data->src = $embed;
         } elseif ($file = $form->get('upload')->getViewData()) {
             $data->type = $file->getMimeType();
-            $data->src = $this->fileUploader->upload($file, 'trick-attachments');
+            $data->src = $this->fileManager->addToUploadPool($file);
         }
     }
 }

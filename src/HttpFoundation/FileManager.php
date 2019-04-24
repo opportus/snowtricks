@@ -7,14 +7,14 @@ use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpKernel\KernelInterface;
 
 /**
- * The file uploader.
+ * The file manager.
  *
  * @version 0.0.1
  * @package App\HttpFoundation
  * @author  Clément Cazaud <opportus@gmail.com>
  * @license https://github.com/opportus/snowtricks/blob/master/LICENSE.md MIT
  */
-class FileUploader implements FileUploaderInterface
+class FileManager implements FileManagerInterface
 {
     /**
      * @var Symfony\Component\HttpFoundation\RequestStack $requestStack
@@ -37,7 +37,12 @@ class FileUploader implements FileUploaderInterface
     private $uploadBaseDirHttp;
 
     /**
-     * Constructs the file uploader.
+     * @var callable[] $uploadPool
+     */
+    private $uploadPool = [];
+
+    /**
+     * Constructs the file manager.
      *
      * @param Symfony\Component\HttpFoundation\RequestStack $requestStack
      * @param Symfony\Component\HttpKernel\KernelInterface $kernel
@@ -55,18 +60,25 @@ class FileUploader implements FileUploaderInterface
     /**
      * {@inheritdoc}
      */
-    public function upload(File $file, string $dir): string
+    public function addToUploadPool(File $file): string
     {
-        $dir = '' === $dir ? $dir : \DIRECTORY_SEPARATOR.\trim($dir, \DIRECTORY_SEPARATOR);
+        $fileBasePath = $this->kernel->getRootDir().$this->uploadBaseDir;
         $fileName = \md5(\uniqid()).'.'.$file->guessExtension();
 
-        $file->move(
-            $this->kernel->getRootDir().$this->uploadBaseDir.$dir,
-            $fileName
-        );
+        $this->uploadPool[] = function () use ($file, $fileBasePath, $fileName) {
+            $file->move($fileBasePath, $fileName);
+        };
 
-        $request = $this->requestStack->getCurrentRequest();
+        return $this->requestStack->getCurrentRequest()->getSchemeAndHttpHost().$this->uploadBaseDirHttp.'/'.$fileName;
+    }
 
-        return $request->getSchemeAndHttpHost().$this->uploadBaseDirHttp.$dir.'/'.$fileName;
+    /**
+     * {@inheritdoc}
+     */
+    public function uploadPool()
+    {
+        foreach ($this->uploadPool as $upload) {
+            $upload();
+        }
     }
 }
