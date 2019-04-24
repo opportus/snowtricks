@@ -454,7 +454,7 @@ class UserController extends AbstractEntityController
      * @param Symfony\Component\Form\FormInterface $form
      * @return App\HttpKernel\ControllerResult
      *
-     * @Route("/user/sign-in", name="get_user_sign_in_empty_form")
+     * @Route("/user/sign-in", name="get_user_sign_in_empty_form", methods={"GET", "POST"})
      * 
      * @ParamConverter(
      *     "form",
@@ -497,7 +497,7 @@ class UserController extends AbstractEntityController
      * 
      * Handled by the Security component.
      *
-     * @Route("/user/sign-out", name="proceed_user_sign_out")
+     * @Route("/user/sign-out", name="proceed_user_sign_out", methods={"POST"})
      */
     public function proceedUserSignOut()
     {

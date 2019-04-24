@@ -48,7 +48,6 @@ class AuthorizerListener
         $authorableAccessMethods = ['POST', 'PUT', 'PATCH'];
 
         if (!\in_array($accessMethod, $authorableAccessMethods)) {
-        exit;
             return;
         }
 

@@ -19,8 +19,6 @@ use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 /**
  * The trick edit type.
  * 
- * @todo Decouple view.
- *
  * @version 0.0.1
  * @package App\Form\Type
  * @author  Clément Cazaud <opportus@gmail.com>

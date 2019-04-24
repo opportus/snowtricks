@@ -14,6 +14,7 @@ framework:
         # With this config, PHP's native session handling is used
         handler_id: ~
         cookie_secure: false
+        name: SESSION_ID
 
     #esi: ~
     #fragments: ~

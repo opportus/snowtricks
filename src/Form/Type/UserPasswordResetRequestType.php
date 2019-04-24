@@ -10,8 +10,6 @@ use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 /**
  * The user password reset request type.
  * 
- * @todo Decouple view.
- *
  * @version 0.0.1
  * @package App\Form\Type
  * @author  Clément Cazaud <opportus@gmail.com>
