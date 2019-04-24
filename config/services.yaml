@@ -37,7 +37,7 @@ services:
             $uploadBaseDir: '%upload_base_dir%'
             $uploadBaseDirHttp: '%upload_base_dir_http%'
 
-    # Param converters...
+    # Param converter...
     App\ParamConverter\SubmittedEntityParamConverter:
         tags:
             - { name: request.param_converter, converter: app.submitted_entity_param_converter }
@@ -51,13 +51,13 @@ services:
         tags:
             - { name: request.param_converter, converter: app.entity_param_converter }
 
-    # View builders...
+    # View builder...
     App\View\TwigViewBuilder:
         tags:
             - { name: view_builder }
 
     # Event listener...
-    App\EventListener\TrickBuilderListener:
+    App\EventListener\TrickMappingOperatorListener:
         tags:
             - { name: kernel.event_listener, event: 'opportus_object_mapper.set_instantiated_target_point_value', method: 'onSetInstantiatedTargetPointValue' }
     App\EventListener\ControllerAnnotationReaderListener:

@@ -10,14 +10,14 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Criteria;
 
 /**
- * The trick builder listener.
+ * The trick mapping operator listener.
  * 
  * @version 0.0.1
  * @package App\EventListner
  * @author  Clément Cazaud <opportus@gmail.com>
  * @license https://github.com/opportus/snowtricks/blob/master/LICENSE.md MIT
  */
-class TrickBuilderListener
+class TrickMappingOperatorListener
 {
     /**
      * @var Opportus\ObjectMapper\ObjectMapperInterface $objectMapper
@@ -25,7 +25,7 @@ class TrickBuilderListener
     private $objectMapper;
 
     /**
-     * Constructs the trick builder listener.
+     * Constructs the trick mapping operator listener.
      *
      * @param Opportus\ObjectMapper\ObjectMapperInterface $objectMapper
      */
