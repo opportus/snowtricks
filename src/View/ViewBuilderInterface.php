@@ -20,6 +20,7 @@ interface ViewBuilderInterface
      * @param App\Annotation\View $viewAnnotation
      * @param mixed $data
      * @return string
+     * @throws App\Exception\ViewBuildingException
      */
     public function build(ViewAnnotation $viewAnnotation, $data = null): string;
 

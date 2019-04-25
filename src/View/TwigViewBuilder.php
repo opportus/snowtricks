@@ -35,10 +35,16 @@ class TwigViewBuilder implements ViewBuilderInterface
      */
     public function build(ViewAnnotation $viewAnnotation, $data = null): string
     {
-        $template = $viewAnnotation->getOptions()['template'];
+        $template = $viewAnnotation->getOptions()['template'] ?? null;
         $context = null === $data ? [] : ['data' => $data];
 
-        $view = $this->twig->render($template, $context);
+        if (null !== $template) {
+            $view = $this->twig->render($template, $context);
+        } elseif ('application/json' === $viewAnnotation->getFormat()) {
+            $view = $context;
+        } else {
+            $view = '';
+        }
 
         if ('application/json' === $viewAnnotation->getFormat()) {
             $view = \json_encode($view);
@@ -54,8 +60,7 @@ class TwigViewBuilder implements ViewBuilderInterface
     {
         $viewFormat = $viewAnnotation->getFormat();
         $viewOptions = $viewAnnotation->getOptions();
-        $template = isset($viewOptions['template']) && \is_string($viewOptions['template']) ? $viewOptions['template'] : false;
 
-        return \in_array($viewFormat, ['text/html', 'application/json']) && $template;
+        return \in_array($viewFormat, ['text/html', 'application/json']);
     }
 }

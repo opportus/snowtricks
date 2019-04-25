@@ -7,4 +7,4 @@ symfony.lock
 /var/
 /vendor/
 ###< symfony/framework-bundle ###
-/public/trick-attachments/*
+/public/upload/*

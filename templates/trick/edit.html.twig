@@ -10,6 +10,19 @@
 {% extends 'base.html.twig' %}
 {% block title %}{{ title }}{% endblock title %}
 {% block description %}{{ description }}{% endblock description %}
+{% block bodyOverlay %}
+    <div id="trick-loader">
+        <div class="status justify-content-center align-items-center">
+            <div class="progress">
+                <div class="progress-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+            </div>
+            <div class "message">
+                <div id="trick-loader-message-in-progress">Uploading your files...</div>
+                <div id="trick-loader-message-almost-done">Almost done now...</div>
+            </div>
+        </div>
+    </div>
+{% endblock bodyOverlay %}
 {% block content %}
     {{ parent() }}
     <div class="trick-edit container-fluid"
@@ -52,104 +65,9 @@
                 </div>
                 <div class="row py-3">
                     <div class="trick-edit col-12">
-                        {{ form_start(form, {'attr': {'id': 'trick-edit-' ~ random() }, 'class': 'row'}) }}
-                            {% block trickAttachmentAddModal %}
-                                {% include 'trick/attachment/add-modal.html.twig' %}
-                            {% endblock trickAttachmentAddModal %}
-                            {% block trickAttachmentCollection %}
-                                {% include 'trick/attachment/collection.html.twig' with {'entity': trick, 'edit': true} %}
-                            {% endblock trickAttachmentCollection %}
-                            {{ form_errors(form) }}
-                            <div class="trick-edit-attachments col-12 form-group">
-                                {{ form_errors(form.attachments) }}
-                                {{ form_widget(
-                                    form.attachments,
-                                    {
-                                        'label': false,
-                                        'attr': {
-                                            'class': 'd-none'
-                                        }
-                                    }
-                                ) }}
-                            </div>
-                            <div class="trick-edit-title col-12 form-group">
-                                {{ form_errors(form.title) }}
-                                {{ form_row(
-                                    form.title,
-                                    {
-                                        'attr': {
-                                            'label': 'trick.edit.form.label.title'|trans,
-                                            'placeholder': 'trick.edit.form.placeholder.title'|trans,
-                                            'class': 'form-control-sm'
-                                        }
-                                    }
-                                ) }}
-                            </div>
-                            <div class="trick-edit-title col-12 form-group">
-                                {{ form_errors(form.description) }}
-                                {{ form_row(
-                                    form.description,
-                                    {
-                                        'attr': {
-                                            'label': 'trick.edit.form.label.description'|trans,
-                                            'placeholder': 'trick.edit.form.placeholder.description'|trans,
-                                            'class': 'form-control-sm'
-                                        }
-                                    }
-                                ) }}
-                            </div>
-                            <div class="trick-edit-body col-12 form-group">
-                                {{ form_errors(form.body) }}
-                                {{ form_row(
-                                    form.body,
-                                    {
-                                        'attr': {
-                                            'label': 'trick.edit.form.label.body'|trans,
-                                            'placeholder': 'trick.edit.form.placeholder.body'|trans,
-                                            'class': 'form-control-sm',
-                                            'rows': '10'
-                                        }
-                                    }
-                                ) }}
-                            </div>
-                            <div class="trick-edit-group col-sm-12 col-lg-3 form-group">
-                                {{ form_errors(form.group) }}
-                                {{ form_row(
-                                    form.group,
-                                    {
-                                        'attr': {
-                                            'label': 'trick.edit.form.label.group'|trans,
-                                            'placeholder': 'trick.edit.form.placeholder.group'|trans,
-                                            'class': 'form-control-sm'
-                                        }
-                                    }
-                                ) }}
-                            </div>
-                            <div class="col-12 text-right">
-                                {% if trick is not null and app.request.attributes.get('_route_params').slug is defined %}
-                                    <div class="trick-edit-delete d-inline">
-                                        <div
-                                            class="btn btn-sm btn-danger ajax-action"
-                                            data-redirection="{{ url('get_home') }}"
-                                            data-action="deleteTrick"
-                                            data-url="{{ url('delete_trick', app.request.attributes.get('_route_params')) }}"
-                                            data-token="{{ csrf_token('security') }}">
-                                                {{ 'trick.edit.form.button.delete'|trans() }}
-                                        </div>
-                                    </div>
-                                {% endif %}
-                                <div class="trick-edit-submit d-inline">
-                                    {{ form_widget(
-                                        form.submit,
-                                        {
-                                            'label': 'trick.edit.form.button.save',
-                                            'attr': {'class': 'btn-sm btn-primary'}
-                                        }
-                                    ) }}
-                                </div>
-                            </div>
-                            {{ form_rest(form) }}
-                        {{ form_end(form) }}
+                        {% include 'trick/attachment/add-modal.html.twig' %}
+                        {% include 'trick/attachment/collection.html.twig' with {'entity': trick, 'edit': true} %}
+                        {% include 'trick/edit-form.html.twig' with {'trick': trick, 'data': data} %}
                     </div>
                 </div>
             </div>

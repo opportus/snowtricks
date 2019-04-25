@@ -1,0 +1,101 @@
+{% if data is defined %}
+    {% set trick = data.getData() %}
+    {% set form = data.createView() %}
+{% endif %}
+{% if app.request.attributes.get('_route_params').slug is defined %}
+    {% set actionUri = url('put_trick_by_edit_form', app.request.attributes.get('_route_params')) %}
+{% else %}
+    {% set actionUri = url('post_trick_by_edit_form') %}
+{% endif %}
+{{ form_start(form, {'attr': {'id': 'trick-edit-' ~ random() }, 'class': 'row'}) }}
+    {{ form_errors(form) }}
+    <div class="trick-edit-attachments col-12 form-group">
+        {{ form_errors(form.attachments) }}
+        {{ form_widget(
+            form.attachments,
+            {
+                'label': false,
+                'attr': {
+                    'class': 'd-none'
+                }
+            }
+        ) }}
+    </div>
+    <div class="trick-edit-title col-12 form-group">
+        {{ form_errors(form.title) }}
+        {{ form_row(
+            form.title,
+            {
+                'attr': {
+                    'label': 'trick.edit.form.label.title'|trans,
+                    'placeholder': 'trick.edit.form.placeholder.title'|trans,
+                    'class': 'form-control-sm'
+                }
+            }
+        ) }}
+    </div>
+    <div class="trick-edit-title col-12 form-group">
+        {{ form_errors(form.description) }}
+        {{ form_row(
+            form.description,
+            {
+                'attr': {
+                    'label': 'trick.edit.form.label.description'|trans,
+                    'placeholder': 'trick.edit.form.placeholder.description'|trans,
+                    'class': 'form-control-sm'
+                }
+            }
+        ) }}
+    </div>
+    <div class="trick-edit-body col-12 form-group">
+        {{ form_errors(form.body) }}
+        {{ form_row(
+            form.body,
+            {
+                'attr': {
+                    'label': 'trick.edit.form.label.body'|trans,
+                    'placeholder': 'trick.edit.form.placeholder.body'|trans,
+                    'class': 'form-control-sm',
+                    'rows': '10'
+                }
+            }
+        ) }}
+    </div>
+    <div class="trick-edit-group col-sm-12 col-lg-3 form-group">
+        {{ form_errors(form.group) }}
+        {{ form_row(
+            form.group,
+            {
+                'attr': {
+                    'label': 'trick.edit.form.label.group'|trans,
+                    'placeholder': 'trick.edit.form.placeholder.group'|trans,
+                    'class': 'form-control-sm'
+                }
+            }
+        ) }}
+    </div>
+    <div class="col-12 text-right">
+        {% if app.request.attributes.get('_route_params').slug is defined %}
+            <div class="trick-edit-delete d-inline">
+                <div
+                    class="btn btn-sm btn-danger ajax-action"
+                    data-redirection="{{ url('get_home') }}"
+                    data-action="deleteTrick"
+                    data-url="{{ url('delete_trick', app.request.attributes.get('_route_params')) }}"
+                    data-token="{{ csrf_token('security') }}">
+                        {{ 'trick.edit.form.button.delete'|trans() }}
+                </div>
+            </div>
+        {% endif %}
+        <div class="trick-edit-submit d-inline">
+            {{ form_widget(
+                form.submit,
+                {
+                    'label': 'trick.edit.form.button.save',
+                    'attr': {'class': 'btn-sm btn-primary ajax-action', 'data-url': actionUri, 'data-action': 'submitTrick', 'data-redirection': url('get_home')}
+                }
+            ) }}
+        </div>
+    </div>
+    {{ form_rest(form) }}
+{{ form_end(form) }}

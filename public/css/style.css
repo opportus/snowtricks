@@ -65,6 +65,38 @@
     min-height: 100vh;
 }
 
+/* Trick Loader */
+
+#trick-loader {
+    background: rgba(0,0,0,0.9);
+    color: #ffffff;
+    font-size: 30px;
+    position: fixed;
+    display: none;
+    height: 100vh;
+    width: 100vw;
+    z-index: 10000;
+}
+
+#trick-loader .status {
+    margin-left: 20%;
+    margin-right: 20%;
+    position: relative;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+#trick-loader .progress {
+    background-color: rgba(0,0,0,0.9);
+}
+
+#trick-loader .progress-bar {
+    background-color: #ffffff;
+}
+
+#trick-loader-message-in-progress, #trick-loader-message-almost-done {
+    display: none;
+}
 
 /* Trick Collection */
 .trick-list-item-title {

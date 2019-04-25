@@ -13,6 +13,7 @@ use App\Annotation\Route;
 use App\Annotation\Response as ResponseAnnotation;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\AcceptHeader;
 use Symfony\Component\Routing\RouterInterface;
 
 /**

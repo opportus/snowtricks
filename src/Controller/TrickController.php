@@ -72,7 +72,7 @@ class TrickController extends AbstractEntityController
      *     )
      * )
      */
-    public function getTrickEditForm(FormInterface $form) : ControllerResult
+    public function getTrickEditForm(FormInterface $form): ControllerResult
     {
         return new ControllerResult(
             Response::HTTP_OK,
@@ -112,9 +112,9 @@ class TrickController extends AbstractEntityController
      *             "template"="trick/edit.html.twig"
      *         }
      *     )
-     * ) 
+     * )
      */
-    public function getTrickEditEmptyForm(FormInterface $form) : ControllerResult
+    public function getTrickEditEmptyForm(FormInterface $form): ControllerResult
     {
         return new ControllerResult(
             Response::HTTP_OK,
@@ -155,7 +155,7 @@ class TrickController extends AbstractEntityController
      *     statusCode=Response::HTTP_NOT_FOUND
      * )
      */
-    public function getTrickCollection(ArrayCollection $trickCollection) : ControllerResult
+    public function getTrickCollection(ArrayCollection $trickCollection): ControllerResult
     {
         return new ControllerResult(
             Response::HTTP_OK,
@@ -202,7 +202,7 @@ class TrickController extends AbstractEntityController
      *     )
      * )
      */
-    public function getTrick(Trick $trick) : ControllerResult
+    public function getTrick(Trick $trick): ControllerResult
     {
         return new ControllerResult(
             Response::HTTP_OK,
@@ -235,37 +235,36 @@ class TrickController extends AbstractEntityController
      * )
      * 
      * @App\Annotation\Response(
-     *     statusCode=Response::HTTP_SEE_OTHER,
-     *     headers={
-     *         "location"=@App\Annotation\Route(
-     *             name="get_home"
-     *         )
-     *     }
+     *     statusCode=Response::HTTP_OK,
+     *     content=@App\Annotation\View(
+     *         format="application/json",
+     *         builder=TwigViewBuilder::class
+     *     )
      * )
      * 
      * @App\Annotation\Response(
      *     statusCode=Response::HTTP_BAD_REQUEST,
      *     content=@App\Annotation\View(
-     *         format="text/html",
+     *         format="application/json",
      *         builder=TwigViewBuilder::class,
      *         options={
-     *             "template"="trick/edit.html.twig"
+     *             "template"="trick/edit-form.html.twig"
      *         }
      *     )
      * )
      * 
      * @App\Annotation\Flash(
-     *     statusCode=Response::HTTP_SEE_OTHER,
+     *     statusCode=Response::HTTP_OK,
      *     message=@App\Annotation\Trans(id="trick.edit.success")
      * )
      */
-    public function postTrickByEditForm(Trick $trick) : ControllerResult
+    public function postTrickByEditForm(Trick $trick): ControllerResult
     {
         $this->entityManager->persist($trick);
         $this->entityManager->flush();
 
         return new ControllerResult(
-            Response::HTTP_SEE_OTHER,
+            Response::HTTP_OK,
             $trick
         );
     }
@@ -296,37 +295,36 @@ class TrickController extends AbstractEntityController
      * )
      * 
      * @App\Annotation\Response(
-     *     statusCode=Response::HTTP_SEE_OTHER,
-     *     headers={
-     *         "location"=@App\Annotation\Route(
-     *             name="get_home"
-     *         )
-     *     }
+     *     statusCode=Response::HTTP_OK,
+     *     content=@App\Annotation\View(
+     *         format="application/json",
+     *         builder=TwigViewBuilder::class
+     *     )
      * )
      * 
      * @App\Annotation\Response(
      *     statusCode=Response::HTTP_BAD_REQUEST,
      *     content=@App\Annotation\View(
-     *         format="text/html",
+     *         format="application/json",
      *         builder=TwigViewBuilder::class,
      *         options={
-     *             "template"="trick/edit.html.twig"
+     *             "template"="trick/edit-form.html.twig"
      *         }
      *     )
      * )
      * 
      * @App\Annotation\Flash(
-     *     statusCode=Response::HTTP_SEE_OTHER,
+     *     statusCode=Response::HTTP_OK,
      *     message=@App\Annotation\Trans(id="trick.edit.success")
      * )
      */
-    public function putTrickByEditForm(Trick $trick) : ControllerResult
+    public function putTrickByEditForm(Trick $trick): ControllerResult
     {
         $this->entityManager->persist($trick);
         $this->entityManager->flush();
 
         return new ControllerResult(
-            Response::HTTP_SEE_OTHER,
+            Response::HTTP_OK,
             $trick
         );
     }
@@ -382,7 +380,7 @@ class TrickController extends AbstractEntityController
      *     )
      * )
      */
-    public function deleteTrick(Trick $trick) : ControllerResult
+    public function deleteTrick(Trick $trick): ControllerResult
     {
         $this->entityManager->remove($trick);
         $this->entityManager->flush();

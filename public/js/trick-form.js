@@ -53,9 +53,9 @@ class TrickForm
     getTrickAttachmentFieldset(type)
     {
         var attachmentFieldset = this.find('#trick_edit_attachments').attr('data-prototype'),
-            attachmentList = this.find('.trick-attachment-list'),
+            attachmentList = this.parent().find('.trick-attachment-list'),
             attachmentCounter = Math.floor(Math.random()*1000),
-            attachmentModal = this.find('#trick-attachment-modal');
+            attachmentModal = this.parent().find('#trick-attachment-modal');
 
         attachmentFieldset = $(attachmentFieldset.replace(/__name__/g, attachmentCounter));
 
@@ -81,13 +81,13 @@ class TrickForm
 
     addTrickAttachment()
     {
-        var attachmentModal = this.find('#trick-attachment-modal'),
+        var attachmentModal = this.parent().find('#trick-attachment-modal'),
             attachmentCounter = attachmentModal.attr('data-attachment-counter'),
             attachmentId = 'trick-attachment-'+attachmentCounter,
             upload = attachmentModal.find('.custom-file input'),
             embed = attachmentModal.find('[id$=embed]'),
             src = upload.length ? URL.createObjectURL(upload[0].files[0]) : $(embed[0].value).attr('src'),
-            active = this.find('.trick-attachment-list').children().length ? '' : 'active',
+            active = this.parent().find('.trick-attachment-list').children().length ? '' : 'active',
             attachmentTemplate = null,
             fieldset = attachmentModal.find('.modal-body').find('fieldset');
 
@@ -104,14 +104,14 @@ class TrickForm
                     attachmentTemplate = '<iframe class="trick-list-item-attachment embed-responsive-item" frameborder="0" src="'+src+'" allowfullscreen></iframe>';
                     break;
                 default:
-                    this.find('#trick-attachment-modal-upload-error').removeClass('d-none');
+                    this.parent().find('#trick-attachment-modal-upload-error').removeClass('d-none');
                     return;
             }
         } else if (embed.length) {
             var embedTag = $(embed[0].value);
 
             if (embedTag[0] === undefined || embedTag[0].tagName !== 'IFRAME' || src.length < 1 || (src.indexOf('https://www.youtube.com/embed/') !== 0 && src.indexOf('https://www.dailymotion.com/embed/video/') !== 0)) {
-                this.find('#trick-attachment-modal-embed-error').removeClass('d-none');
+                this.parent().find('#trick-attachment-modal-embed-error').removeClass('d-none');
                 return;
             }
 
@@ -135,43 +135,42 @@ class TrickForm
             '</div>'
         ;
 
-        this.find('.trick-attachment-list').append(attachmentTemplate).show('slow');
-        this.find('#trick-attachment-modal').modal('toggle');
-
-        console.debug(fieldset.find('input'));
+        this.parent().find('.trick-attachment-list').append(attachmentTemplate).show('slow');
+        this.parent().find('#trick-attachment-modal').modal('toggle');
 
         if (fieldset.find('input').attr('type') == 'file') {
+            fieldset.find('input').addClass('new-file');
         } else {
             fieldset.find('input').val(src)
         }
 
         this.find('#trick_edit_attachments').append(fieldset);
-        this.find('#trick-attachment-carousel').removeClass('d-none');
+        this.parent().find('#trick-attachment-carousel').removeClass('d-none');
 
-        if (this.find('.trick-attachment-list').children().length > 3) {
-            this.find('#trick-attachment-carousel').addClass('carousel');
-            this.find('.trick-attachment-carousel-control').removeClass('d-none');
+        if (this.parent().find('.trick-attachment-list').children().length > 3) {
+            this.parent().find('#trick-attachment-carousel').addClass('carousel');
+            this.parent().find('.trick-attachment-carousel-control').removeClass('d-none');
         }
     }
 
     removeTrickAttachment(attachmentId)
     {
-        var attachmentCounter = this.find('#'+attachmentId).attr('data-attachment-counter');
+        var attachmentCounter = this.parent().find('#'+attachmentId).attr('data-attachment-counter');
 
-        this.find('#'+attachmentId).remove();
+        this.parent().find('#'+attachmentId).remove();
         this.find('#trick_edit_attachments_'+attachmentCounter).parent('fieldset').remove();
 
-        var attachmentList = this.find('.trick-attachment-list');
+        var attachmentList = this.parent().find('.trick-attachment-list');
 
         if (attachmentList.children().length == 0) {
-            this.find('#trick-attachment-carousel').addClass('d-none');
+            this.parent().find('#trick-attachment-carousel').addClass('d-none');
         }
 
         attachmentList.children(':first').addClass('active');
 
-        if (this.find('.trick-attachment-list').children().length <= 3) {
-            this.find('#trick-attachment-carousel').removeClass('carousel');
-            this.find('.trick-attachment-carousel-control').addClass('d-none');
+        if (this.parent().find('.trick-attachment-list').children().length <= 3) {
+            this.parent().find('#trick-attachment-carousel').removeClass('carousel');
+            this.parent().find('.trick-attachment-carousel-control').addClass('d-none');
         }
     }
 }
