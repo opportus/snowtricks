@@ -15,8 +15,8 @@ use Doctrine\Annotations\AnnotationException;
  * @Annotation
  * @Target("METHOD")
  * @Attributes({
- *     @Attribute("content", type="App\Annotation\View"),
  *     @Attribute("statusCode", type="integer", required=true),
+ *     @Attribute("content", type="App\Annotation\View", required=true),
  *     @Attribute("headers", type="array"),
  *     @Attribute("options", type="array")
  * })
@@ -24,14 +24,14 @@ use Doctrine\Annotations\AnnotationException;
 class Response extends AbstractAnnotation
 {
     /**
-     * @var null|App\Annotation\View $content
-     */
-    private $content;
-
-    /**
      * @var int $statusCode
      */
     private $statusCode;
+
+    /**
+     * @var App\Annotation\View $content
+     */
+    private $content;
 
     /**
      * @var array $headers
@@ -50,8 +50,8 @@ class Response extends AbstractAnnotation
      */
     public function __construct(array $values)
     {
-        $this->content = $values['content'] ?? null;
         $this->statusCode = $values['statusCode'];
+        $this->content = $values['content'];
         $this->headers = $values['headers'] ?? [];
         $this->options = $values['options'] ?? [];
 
@@ -69,16 +69,6 @@ class Response extends AbstractAnnotation
     }
 
     /**
-     * Gets the content.
-     * 
-     * @return null|App\Annotation\View
-     */
-    public function getContent(): ?View
-    {
-        return $this->content;
-    }
-
-    /**
      * Gets the status code.
      * 
      * @return int
@@ -86,6 +76,16 @@ class Response extends AbstractAnnotation
     public function getStatusCode(): int
     {
         return $this->statusCode;
+    }
+
+    /**
+     * Gets the content.
+     * 
+     * @return null|App\Annotation\View
+     */
+    public function getContent(): ?View
+    {
+        return $this->content;
     }
 
     /**

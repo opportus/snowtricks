@@ -152,7 +152,8 @@ class TrickController extends AbstractEntityController
      * )
      * 
      * @App\Annotation\Response(
-     *     statusCode=Response::HTTP_NOT_FOUND
+     *     statusCode=Response::HTTP_NOT_FOUND,
+     *     content=@App\Annotation\View(format="application/json")
      * )
      */
     public function getTrickCollection(ArrayCollection $trickCollection): ControllerResult
@@ -236,10 +237,7 @@ class TrickController extends AbstractEntityController
      * 
      * @App\Annotation\Response(
      *     statusCode=Response::HTTP_OK,
-     *     content=@App\Annotation\View(
-     *         format="application/json",
-     *         builder=TwigViewBuilder::class
-     *     )
+     *     content=@App\Annotation\View(format="application/json")
      * )
      * 
      * @App\Annotation\Response(
@@ -296,11 +294,9 @@ class TrickController extends AbstractEntityController
      * 
      * @App\Annotation\Response(
      *     statusCode=Response::HTTP_OK,
-     *     content=@App\Annotation\View(
-     *         format="application/json",
-     *         builder=TwigViewBuilder::class
-     *     )
+     *     content=@App\Annotation\View(format="application/json")
      * )
+     * 
      * 
      * @App\Annotation\Response(
      *     statusCode=Response::HTTP_BAD_REQUEST,
@@ -351,10 +347,9 @@ class TrickController extends AbstractEntityController
      * 
      * @App\Annotation\Response(
      *     statusCode=Response::HTTP_SEE_OTHER,
+     *     content=@App\Annotation\View(format="text/html"),
      *     headers={
-     *         "location"=@App\Annotation\Route(
-     *             name="get_home"
-     *         )
+     *         "location"=@App\Annotation\Route(name="get_home")
      *     }
      * )
      * 

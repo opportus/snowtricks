@@ -98,6 +98,7 @@ class UserController extends AbstractEntityController
      * 
      * @App\Annotation\Response(
      *     statusCode=Response::HTTP_SEE_OTHER,
+     *     content=@App\Annotation\View(format="text/html"),
      *     headers={
      *         "location"=@App\Annotation\Route(name="get_home")
      *     }
@@ -161,6 +162,7 @@ class UserController extends AbstractEntityController
      * 
      * @App\Annotation\Response(
      *     statusCode=Response::HTTP_SEE_OTHER,
+     *     content=@App\Annotation\View(format="text/html"),
      *     headers={
      *         "location"=@App\Annotation\Route(name="get_home")
      *     }
@@ -279,6 +281,7 @@ class UserController extends AbstractEntityController
      *
      * @App\Annotation\Response(
      *     statusCode=Response::HTTP_SEE_OTHER,
+     *     content=@App\Annotation\View(format="text/html"),
      *     headers={
      *         "location"=@App\Annotation\Route(name="get_home")
      *     }
@@ -389,6 +392,7 @@ class UserController extends AbstractEntityController
      * 
      * @App\Annotation\Response(
      *     statusCode=Response::HTTP_SEE_OTHER,
+     *     content=@App\Annotation\View(format="text/html"),
      *     headers={
      *         "location"=@App\Annotation\Route(name="get_home")
      *     }

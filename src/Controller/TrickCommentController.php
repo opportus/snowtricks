@@ -64,11 +64,13 @@ class TrickCommentController extends AbstractEntityController
      * )
      * 
      * @App\Annotation\Response(
-     *     statusCode=Response::HTTP_FORBIDDEN
+     *     statusCode=Response::HTTP_FORBIDDEN,
+     *     content=@App\Annotation\View(format="application/json")
      * )
      * 
      * @App\Annotation\Response(
-     *     statusCode=Response::HTTP_NOT_FOUND
+     *     statusCode=Response::HTTP_NOT_FOUND,
+     *     content=@App\Annotation\View(format="application/json")
      * )
      */
     public function getTrickCommentEditForm(FormInterface $form) : ControllerResult
@@ -163,7 +165,8 @@ class TrickCommentController extends AbstractEntityController
      * )
      * 
      * @App\Annotation\Response(
-     *     statusCode=Response::HTTP_NOT_FOUND
+     *     statusCode=Response::HTTP_NOT_FOUND,
+     *     content=@App\Annotation\View(format="application/json")
      * )
      */
     public function getTrickCommentCollection(ArrayCollection $trickCommentCollection) : ControllerResult
@@ -200,7 +203,8 @@ class TrickCommentController extends AbstractEntityController
      * )
      * 
      * @App\Annotation\Response(
-     *     statusCode=Response::HTTP_NOT_FOUND
+     *     statusCode=Response::HTTP_NOT_FOUND,
+     *     content=@App\Annotation\View(format="application/json")
      * )
      */
     public function getTrickComment(TrickComment $trickComment) : ControllerResult
@@ -236,7 +240,8 @@ class TrickCommentController extends AbstractEntityController
      * )
      * 
      * @App\Annotation\Response(
-     *     statusCode=Response::HTTP_NO_CONTENT
+     *     statusCode=Response::HTTP_NO_CONTENT,
+     *     content=@App\Annotation\View(format="application/json")
      * )
      */
     public function postTrickCommentByEditForm(TrickComment $trickComment) : ControllerResult
@@ -276,15 +281,18 @@ class TrickCommentController extends AbstractEntityController
      * )
      * 
      * @App\Annotation\Response(
-     *     statusCode=Response::HTTP_NO_CONTENT
+     *     statusCode=Response::HTTP_NO_CONTENT,
+     *     content=@App\Annotation\View(format="application/json")
      * )
      * 
      * @App\Annotation\Response(
-     *     statusCode=Response::HTTP_FORBIDDEN
+     *     statusCode=Response::HTTP_FORBIDDEN,
+     *     content=@App\Annotation\View(format="application/json")
      * )
      * 
      * @App\Annotation\Response(
-     *     statusCode=Response::HTTP_NOT_FOUND
+     *     statusCode=Response::HTTP_NOT_FOUND,
+     *     content=@App\Annotation\View(format="application/json")
      * )
      */
     public function putTrickCommentByEditForm(TrickComment $trickComment) : ControllerResult
@@ -314,15 +322,18 @@ class TrickCommentController extends AbstractEntityController
      * )
      *
      * @App\Annotation\Response(
-     *     statusCode=Response::HTTP_NO_CONTENT
+     *     statusCode=Response::HTTP_NO_CONTENT,
+     *     content=@App\Annotation\View(format="application/json")
      * )
      * 
      * @App\Annotation\Response(
-     *     statusCode=Response::HTTP_FORBIDDEN
+     *     statusCode=Response::HTTP_FORBIDDEN,
+     *     content=@App\Annotation\View(format="application/json")
      * )
      * 
      * @App\Annotation\Response(
-     *     statusCode=Response::HTTP_NOT_FOUND
+     *     statusCode=Response::HTTP_NOT_FOUND,
+     *     content=@App\Annotation\View(format="application/json")
      * )
      */
     public function deleteTrickCommentByDeleteForm(TrickComment $trickComment) : ControllerResult

@@ -71,7 +71,7 @@ class ResponseBuilder implements ResponseBuilderInterface
         // Looks for the contextual response annotations...
         foreach ($request->attributes->get('_response') as $candidateResponseAnnotation) {
             if ($candidateResponseAnnotation->getStatusCode() === $controllerResult->getStatusCode()) {
-                if (null === $candidateResponseAnnotation->getContent() || \in_array($candidateResponseAnnotation->getContent()->getFormat(), $request->getAcceptableContentTypes())) {
+                if (\in_array($candidateResponseAnnotation->getContent()->getFormat(), $request->getAcceptableContentTypes())) {
                     $responseAnnotation = $candidateResponseAnnotation;
                     break;
                 }
@@ -81,8 +81,8 @@ class ResponseBuilder implements ResponseBuilderInterface
         if (!isset($responseAnnotation)) {
             throw new ResponseBuildingException(\sprintf(
                 'No "%s" annotation found on action "%s" for the following context:%s
-                    controller_result_status_code: "%d"%s
-                    request_acceptable_content_types: "%s"
+                    controller result status code: "%d"%s
+                    request acceptable content types: "%s"
                 ',
                 ResponseAnnotation::class,
                 $request->attributes->get('_controller'),
@@ -94,44 +94,40 @@ class ResponseBuilder implements ResponseBuilderInterface
         }
 
         // Defines the response content...
-        if (null === $responseAnnotation->getContent()) {
-            $content = '';
+        $viewAnnotation = $responseAnnotation->getContent();
+
+        if (null !== $viewAnnotation->getBuilder()) {
+            if (!isset($this->viewBuilders[$viewAnnotation->getBuilder()])) {
+                throw new ResponseBuildingException(\sprintf(
+                    'View builder "%s" is unknown to the response builder. Make sure that this view builder implements "%s" and is registered as a service tagged "%s".',
+                    $viewAnnotation->getBuilder(),
+                    ViewBuilderInterface::class,
+                    'view_builder'
+                ));
+            }
+
+            $viewBuilder = $this->viewBuilders[$viewAnnotation->getBuilder()];
+
+            if (!$viewBuilder->supports($viewAnnotation)) {
+                throw new ResponseBuildingException(\sprintf(
+                    'View builder "%s" does not support the current view.',
+                    $viewAnnotation->getBuilder()
+                ));
+            }
         } else {
-            $viewAnnotation = $responseAnnotation->getContent();
-
-            if (null !== $viewAnnotation->getBuilder()) {
-                if (!isset($this->viewBuilders[$viewAnnotation->getBuilder()])) {
-                    throw new ResponseBuildingException(\sprintf(
-                        'View builder "%s" is unknown to the response builder. Make sure the view builder implements "%s" and is registered as a service tagged "%s".',
-                        $viewAnnotation->getBuilder(),
-                        ViewBuilderInterface::class,
-                        'view_builder'
-                    ));
-                }
-
-                $viewBuilder = $this->viewBuilders[$viewAnnotation->getBuilder()];
-
-                if (!$viewBuilder->supports($viewAnnotation)) {
-                    throw new ResponseBuildingException(\sprintf(
-                        'View builder "%s" does not support the current view.',
-                        $viewAnnotation->getBuilder()
-                    ));
-                }
-            } else {
-                foreach ($this->viewBuilders as $candidateViewBuilder) {
-                    if ($candidateViewBuilder->supports($viewAnnotation)) {
-                        $viewBuilder = $candidateViewBuilder;
-                        break;
-                    }
-                }
-
-                if (!isset($viewBuilder)) {
-                    throw new ResponseBuildingException('None of registered view builders support the current view.');
+            foreach ($this->viewBuilders as $candidateViewBuilder) {
+                if ($candidateViewBuilder->supports($viewAnnotation)) {
+                    $viewBuilder = $candidateViewBuilder;
+                    break;
                 }
             }
 
-            $content = $viewBuilder->build($viewAnnotation, $controllerResult->getData());
+            if (!isset($viewBuilder)) {
+                throw new ResponseBuildingException('None of registered view builders support the current view.');
+            }
         }
+
+        $content = $viewBuilder->build($viewAnnotation, $controllerResult->getData());
 
         // Defines headers...
         $data = $controllerResult->getData();
@@ -157,13 +153,15 @@ class ResponseBuilder implements ResponseBuilderInterface
             }
         }
 
-        if ($content) {
-            $headers['Content-Type'] = $responseAnnotation->getContent()->getFormat();
-        }
+        $headers['Content-Type'] = $responseAnnotation->getContent()->getFormat();
 
         // Defines status code...
         $statusCode = $controllerResult->getStatusCode();
 
-        return new Response($content, $statusCode, $headers);
+        // Prepares the response...
+        $response = new Response($content, $statusCode, $headers);
+        $response->prepare($request);
+
+        return $response;
     }
 }

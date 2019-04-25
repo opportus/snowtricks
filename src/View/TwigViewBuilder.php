@@ -59,7 +59,6 @@ class TwigViewBuilder implements ViewBuilderInterface
     public function supports(ViewAnnotation $viewAnnotation): bool
     {
         $viewFormat = $viewAnnotation->getFormat();
-        $viewOptions = $viewAnnotation->getOptions();
 
         return \in_array($viewFormat, ['text/html', 'application/json']);
     }
