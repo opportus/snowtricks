@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Annotation;
+namespace App\Configuration;
 
 /**
- * The flash annotation.
+ * The flash.
  *
  * @version 0.0.1
- * @package App\Annotation
+ * @package App\Configuration
  * @author  Clément Cazaud <opportus@gmail.com>
  * @license https://github.com/opportus/snowtricks/blob/master/LICENSE.md MIT
  *
@@ -14,23 +14,25 @@ namespace App\Annotation;
  * @Target("METHOD")
  * @Attributes({
  *     @Attribute("statusCode", type="integer", required=true),
- *     @Attribute("message", type="App\Annotation\Trans", required=true)
+ *     @Attribute("message", type="App\Configuration\Trans", required=true)
  * })
  */
-class Flash extends AbstractAnnotation
+class Flash implements AnnotationInterface
 {
+    use AnnotationTrait;
+
     /**
      * @var int $statusCode
      */
     private $statusCode;
 
     /**
-     * @var App\Annotation\Trans $message
+     * @var App\Configuration\Trans $message
      */
     private $message;
 
     /**
-     * Constructs the flash annotation.
+     * Constructs the flash.
      *
      * @param array $values
      */
@@ -53,7 +55,7 @@ class Flash extends AbstractAnnotation
     /**
      * Gets the message.
      *
-     * @return App\Annotation\Trans
+     * @return App\Configuration\Trans
      */
     public function getMessage(): Trans
     {

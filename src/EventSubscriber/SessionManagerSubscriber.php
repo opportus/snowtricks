@@ -63,13 +63,13 @@ class SessionManagerSubscriber implements EventSubscriberInterface
             return;
         }
 
-        if (null === $flashAnnotations = $event->getRequest()->attributes->get('_flash')) {
+        if (null === $flashConfigurations = $event->getRequest()->attributes->get('_flash_configurations')) {
             return;
         }
 
-        foreach ($flashAnnotations as $flashAnnotation) {
-            if ($flashAnnotation->getStatusCode() === $controllerResult->getStatusCode()) {
-                $this->sessionManager->generateFlash($flashAnnotation, $controllerResult);
+        foreach ($flashConfigurations as $flashConfiguration) {
+            if ($flashConfiguration->getStatusCode() === $controllerResult->getStatusCode()) {
+                $this->sessionManager->generateFlash($flashConfiguration, $controllerResult);
             }
         }
     }
@@ -87,13 +87,13 @@ class SessionManagerSubscriber implements EventSubscriberInterface
             return;
         }
 
-        if (null === $flashAnnotations = $event->getRequest()->attributes->get('_flash')) {
+        if (null === $flashConfigurations = $event->getRequest()->attributes->get('_flash_configurations')) {
             return;
         }
 
-        foreach ($flashAnnotations as $flashAnnotation) {
-            if ($flashAnnotation->getStatusCode() === $exception->getStatusCode()) {
-                $this->sessionManager->generateFlash($flashAnnotation, $exception);
+        foreach ($flashConfigurations as $flashConfiguration) {
+            if ($flashConfiguration->getStatusCode() === $exception->getStatusCode()) {
+                $this->sessionManager->generateFlash($flashConfiguration, $exception);
             }
         }
     }

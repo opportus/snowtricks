@@ -2,7 +2,7 @@
 
 namespace App\EventListener;
 
-use App\Annotation\AbstractAnnotation;
+use App\Configuration\AnnotationInterface;
 use Doctrine\Common\Annotations\Reader;
 use Symfony\Component\HttpKernel\Event\FilterControllerEvent;
 
@@ -51,7 +51,7 @@ class ControllerAnnotationReaderListener
         $supportedAnnotations = [];
 
         foreach ($methodAnnotations as $annotation) {
-            if ($annotation instanceof AbstractAnnotation) {
+            if ($annotation instanceof AnnotationInterface) {
                 $supportedAnnotations[$annotation->getAlias()][] = $annotation;
             }
         }
@@ -59,7 +59,7 @@ class ControllerAnnotationReaderListener
         $request = $event->getRequest();
 
         foreach ($supportedAnnotations as $alias => $annotations) {
-            $request->attributes->set('_'.$alias, $annotations);
+            $request->attributes->set(\sprintf('_%s_configurations', $alias), $annotations);
         }
     }
 }

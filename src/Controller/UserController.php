@@ -55,9 +55,9 @@ class UserController extends AbstractEntityController
      *     }
      * )
      * 
-     * @App\Annotation\Response(
+     * @App\Configuration\Response(
      *     statusCode=Response::HTTP_OK,
-     *     content=@App\Annotation\View(
+     *     content=@App\Configuration\View(
      *         format="text/html",
      *         builder=TwigViewBuilder::class,
      *         options={
@@ -96,17 +96,17 @@ class UserController extends AbstractEntityController
      *     }
      * )
      * 
-     * @App\Annotation\Response(
+     * @App\Configuration\Response(
      *     statusCode=Response::HTTP_SEE_OTHER,
-     *     content=@App\Annotation\View(format="text/html"),
+     *     content=@App\Configuration\View(format="text/html"),
      *     headers={
-     *         "location"=@App\Annotation\Route(name="get_home")
+     *         "location"=@App\Configuration\Route(name="get_home")
      *     }
      * )
      * 
-     * @App\Annotation\Response(
+     * @App\Configuration\Response(
      *     statusCode=Response::HTTP_BAD_REQUEST,
-     *     content=@App\Annotation\View(
+     *     content=@App\Configuration\View(
      *         format="text/html",
      *         builder=TwigViewBuilder::class,
      *         options={
@@ -115,13 +115,13 @@ class UserController extends AbstractEntityController
      *     )
      * )
      * 
-     * @App\Annotation\Flash(
+     * @App\Configuration\Flash(
      *     statusCode=Response::HTTP_SEE_OTHER,
-     *     message=@App\Annotation\Trans(
+     *     message=@App\Configuration\Trans(
      *         id="user.sign_up.notification.201",
      *         parameters={
-     *             "%username%"=@App\Annotation\DatumGetterReference(name="getUsername"),
-     *             "%email%"=@App\Annotation\DatumGetterReference(name="getEmail")
+     *             "%username%"=@App\Configuration\ControllerResultDataGetter(name="getUsername"),
+     *             "%email%"=@App\Configuration\ControllerResultDataGetter(name="getEmail")
      *         }
      *     )
      * )
@@ -160,17 +160,17 @@ class UserController extends AbstractEntityController
      *     }
      * )
      * 
-     * @App\Annotation\Response(
+     * @App\Configuration\Response(
      *     statusCode=Response::HTTP_SEE_OTHER,
-     *     content=@App\Annotation\View(format="text/html"),
+     *     content=@App\Configuration\View(format="text/html"),
      *     headers={
-     *         "location"=@App\Annotation\Route(name="get_home")
+     *         "location"=@App\Configuration\Route(name="get_home")
      *     }
      * )
      * 
-     * @App\Annotation\Response(
+     * @App\Configuration\Response(
      *     statusCode=Response::HTTP_FORBIDDEN,
-     *     content=@App\Annotation\View(
+     *     content=@App\Configuration\View(
      *         format="text/html",
      *         builder=TwigViewBuilder::class,
      *         options={
@@ -179,9 +179,9 @@ class UserController extends AbstractEntityController
      *     )
      * )
      * 
-     * @App\Annotation\Response(
+     * @App\Configuration\Response(
      *     statusCode=Response::HTTP_NOT_FOUND,
-     *     content=@App\Annotation\View(
+     *     content=@App\Configuration\View(
      *         format="text/html",
      *         builder=TwigViewBuilder::class,
      *         options={
@@ -190,19 +190,19 @@ class UserController extends AbstractEntityController
      *     )
      * )
      * 
-     * @App\Annotation\Flash(
+     * @App\Configuration\Flash(
      *     statusCode=Response::HTTP_SEE_OTHER,
-     *     message=@App\Annotation\Trans(id="user.activation.notification.303")
+     *     message=@App\Configuration\Trans(id="user.activation.notification.303")
      * )
      * 
-     * @App\Annotation\Flash(
+     * @App\Configuration\Flash(
      *     statusCode=Response::HTTP_FORBIDDEN,
-     *     message=@App\Annotation\Trans(id="user.activation.notification.403")
+     *     message=@App\Configuration\Trans(id="user.activation.notification.403")
      * )
      * 
-     * @App\Annotation\Flash(
+     * @App\Configuration\Flash(
      *     statusCode=Response::HTTP_NOT_FOUND,
-     *     message=@App\Annotation\Trans(id="user.activation.notification.404")
+     *     message=@App\Configuration\Trans(id="user.activation.notification.404")
      * )
      */
     public function patchUserByActivationEmailForm(User $user) : ControllerResult
@@ -236,9 +236,9 @@ class UserController extends AbstractEntityController
      *     }
      * )
      *
-     * @App\Annotation\Response(
+     * @App\Configuration\Response(
      *     statusCode=Response::HTTP_OK,
-     *     content=@App\Annotation\View(
+     *     content=@App\Configuration\View(
      *         format="text/html",
      *         builder=TwigViewBuilder::class,
      *         options={
@@ -268,7 +268,7 @@ class UserController extends AbstractEntityController
      *     class=User::class,
      *     converter="app.entity_param_converter",
      *     options={
-     *         "id"=@App\Annotation\DatumPropertyReference(name="username"),
+     *         "id"=@App\Configuration\ControllerResultDataProperty(name="username"),
      *         "form_type"=UserPasswordResetRequestType::class,
      *         "form_options"={
      *             "data_class"=UserPasswordResetRequestData::class,
@@ -279,17 +279,17 @@ class UserController extends AbstractEntityController
      *     }
      * )
      *
-     * @App\Annotation\Response(
+     * @App\Configuration\Response(
      *     statusCode=Response::HTTP_SEE_OTHER,
-     *     content=@App\Annotation\View(format="text/html"),
+     *     content=@App\Configuration\View(format="text/html"),
      *     headers={
-     *         "location"=@App\Annotation\Route(name="get_home")
+     *         "location"=@App\Configuration\Route(name="get_home")
      *     }
      * )
      * 
-     * @App\Annotation\Response(
+     * @App\Configuration\Response(
      *     statusCode=Response::HTTP_BAD_REQUEST,
-     *     content=@App\Annotation\View(
+     *     content=@App\Configuration\View(
      *         format="text/html",
      *         builder=TwigViewBuilder::class,
      *         options={
@@ -298,9 +298,9 @@ class UserController extends AbstractEntityController
      *     )
      * )
      * 
-     * @App\Annotation\Flash(
+     * @App\Configuration\Flash(
      *     statusCode=Response::HTTP_SEE_OTHER,
-     *     message=@App\Annotation\Trans(id="user.password_reset_request.notification.303")
+     *     message=@App\Configuration\Trans(id="user.password_reset_request.notification.303")
      * )
      */
     public function proceedByUserPasswordResetRequestForm(User $user) : ControllerResult
@@ -332,9 +332,9 @@ class UserController extends AbstractEntityController
      *     }
      * )
      * 
-     * @App\Annotation\Response(
+     * @App\Configuration\Response(
      *     statusCode=Response::HTTP_OK,
-     *     content=@App\Annotation\View(
+     *     content=@App\Configuration\View(
      *         format="text/html",
      *         builder=TwigViewBuilder::class,
      *         options={
@@ -343,9 +343,9 @@ class UserController extends AbstractEntityController
      *     )
      * )
      * 
-     * @App\Annotation\Response(
+     * @App\Configuration\Response(
      *     statusCode=Response::HTTP_NOT_FOUND,
-     *     content=@App\Annotation\View(
+     *     content=@App\Configuration\View(
      *         format="text/html",
      *         builder=TwigViewBuilder::class,
      *         options={
@@ -354,9 +354,9 @@ class UserController extends AbstractEntityController
      *     )
      * )
      * 
-     * @App\Annotation\Flash(
+     * @App\Configuration\Flash(
      *     statusCode=Response::HTTP_NOT_FOUND,
-     *     message=@App\Annotation\Trans(id="user.password_reset.notification.404")
+     *     message=@App\Configuration\Trans(id="user.password_reset.notification.404")
      * )
      */
     public function getUserPasswordResetEmptyForm(FormInterface $form) : ControllerResult
@@ -390,17 +390,17 @@ class UserController extends AbstractEntityController
      *     }
      * )
      * 
-     * @App\Annotation\Response(
+     * @App\Configuration\Response(
      *     statusCode=Response::HTTP_SEE_OTHER,
-     *     content=@App\Annotation\View(format="text/html"),
+     *     content=@App\Configuration\View(format="text/html"),
      *     headers={
-     *         "location"=@App\Annotation\Route(name="get_home")
+     *         "location"=@App\Configuration\Route(name="get_home")
      *     }
      * )
      * 
-     * @App\Annotation\Response(
+     * @App\Configuration\Response(
      *     statusCode=Response::HTTP_BAD_REQUEST,
-     *     content=@App\Annotation\View(
+     *     content=@App\Configuration\View(
      *         format="text/html",
      *         builder=TwigViewBuilder::class,
      *         options={
@@ -409,9 +409,9 @@ class UserController extends AbstractEntityController
      *     )
      * )
      * 
-     * @App\Annotation\Response(
+     * @App\Configuration\Response(
      *     statusCode=Response::HTTP_FORBIDDEN,
-     *     content=@App\Annotation\View(
+     *     content=@App\Configuration\View(
      *         format="text/html",
      *         builder=TwigViewBuilder::class,
      *         options={
@@ -420,9 +420,9 @@ class UserController extends AbstractEntityController
      *     )
      * )
      * 
-     * @App\Annotation\Response(
+     * @App\Configuration\Response(
      *     statusCode=Response::HTTP_NOT_FOUND,
-     *     content=@App\Annotation\View(
+     *     content=@App\Configuration\View(
      *         format="text/html",
      *         builder=TwigViewBuilder::class,
      *         options={
@@ -431,19 +431,19 @@ class UserController extends AbstractEntityController
      *     )
      * )
      * 
-     * @App\Annotation\Flash(
+     * @App\Configuration\Flash(
      *     statusCode=Response::HTTP_SEE_OTHER,
-     *     message=@App\Annotation\Trans(id="user.password_reset.notification.303")
+     *     message=@App\Configuration\Trans(id="user.password_reset.notification.303")
      * )
      * 
-     * @App\Annotation\Flash(
+     * @App\Configuration\Flash(
      *     statusCode=Response::HTTP_FORBIDDEN,
-     *     message=@App\Annotation\Trans(id="user.password_reset.notification.403")
+     *     message=@App\Configuration\Trans(id="user.password_reset.notification.403")
      * )
      * 
-     * @App\Annotation\Flash(
+     * @App\Configuration\Flash(
      *     statusCode=Response::HTTP_NOT_FOUND,
-     *     message=@App\Annotation\Trans(id="user.password_reset.notification.404")
+     *     message=@App\Configuration\Trans(id="user.password_reset.notification.404")
      * )
      */
     public function patchUserByPasswordResetForm(User $user) : ControllerResult
@@ -477,9 +477,9 @@ class UserController extends AbstractEntityController
      *     }
      * )
      * 
-     * @App\Annotation\Response(
+     * @App\Configuration\Response(
      *     statusCode=Response::HTTP_OK,
-     *     content=@App\Annotation\View(
+     *     content=@App\Configuration\View(
      *         format="text/html",
      *         builder=TwigViewBuilder::class,
      *         options={

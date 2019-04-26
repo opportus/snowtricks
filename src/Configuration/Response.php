@@ -1,14 +1,14 @@
 <?php
 
-namespace App\Annotation;
+namespace App\Configuration;
 
-use Doctrine\Annotations\AnnotationException;
+use App\Exception\ConfigurationException;
 
 /**
- * The response annotation.
+ * The response.
  *
  * @version 0.0.1
- * @package App\Annotation
+ * @package App\Configuration
  * @author  Clément Cazaud <opportus@gmail.com>
  * @license https://github.com/opportus/snowtricks/blob/master/LICENSE.md MIT
  * 
@@ -16,20 +16,22 @@ use Doctrine\Annotations\AnnotationException;
  * @Target("METHOD")
  * @Attributes({
  *     @Attribute("statusCode", type="integer", required=true),
- *     @Attribute("content", type="App\Annotation\View", required=true),
+ *     @Attribute("content", type="App\Configuration\View", required=true),
  *     @Attribute("headers", type="array"),
  *     @Attribute("options", type="array")
  * })
  */
-class Response extends AbstractAnnotation
+class Response implements AnnotationInterface
 {
+    use AnnotationTrait;
+
     /**
      * @var int $statusCode
      */
     private $statusCode;
 
     /**
-     * @var App\Annotation\View $content
+     * @var App\Configuration\View $content
      */
     private $content;
 
@@ -44,9 +46,10 @@ class Response extends AbstractAnnotation
     private $options;
 
     /**
-     * Constructs the response annotation.
+     * Constructs the response.
      * 
      * @param array $values
+     * @throws App\Exception\ConfigurationException
      */
     public function __construct(array $values)
     {
@@ -56,12 +59,11 @@ class Response extends AbstractAnnotation
         $this->options = $values['options'] ?? [];
 
         foreach ($this->headers as $headerName => $headerValue) {
-            if (!\is_string($headerValue) && !(\is_object($headerValue) && ($headerValue instanceof AbstractDatumReference || $headerValue instanceof Route))) {
-                throw AnnotationException::typeError(\sprintf(
-                    'Header "%s" of annotation @%s must have as value either a string or an annotation of type %s or %s.',
-                    (string)$headerName,
-                    self::class,
-                    AbstractDatumReference::class,
+            if (!\is_string($headerValue) && !(\is_object($headerValue) && ($headerValue instanceof ControllerResultDataAccessorInterface || $headerValue instanceof Route))) {
+                throw new ConfigurationException(\sprintf(
+                    'Response header "%s" must have as value either a string or an object of type "%s" or "%s".',
+                    $headerName,
+                    ControllerResultDataAccessorInterface::class,
                     Route::class
                 ));
             }
@@ -81,7 +83,7 @@ class Response extends AbstractAnnotation
     /**
      * Gets the content.
      * 
-     * @return null|App\Annotation\View
+     * @return null|App\Configuration\View
      */
     public function getContent(): ?View
     {

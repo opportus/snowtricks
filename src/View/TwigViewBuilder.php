@@ -2,7 +2,7 @@
 
 namespace App\View;
 
-use App\Annotation\View as ViewAnnotation;
+use App\Configuration\View as ViewConfiguration;
 use Twig_Environment;
 
 /**
@@ -33,20 +33,20 @@ class TwigViewBuilder implements ViewBuilderInterface
     /**
      * {@inheritdoc}
      */
-    public function build(ViewAnnotation $viewAnnotation, $data = null): string
+    public function build(ViewConfiguration $viewConfiguration, $data = null): string
     {
-        $template = $viewAnnotation->getOptions()['template'] ?? null;
+        $template = $viewConfiguration->getOptions()['template'] ?? null;
         $context = null === $data ? [] : ['data' => $data];
 
         if (null !== $template) {
             $view = $this->twig->render($template, $context);
-        } elseif ('application/json' === $viewAnnotation->getFormat()) {
+        } elseif ('application/json' === $viewConfiguration->getFormat()) {
             $view = $context;
         } else {
             $view = '';
         }
 
-        if ('application/json' === $viewAnnotation->getFormat()) {
+        if ('application/json' === $viewConfiguration->getFormat()) {
             $view = \json_encode($view);
         }
 
@@ -56,9 +56,9 @@ class TwigViewBuilder implements ViewBuilderInterface
     /**
      * {@inheritdoc}
      */
-    public function supports(ViewAnnotation $viewAnnotation): bool
+    public function supports(ViewConfiguration $viewConfiguration): bool
     {
-        $viewFormat = $viewAnnotation->getFormat();
+        $viewFormat = $viewConfiguration->getFormat();
 
         return \in_array($viewFormat, ['text/html', 'application/json']);
     }

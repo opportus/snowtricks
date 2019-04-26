@@ -1,14 +1,14 @@
 <?php
 
-namespace App\Annotation;
+namespace App\Configuration;
 
-use Doctrine\Annotations\AnnotationException;
+use App\Exception\ConfigurationException;
 
 /**
- * The route annotation.
+ * The route.
  *
  * @version 0.0.1
- * @package App\Annotation
+ * @package App\Configuration
  * @author  Clément Cazaud <opportus@gmail.com>
  * @license https://github.com/opportus/snowtricks/blob/master/LICENSE.md MIT
  * 
@@ -19,8 +19,10 @@ use Doctrine\Annotations\AnnotationException;
  *     @Attribute("parameters", type="array")
  * })
  */
-class Route extends AbstractAnnotation
+class Route implements AnnotationInterface
 {
+    use AnnotationTrait;
+
     /**
      * @var string $name
      */
@@ -32,9 +34,10 @@ class Route extends AbstractAnnotation
     private $parameters;
 
     /**
-     * Constructs the route annotation.
+     * Constructs the route.
      * 
      * @param array $values
+     * @throws App\Exception\ConfigurationException
      */
     public function __construct(array $values)
     {
@@ -42,12 +45,11 @@ class Route extends AbstractAnnotation
         $this->parameters = $values['parameters'] ?? [];
 
         foreach ($this->parameters as $parameterKey => $parameterValue) {
-            if (!\is_string($parameterValue) && !(\is_object($parameterValue) && $parameterValue instanceof AbstractDatumReference)) {
-                throw AnnotationException::typeError(\sprintf(
-                    'Parameter "%s" of annotation @%s must have as value either a string or an annotation of type %s.',
-                    (string)$parameterKey,
-                    self::class,
-                    AbstractDatumReference::class
+            if (!\is_string($parameterValue) && !(\is_object($parameterValue) && $parameterValue instanceof ControllerResultDataAccessorInterface)) {
+                throw new ConfigurationException(\sprintf(
+                    'Route parameter "%s" must have as value either a string or an object of type "%s".',
+                    $parameterKey,
+                    ControllerResultDataAccessorInterface::class
                 ));
             }
         }

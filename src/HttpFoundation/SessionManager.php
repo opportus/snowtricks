@@ -3,8 +3,8 @@
 namespace App\HttpFoundation;
 
 use App\HttpKernel\ControllerResultInterface;
-use App\Annotation\Flash as FlashAnnotation;
-use App\Annotation\DatumFetcherInterface;
+use App\Configuration\Flash as FlashConfiguration;
+use App\Configuration\ControllerResultDataFetcherInterface;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Translation\TranslatorInterface;
 
@@ -24,9 +24,10 @@ class SessionManager implements SessionManagerInterface
     private $session;
 
     /**
-     * @var App\Annotation\DatumFetcherInterface $datumFetcher
+     * @var App\Configuration\ControllerResultDataFetcherInterface $controllerResultDataFetcher
      */
-    private $datumFetcher;
+    private $controllerResultDataFetcher;
+
 
     /**
      * @var Symfony\Component\Translations\TranslatorItnerface $translator
@@ -37,33 +38,33 @@ class SessionManager implements SessionManagerInterface
      * Constructs the session manager.
      *
      * @param Symfony\Component\HttpFoundation\Session\SessionInterface $session
-     * @param App\Annotation\DatumFetcherInterface $datumFetcher
+     * @param App\Configuration\ControllerResultDataFetcherInterface $controllerResultDataFetcher
      * @param Symfony\Component\HttpFoundation\Translation\TranslatorInterface $translator
      */
-    public function __construct(SessionInterface $session, DatumFetcherInterface $datumFetcher, TranslatorInterface $translator)
+    public function __construct(SessionInterface $session, ControllerResultDataFetcherInterface $controllerResultDataFetcher, TranslatorInterface $translator)
     {
         $this->session = $session;
-        $this->datumFetcher = $datumFetcher;
+        $this->controllerResultDataFetcher = $controllerResultDataFetcher;
         $this->translator = $translator;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function generateFlash(FlashAnnotation $flashAnnotation, ControllerResultInterface $controllerResult)
+    public function generateFlash(FlashConfiguration $flashConfiguration, ControllerResultInterface $controllerResult)
     {
-        $transId = $flashAnnotation->getMessage()->getId();
-        $transParameters = $flashAnnotation->getMessage()->getParameters();
-        $transDomain = $flashAnnotation->getMessage()->getDomain();
-        $transLocale = $flashAnnotation->getMessage()->getLocale();
+        $transId = $flashConfiguration->getMessage()->getId();
+        $transParameters = $flashConfiguration->getMessage()->getParameters();
+        $transDomain = $flashConfiguration->getMessage()->getDomain();
+        $transLocale = $flashConfiguration->getMessage()->getLocale();
 
         $data = $controllerResult->getData();
-        foreach ($transParameters as $key => $reference) {
-            $transParameters[$key] = $this->datumFetcher->fetch($reference, $data);
+        foreach ($transParameters as $key => $accessor) {
+            $transParameters[$key] = $this->controllerResultDataFetcher->fetch($accessor, $data);
         }
 
-        $statusCode = $flashAnnotation->getStatusCode();
         $message = $this->translator->trans($transId, $transParameters, $transDomain, $transLocale);
+        $statusCode = $flashConfiguration->getStatusCode();
 
         $this->session->getFlashBag()->add($statusCode, $message);
     }

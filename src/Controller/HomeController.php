@@ -25,9 +25,9 @@ class HomeController
      *
      * @Route("/", name="get_home", methods={"GET"})
      * 
-     * @App\Annotation\Response(
+     * @App\Configuration\Response(
      *     statusCode=Response::HTTP_OK,
-     *     content=@App\Annotation\View(
+     *     content=@App\Configuration\View(
      *         format="text/html",
      *         builder=TwigViewBuilder::class,
      *         options={

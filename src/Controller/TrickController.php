@@ -50,9 +50,9 @@ class TrickController extends AbstractEntityController
      *     }
      * )
      * 
-     * @App\Annotation\Response(
+     * @App\Configuration\Response(
      *     statusCode=Response::HTTP_OK,
-     *     content=@App\Annotation\View(
+     *     content=@App\Configuration\View(
      *         format="text/html",
      *         builder=TwigViewBuilder::class,
      *         options={
@@ -61,9 +61,9 @@ class TrickController extends AbstractEntityController
      *     )
      * )
      * 
-     * @App\Annotation\Response(
+     * @App\Configuration\Response(
      *     statusCode=Response::HTTP_NOT_FOUND,
-     *     content=@App\Annotation\View(
+     *     content=@App\Configuration\View(
      *         format="text/html",
      *         builder=TwigViewBuilder::class,
      *         options={
@@ -103,9 +103,9 @@ class TrickController extends AbstractEntityController
      *     }
      * )
      * 
-     * @App\Annotation\Response(
+     * @App\Configuration\Response(
      *     statusCode=Response::HTTP_OK,
-     *     content=@App\Annotation\View(
+     *     content=@App\Configuration\View(
      *         format="text/html",
      *         builder=TwigViewBuilder::class,
      *         options={
@@ -140,9 +140,9 @@ class TrickController extends AbstractEntityController
      *     }
      * )
      * 
-     * @App\Annotation\Response(
+     * @App\Configuration\Response(
      *     statusCode=Response::HTTP_OK,
-     *     content=@App\Annotation\View(
+     *     content=@App\Configuration\View(
      *         format="application/json",
      *         builder=TwigViewBuilder::class,
      *         options={
@@ -151,9 +151,9 @@ class TrickController extends AbstractEntityController
      *     )
      * )
      * 
-     * @App\Annotation\Response(
+     * @App\Configuration\Response(
      *     statusCode=Response::HTTP_NOT_FOUND,
-     *     content=@App\Annotation\View(format="application/json")
+     *     content=@App\Configuration\View(format="application/json")
      * )
      */
     public function getTrickCollection(ArrayCollection $trickCollection): ControllerResult
@@ -181,9 +181,9 @@ class TrickController extends AbstractEntityController
      *     }
      * )
      * 
-     * @App\Annotation\Response(
+     * @App\Configuration\Response(
      *     statusCode=Response::HTTP_OK,
-     *     content=@App\Annotation\View(
+     *     content=@App\Configuration\View(
      *         format="text/html",
      *         builder=TwigViewBuilder::class,
      *         options={
@@ -192,9 +192,9 @@ class TrickController extends AbstractEntityController
      *     )
      * )
      * 
-     * @App\Annotation\Response(
+     * @App\Configuration\Response(
      *     statusCode=Response::HTTP_NOT_FOUND,
-     *     content=@App\Annotation\View(
+     *     content=@App\Configuration\View(
      *         format="text/html",
      *         builder=TwigViewBuilder::class,
      *         options={
@@ -235,14 +235,14 @@ class TrickController extends AbstractEntityController
      *     }
      * )
      * 
-     * @App\Annotation\Response(
+     * @App\Configuration\Response(
      *     statusCode=Response::HTTP_OK,
-     *     content=@App\Annotation\View(format="application/json")
+     *     content=@App\Configuration\View(format="application/json")
      * )
      * 
-     * @App\Annotation\Response(
+     * @App\Configuration\Response(
      *     statusCode=Response::HTTP_BAD_REQUEST,
-     *     content=@App\Annotation\View(
+     *     content=@App\Configuration\View(
      *         format="application/json",
      *         builder=TwigViewBuilder::class,
      *         options={
@@ -251,9 +251,9 @@ class TrickController extends AbstractEntityController
      *     )
      * )
      * 
-     * @App\Annotation\Flash(
+     * @App\Configuration\Flash(
      *     statusCode=Response::HTTP_OK,
-     *     message=@App\Annotation\Trans(id="trick.edit.success")
+     *     message=@App\Configuration\Trans(id="trick.edit.success")
      * )
      */
     public function postTrickByEditForm(Trick $trick): ControllerResult
@@ -292,15 +292,15 @@ class TrickController extends AbstractEntityController
      *     }
      * )
      * 
-     * @App\Annotation\Response(
+     * @App\Configuration\Response(
      *     statusCode=Response::HTTP_OK,
-     *     content=@App\Annotation\View(format="application/json")
+     *     content=@App\Configuration\View(format="application/json")
      * )
      * 
      * 
-     * @App\Annotation\Response(
+     * @App\Configuration\Response(
      *     statusCode=Response::HTTP_BAD_REQUEST,
-     *     content=@App\Annotation\View(
+     *     content=@App\Configuration\View(
      *         format="application/json",
      *         builder=TwigViewBuilder::class,
      *         options={
@@ -309,9 +309,9 @@ class TrickController extends AbstractEntityController
      *     )
      * )
      * 
-     * @App\Annotation\Flash(
+     * @App\Configuration\Flash(
      *     statusCode=Response::HTTP_OK,
-     *     message=@App\Annotation\Trans(id="trick.edit.success")
+     *     message=@App\Configuration\Trans(id="trick.edit.success")
      * )
      */
     public function putTrickByEditForm(Trick $trick): ControllerResult
@@ -345,17 +345,17 @@ class TrickController extends AbstractEntityController
      *     }
      * )
      * 
-     * @App\Annotation\Response(
+     * @App\Configuration\Response(
      *     statusCode=Response::HTTP_SEE_OTHER,
-     *     content=@App\Annotation\View(format="text/html"),
+     *     content=@App\Configuration\View(format="text/html"),
      *     headers={
-     *         "location"=@App\Annotation\Route(name="get_home")
+     *         "location"=@App\Configuration\Route(name="get_home")
      *     }
      * )
      * 
-     * @App\Annotation\Response(
+     * @App\Configuration\Response(
      *     statusCode=Response::HTTP_NOT_FOUND,
-     *     content=@App\Annotation\View(
+     *     content=@App\Configuration\View(
      *         format="text/html",
      *         builder=TwigViewBuilder::class,
      *         options={
@@ -364,9 +364,9 @@ class TrickController extends AbstractEntityController
      *     )
      * )
      * 
-     * @App\Annotation\Response(
+     * @App\Configuration\Response(
      *     statusCode=Response::HTTP_FORBIDDEN,
-     *     content=@App\Annotation\View(
+     *     content=@App\Configuration\View(
      *         format="text/html",
      *         builder=TwigViewBuilder::class,
      *         options={

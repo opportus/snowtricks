@@ -1,19 +1,19 @@
 <?php
 
-namespace App\Annotation;
+namespace App\Configuration;
 
 /**
- * The abstract annotation.
+ * The annotation trait.
  *
  * @version 0.0.1
- * @package App\Annotation
+ * @package App\Configuration
  * @author  Clément Cazaud <opportus@gmail.com>
  * @license https://github.com/opportus/snowtricks/blob/master/LICENSE.md MIT
  */
-abstract class AbstractAnnotation
+trait AnnotationTrait
 {
     /**
-     * Gets the alias of the annotation.
+     * Gets the alias.
      * 
      * @return string
      */

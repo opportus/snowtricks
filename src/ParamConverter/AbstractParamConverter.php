@@ -3,7 +3,7 @@
 namespace App\ParamConverter;
 
 use App\HttpKernel\ControllerException;
-use App\Annotation\DatumFetcherInterface;
+use App\Configuration\ControllerResultDataFetcherInterface;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -50,9 +50,10 @@ abstract class AbstractParamConverter
     private $objectMapper;
 
     /**
-     * @var App\Annotation\DatumFetcherInterface $datumFetcher
+     * @var App\Configuration\ControllerResultDataFetcherInterface $controllerResultDataFetcher
      */
-    private $datumFetcher;
+    private $controllerResultDataFetcher;
+
 
     /**
      * Constructs the abstract form aware param converter.
@@ -62,7 +63,7 @@ abstract class AbstractParamConverter
      * @param Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface $authorizationChecker
      * @param Symfony\Component\Validator\Validator\ValidatorInterface $validator
      * @param Opportus\ObjectMapper\ObjectMapperInterface $objectMapper
-     * @param App\Annotation\DatumFetcherInterface $datumFetcher
+     * @param App\Configuration\ControllerResultDataFetcherInterface $controllerResultDataFetcher
      */
     public function __construct(
         EntityManagerInterface $entityManager,
@@ -70,14 +71,14 @@ abstract class AbstractParamConverter
         AuthorizationCheckerInterface $authorizationChecker,
         ValidatorInterface $validator,
         ObjectMapperInterface $objectMapper,
-        DatumFetcherInterface $datumFetcher
+        ControllerResultDataFetcherInterface $controllerResultDataFetcher
     ) {
         $this->entityManager = $entityManager;
         $this->formFactory = $formFactory;
         $this->authorizationChecker = $authorizationChecker;
         $this->validator = $validator;
         $this->objectMapper = $objectMapper;
-        $this->datumFetcher = $datumFetcher;
+        $this->controllerResultDataFetcher = $controllerResultDataFetcher;
     }
 
     /**
@@ -158,7 +159,7 @@ abstract class AbstractParamConverter
      */
     protected function getEntityFromForm(ParamConverter $config, FormInterface $form): object
     {
-        $id = $this->datumFetcher->fetch($config->getOptions()['id'], $form->getData());
+        $id = $this->controllerResultDataFetcher->fetch($config->getOptions()['id'], $form->getData());
 
         $entity = $this->entityManager->getRepository($config->getClass())
             ->{$config->getOptions()['repository_method']}($id)

@@ -1,14 +1,14 @@
 <?php
 
-namespace App\Annotation;
+namespace App\Configuration;
 
-use Doctrine\Annotations\AnnotationException;
+use App\Exception\ConfigurationException;
 
 /**
- * The trans annotation.
+ * The trans.
  *
  * @version 0.0.1
- * @package App\Annotation
+ * @package App\Configuration
  * @author  Clément Cazaud <opportus@gmail.com>
  * @license https://github.com/opportus/snowtricks/blob/master/LICENSE.md MIT
  * 
@@ -21,8 +21,10 @@ use Doctrine\Annotations\AnnotationException;
  *     @Attribute("locale", type="string"),
  * })
  */
-class Trans extends AbstractAnnotation
+class Trans implements AnnotationInterface
 {
+    use AnnotationTrait;
+
     /**
      * @var string $id
      */
@@ -44,10 +46,10 @@ class Trans extends AbstractAnnotation
     private $locale;
 
     /**
-     * Constructs the trans annotation.
+     * Constructs the trans.
      * 
      * @param array $values
-     * @throws App\Exception\InvalidAnnotationException
+     * @throws App\Exception\ConfigurationException
      */
     public function __construct(array $values)
     {
@@ -57,12 +59,11 @@ class Trans extends AbstractAnnotation
         $this->locale = $values['locale'] ?? null;
 
         foreach ($this->parameters as $parameterKey => $parameterValue) {
-            if (!\is_object($parameterValue) || !$parameterValue instanceof AbstractDatumReference) {
-                throw AnnotationException::typeError(\sprintf(
-                    'Parameter "%s" of annotation @%s must have as value an annotation of type %s.',
-                    (string)$parameterKey,
-                    self::class,
-                    AbstractDatumReference::class
+            if (!\is_object($parameterValue) || !$parameterValue instanceof ControllerResultDataAccessorInterface) {
+                throw new ConfigurationException(\sprintf(
+                    'Trans parameter "%s" must have as value an object of type "%s".',
+                    $parameterKey,
+                    ControllerResultDataAccessorInterface::class
                 ));
             }
         }

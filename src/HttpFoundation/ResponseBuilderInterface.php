@@ -22,7 +22,7 @@ interface ResponseBuilderInterface
      * @param  Symfony\Component\HttpFoundation\Request $request
      * @param  App\HttpKernel\ControllerResultInterface $controllerResult
      * @return Symfony\Component\HttpFoundation\Response
-     * @throws App\Exception\ResponseBuildingException
+     * @throws App\Exception\ConfigurationException
      */
     public function build(Request $request, ControllerResultInterface $controllerResult): Response;
 }

@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Annotation;
+namespace App\Configuration;
 
 /**
- * The datum key reference annotation.
+ * The controller result data key.
  *
  * @version 0.0.1
- * @package App\Annotation
+ * @package App\Configuration
  * @author  Clément Cazaud <opportus@gmail.com>
  * @license https://github.com/opportus/snowtricks/blob/master/LICENSE.md MIT
  *
@@ -16,6 +16,8 @@ namespace App\Annotation;
  *     @Attribute("name", type="string", required=true)
  * })
  */
-class DatumKeyReference extends AbstractDatumReference
+class ControllerResultDataKey implements ControllerResultDataAccessorInterface, AnnotationInterface
 {
+    use ControllerResultDataAccessorTrait;
+    use AnnotationTrait;
 }

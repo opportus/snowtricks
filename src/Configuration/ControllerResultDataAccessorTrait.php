@@ -1,16 +1,16 @@
 <?php
 
-namespace App\Annotation;
+namespace App\Configuration;
 
 /**
- * The abstract datum reference annotation.
+ * The controller result data accessor trait.
  *
  * @version 0.0.1
- * @package App\Annotation
+ * @package App\Configuration
  * @author  Clément Cazaud <opportus@gmail.com>
  * @license https://github.com/opportus/snowtricks/blob/master/LICENSE.md MIT
  */
-abstract class AbstractDatumReference extends AbstractAnnotation
+trait ControllerResultDataAccessorTrait
 {
     /**
      * @var string $name
@@ -18,7 +18,7 @@ abstract class AbstractDatumReference extends AbstractAnnotation
     private $name;
 
     /**
-     * Constructs the abstract datum reference.
+     * Constructs the controller result data accessor.
      * 
      * @param array $values
      */
@@ -35,15 +35,5 @@ abstract class AbstractDatumReference extends AbstractAnnotation
     public function getName(): string
     {
         return $this->name;
-    }
-
-    /**
-     * Returns the name.
-     * 
-     * @return string
-     */
-    public function __toString(): string
-    {
-        return $this->getName();
     }
 }

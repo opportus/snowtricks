@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Annotation;
+namespace App\Configuration;
 
 /**
- * The view annotation.
+ * The view.
  *
  * @version 0.0.1
- * @package App\Annotation
+ * @package App\Configuration
  * @author  Clément Cazaud <opportus@gmail.com>
  * @license https://github.com/opportus/snowtricks/blob/master/LICENSE.md MIT
  * 
@@ -18,8 +18,10 @@ namespace App\Annotation;
  *     @Attribute("options", type="array")
  * })
  */
-class View extends AbstractAnnotation
+class View implements AnnotationInterface
 {
+    use AnnotationTrait;
+    
     /**
      * @var string $format
      */
@@ -36,7 +38,7 @@ class View extends AbstractAnnotation
     private $options;
 
     /**
-     * Constructs the view annotation.
+     * Constructs the view.
      * 
      * @param array $values
      */

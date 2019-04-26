@@ -2,7 +2,7 @@
 
 namespace App\View;
 
-use App\Annotation\View as ViewAnnotation;
+use App\Configuration\View as ViewConfiguration;
 
 /**
  * The view builder interface.
@@ -17,17 +17,17 @@ interface ViewBuilderInterface
     /**
      * Builds the view.
      * 
-     * @param App\Annotation\View $viewAnnotation
+     * @param App\Configuration\View $viewConfiguration
      * @param mixed $data
      * @return string
      * @throws App\Exception\ViewBuildingException
      */
-    public function build(ViewAnnotation $viewAnnotation, $data = null): string;
+    public function build(ViewConfiguration $viewConfiguration, $data = null): string;
 
     /**
-     * Checks whether the given view annotation is supported.
+     * Checks whether the given view configuration is supported.
      * 
      * @return bool
      */
-    public function supports(ViewAnnotation $viewAnnotation): bool;
+    public function supports(ViewConfiguration $viewConfiguration): bool;
 }
