@@ -1,7 +1,7 @@
 [![SymfonyInsight](https://insight.symfony.com/projects/648e763e-751a-413e-9327-89bb416f83a3/big.svg)](https://insight.symfony.com/projects/648e763e-751a-413e-9327-89bb416f83a3)  
 # Snowtricks
 
-Shool project #6 - A Symfony 4 application...
+Symfony 4 demo application.
 
 ## Attached Resources
 
