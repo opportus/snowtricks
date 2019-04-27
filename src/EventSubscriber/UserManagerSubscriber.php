@@ -2,18 +2,17 @@
 
 namespace App\EventSubscriber;
 
-use App\Entity\User;
+use App\Entity\UserToken;
 use App\Mailer\MailerInterface;
-use App\HttpKernel\ControllerResult;
+use App\Controller\UserController;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\HttpKernel\Event\GetResponseForControllerResultEvent;
-use Symfony\Component\Form\FormEvents;
-use Symfony\Component\Form\FormEvent;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Doctrine\ORM\EntityManagerInterface;
 
 /**
- * The user manager subscriber...
+ * The user manager subscriber.
  *
  * @version 0.0.1
  * @package App\EventSubscriber
@@ -41,7 +40,7 @@ class UserManagerSubscriber implements EventSubscriberInterface
     public function __construct(EntityManagerInterface $entityManager, MailerInterface $mailer)
     {
         $this->entityManager = $entityManager;
-        $this->mailer        = $mailer;
+        $this->mailer = $mailer;
     }
 
     /**
@@ -50,68 +49,109 @@ class UserManagerSubscriber implements EventSubscriberInterface
     public static function getSubscribedEvents()
     {
         return array(
-            KernelEvents::VIEW => array(
-                array('proceedUserSignUp', 90),
-                array('proceedUserPasswordReset', 90),
-            ),
+            KernelEvents::VIEW => [
+                ['onUserSignUp', 100],
+                ['onUserActivation', 100],
+                ['onUserPasswordResetRequest', 100],
+                ['onUserPasswordReset', 100],
+            ],
         );
     }
 
     /**
-     * Proceeds user sign up.
+     * On user sign up.
      *
-     * @param  Symfony\Component\HttpKernel\Event\GetResponseForControllerResultEvent $event
-     * @throws \Swift_Exception
+     * @param Symfony\Component\HttpKernel\Event\GetResponseForControllerResultEvent $event
      */
-    public function proceedUserSignUp(GetResponseForControllerResultEvent $event)
+    public function onUserSignUp(GetResponseForControllerResultEvent $event)
     {
-        if ($event->getRequest()->attributes->get('_controller') !== 'App\Controller\UserController::postUserBySignUpForm' ||
-            $event->getControllerResult()->getStatusCode() !== 201
+        if ($event->getRequest()->attributes->get('_controller') !== UserController::class.'::postUserBySignUpForm' ||
+            $event->getControllerResult()->getStatusCode() !== Response::HTTP_SEE_OTHER
         ) {
             return;
         }
 
-        $user = $event->getControllerResult()->getData()['entity'];
+        $user = $event->getControllerResult()->getData();
 
-        $this->mailer->sendUserSignUpEmail($user);
-
-        $user->createActivationToken();
-
+        $activationToken = new UserToken($user, UserToken::ACTIVATION_TYPE);
+        $user->addToken($activationToken);
         $this->entityManager->flush();
 
         $this->mailer->sendUserActivationEmail($user);
+        $this->mailer->sendUserSignUpEmail($user);
     }
 
     /**
-     * Proceeds user password reset.
-     *
-     * @param  Symfony\Component\HttpKernel\Event\GetResponseForControllerResultEvent $event
-     * @throws \Swift_Exception
+     * On user activation.
+     * 
+     * @param Symfony\Component\HttpKernel\Event\GetResponseForControllerResultEvent $event
      */
-    public function proceedUserPasswordReset(GetResponseForControllerResultEvent $event)
+    public function onUserActivation(GetResponseForControllerResultEvent $event)
     {
-        if ($event->getRequest()->attributes->get('_controller') !== 'App\Controller\UserController::proceedByUserPasswordResetRequestForm' ||
-            $event->getControllerResult()->getStatusCode() !== 202
+        if ($event->getRequest()->attributes->get('_controller') !== UserController::class.'::patchUserByActivationEmailForm' ||
+            ($event->getControllerResult()->getStatusCode() !== Response::HTTP_SEE_OTHER &&
+            $event->getControllerResult()->getStatusCode() !== Response::HTTP_FORBIDDEN)
         ) {
             return;
         }
 
-        $form = $event->getControllerResult()->getData()['form'];
-        $user = $this->entityManager->getRepository(User::class)->findOneByUsername($form->getData()->username);
+        $user = $event->getControllerResult()->getData();
+        $activationToken = $user->getLastActivationToken();
 
-        $user->createPasswordResetToken();
+        if (null === $activationToken) {
+            return;
+        }
+
+        $user->removeToken($activationToken);
 
         $this->entityManager->flush();
+    }
 
-        $event->setControllerResult(
-            new ControllerResult(
-                204,
-                array(
-                    'entity' => $user,
-                )
-            )
-        );
+    /**
+     * On user password reset request.
+     *
+     * @param Symfony\Component\HttpKernel\Event\GetResponseForControllerResultEvent $event
+     */
+    public function onUserPasswordResetRequest(GetResponseForControllerResultEvent $event)
+    {
+        if ($event->getRequest()->attributes->get('_controller') !== UserController::class.'::proceedByUserPasswordResetRequestForm' ||
+            $event->getControllerResult()->getStatusCode() !== Response::HTTP_SEE_OTHER
+        ) {
+            return;
+        }
+
+        $user = $event->getControllerResult()->getData();
+
+        $passwordResetToken = new UserToken($user, UserToken::PASSWORD_RESET_TYPE);
+        $user->addToken($passwordResetToken);
+        $this->entityManager->flush();
 
         $this->mailer->sendUserPasswordResetEmail($user);
+    }
+
+    /**
+     * On user password reset.
+     *
+     * @param Symfony\Component\HttpKernel\Event\GetResponseForControllerResultEvent $event
+     */
+    public function onUserPasswordReset(GetResponseForControllerResultEvent $event)
+    {
+        if ($event->getRequest()->attributes->get('_controller') !== UserController::class.'::patchUserByPasswordResetForm' ||
+            ($event->getControllerResult()->getStatusCode() !== Response::HTTP_SEE_OTHER &&
+            $event->getControllerResult()->getStatusCode() !== Response::HTTP_FORBIDDEN)
+        ) {
+            return;
+        }
+
+        $user = $event->getControllerResult()->getData();
+        $passwordResetToken = $user->getLastPasswordResetToken();
+
+        if (null === $passwordResetToken) {
+            return;
+        }
+
+        $user->removeToken($passwordResetToken);
+
+        $this->entityManager->flush();
     }
 }

@@ -2,17 +2,15 @@
 
 namespace App\Mailer;
 
-use App\Entity\UserInterface;
-use App\Validator\ValidatorInterface;
+use App\Entity\User;
 use Symfony\Component\Translation\TranslatorInterface;
-use Symfony\Component\Routing\RouterInterface;
 use Psr\Log\LoggerInterface;
 use Swift_Mailer;
 use Swift_Message;
 use Twig_Environment;
 
 /**
- * The mailer...
+ * The mailer.
  *
  * @version 0.0.1
  * @package App\Mailer
@@ -21,11 +19,6 @@ use Twig_Environment;
  */
 class Mailer implements MailerInterface
 {
-    /**
-     * @var array $parameters
-     */
-    private $parameters;
-
     /**
      * @var \Swift_Mailer $mailer
      */
@@ -42,65 +35,49 @@ class Mailer implements MailerInterface
     private $translator;
 
     /**
-     * @var Symfony\Component\Routing\RouterInterface $router
-     */
-    private $router;
-
-    /**
-     * @var App\Validator\ValidatorInterface $validator
-     */
-    private $validator;
-
-    /**
      * @var Psr\Log\LoggerInterface $logger
      */
     private $logger;
 
     /**
+     * @var string $from
+     */
+    private $from;
+
+    /**
      * Constructs the mailer.
      *
-     * @param array $parameters
      * @param \Swift_Mailer $mailer
      * @param \Twig_Environment $twig
      * @param Symfony\Component\Translation\TranslatorInterface $translator
-     * @param Symfony\Component\Routing\RouterInterface $router
-     * @param App\Validator\ValidatorInterface $validator
      * @param Psr\Log\LoggerInterface $logger
      */
     public function __construct(
-        array               $parameters,
         Swift_Mailer        $mailer,
         Twig_Environment    $twig,
         TranslatorInterface $translator,
-        RouterInterface     $router,
-        ValidatorInterface  $validator,
         LoggerInterface     $logger
     ) {
-        $this->parameters = $parameters;
         $this->mailer     = $mailer;
         $this->twig       = $twig;
         $this->translator = $translator;
-        $this->router     = $router;
-        $this->validator  = $validator;
         $this->logger     = $logger;
+
+        $this->from = 'snowtricks@example.com';
     }
 
     /**
      * {@inheritdoc}
      */
-    public function sendUserSignUpEmail(UserInterface $user) : MailerInterface
+    public function sendUserSignUpEmail(User $user)
     {
-        $this->validator->validateWithExceptionAndLog($user, null, array('user.sign_up.email'));
-
-        $template = $this->parameters['send_user_sign_up_email']['template'];
-        $from     = $this->parameters['send_user_sign_up_email']['from'];
-        $subject  = $this->translator->trans(
+        $subject = $this->translator->trans(
             'user.sign_up.email.subject',
             array(
                 '%username%' => $user->getUsername(),
             )
         );
-        $message  = $this->translator->trans(
+        $message = $this->translator->trans(
             'user.sign_up.email.message',
             array(
                 '%username%' => $user->getUsername(),
@@ -109,102 +86,86 @@ class Mailer implements MailerInterface
 
         $this->sendEmail(
             $user,
-            $template,
-            $from,
             $subject,
-            $message
+            $message,
+            'user/sign_up_email.html.twig'
         );
-
-        return $this;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function sendUserActivationEmail(UserInterface $user) : MailerInterface
+    public function sendUserActivationEmail(User $user)
     {
-        $template = $this->parameters['send_user_activation_email']['template'];
-        $from     = $this->parameters['send_user_activation_email']['from'];
-        $subject  = $this->translator->trans(
+        $subject = $this->translator->trans(
             'user.activation.email.subject',
             array(
                 '%username%'    => $user->getUsername(),
-                '%action_ttl%'  => $user->getActivationToken()->getTtl(),
+                '%action_ttl%'  => $user->getLastActivationToken()->getTtl(),
             )
         );
-        $message  = $this->translator->trans(
+        $message = $this->translator->trans(
             'user.activation.email.message',
             array(
                 '%username%'    => $user->getUsername(),
-                '%action_ttl%'  => $user->getActivationToken()->getTtl(),
+                '%action_ttl%'  => $user->getLastActivationToken()->getTtl(),
             )
         );
 
         $this->sendEmail(
             $user,
-            $template,
-            $from,
             $subject,
-            $message
+            $message,
+            'user/activation_email.html.twig'
         );
-
-        return $this;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function sendUserPasswordResetEmail(UserInterface $user) : MailerInterface
+    public function sendUserPasswordResetEmail(User $user)
     {
-        $template = $this->parameters['send_user_password_reset_email']['template'];
-        $from     = $this->parameters['send_user_password_reset_email']['from'];
-        $subject  = $this->translator->trans(
+        $subject = $this->translator->trans(
             'user.password_reset.email.subject',
             array(
                 '%username%'    => $user->getUsername(),
-                '%action_ttl%'  => $user->getPasswordResetToken()->getTtl(),
+                '%action_ttl%'  => $user->getLastPasswordResetToken()->getTtl(),
             )
         );
-        $message  = $this->translator->trans(
+        $message = $this->translator->trans(
             'user.password_reset.email.message',
             array(
                 '%username%'    => $user->getUsername(),
-                '%action_ttl%'  => $user->getPasswordResetToken()->getTtl(),
+                '%action_ttl%'  => $user->getLastPasswordResetToken()->getTtl(),
             )
         );
 
         $this->sendEmail(
             $user,
-            $template,
-            $from,
             $subject,
-            $message
+            $message,
+            'user/password_reset_email.html.twig'
         );
-
-        return $this;
     }
 
     /**
      * Sends an email to a user.
      *
-     * @param  App\Entity\UserInterface $user
-     * @param  string $template
-     * @param  string $from
-     * @param  string $subject
-     * @param  string $message
-     * @return App\Mailer\MailerInterface
+     * @param App\Entity\User $user
+     * @param string $subject
+     * @param string $message
+     * @param string $template
      */
     private function sendEmail(
-        UserInterface $user,
-        string        $template,
-        string        $from,
-        string        $subject,
-        string        $message
-    ) : MailerInterface {
+        User   $user,
+        string $subject,
+        string $message,
+        string $template
+    ) {
         try {
             $email = new Swift_Message();
 
-            $email->setFrom($from);
+            $email->setFrom($this->from);
             $email->setSubject($subject);
             $email->setTo($user->getEmail());
             $email->setBody($this->twig->render(
@@ -217,8 +178,6 @@ class Mailer implements MailerInterface
             ), 'text/html');
 
             $this->mailer->send($email);
-
-            return $this;
         } catch (\Exception $exception) {
             $this->logger->critical(
                 sprintf(
@@ -227,18 +186,16 @@ class Mailer implements MailerInterface
                     $user->getEmail()
                 ),
                 array(
-                    'exception' => $exception,
                     'user'      => $user,
                     'template'  => $template,
-                    'from'      => $from,
+                    'from'      => $this->from,
                     'subject'   => $subject,
                     'message'   => $message,
+                    'exception' => $exception,
                 )
             );
 
             throw $exception;
         }
-
-        return $this;
     }
 }

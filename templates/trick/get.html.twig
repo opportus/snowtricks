@@ -1,56 +1,59 @@
 {% extends 'base.html.twig' %}
+{% set entity = data %}
 {% block title %}{{ entity.title }}{% endblock title %}
-{% block description %}{{ entity.description }}{% endblock description %}
+{% block description %}{{ data.description }}{% endblock description %}
 {% block content %}
     {{ parent() }}
     <div id="{{ entity.id }}" class="trick-show container-fluid"
         style="background:url({{ asset('img/snowtrick.jpg') }});background-repeat:no-repeat;background-size:100% 100vh;min-height:100vh;">
         <div class="row">
-            <div class="trick-show-content col-md-8 offset-md-2 mt-5 bg-white" style="border:1px solid #999999">
+            <div class="trick-show-content col-md-8 offset-md-2 bg-white">
                 <div class="row mb-4">
                     {% if entity.featuredAttachment is not null %}
                         {% set src = entity.featuredAttachment.src %}
                     {% else %}
                         {% set src = asset('img/snowtrick.jpg') %}
                     {% endif %}
-                    <header class="trick-show-header col text-center justify-content-center"
-                        style="background:url({{ asset(src) }});height:50vh;padding-top:20vh;">
+                    <header class="trick-show-header col text-center justify-content-center p-0">
+                        <div class="trick-show-header-overlay"></div>
+                        <div class="embed-responsive embed-responsive-16by9 z-depth-1">
+                            <img class="trick-show-header-featured-attachment embed-responsive-item w-100"
+                                src="{{ asset(src) }}">
+                            </img>
+                        </div>
                         {% if is_granted('ROLE_USER') %}
-                            <ul class="trick-show-action-list list-inline position-absolute" style="right:30px;top:30px;z-index:1000;">
+                            <ul class="trick-show-action-list list-inline position-absolute">
                                 <li class="list-inline-item">
                                     <a href="{{ url('get_trick_edit_form', {'slug': entity.slug}) }}">
-                                        <i class="trick-show-action-list-item-edit fas fa-pencil-alt"
-                                            style="cursor:pointer;color:initial">
-                                        </i>
+                                        <i class="trick-show-action-list-item-edit fas fa-pencil-alt"></i>
                                     </a>
                                 </li>
                                 {% if is_granted('DELETE', entity) %}
                                     <li class="list-inline-item">
                                         <i class="trick-show-action-list-item-delete fas fa-trash ajax-action"
-                                            style="cursor:pointer;"
                                             data-action="deleteTrick"
                                             data-redirection="{{ url('get_home') }}"
                                             data-token="{{ csrf_token('security') }}"
-                                            data-url="{{ url('delete_trick_by_delete_form', {'slug': entity.slug}) }}">
+                                            data-url="{{ url('delete_trick', {'slug': entity.slug}) }}">
                                         </i>
                                     </li>
                                 {% endif %}
                             </ul>
                         {% endif %}
-                        <div class="trick-show-header-overlay" style="background:rgba(255,255,255,0.5);z-index:10;position:absolute;top:0;bottom:0;left:0;right:0;padding:30px;">
-                            <div style="position:relative;top:40%;">
-                                <h1 class="trick-show-title">{{ block('title') }}</h1>
-                                <div class="trick-show-description">{{ entity.description }}</div>
-                            </div>
-                        </div>
+                        <h1 class="trick-show-title">{{ block('title') }}</h1>
                     </header>
                 </div>
                 {% if entity.attachments is not empty %}
                     {% include 'trick/attachment/collection.html.twig' with {'entity': entity} %}
                 {% endif %}
                 <div class="row mt-4">
+                    <div class="trick-show-description col">
+                        {{ entity.description|nl2br }}
+                    </div>
+                </div>
+                <div class="row mt-4">
                     <div class="trick-show-body col">
-                        {{ entity.body }}
+                        {{ entity.body|nl2br }}
                     </div>
                 </div>
                 <div class="row mt-4">
@@ -60,18 +63,25 @@
                                 {{ 'trick.show.group.label'|trans() }}: {{ entity.group.title }}
                             </li>
                         {% endif %}
-                        {% for author in entity.authors %}
-                            <li id="{{ author.id }}" class="trick-show-author list-inline-item badge badge-pill badge-secondary">
-                                {{ 'trick.show.author.label'|trans() }}: {{ author.username }}
+                        <li id="{{ entity.author.id }}" class="trick-show-author list-inline-item badge badge-pill badge-secondary">
+                            {{ 'trick.show.author.label'|trans() }}: {{ entity.author.username }}
+                        </li>
+                        {% if entity.updatedAt is defined %}
+                            <li class="trick-show-updated-at list-inline-item badge badge-pill badge-secondary">
+                                {{ 'trick.show.updated_at.label'|trans() }}: {{ entity.updatedAt|date() }}
                             </li>
-                        {% endfor %}
+                        {% else %}
+                            <li class="trick-show-created-at list-inline-item badge badge-pill badge-secondary">
+                                {{ 'trick.show.created_at.label'|trans() }}: {{ entity.createdAt|date("m/d/Y") }}
+                            </li>
+                        {% endif %}
                     </ul>
                 </div>
                 <div class="row mt-4">
                     <div class="col-lg-8 offset-lg-2">
                         {% if is_granted('ROLE_USER') %}
                             <div class="row mt-4">
-                                <div class="trick-show-comment-edit col-12" style="border-bottom:1px solid #999999;border-top:1px solid #999999;">
+                                <div class="trick-show-comment-edit col-12">
                                     {{ render(controller('App\\Controller\\TrickCommentController::getTrickCommentEmptyEditForm', {}, {'attribute[thread]': entity.id, 'attribute[parent]': null})) }}
                                 </div>
                             </div>

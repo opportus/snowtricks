@@ -2,10 +2,10 @@
 
 namespace App\Repository;
 
-use App\Entity\UserInterface;
+use App\Entity\User;
 
 /**
- * The user repository interface...
+ * The user repository interface.
  *
  * @version 0.0.1
  * @package App\Repository
@@ -18,16 +18,16 @@ interface UserRepositoryInterface extends EntityRepositoryInterface
      * Finds one user by username.
      *
      * @param  string $username
-     * @return null|App\Entity\UserInterface
+     * @return null|App\Entity\User
      */
-    public function findOneByUsername(string $username) : ?UserInterface;
+    public function findOneByUsername(string $username) : ?User;
 
     /**
-     * Finds one user by email.
+     * Finds one user by username or throws exception if no result.
      *
-     * @param  string $email
-     * @return null|App\Entity\UserInterface
+     * @param  string $username
+     * @return App\Entity\User
+     * @throws Doctrine\ORM\EntityNotFoundException
      */
-    public function findOneByEmail(string $email) : ?UserInterface;
+    public function findOneByUsernameOrThrowExceptionIfNoResult(string $username) : User;
 }
-

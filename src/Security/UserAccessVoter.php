@@ -2,12 +2,13 @@
 
 namespace App\Security;
 
-use App\Entity\UserInterface;
-use App\Security\AuthorizableInterface;
+use App\Entity\Entity;
+use App\Entity\User;
+use App\Controller\UserController;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 
 /**
- * The user access voter...
+ * The user access voter.
  *
  * @version 0.0.1
  * @package App\Security
@@ -19,7 +20,7 @@ class UserAccessVoter extends EntityAccessVoter
     /**
      * {@inheritdoc}
      */
-    protected function canGet(AuthorizableInterface $subject, TokenInterface $token) : bool
+    protected function canGet(Entity $subject, TokenInterface $token) : bool
     {
         return $subject->getUsername() === $token->getUsername();
     }
@@ -27,7 +28,7 @@ class UserAccessVoter extends EntityAccessVoter
     /**
      * {@inheritdoc}
      */
-    protected function canPost(AuthorizableInterface $subject, TokenInterface $token) : bool
+    protected function canPost(Entity $subject, TokenInterface $token) : bool
     {
         return true;
     }
@@ -35,7 +36,7 @@ class UserAccessVoter extends EntityAccessVoter
     /**
      * {@inheritdoc}
      */
-    protected function canPut(AuthorizableInterface $subject, TokenInterface $token) : bool
+    protected function canPut(Entity $subject, TokenInterface $token) : bool
     {
         return $subject->getUsername() === $token->getUsername();
     }
@@ -43,26 +44,38 @@ class UserAccessVoter extends EntityAccessVoter
     /**
      * {@inheritdoc}
      */
-    protected function canPatch(AuthorizableInterface $subject, TokenInterface $token) : bool
+    protected function canPatch(Entity $subject, TokenInterface $token) : bool
     {
-        if ($this->requestStack->getCurrentRequest()->attributes->get('_controller') === 'App\Controller\UserController::patchUserByActivationEmailForm') {
-            $token = $subject->getActivationToken();
+        if ($this->requestStack->getCurrentRequest()->attributes->get('_controller') === UserController::class.'::patchUserByActivationEmailForm') {
+            $token = $subject->getLastActivationToken();
 
             if ($token === null) {
                 return false;
             }
 
-            return $token->hasKey($this->requestStack->getCurrentRequest()->request->get('user_activation_email')['token']) && ! $token->isExpired();
+            $requestToken = $this->requestStack->getCurrentRequest()->request->get('user_activation_email')['token'];
+
+            if (null === $requestToken) {
+                return false;
+            }
+
+            return \hash_equals((string)$token, $requestToken) && !$token->isExpired();
         }
 
-        if ($this->requestStack->getCurrentRequest()->attributes->get('_controller') === 'App\Controller\UserController::patchUserByPasswordResetForm') {
-            $token = $subject->getPasswordResetToken();
+        if ($this->requestStack->getCurrentRequest()->attributes->get('_controller') === UserController::class.'::patchUserByPasswordResetForm') {
+            $token = $subject->getLastPasswordResetToken();
 
             if ($token === null) {
                 return false;
             }
 
-            return $token->hasKey($this->requestStack->getCurrentRequest()->query->get('user_password_reset_email')['token']) && ! $token->isExpired();
+            $requestToken = $this->requestStack->getCurrentRequest()->query->get('user_password_reset_email')['token'];
+
+            if (null === $requestToken) {
+                return false;
+            }
+
+            return \hash_equals((string)$token, $requestToken) && !$token->isExpired();
         }
 
         return $subject->getUsername() === $token->getUsername();
@@ -71,7 +84,7 @@ class UserAccessVoter extends EntityAccessVoter
     /**
      * {@inheritdoc}
      */
-    protected function canDelete(AuthorizableInterface $subject, TokenInterface $token) : bool
+    protected function canDelete(Entity $subject, TokenInterface $token) : bool
     {
         return $subject->getUsername() === $token->getUsername();
     }
@@ -79,9 +92,8 @@ class UserAccessVoter extends EntityAccessVoter
     /**
      * {@inheritdoc}
      */
-    protected function supportsSubject(AuthorizableInterface $subject) : bool
+    protected function supportsSubject(Entity $subject) : bool
     {
-        return $subject instanceof UserInterface;
+        return $subject instanceof User;
     }
 }
-

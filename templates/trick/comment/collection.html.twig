@@ -1,3 +1,3 @@
-{% for entity in entities %}
-    {% include 'trick/comment/get.html.twig' with {'entity': entity} %}
+{% for comment in data %}
+    {% include 'trick/comment/get.html.twig' with {'entity': comment} %}
 {% endfor %}

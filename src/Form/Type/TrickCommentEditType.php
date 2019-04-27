@@ -17,8 +17,8 @@ use Symfony\Component\HttpFoundation\RequestStack;
 use Doctrine\ORM\EntityManagerInterface;
 
 /**
- * The trick comment edit type...
- *
+ * The trick comment edit type.
+ * 
  * @version 0.0.1
  * @package App\Form\Type
  * @author  Clément Cazaud <opportus@gmail.com>
@@ -87,10 +87,10 @@ class TrickCommentEditType extends AbstractType
             ->add(
                 'id',
                 HiddenType::class,
-                array(
+                [
                     'data'   => $this->requestStack->getCurrentRequest()->attributes->get('id'),
                     'mapped' => false,
-                )
+                ]
             )
             ->add(
                 'submit',
@@ -98,44 +98,38 @@ class TrickCommentEditType extends AbstractType
             )
         ;
 
-        if (! $builder->getData()) {
+        if ('GET' === $this->requestStack->getCurrentRequest()->getMethod()) {
             $formQuery = $this->requestStack->getCurrentRequest()->query->get('attribute');
 
+            $thread = null;
             if (isset($formQuery['thread']) && $formQuery['thread']) {
                 $thread = $this->entityManager->getRepository(Trick::class)->findOneById($formQuery['thread']);
-            }
-
-            if (!isset($thread)) {
-                $thread = null;
             }
 
             $builder
                 ->add(
                     'thread',
                     HiddenType::class,
-                    array(
+                    [
                         'data_class' => null,
                         'data'       => $thread
-                    )
+                    ]
                 )
             ;
 
+            $parent = null;
             if (isset($formQuery['parent']) && $formQuery['parent']) {
                 $parent = $this->entityManager->getRepository(TrickComment::class)->findOneById($formQuery['parent']);
-            }
-
-            if (!isset($parent)) {
-                $parent = null;
             }
 
             $builder
                 ->add(
                     'parent',
                     HiddenType::class,
-                    array(
+                    [
                         'data_class' => null,
                         'data'       => $parent
-                    )
+                    ]
                 )
             ;
         } else {
@@ -156,7 +150,7 @@ class TrickCommentEditType extends AbstractType
 
         $builder->addEventListener(
             FormEvents::SUBMIT,
-            array($this->authorizerListener, 'onFormSubmit')
+            [$this->authorizerListener, 'onFormSubmit']
         );
     }
 }

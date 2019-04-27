@@ -1,9 +1,10 @@
 {% extends 'base.html.twig' %}
+{% set form = data.createView() %}
 {% block title %}{{ 'user.sign_up.page.title'|trans() }}{% endblock title %}
 {% block description %}{{ 'user.sign_up.page.description'|trans() }}{% endblock description %}
 {% block content %}
     {{ parent() }}
-    <div class="container-fluid" style="min-height:100vh;">
+    <div class="sign-up container-fluid">
         <div class="row mt-5">
             <div class="col-md-4 offset-md-4 text-center justify-content-center">
                 <h1>{{ block('title') }}</h1>

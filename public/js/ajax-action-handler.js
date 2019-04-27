@@ -32,6 +32,72 @@ class AjaxActionHandler
         });
     }
 
+    submitTrick(target)
+    {
+        var trickForm = target.closest('form');
+        var formData = new FormData();
+
+        $('input,textarea,select').each(function () {
+            var val = null;
+
+            if ('file' === $(this).attr('type')) {
+                trickForm.parent().append(this);
+
+                val = this.files[0];
+            } else {
+                val = $(this).val();
+            }
+
+            formData.append($(this).attr('name'), val);
+
+        });
+
+        $.ajax({
+            url: target.data('url'),
+            processData: false,
+            contentType: false,
+            method: 'POST',
+            dataType: 'json',
+            data: formData,
+            success: function (response, status, xhr) {
+                $(location).attr('href', target.data('redirection'));
+            },
+            error: function (xhr, status) {
+                trickForm.replaceWith(xhr.responseJSON);
+                $('#trick-loader').hide();
+                $('#trick-loader-message-almost-done').hide();
+                $('.progress-bar').css('width', 0);
+                $('.progress-bar').attr('aria-valuenow', 0);
+            },
+            xhr: function () {
+                var xhr = new window.XMLHttpRequest();
+
+                if ($('input[type="file"][class="custom-file-input new-file"]').length) {
+                    $('#trick-loader').show();
+
+                    xhr.upload.addEventListener("progress", function(evt) {
+                        if (evt.lengthComputable) {
+                            var percentComplete = evt.loaded / evt.total;
+
+                            percentComplete = parseInt(percentComplete * 100);
+
+                            $('.progress-bar').css('width', percentComplete+'%');
+                            $('.progress-bar').attr('aria-valuenow', percentComplete);
+                            $('#trick-loader-message-in-progress').show();
+
+                            if (percentComplete === 100) {
+                                $('#trick-loader-message-in-progress').hide();
+                                $('#trick-loader-message-almost-done').show();
+                            }
+                        }
+                    }, false);
+                }
+
+                return xhr;
+            }
+        });
+    }
+
     toggleTrickCommentEdit()
     {
         $('.trick-show-comment-list').find('.trick-comment-list-item').each(function() {
@@ -199,12 +265,12 @@ class AjaxActionHandler
     deleteTrick(target)
     {
         $('#trick-delete-modal').modal();
-        $('#trick-delete-modal .btn-primary').on('click', function () {
+        $('#trick-delete-modal .btn-danger').on('click', function () {
             $.ajax({
                 url: target.data('url'),
                 data: {'trick_delete[_token]': target.data('token'), '_method': 'DELETE'},
                 method: 'POST',
-                dataType: 'json',
+                dataType: 'html',
                 success: function(response, status) {
                     if (target.data('redirection')) {
                         $(location).attr('href', target.data('redirection'))

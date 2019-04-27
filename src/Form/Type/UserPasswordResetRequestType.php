@@ -8,8 +8,8 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 
 /**
- * The user password reset request type...
- *
+ * The user password reset request type.
+ * 
  * @version 0.0.1
  * @package App\Form\Type
  * @author  Clément Cazaud <opportus@gmail.com>
@@ -26,19 +26,18 @@ class UserPasswordResetRequestType extends AbstractType
             ->add(
                 'username',
                 TextType::class,
-                array(
+                [
                     'attr'  => array('autocomplete' => 'username'),
                     'label' => 'user.password_reset_request.form.label.username',
-                )
+                ]
             )
             ->add(
                 'submit',
                 SubmitType::class,
-                array(
+                [
                     'label' => 'user.password_reset_request.form.label.submit',
-                )
+                ]
             )
         ;
     }
 }
-

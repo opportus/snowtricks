@@ -4,6 +4,31 @@
     <file source-language="en" datatype="plaintext" original="file.ext">
         <body>
 
+            <trans-unit id="error.not_found.title">
+                <source>error.not_found.title</source>
+                <target>Page Not Found</target>
+            </trans-unit>
+            <trans-unit id="error.not_found.description">
+                <source>error.not_found.description</source>
+                <target>Oops, looks like the resource you are looking for does not exist...</target>
+            </trans-unit>
+            <trans-unit id="error.forbidden.title">
+                <source>error.forbidden.title</source>
+                <target>Forbidden</target>
+            </trans-unit>
+            <trans-unit id="error.forbidden.description">
+                <source>error.forbidden.description</source>
+                <target>Oops, looks like you do not have the authorization for this action...</target>
+            </trans-unit>
+            <trans-unit id="error.internal_server_error.title">
+                <source>error.internal_server_error.title</source>
+                <target>Internal Server Error</target>
+            </trans-unit>
+            <trans-unit id="error.internal_server_error.description">
+                <source>error.internal_server_error.description</source>
+                <target>Oops, looks like an unexpected error happened...</target>
+            </trans-unit>
+
             <trans-unit id="user.sign_up.notification.201">
                 <source>user.sign_up.notification.201</source>
                 <target>Welcome %username%! An email has been sent to %email%. It contains an activation link you must click in order to activate your account.</target>
@@ -44,13 +69,9 @@
                 <source>user.sign_up.form.label.password</source>
                 <target>Password</target>
             </trans-unit>
-            <trans-unit id="user.sign_up.form.message.username_conflict">
-                <source>user.sign_up.form.message.username_conflict</source>
-                <target>This username is already used</target>
-            </trans-unit>
-            <trans-unit id="user.sign_up.form.message.email_conflict">
-                <source>user.sign_up.form.message.email_conflict</source>
-                <target>This email is already used</target>
+            <trans-unit id="user.sign_up.form.message.conflict">
+                <source>user.sign_up.form.message.conflict</source>
+                <target>This %attribute% is already used</target>
             </trans-unit>
             <trans-unit id="user.sign_up.form.label.submit">
                 <source>user.sign_up.form.label.submit</source>
@@ -111,8 +132,8 @@
                 <target>Sign In</target>
             </trans-unit>
 
-            <trans-unit id="user.activation.notification.204">
-                <source>user.activation.notification.204</source>
+            <trans-unit id="user.activation.notification.303">
+                <source>user.activation.notification.303</source>
                 <target>Congrats. Your account is now activated.</target>
             </trans-unit>
             <trans-unit id="user.activation.notification.403">
@@ -146,13 +167,9 @@
                 </target>
             </trans-unit>
 
-            <trans-unit id="user.password_reset_request.notification.204">
-                <source>user.password_reset_request.notification.204</source>
+            <trans-unit id="user.password_reset_request.notification.303">
+                <source>user.password_reset_request.notification.303</source>
                 <target>An email has been sent to you. It contains a link you must click in order to reset your password.</target>
-            </trans-unit>
-            <trans-unit id="user.password_reset_request.notification.404">
-                <source>user.password_reset_request.notification.404</source>
-                <target>User does not exist.</target>
             </trans-unit>
             <trans-unit id="user.password_reset_request.notification.500">
                 <source>user.password_reset_request.notification.500</source>
@@ -179,9 +196,9 @@
                 <target>User not found</target>
             </trans-unit>
 
-            <trans-unit id="user.password_reset.notification.204">
-                <source>user.password_reset.notification.204</source>
-                <target>Your password has been updated.</target>
+            <trans-unit id="user.password_reset.notification.303">
+                <source>user.password_reset.notification.303</source>
+                <target>Your password has been successfully updated.</target>
             </trans-unit>
             <trans-unit id="user.password_reset.notification.403">
                 <source>user.password_reset.notification.403</source>
@@ -238,6 +255,18 @@
                 <source>trick.show.author.label</source>
                 <target>Contributor</target>
             </trans-unit>
+            <trans-unit id="trick.show.updated_at.label">
+                <source>trick.show.updated_at.label</source>
+                <target>Updated At</target>
+            </trans-unit>
+            <trans-unit id="trick.show.created_at.label">
+                <source>trick.show.created_at.label</source>
+                <target>Created At</target>
+            </trans-unit>
+            <trans-unit id="trick.edit.success">
+                <source>trick.edit.success</source>
+                <target>The trick has been successfully saved</target>
+            </trans-unit>
             <trans-unit id="trick.edit.form.label.title">
                 <source>trick.edit.form.label.title</source>
                 <target>Title</target>
@@ -292,7 +321,19 @@
             </trans-unit>
             <trans-unit id="trick.delete_modal.button.ok">
                 <source>trick.delete_modal.button.ok</source>
-                <target>Ok</target>
+                <target>Delete</target>
+            </trans-unit>
+            <trans-unit id="trick.edit.form.button.add_embedded_attachment">
+                <source>trick.edit.form.button.add_embedded_attachment</source>
+                <target>Add an embedded attachment</target>
+            </trans-unit>
+            <trans-unit id="trick.edit.form.button.add_uploaded_attachment">
+                <source>trick.edit.form.button.add_uploaded_attachment</source>
+                <target>Add an uploaded attachment</target>
+            </trans-unit>
+            <trans-unit id="trick.edit.form.message.title_conflict">
+                <source>trick.edit.form.message.title_conflict</source>
+                <target>Another trick with the same title already exist.</target>
             </trans-unit>
 
             <trans-unit id="trick_attachment.edit.form.title">
@@ -406,6 +447,11 @@
             <trans-unit id="base.navbar.link.title.sign_out">
                 <source>base.navbar.link.title.sign_out</source>
                 <target>Sign Out</target>
+            </trans-unit>
+
+            <trans-unit id="trick_attachment_collection.button.show">
+                <source>trick_attachment_collection.button.show</source>
+                <target>See Medias</target>
             </trans-unit>
 
         </body>

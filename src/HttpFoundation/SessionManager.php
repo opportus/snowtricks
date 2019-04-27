@@ -3,13 +3,13 @@
 namespace App\HttpFoundation;
 
 use App\HttpKernel\ControllerResultInterface;
+use App\Configuration\Flash as FlashConfiguration;
+use App\Configuration\ControllerResultDataFetcherInterface;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Translation\TranslatorInterface;
-use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
- * The session manager...
+ * The session manager.
  *
  * @version 0.0.1
  * @package App\HttpFoundation
@@ -19,14 +19,15 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 class SessionManager implements SessionManagerInterface
 {
     /**
-     * @var array $parameters
-     */
-    private $parameters;
-
-    /**
      * @var Symfony\Component\HttpFoundation\Session\SessionInterface $session
      */
     private $session;
+
+    /**
+     * @var App\Configuration\ControllerResultDataFetcherInterface $controllerResultDataFetcher
+     */
+    private $controllerResultDataFetcher;
+
 
     /**
      * @var Symfony\Component\Translations\TranslatorItnerface $translator
@@ -36,108 +37,35 @@ class SessionManager implements SessionManagerInterface
     /**
      * Constructs the session manager.
      *
-     * @param array $parameters
      * @param Symfony\Component\HttpFoundation\Session\SessionInterface $session
+     * @param App\Configuration\ControllerResultDataFetcherInterface $controllerResultDataFetcher
      * @param Symfony\Component\HttpFoundation\Translation\TranslatorInterface $translator
      */
-    public function __construct(array $parameters, SessionInterface $session, TranslatorInterface $translator)
+    public function __construct(SessionInterface $session, ControllerResultDataFetcherInterface $controllerResultDataFetcher, TranslatorInterface $translator)
     {
-        $this->parameters = $parameters;
-        $this->session    = $session;
+        $this->session = $session;
+        $this->controllerResultDataFetcher = $controllerResultDataFetcher;
         $this->translator = $translator;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function generateFlash(Request $request, ControllerResultInterface $controllerResult)
+    public function generateFlash(FlashConfiguration $flashConfiguration, ControllerResultInterface $controllerResult)
     {
-        $parameters = $this->resolveParameters($request, $controllerResult);
+        $transId = $flashConfiguration->getMessage()->getId();
+        $transParameters = $flashConfiguration->getMessage()->getParameters();
+        $transDomain = $flashConfiguration->getMessage()->getDomain();
+        $transLocale = $flashConfiguration->getMessage()->getLocale();
 
-        if (null === $parameters['flash']['message']['id']) {
-            return;
+        $data = $controllerResult->getData();
+        foreach ($transParameters as $key => $accessor) {
+            $transParameters[$key] = $this->controllerResultDataFetcher->fetch($accessor, $data);
         }
 
-        if ($this->translator->getCatalogue()->has($parameters['flash']['message']['id'])) {
-            if ($parameters['flash']['message']['parameters']) {
-                $entity = $controllerResult->getData()['entity'];
+        $message = $this->translator->trans($transId, $transParameters, $transDomain, $transLocale);
+        $statusCode = $flashConfiguration->getStatusCode();
 
-                foreach ($parameters['flash']['message']['parameters'] as $id => $property) {
-                    $parameters['flash']['message']['parameters']['%' . $id . '%'] = $entity->$property();
-                    unset($parameters['flash']['message']['parameters'][$id]);
-                }
-            }
-
-            $message = $this->translator->trans(
-                $parameters['flash']['message']['id'],
-                $parameters['flash']['message']['parameters'],
-                $parameters['flash']['message']['domain'],
-                $parameters['flash']['message']['locale']
-            );
-        } else {
-            $message = $parameters['flash']['message']['id'];
-        }
-
-        $this->session->getFlashBag()->add(
-            $parameters['flash']['code'],
-            $message
-        );
-    }
-
-    /**
-     * Resolves the session manager parameters.
-     *
-     * @param  Symfony\Component\HttpFoundation\Request $request
-     * @param  App\HttpKernel\ControllerResultInterface $controllerResult
-     * @return array
-     */
-    private function resolveParameters(Request $request, ControllerResultInterface $controllerResult) : array
-    {
-        $parameters = array();
-        $action     = $request->attributes->get('_controller');
-        $status     = $controllerResult->getStatusCode();
-
-        if (isset($this->parameters[$action]['session'])) {
-            foreach ($this->parameters[$action]['session'] as $params) {
-                if (isset($params['status']) && $params['status'] === $status) {
-                    $parameters = $params;
-
-                    break;
-                }
-            }
-        }
-
-        $parametersResolver = new OptionsResolver();
-        $parametersResolver->setDefaults(array(
-            'status' => null,
-            'flash'  => array()
-        ));
-
-        $flashParametersResolver = new OptionsResolver();
-        $flashParametersResolver->setDefaults(array(
-            'code'    => $status,
-            'message' => array()
-        ));
-
-        $flashMessageParametersResolver = new OptionsResolver();
-        $flashMessageParametersResolver->setDefaults(array(
-            'id'         => null,
-            'parameters' => array(),
-            'domain'     => null,
-            'locale'     => null
-        ));
-
-        $resolvedParameters = $parametersResolver->resolve($parameters);
-
-        $flashParameters = isset($parameters['flash']) ? $parameters['flash'] : array();
-        $flashParameters = $flashParametersResolver->resolve($flashParameters);
-
-        $flashMessageParameters = isset($parameters['flash']['message']) ? $parameters['flash']['message'] : array();
-        $flashMessageParameters = $flashMessageParametersResolver->resolve($flashMessageParameters);
-
-        $resolvedParameters['flash']            = $flashParameters;
-        $resolvedParameters['flash']['message'] = $flashMessageParameters;
-
-        return $resolvedParameters;
+        $this->session->getFlashBag()->add($statusCode, $message);
     }
 }

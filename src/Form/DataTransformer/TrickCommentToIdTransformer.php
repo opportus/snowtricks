@@ -3,13 +3,12 @@
 namespace App\Form\DataTransformer;
 
 use App\Entity\TrickComment;
-use App\Entity\TrickCommentInterface;
 use Symfony\Component\Form\DataTransformerInterface;
 use Symfony\Component\Form\Exception\TransformationFailedException;
 use Doctrine\ORM\EntityManagerInterface;
 
 /**
- * The trick comment to ID transformer...
+ * The trick comment to ID transformer.
  *
  * @version 0.0.1
  * @package App\Form\DataTransformer
@@ -42,13 +41,8 @@ class TrickCommentToIdTransformer implements DataTransformerInterface
             return '';
         }
 
-        if (!$value instanceof TrickCommentInterface) {
-            throw new TransformationFailedException(
-                sprintf(
-                    'The value must be an instance of %s',
-                    TrickCommentInterface::class
-                )
-            );
+        if (!$value instanceof TrickComment) {
+            throw new TransformationFailedException(\sprintf('The value must be an instance of %s', TrickComment::class));
         }
 
         return $value->getId();
@@ -68,12 +62,7 @@ class TrickCommentToIdTransformer implements DataTransformerInterface
         ;
 
         if ($trickComment === null) {
-            throw new TransformationFailedException(
-                sprintf(
-                    'Trick comment %s not found',
-                    $value
-                )
-            );
+            throw new TransformationFailedException(\sprintf('Trick comment %s not found', $value));
         }
 
         return $trickComment;

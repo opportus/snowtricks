@@ -2,10 +2,10 @@
 
 namespace App\Repository;
 
-use App\Entity\TrickInterface;
+use App\Entity\Trick;
 
 /**
- * The trick repository interface...
+ * The trick repository interface.
  *
  * @version 0.0.1
  * @package App\Repository
@@ -15,11 +15,11 @@ use App\Entity\TrickInterface;
 interface TrickRepositoryInterface extends EntityRepositoryInterface
 {
     /**
-     * Finds one trick by slug.
+     * Finds one trick by slug or throws exception if no result.
      *
      * @param  string $slug
-     * @return null|App\Entity\TrickInterface
+     * @return App\Entity\Trick
+     * @throws Doctrine\ORM\EntityNotFoundException
      */
-    public function findOneBySlug(string $slug) : ?TrickInterface;
+    public function findOneBySlugOrThrowExceptionIfNoResult(string $slug) : Trick;
 }
-

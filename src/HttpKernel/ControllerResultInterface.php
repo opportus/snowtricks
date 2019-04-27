@@ -3,7 +3,7 @@
 namespace App\HttpKernel;
 
 /**
- * The controller result interface...
+ * The controller result interface.
  *
  * @version 0.0.1
  * @package App\HttpKernel
@@ -14,15 +14,15 @@ interface ControllerResultInterface
 {
     /**
      * Gets the status code.
-     *
+     * 
      * @return int
      */
-    public function getStatusCode() : int;
+    public function getStatusCode(): int;
 
     /**
      * Gets the data.
-     *
-     * @return array
+     * 
+     * @return mixed
      */
-    public function getData() : array;
+    public function getData();
 }

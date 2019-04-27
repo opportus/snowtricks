@@ -2,10 +2,8 @@
 
 namespace App\Validator;
 
-use Symfony\Component\Validator\Exception\ValidatorException;
-
 /**
- * The validator interface...
+ * The validator interface.
  *
  * @version 0.0.1
  * @package App\Validator
@@ -20,18 +18,7 @@ interface ValidatorInterface
      * @param  mixed $value
      * @param  null|array|Symfony\Component\Validator\Constraint $constraints
      * @param  null|array $groups
-     * @throws mixed
+     * @throws Symfony\Component\Validator\Exception\ValidatorException
      */
-    public function validateWithException($value, $constraints = null, $groups = null, string $exception = ValidatorException::class);
-
-    /**
-     * Validates by throwing an exception and logs.
-     *
-     * @param  mixed $value
-     * @param  null|array|Symfony\Component\Validator\Constraint $constraints
-     * @param  null|array $groups
-     * @throws mixed
-     */
-    public function validateWithExceptionAndLog($value, $constraints = null, $groups = null, string $exception = ValidatorException::class);
+    public function validateWithException($value, $constraints = null, $groups = null);
 }
-

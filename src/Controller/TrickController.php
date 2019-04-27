@@ -2,120 +2,387 @@
 
 namespace App\Controller;
 
-use App\HttpKernel\ControllerResultInterface;
-use Symfony\Component\HttpFoundation\Request;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
+use App;
+use App\Entity\Trick;
+use App\Form\Type\TrickEditType;
+use App\Form\Data\TrickData;
+use App\View\TwigViewBuilder;
+use App\Validator\Constraints\TrickCollectionQueryParameters;
+use App\HttpKernel\ControllerResult;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Form\FormInterface;
+use Symfony\Component\Routing\Annotation\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
+use Doctrine\Common\Collections\ArrayCollection;
 
 /**
- * The trick controller...
+ * The trick controller.
  *
  * @version 0.0.1
  * @package App\Controller
  * @author  Clément Cazaud <opportus@gmail.com>
  * @license https://github.com/opportus/snowtricks/blob/master/LICENSE.md MIT
  */
-class TrickController extends Controller
+class TrickController extends AbstractEntityController
 {
     /**
      * Get the trick edit form.
      *
-     * @param  Symfony\Component\HttpFoundation\Request $request
-     * @return App\HttpKernel\ControllerResultInterface
+     * @param Symfony\Component\Form\FormInterface $form
+     * @return App\HttpKernel\ControllerResult
      *
-     * @Route("/trick/edit/{slug}", name="get_trick_edit_form")
-     * @Method("GET")
+     * @Route("/trick/edit/{slug}", name="get_trick_edit_form", methods={"GET"})
+     * 
+     * @IsGranted("IS_AUTHENTICATED_FULLY")
+     *
+     * @ParamConverter(
+     *     "form",
+     *     class=Trick::class,
+     *     converter="app.entity_form_param_converter",
+     *     options={
+     *         "id"="slug",
+     *         "form_type"=TrickEditType::class,
+     *         "form_options"={
+     *             "data_class"=TrickData::class,
+     *             "method"="PUT"
+     *         }
+     *     }
+     * )
+     * 
+     * @App\Configuration\Response(
+     *     statusCode=Response::HTTP_OK,
+     *     content=@App\Configuration\View(
+     *         format="text/html",
+     *         builder=TwigViewBuilder::class,
+     *         options={
+     *             "template"="trick/edit.html.twig"
+     *         }
+     *     )
+     * )
+     * 
+     * @App\Configuration\Response(
+     *     statusCode=Response::HTTP_NOT_FOUND,
+     *     content=@App\Configuration\View(
+     *         format="text/html",
+     *         builder=TwigViewBuilder::class,
+     *         options={
+     *             "template"="error/not-found.html.twig"
+     *         }
+     *     )
+     * )
      */
-    public function getTrickEditForm(Request $request) : ControllerResultInterface
+    public function getTrickEditForm(FormInterface $form): ControllerResult
     {
-        return $this->getForm($request);
+        return new ControllerResult(
+            Response::HTTP_OK,
+            $form
+        );
     }
 
     /**
-     * Get the trick edit empty form.
+     * Get the empty trick edit form.
      *
-     * @param  Symfony\Component\HttpFoundation\Request $request
-     * @return App\HttpKernel\ControllerResultInterface
+     * @param Symfony\Component\Form\FormInterface $form
+     * @return App\HttpKernel\ControllerResult
      *
-     * @Route("/trick/edit", name="get_trick_edit_empty_form")
-     * @Method("GET")
+     * @Route("/trick/edit", name="get_trick_edit_empty_form", methods={"GET"})
+     * 
+     * @IsGranted("IS_AUTHENTICATED_FULLY")
+     *
+     * @ParamConverter(
+     *     "form",
+     *     class=Trick::class,
+     *     converter="app.entity_form_param_converter",
+     *     options={
+     *         "form_type"=TrickEditType::class,
+     *         "form_options"={
+     *             "data_class"=TrickData::class,
+     *             "method"="POST"
+     *         }
+     *     }
+     * )
+     * 
+     * @App\Configuration\Response(
+     *     statusCode=Response::HTTP_OK,
+     *     content=@App\Configuration\View(
+     *         format="text/html",
+     *         builder=TwigViewBuilder::class,
+     *         options={
+     *             "template"="trick/edit.html.twig"
+     *         }
+     *     )
+     * )
      */
-    public function getTrickEditEmptyForm(Request $request) : ControllerResultInterface
+    public function getTrickEditEmptyForm(FormInterface $form): ControllerResult
     {
-        return $this->getForm($request);
+        return new ControllerResult(
+            Response::HTTP_OK,
+            $form
+        );
     }
 
     /**
-     * Gets trick collection.
+     * Gets the trick collection.
      *
-     * @param  Symfony\Component\HttpFoundation\Request $request
-     * @return App\HttpKernel\ControllerResultInterface
+     * @param Doctrine\Common\Collections\ArrayCollection $trickCollection
+     * @return App\HttpKernel\ControllerResult
      *
-     * @Route("/trick", name="get_trick_collection")
-     * @Method("GET")
+     * @Route("/trick", name="get_trick_collection", methods={"GET"})
+     *
+     * @ParamConverter(
+     *     "trickCollection",
+     *     class=Trick::class,
+     *     converter="app.entity_collection_param_converter",
+     *     options={
+     *         "repository_method"="findAllByCriteria",
+     *         "query_constraint"=TrickCollectionQueryParameters::class
+     *     }
+     * )
+     * 
+     * @App\Configuration\Response(
+     *     statusCode=Response::HTTP_OK,
+     *     content=@App\Configuration\View(
+     *         format="application/json",
+     *         builder=TwigViewBuilder::class,
+     *         options={
+     *             "template"="trick/collection.html.twig"
+     *         }
+     *     )
+     * )
+     * 
+     * @App\Configuration\Response(
+     *     statusCode=Response::HTTP_NOT_FOUND,
+     *     content=@App\Configuration\View(format="application/json")
+     * )
      */
-    public function getTrickCollection(Request $request) : ControllerResultInterface
+    public function getTrickCollection(ArrayCollection $trickCollection): ControllerResult
     {
-        return $this->getCollection($request);
+        return new ControllerResult(
+            Response::HTTP_OK,
+            $trickCollection
+        );
     }
 
     /**
-     * Gets trick.
+     * Gets the trick.
      *
-     * @param  Symfony\Component\HttpFoundation\Request $request
-     * @return App\HttpKernel\ControllerResultInterface
+     * @param App\Entity\Trick $trick
+     * @return App\HttpKernel\ControllerResult
      *
-     * @Route("/trick/{slug}", name="get_trick")
-     * @Method("GET")
+     * @Route("/trick/{slug}", name="get_trick", methods={"GET"})
+     *
+     * @ParamConverter(
+     *     "trick",
+     *     class=Trick::class,
+     *     converter="app.entity_param_converter",
+     *     options={
+     *         "id"="slug"
+     *     }
+     * )
+     * 
+     * @App\Configuration\Response(
+     *     statusCode=Response::HTTP_OK,
+     *     content=@App\Configuration\View(
+     *         format="text/html",
+     *         builder=TwigViewBuilder::class,
+     *         options={
+     *             "template"="trick/get.html.twig"
+     *         }
+     *     )
+     * )
+     * 
+     * @App\Configuration\Response(
+     *     statusCode=Response::HTTP_NOT_FOUND,
+     *     content=@App\Configuration\View(
+     *         format="text/html",
+     *         builder=TwigViewBuilder::class,
+     *         options={
+     *             "template"="error/not-found.html.twig"
+     *         }
+     *     )
+     * )
      */
-    public function getTrick(Request $request) : ControllerResultInterface
+    public function getTrick(Trick $trick): ControllerResult
     {
-        return $this->get($request);
+        return new ControllerResult(
+            Response::HTTP_OK,
+            $trick
+        );
     }
 
     /**
      * Posts the trick.
      *
-     * @param  Symfony\Component\HttpFoundation\Request $request
-     * @return App\HttpKernel\ControllerResultInterface
+     * @param App\Entity\Trick $trick
+     * @return App\HttpKernel\ControllerResult
      *
-     * @Route("/trick/edit", name="post_trick_by_edit_form")
-     * @Method("POST")
-     * @Security("has_role('ROLE_USER')")
+     * @Route("/trick/edit", name="post_trick_by_edit_form", methods={"POST"})
+     * 
+     * @IsGranted("IS_AUTHENTICATED_FULLY")
+     *
+     * @ParamConverter(
+     *     "trick",
+     *     class=Trick::class,
+     *     converter="app.submitted_entity_param_converter",
+     *     options={
+     *         "form_type"=TrickEditType::class,
+     *         "form_options"={
+     *             "data_class"=TrickData::class,
+     *             "method"="POST",
+     *             "validation_groups"={"trick.form.edit"}
+     *         }
+     *     }
+     * )
+     * 
+     * @App\Configuration\Response(
+     *     statusCode=Response::HTTP_OK,
+     *     content=@App\Configuration\View(format="application/json")
+     * )
+     * 
+     * @App\Configuration\Response(
+     *     statusCode=Response::HTTP_BAD_REQUEST,
+     *     content=@App\Configuration\View(
+     *         format="application/json",
+     *         builder=TwigViewBuilder::class,
+     *         options={
+     *             "template"="trick/edit-form.html.twig"
+     *         }
+     *     )
+     * )
+     * 
+     * @App\Configuration\Flash(
+     *     statusCode=Response::HTTP_OK,
+     *     message=@App\Configuration\Trans(id="trick.edit.success")
+     * )
      */
-    public function postTrickByEditForm(Request $request) : ControllerResultInterface
+    public function postTrickByEditForm(Trick $trick): ControllerResult
     {
-        return $this->post($request);
+        $this->entityManager->persist($trick);
+        $this->entityManager->flush();
+
+        return new ControllerResult(
+            Response::HTTP_OK,
+            $trick
+        );
     }
 
     /**
      * Puts the trick.
      *
-     * @param  Symfony\Component\HttpFoundation\Request $request
-     * @return App\HttpKernel\ControllerResultInterface
+     * @param App\Entity\Trick $trick
+     * @return App\HttpKernel\ControllerResult
      *
-     * @Route("/trick/edit/{slug}", name="put_trick_by_edit_form")
-     * @Method("PUT")
-     * @Security("has_role('ROLE_USER')")
+     * @Route("/trick/edit/{slug}", name="put_trick_by_edit_form", methods={"PUT"})
+     *
+     * @IsGranted("IS_AUTHENTICATED_FULLY")
+     *
+     * @ParamConverter(
+     *     "trick",
+     *     class=Trick::class,
+     *     converter="app.submitted_entity_param_converter",
+     *     options={
+     *         "id"="slug",
+     *         "form_type"=TrickEditType::class,
+     *         "form_options"={
+     *             "data_class"=TrickData::class,
+     *             "method"="PUT",
+     *             "validation_groups"={"trick.form.edit"}
+     *         }
+     *     }
+     * )
+     * 
+     * @App\Configuration\Response(
+     *     statusCode=Response::HTTP_OK,
+     *     content=@App\Configuration\View(format="application/json")
+     * )
+     * 
+     * 
+     * @App\Configuration\Response(
+     *     statusCode=Response::HTTP_BAD_REQUEST,
+     *     content=@App\Configuration\View(
+     *         format="application/json",
+     *         builder=TwigViewBuilder::class,
+     *         options={
+     *             "template"="trick/edit-form.html.twig"
+     *         }
+     *     )
+     * )
+     * 
+     * @App\Configuration\Flash(
+     *     statusCode=Response::HTTP_OK,
+     *     message=@App\Configuration\Trans(id="trick.edit.success")
+     * )
      */
-    public function putTrickByEditForm(Request $request) : ControllerResultInterface
+    public function putTrickByEditForm(Trick $trick): ControllerResult
     {
-        return $this->put($request);
+        $this->entityManager->persist($trick);
+        $this->entityManager->flush();
+
+        return new ControllerResult(
+            Response::HTTP_OK,
+            $trick
+        );
     }
 
     /**
-     * Deletes trick by delete form.
+     * Deletes the trick.
      *
-     * @param  Symfony\Component\HttpFoundation\Request $request
-     * @return App\HttpKernel\ControllerResultInterface
+     * @param App\Entity\Trick $trick
+     * @return App\HttpKernel\ControllerResult
      *
-     * @Route("/trick/delete/{slug}", name="delete_trick_by_delete_form")
-     * @Method("DELETE")
-     * @Security("has_role('ROLE_USER')")
+     * @Route("/trick/delete/{slug}", name="delete_trick", methods={"DELETE"})
+     * 
+     * @IsGranted("IS_AUTHENTICATED_FULLY")
+     * 
+     * @ParamConverter(
+     *     "trick",
+     *     class=Trick::class,
+     *     converter="app.entity_param_converter",
+     *     options={
+     *         "id"="slug",
+     *         "grant"="DELETE"
+     *     }
+     * )
+     * 
+     * @App\Configuration\Response(
+     *     statusCode=Response::HTTP_SEE_OTHER,
+     *     content=@App\Configuration\View(format="text/html"),
+     *     headers={
+     *         "location"=@App\Configuration\Route(name="get_home")
+     *     }
+     * )
+     * 
+     * @App\Configuration\Response(
+     *     statusCode=Response::HTTP_NOT_FOUND,
+     *     content=@App\Configuration\View(
+     *         format="text/html",
+     *         builder=TwigViewBuilder::class,
+     *         options={
+     *             "template"="error/not-found.html.twig"
+     *         }
+     *     )
+     * )
+     * 
+     * @App\Configuration\Response(
+     *     statusCode=Response::HTTP_FORBIDDEN,
+     *     content=@App\Configuration\View(
+     *         format="text/html",
+     *         builder=TwigViewBuilder::class,
+     *         options={
+     *             "template"="error/forbidden.html.twig"
+     *         }
+     *     )
+     * )
      */
-    public function deleteTrickByDeleteForm(Request $request) : ControllerResultInterface
+    public function deleteTrick(Trick $trick): ControllerResult
     {
-        return $this->delete($request);
+        $this->entityManager->remove($trick);
+        $this->entityManager->flush();
+
+        return new ControllerResult(
+            Response::HTTP_SEE_OTHER,
+            null
+        );
     }
 }

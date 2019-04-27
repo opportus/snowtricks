@@ -3,12 +3,11 @@
 namespace App\Repository;
 
 use App\Entity\TrickAttachment;
-use App\Entity\TrickAttachmentInterface;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 
 /**
- * The trick attachment repository...
+ * The trick attachment repository.
  *
  * @version 0.0.1
  * @package App\Repository
@@ -28,4 +27,3 @@ class TrickAttachmentRepository extends ServiceEntityRepository implements Trick
 
     }
 }
-

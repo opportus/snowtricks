@@ -2,11 +2,11 @@
 
 namespace App\Entity;
 
-use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
+use Doctrine\ORM\Mapping as ORM;
 
 /**
- * The user token...
+ * The user token.
  *
  * @version 0.0.1
  * @package App\Entity
@@ -16,8 +16,11 @@ use Symfony\Component\Validator\Constraints as Assert;
  * @ORM\Entity(repositoryClass="App\Repository\UserTokenRepository", readOnly=true)
  * @ORM\Table(name="user_token")
  */
-class UserToken extends Entity implements UserTokenInterface
+class UserToken extends Entity
 {
+    const ACTIVATION_TYPE = 'activation';
+    const PASSWORD_RESET_TYPE = 'password_reset';
+
     /**
      * @var string $key
      *
@@ -26,7 +29,7 @@ class UserToken extends Entity implements UserTokenInterface
      * @Assert\Type(type="string")
      * @Assert\Length(max=255)
      */
-    protected $key;
+    private $key;
 
     /**
      * @var string $type
@@ -37,7 +40,7 @@ class UserToken extends Entity implements UserTokenInterface
      * @Assert\Length(max=20)
      * @Assert\Choice(choices={"activation", "password_reset"})
      */
-    protected $type;
+    private $type;
 
     /**
      * @var int $ttl
@@ -47,93 +50,92 @@ class UserToken extends Entity implements UserTokenInterface
      * @Assert\Type(type="integer")
      * @Assert\Range(min=1, max=32767)
      */
-    protected $ttl;
+    private $ttl;
 
     /**
-     * @var App\Entity\UserInterface $user
+     * @var App\Entity\User $user
      *
      * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="tokens")
      * @ORM\JoinColumn(name="user_id", referencedColumnName="id", nullable=false)
      * @Assert\NotNull()
      * @Assert\Valid()
      */
-    protected $user;
+    private $user;
 
     /**
      * Constructs the user token.
      *
-     * @param App\Entity\UserInterface $user
+     * @param App\Entity\User $user
      * @param string $type
-     * @param int $ttl
+     * @param null|int $ttl
      */
-    public function __construct(UserInterface $user, string $type, int $ttl = 24)
+    public function __construct(User $user, string $type, ?int $ttl = 24)
     {
-        $this->id        = $this->generateId();
+        $this->id = $this->generateId();
         $this->createdAt = new \DateTime();
-        $this->key       = rtrim(strtr(base64_encode(random_bytes(32)), '+/', '-_'), '=');
-        $this->type      = $type;
-        $this->ttl       = $ttl;
-        $this->user      = $user;
+        $this->key = \rtrim(\strtr(\base64_encode(\random_bytes(32)), '+/', '-_'), '=');
+        $this->user = $user;
+        $this->type = $type;
+        $this->ttl = $ttl ?? 24;
     }
 
     /**
-     * {@inheritdoc}
+     * Gets the key.
+     *
+     * @return string
      */
-    public function getKey() : string
+    public function getKey(): string
     {
         return $this->key;
     }
 
     /**
-     * {@inheritdoc}
+     * Gets the type.
+     *
+     * @return string
      */
-    public function getType() : string
+    public function getType(): string
     {
         return $this->type;
     }
 
     /**
-     * {@inheritdoc}
+     * Gets the TTL.
+     *
+     * @return int
      */
-    public function getTtl() : int
+    public function getTtl(): int
     {
         return $this->ttl;
     }
 
     /**
-     * {@inheritdoc}
+     * Gets the user.
+     *
+     * @return App\Entity\User
      */
-    public function getUser() : UserInterface
+    public function getUser(): User
     {
         return $this->user;
     }
 
     /**
-     * {@inheritdoc}
+     * Checks whether the token is expired.
+     *
+     * @return bool
      */
-    public function isExpired() : bool
+    public function isExpired(): bool
     {
-        return
-            $this->createdAt !== null &&
-            $this->ttl !== null &&
-            $this->createdAt->diff(new \DateTime())->h > $this->ttl
-        ;
+        return $this->createdAt->diff(new \DateTime())->h > $this->ttl;
     }
 
     /**
-     * {@inheritdoc}
+     * Returns the key.
+     *
+     * @return string
      */
-    public function hasKey(string $token) : bool
+    public function __toString(): string
     {
-        return hash_equals($this->key, $token);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function __toString() : string
-    {
-        return (string) $this->key;
+        return $this->key;
     }
 }
-

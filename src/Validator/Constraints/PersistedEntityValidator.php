@@ -2,8 +2,10 @@
 
 namespace App\Validator\Constraints;
 
+use Symfony\Component\Validator\ConstraintValidator;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\Exception\UnexpectedTypeException;
+use Doctrine\ORM\EntityManagerInterface;
 
 /**
  * The persisted entity constraint validator.
@@ -13,27 +15,39 @@ use Symfony\Component\Validator\Exception\UnexpectedTypeException;
  * @author  Clément Cazaud <opportus@gmail.com>
  * @license https://github.com/opportus/snowtricks/blob/master/LICENSE.md MIT
  */
-class PersistedEntityValidator extends EntityValidator
+class PersistedEntityValidator extends ConstraintValidator
 {
+    /**
+     * @var Doctrine\ORM\EntityManagerIntreface $entityManager
+     */
+    private $entityManager;
+
+    /**
+     * Constructs the persisted entity constraint validator.
+     *
+     * @param Doctrine\ORM\EntityManagerInterface $entityManager
+     */
+    public function __construct(EntityManagerInterface $entityManager)
+    {
+        $this->entityManager = $entityManager;
+    }
+
     /**
      * {@inheritdoc}
      */
     public function validate($data, Constraint $constraint)
     {
         if (!$constraint instanceof PersistedEntity) {
-            throw new UnexpectedTypeException();
+            throw new UnexpectedTypeException($constraint, PersistedEntity::class);
         }
 
-        $value = $data->{$constraint->primaryKey};
-
-        if ($this->entityManager->getRepository($constraint->entityClass)->findOneBy(array($constraint->primaryKey => $value))) {
+        if ($this->entityManager->getRepository($constraint->entityClass)->findOneBy([$constraint->entityIdentifier => $data->{$constraint->entityIdentifier}])) {
             return;
         }
 
         $this->context->buildViolation($constraint->message)
-            ->setParameter('{{ string }}', $value)
             ->setTranslationDomain('messages')
-            ->atPath($constraint->primaryKey)
+            ->atPath($constraint->entityIdentifier)
             ->addViolation()
         ;
     }

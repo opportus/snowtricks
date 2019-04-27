@@ -2,13 +2,13 @@
 
 namespace App\Entity;
 
+use Symfony\Component\Validator\Constraints as Assert;
+use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Validator\Constraints as Assert;
 
 /**
- * The trick comment...
+ * The trick comment.
  *
  * @version 0.0.1
  * @package App\Entity
@@ -18,16 +18,16 @@ use Symfony\Component\Validator\Constraints as Assert;
  * @ORM\Entity(repositoryClass="App\Repository\TrickCommentRepository")
  * @ORM\Table(name="trick_comment")
  */
-class TrickComment extends Entity implements TrickCommentInterface
+class TrickComment extends Entity
 {
     /**
-     * @var null|\DateTimeInterface $updatedAt
+     * @var null|\DateTime $updatedAt
      *
      * @ORM\Column(name="updated_at", type="datetime", nullable=true)
      * @Assert\Type(type="object")
      * @Assert\DateTime()
      */
-    protected $updatedAt;
+    private $updatedAt;
 
     /**
      * @var string $body
@@ -37,36 +37,36 @@ class TrickComment extends Entity implements TrickCommentInterface
      * @Assert\Type(type="string")
      * @Assert\Length(max=64512)
      */
-    protected $body;
+    private $body;
 
     /**
-     * @var App\Entity\UserInterface $author
-     *
-     * @ORM\ManyToOne(targetEntity="App\Entity\User")
-     * @ORM\JoinColumn(name="author_id", referencedColumnName="id", nullable=false)
-     * @Assert\NotNull()
-     * @Assert\Valid()
-     */
-    protected $author;
-
-    /**
-     * @var App\Entity\TrickInterface $thread
+     * @var App\Entity\Trick $thread
      *
      * @ORM\ManyToOne(targetEntity="App\Entity\Trick", inversedBy="comments")
      * @ORM\JoinColumn(name="thread_id", referencedColumnName="id", nullable=false)
      * @Assert\NotNull()
      * @Assert\Valid()
      */
-    protected $thread;
+    private $thread;
 
     /**
-     * @var null|App\Entity\TrickCommentInterface $parent
+     * @var App\Entity\User $author
+     *
+     * @ORM\ManyToOne(targetEntity="App\Entity\User")
+     * @ORM\JoinColumn(name="author_id", referencedColumnName="id", nullable=false)
+     * @Assert\NotNull()
+     * @Assert\Valid()
+     */
+    private $author;
+
+    /**
+     * @var null|App\Entity\TrickComment $parent
      *
      * @ORM\ManyToOne(targetEntity="App\Entity\TrickComment", inversedBy="children")
      * @ORM\JoinColumn(name="parent_id", referencedColumnName="id")
      * @Assert\Valid()
      */
-    protected $parent;
+    private $parent;
 
     /**
      * @var Doctrine\Common\Collections\Collection $children
@@ -74,141 +74,110 @@ class TrickComment extends Entity implements TrickCommentInterface
      * @ORM\OneToMany(targetEntity="App\Entity\TrickComment", mappedBy="parent", cascade={"all"})
      * @Assert\Valid()
      */
-    protected $children;
+    private $children;
 
     /**
      * Constructs the trick comment.
      *
      * @param string $body
-     * @param App\Entity\UserInterface $author
-     * @param App\Entity\TrickInterface $thread
-     * @param null|App\Entity\TrickCommentInterface $parent
-     * @param null|Collection $children
+     * @param App\Entity\Trick $thread
+     * @param App\Entity\User $author
+     * @param null|App\Entity\TrickComment $parent
      */
     public function __construct(
-        string                 $body,
-        UserInterface          $author,
-        TrickInterface         $thread,
-        ?TrickCommentInterface $parent = null,
-        ?Collection            $children = null
-    )
-    {
-        $this->id        = $this->generateId();
+        string $body,
+        Trick $thread,
+        User $author,
+        ?TrickComment $parent = null
+    ) {
+        $this->id = $this->generateId();
         $this->createdAt = new \DateTime();
-        $this->body      = $body;
-        $this->author    = $author;
-        $this->thread    = $thread;
-        $this->parent    = $parent;
-        $this->children  = $children === null ? new ArrayCollection() : $children;
+        $this->body = $body;
+        $this->thread = $thread;
+        $this->author = $author;
+        $this->parent = $parent;
+        $this->children = new ArrayCollection();
     }
 
     /**
-     * {@inheritdoc}
+     * Gets the update datetime.
+     *
+     * @return null|\DateTime
      */
-    public function update(string $body) : TrickCommentInterface
+    public function getUpdatedAt(): ?\DateTime
     {
-        $this->body      = $body;
-        $this->updatedAt = new \DateTime();
-
-        return $this;
+        return $this->updatedAt;
     }
 
     /**
-     * {@inheritdoc}
+     * Gets the body.
+     *
+     * @return string
      */
-    public function getUpdatedAt() : ?\DateTimeInterface
-    {
-        return $this->updatedAt === null ? null : clone $this->updatedAt;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getBody() : string
+    public function getBody(): string
     {
         return $this->body;
     }
 
     /**
-     * {@inheritdoc}
+     * Sets the body.
+     * 
+     * @param string $body
      */
-    public function getAuthor() : UserInterface
+    public function setBody(string $body)
+    {
+        $this->body = $body;
+        $this->updatedAt = new \DateTime();
+    }
+
+    /**
+     * Gets the thread.
+     *
+     * @return App\Entity\Trick
+     */
+    public function getThread(): Trick
+    {
+        return $this->thread;
+    }
+
+    /**
+     * Gets the author.
+     *
+     * @return App\Entity\User
+     */
+    public function getAuthor(): User
     {
         return $this->author;
     }
 
     /**
-     * {@inheritdoc}
+     * Checks whether this comment has the author.
+     * 
+     * @param App\Entity\User $user
+     * @return bool
      */
-    public function hasAuthor(UserInterface $author) : bool
+    public function hasAuthor(User $user): bool
     {
-        return $author->getUsername() === $this->author->getUsername();
+        return $user->getId() === $this->author->getId();
     }
 
     /**
-     * {@inheritdoc}
+     * Gets the parent.
+     *
+     * @return null|App\Entity\TrickComment
      */
-    public function getThread() : TrickInterface
+    public function getParent(): ?TrickComment
     {
-        return clone $this->thread;
+        return $this->parent;
     }
 
     /**
-     * {@inheritdoc}
+     * Gets the children.
+     *
+     * @return Doctrine\Common\Collections\Collection
      */
-    public function getParent() : ?TrickCommentInterface
+    public function getChildren(): Collection
     {
-        return $this->parent === null ? null : clone $this->parent;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function hasParent() : bool
-    {
-        return (bool) $this->parent;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getChildren() : Collection
-    {
-        return clone $this->children;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function hasChildren() : bool
-    {
-        return ! $this->children->isEmpty();
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function addChild(TrickCommentInterface $child) : TrickCommentInterface
-    {
-        $child->setParent($this);
-
-        if ($this->children->contains($child) === false) {
-            $this->children->add($child);
-        }
-
-        return $this;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function removeChild(TrickCommentInterface $child) : TrickCommentInterface
-    {
-        $child->removeParent();
-
-        $this->children->removeElement($child);
-
-        return $this;
+        return $this->children;
     }
 }
-

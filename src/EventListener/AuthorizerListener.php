@@ -2,12 +2,12 @@
 
 namespace App\EventListener;
 
-use App\Security\AuthorableInterface;
+use App\Form\Data\AuthorableInterface;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 /**
- * The authorizer listener...
+ * The authorizer listener.
  *
  * @version 0.0.1
  * @package App\EventListener
@@ -38,15 +38,24 @@ class AuthorizerListener
      */
     public function onFormSubmit(FormEvent $event)
     {
-        $authorable              = $event->getData();
-        $accessMethod            = $event->getForm()->getConfig()->getMethod();
-        $authorableAccessMethods = array('POST', 'PUT', 'PATCH');
+        $authorable = $event->getData();
 
-        if ((!$authorable instanceof AuthorableInterface) || !in_array($accessMethod, $authorableAccessMethods)) {
+        if (!\is_object($authorable) || !$authorable instanceof AuthorableInterface) {
+            return;
+        }
+
+        $accessMethod = $event->getForm()->getConfig()->getMethod();
+        $authorableAccessMethods = ['POST', 'PUT', 'PATCH'];
+
+        if (!\in_array($accessMethod, $authorableAccessMethods)) {
             return;
         }
 
         $author = $this->tokenStorage->getToken()->getUser();
+
+        if (null === $author) {
+            return;
+        }
 
         $authorable->setAuthor($author);
     }

@@ -2,8 +2,8 @@
 
 namespace App\Form\Type;
 
-use App\Entity\Dto\TrickAttachmentDto;
-use App\EventListener\TrickAttachmentDtoBuilderListener;
+use App\Form\Data\TrickAttachmentData;
+use App\EventListener\TrickAttachmentDataBuilderListener;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -11,7 +11,6 @@ use Symfony\Component\Form\Extension\Core\Type\UrlType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\FormEvents;
-use Symfony\Component\Form\FormEvent;
 
 /**
  * The trick attachment edit type.
@@ -24,18 +23,18 @@ use Symfony\Component\Form\FormEvent;
 class TrickAttachmentEditType extends AbstractType
 {
     /**
-     * @var App\EventListener\TrickAttachmentDtoBuilderListener $trickAttachmentDtoBuilderListener
+     * @var App\EventListener\TrickAttachmentDataBuilderListener $trickAttachmentDataBuilderListener
      */
-    private $trickAttachmentDtoBuilderListener;
+    private $trickAttachmentDataBuilderListener;
 
     /**
      * Constructs the trick attachment edit type.
      *
-     * @param App\EventListener\TrickAttachmentDtoBuilderListener $trickAttachmentDtoBuilderListener
+     * @param App\EventListener\TrickAttachmentDataBuilderListener $trickAttachmentDataBuilderListener
      */
-    public function __construct(TrickAttachmentDtoBuilderListener $trickAttachmentDtoBuilderListener)
+    public function __construct(TrickAttachmentDataBuilderListener $trickAttachmentDataBuilderListener)
     {
-        $this->trickAttachmentDtoBuilderListener = $trickAttachmentDtoBuilderListener;
+        $this->trickAttachmentDataBuilderListener = $trickAttachmentDataBuilderListener;
     }
 
     /**
@@ -47,26 +46,30 @@ class TrickAttachmentEditType extends AbstractType
             ->add(
                 'embed',
                 TextType::class,
-                array(
+                [
                     'mapped' => false,
                     'required' => false,
-                )
+                ]
             )
             ->add(
                 'upload',
                 FileType::class,
-                array(
+                [
                     'mapped' => false,
                     'required' => false,
-                )
+                ]
             )
-            ->add(
+             ->add(
                 'src',
-                UrlType::class
+                UrlType::class,
+                [
+                    'mapped' => false,
+                    'required' => false,
+                ]
             )
             ->addEventListener(
                 FormEvents::SUBMIT,
-                array($this->trickAttachmentDtoBuilderListener, 'onFormSubmit')
+                [$this->trickAttachmentDataBuilderListener, 'onFormSubmit']
             )
         ;
     }
@@ -76,8 +79,8 @@ class TrickAttachmentEditType extends AbstractType
      */
     public function configureOptions(OptionsResolver $resolver)
     {
-        $resolver->setDefaults(array(
-            'data_class' => TrickAttachmentDto::class,
-        ));
+        $resolver->setDefaults([
+            'data_class' => TrickAttachmentData::class,
+        ]);
     }
 }

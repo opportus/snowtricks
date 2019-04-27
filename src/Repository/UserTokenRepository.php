@@ -3,12 +3,11 @@
 namespace App\Repository;
 
 use App\Entity\UserToken;
-use App\Entity\UserTokenInterface;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 
 /**
- * The user token repository...
+ * The user token repository.
  *
  * @version 0.0.1
  * @package App\Repository
@@ -27,29 +26,4 @@ class UserTokenRepository extends ServiceEntityRepository implements UserTokenRe
         parent::__construct($registry, UserToken::class);
 
     }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function findOneByKey(string $key) : ?UserTokenInterface
-    {
-        return $this->findOneBy(
-            array(
-                'key' => $key
-            )
-        );
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function findAllByUserId(int $userId) : array
-    {
-        return $this->findBy(
-            array(
-                'user' => $userId
-            )
-        );
-    }
 }
-

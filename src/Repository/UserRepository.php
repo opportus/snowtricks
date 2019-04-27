@@ -3,12 +3,12 @@
 namespace App\Repository;
 
 use App\Entity\User;
-use App\Entity\UserInterface;
+use Doctrine\ORM\EntityNotFoundException;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 
 /**
- * The user repository...
+ * The user repository.
  *
  * @version 0.0.1
  * @package App\Repository
@@ -31,7 +31,7 @@ class UserRepository extends ServiceEntityRepository implements UserRepositoryIn
     /**
      * {@inheritdoc}
      */
-    public function findOneByUsername(string $username) : ?UserInterface
+    public function findOneByUsername(string $username) : ?User
     {
         return $this->findOneBy(
             array(
@@ -43,13 +43,14 @@ class UserRepository extends ServiceEntityRepository implements UserRepositoryIn
     /**
      * {@inheritdoc}
      */
-    public function findOneByEmail(string $email) : ?UserInterface
+    public function findOneByUsernameOrThrowExceptionIfNoResult(string $username) : User
     {
-        return $this->findOneBy(
-            array(
-                'email' => $email
-            )
-        );
+        $user = $this->findOneByUsername($username);
+
+        if (null === $user) {
+            throw new EntityNotFoundException('No entity matches this set of criteria');
+        }
+
+        return $user;
     }
 }
-

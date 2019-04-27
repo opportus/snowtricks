@@ -2,35 +2,22 @@
 
 namespace App\Entity;
 
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
-use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
-use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Doctrine\ORM\Mapping as ORM;
 
 /**
- * The trick group...
+ * The trick group.
  *
  * @version 0.0.1
  * @package App\Entity
  * @author  Clément Cazaud <opportus@gmail.com>
  * @license https://github.com/opportus/snowtricks/blob/master/LICENSE.md MIT
  *
- * @ORM\Entity(repositoryClass="App\Repository\TrickGroupRepository")
+ * @ORM\Entity(repositoryClass="App\Repository\TrickGroupRepository", readOnly=true)
  * @ORM\Table(name="trick_group")
  */
-class TrickGroup extends Entity implements TrickGroupInterface
+class TrickGroup extends Entity
 {
-    /**
-     * @var string $slug
-     *
-     * @ORM\Column(name="slug", type="string", length=255, unique=true)
-     * @Assert\NotBlank()
-     * @Assert\Type(type="string")
-     * @Assert\Length(max=255)
-     */
-    protected $slug;
-
     /**
      * @var string $title
      *
@@ -39,97 +26,27 @@ class TrickGroup extends Entity implements TrickGroupInterface
      * @Assert\Type(type="string")
      * @Assert\Length(max=255)
      */
-    protected $title;
-
-    /**
-     * @var string $description
-     *
-     * @ORM\Column(name="description", type="string", length=255)
-     * @Assert\NotBlank()
-     * @Assert\Type(type="string")
-     * @Assert\Length(max=255)
-     */
-    protected $description;
-
-    /**
-     * @var Doctrine\Common\Collections\Collection
-     *
-     * @ORM\OneToMany(targetEntity="App\Entity\Trick", mappedBy="group", cascade={"persist"})
-     * @Assert\Valid()
-     */
-    protected $tricks;
+    private $title;
 
     /**
      * Constructs the trick group.
      *
      * @param string $title
-     * @param string $description
      */
-    public function __construct(
-        string $title,
-        string $description
-    )
+    public function __construct(string $title)
     {
-        $this->id          = $this->generateId();
-        $this->createdAt   = new \DateTime();
-        $this->slug        = preg_replace('/[\s]+/', '-', strtolower(trim($title)));
-        $this->title       = $title;
-        $this->description = $description;
-        $this->tricks      = new ArrayCollection();
+        $this->id = $this->generateId();
+        $this->createdAt = new \DateTime();
+        $this->title = $title;
     }
 
     /**
-     * {@inheritdoc}
+     * Gets the title.
+     *
+     * @return string
      */
-    public function getSlug() : string
-    {
-        return $this->slug;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getTitle() : string
+    public function getTitle(): string
     {
         return $this->title;
     }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getDescription() : string
-    {
-        return $this->description;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getTricks() : Collection
-    {
-        return clone $this->tricks;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function addTrick(TrickInterface $trick) : TrickGroupInterface
-    {
-        if ($this->tricks->contains($trick) === false) {
-            $this->tricks->add($trick);
-        }
-
-        return $this;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function removeTrick(TrickInterface $trick) : TrickGroupInterface
-    {
-        $this->tricks->removeElement($trick);
-
-        return $this;
-    }
 }
-

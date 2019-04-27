@@ -4,15 +4,13 @@ namespace App\DataFixtures;
 
 use App\Entity\User;
 use App\Entity\TrickGroup;
-use App\Entity\TrickVersion;
 use App\Entity\Trick;
 use App\Entity\TrickComment;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\Persistence\ObjectManager;
-use Doctrine\Common\Collections\ArrayCollection;
 
 /**
- * The fixtures...
+ * The fixtures.
  *
  * @version 0.0.1
  * @package App\DataFixtures
@@ -26,28 +24,41 @@ class Fixtures extends Fixture
      */
     public function load(ObjectManager $entityManager)
     {
-        $tricks = $this->generateTricks($entityManager);
-    }
+        // Loads the default user...
+        $user = new User(
+            'Clément',
+            'clem@example.com',
+            'azerty',
+            true
+        );
 
-    /**
-     * Generates the tricks.
-     *
-     * @param Doctrine\Common\Persistence\ObjectManager $entityManager
-     * @return Doctrine\Common\Collections\ArrayCollection
-     */
-    private function generateTricks(ObjectManager $entityManager) : ArrayCollection
-    {
-        $user = $this->generateUser($entityManager);
-        $trickGroups = $this->generateTrickGroups($entityManager);
-        $tricks = array();
+        $entityManager->persist($user);
+
+        // Loads the default trick groups...
+        $trickGroups = [];
+
+        foreach ($this->getData()['tricks'] as $trickData) {
+            $trickGroups[$trickData['group']] = $trickData['group'];
+        }
+
+        foreach ($trickGroups as $trickGroupKey => $trickGroupTitle) {
+            $trickGroup = new TrickGroup($trickGroupTitle);
+
+            $entityManager->persist($trickGroup);
+
+            $trickGroups[$trickGroupKey] = $trickGroup;
+        }
+
+        // Loads the default tricks...
+        $tricks = [];
 
         foreach ($this->getData()['tricks'] as $trickData) {
             $trick = new Trick(
                 $trickData['title'],
                 $trickData['description'],
                 $trickData['body'],
-                $user,
-                $trickGroups[$trickData['group']]
+                $trickGroups[$trickData['group']],
+                $user
             );
 
             $entityManager->persist($trick);
@@ -55,21 +66,20 @@ class Fixtures extends Fixture
             $tricks[] = $trick;
         }
 
-        $tricks = new ArrayCollection($tricks);
-
+        // Loads the default trick comments...
         foreach ($tricks as $trick) {
             $trickComment = new TrickComment(
                 $this->generateLoremIpsum(),
-                $user,
-                $trick
+                $trick,
+                $user
             );
 
             $entityManager->persist($trickComment);
 
             $trickCommentChild = new TrickComment(
                 $this->generateLoremIpsum(),
-                $user,
                 $trick,
+                $user,
                 $trickComment
             );
 
@@ -77,56 +87,6 @@ class Fixtures extends Fixture
         }
 
         $entityManager->flush();
-
-        return $tricks;
-    }
-
-    /**
-     * Generates the trick groups.
-     *
-     * @param Doctrine\Common\Persistence\ObjectManager $entityManager
-     * @return Doctrine\Common\Collections\ArrayCollection
-     */
-    private function generateTrickGroups(ObjectManager $entityManager) : ArrayCollection
-    {
-        $trickGroups = array();
-
-        foreach ($this->getData()['tricks'] as $trickData) {
-            $trickGroups[$trickData['group']] = $trickData['group'];
-        }
-
-        foreach ($trickGroups as $trickGroupKey => $trickGroupTitle) {
-            $trickGroup = new TrickGroup(
-                $trickGroupTitle,
-                'No description'
-            );
-
-            $entityManager->persist($trickGroup);
-
-            $trickGroups[$trickGroupKey] = $trickGroup;
-        }
-
-        return new ArrayCollection($trickGroups);
-    }
-
-    /**
-     * Generates the user.
-     *
-     * @param Doctrine\Common\Persistence\ObjectManager $entityManager
-     * @return App\Entity\User
-     */
-    private function generateUser(ObjectManager $entityManager) : User
-    {
-        $user = new User(
-            'Clément',
-            'clem@clem.com',
-            'azerty',
-            true
-        );
-
-        $entityManager->persist($user);
-
-        return $user;
     }
 
     /**
@@ -136,7 +96,7 @@ class Fixtures extends Fixture
      */
     private function getData() : array
     {
-        return \json_decode(\file_get_contents(__DIR__.'/data.json'), true);
+        return \json_decode(\file_get_contents(__DIR__.\DIRECTORY_SEPARATOR.'data.json'), true);
     }
 
     /**
