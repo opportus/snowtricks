@@ -3,7 +3,7 @@
 namespace App\ParamConverter;
 
 use App\HttpKernel\ControllerException;
-use App\Annotation\AbstractDatumReference;
+use App\Configuration\ControllerResultDataAccessorInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Form\AbstractType;
@@ -74,7 +74,7 @@ class EntityParamConverter extends AbstractParamConverter implements ParamConver
 
             if (!isset($configuration->getOptions()['id']) ||
                 !\is_object($configuration->getOptions()['id']) ||
-                !$configuration->getOptions()['id'] instanceof AbstractDatumReference
+                !$configuration->getOptions()['id'] instanceof ControllerResultDataAccessorInterface
             ) {
                 return false;
             }

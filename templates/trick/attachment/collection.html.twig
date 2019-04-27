@@ -5,7 +5,9 @@
     {% else %}
         {% set display = '' %}
     {% endif %}
-    <div class="trick-attachment-carousel-toggler btn btn-secondary col-12">{{ 'trick_attachment_collection.button.show'|trans }}</div>
+    {% if entity is not null and not entity.attachments.isEmpty %}
+        <div class="trick-attachment-carousel-toggler btn btn-secondary col-12">{{ 'trick_attachment_collection.button.show'|trans }}</div>
+    {% endif %}
 
     <div id="trick-attachment-carousel" class="carousel slide {{ display }}" data-ride="carousel" data-interval="0">
         <ul class="carousel-inner row w-100 mx-auto trick-attachment-list list-unstyled" role="listbox">

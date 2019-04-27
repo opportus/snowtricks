@@ -10,7 +10,6 @@
 {{ form_start(form, {'attr': {'id': 'trick-edit-' ~ random() }, 'class': 'row'}) }}
     {{ form_errors(form) }}
     <div class="trick-edit-attachments col-12 form-group">
-        {{ form_errors(form.attachments) }}
         {{ form_widget(
             form.attachments,
             {
@@ -22,7 +21,6 @@
         ) }}
     </div>
     <div class="trick-edit-title col-12 form-group">
-        {{ form_errors(form.title) }}
         {{ form_row(
             form.title,
             {
@@ -35,7 +33,6 @@
         ) }}
     </div>
     <div class="trick-edit-title col-12 form-group">
-        {{ form_errors(form.description) }}
         {{ form_row(
             form.description,
             {
@@ -48,7 +45,6 @@
         ) }}
     </div>
     <div class="trick-edit-body col-12 form-group">
-        {{ form_errors(form.body) }}
         {{ form_row(
             form.body,
             {
@@ -62,7 +58,6 @@
         ) }}
     </div>
     <div class="trick-edit-group col-sm-12 col-lg-3 form-group">
-        {{ form_errors(form.group) }}
         {{ form_row(
             form.group,
             {

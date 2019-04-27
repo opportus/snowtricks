@@ -4,7 +4,7 @@ jQuery(document).ready(function($) {
             $('.trick-attachment-carousel-control').removeClass('d-none');
         }
     } else {
-        if ($('#trick-attachment-carousel .carousel.inner').children().length > 1) {
+        if ($('#trick-attachment-carousel .carousel-inner').children().length > 1) {
             $('.trick-attachment-carousel-control').removeClass('d-none');
         }
     }

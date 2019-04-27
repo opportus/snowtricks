@@ -20,6 +20,14 @@
                 <source>error.forbidden.description</source>
                 <target>Oops, looks like you do not have the authorization for this action...</target>
             </trans-unit>
+            <trans-unit id="error.internal_server_error.title">
+                <source>error.internal_server_error.title</source>
+                <target>Internal Server Error</target>
+            </trans-unit>
+            <trans-unit id="error.internal_server_error.description">
+                <source>error.internal_server_error.description</source>
+                <target>Oops, looks like an unexpected error happened...</target>
+            </trans-unit>
 
             <trans-unit id="user.sign_up.notification.201">
                 <source>user.sign_up.notification.201</source>
