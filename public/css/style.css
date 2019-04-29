@@ -9,10 +9,37 @@
     line-height: inherit;
 }
 
+@media(max-width: 767px) {
+    body{
+        padding-bottom: 56px;
+    }
+    #navbar {
+        display: none;
+    }
+}
+
+@media(min-width: 768px) {
+    #mobile-navbar {
+        display: none;
+    }
+}
+
+#mobile-navbar {
+    height: 56px;
+    left:0;
+    right:0;
+    width: 100%;
+}
+
+#mobile-navbar .list-inline-item a i {
+    color: #333;
+    font-size: 20px;
+}
+
 /* Scroller */
 
 .arrow-scroll {
-    bottom: 50px;
+    bottom: 60px;
     cursor: pointer;
     right: 50px;
     font-size: 30px;
@@ -25,7 +52,7 @@
 
 #arrow-scroll-up {
     display: none;
-    bottom: 50px;
+    bottom: 60px;
     right: 50px;
 }
 
