@@ -1,8 +1,8 @@
 {
     "name": "opportus/snowtricks",
-    "description": "School project #6 - A Symfony application",
+    "description": "Symfony 4 demo application",
     "type": "project",
-    "license": "proprietary",
+    "license": "MIT",
     "require": {
         "php": "^7.1.3",
         "opportus/object-mapper-bundle": "^2.0",
