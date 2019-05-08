@@ -74,3 +74,7 @@ services:
         tags:
             - { name: doctrine.event_listener, event: postPersist, priority: 90}
             - { name: doctrine.event_listener, event: postRemove, priority: 90}
+
+rules:
+    symfony.version.latest_stable:
+      enabled: false
